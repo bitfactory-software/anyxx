@@ -105,8 +105,6 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga13249a9ab9228bed2d13f8be41984cbf" id="r_ga13249a9ab9228bed2d13f8be41984cbf"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a> = observer&lt;const_void&gt;</td></tr>
-<tr class="memitem:ga56d1fe32eadd3e57d34611a42fc845a2" id="r_ga56d1fe32eadd3e57d34611a42fc845a2"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#ga56d1fe32eadd3e57d34611a42fc845a2">anyxx::mutref</a> = observer&lt;mutable_void&gt;</td></tr>
 <tr class="memitem:gaf97e4130c5c467557b419eb6e97b8d80" id="r_gaf97e4130c5c467557b419eb6e97b8d80"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename &gt; typename Any, is_proxy Proxy, typename... Types&gt; </td></tr>
 <tr class="memitem:gaf97e4130c5c467557b419eb6e97b8d80 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#gaf97e4130c5c467557b419eb6e97b8d80">anyxx::vany_variant</a> = std::variant&lt;Any&lt;Proxy&gt;, Types...&gt;</td></tr>
 <tr class="memitem:ga56505144f855bfd01c879bf63c62f09c" id="r_ga56505144f855bfd01c879bf63c62f09c"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#ga56505144f855bfd01c879bf63c62f09c">anyxx::shared</a> = std::shared_ptr&lt;void const&gt;</td></tr>
@@ -115,40 +113,6 @@ Typedefs</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Proxies manage the storage in an <a class="el" href="classanyxx_1_1any.html" title="any">any</a>. </p>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
-<a id="ga13249a9ab9228bed2d13f8be41984cbf" name="ga13249a9ab9228bed2d13f8be41984cbf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga13249a9ab9228bed2d13f8be41984cbf">&#9670;&#160;</a></span>cref</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a> = observer&lt;const_void&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Proxy to capture the dispatch target type erased by const reference An any with such a proxy is lifetime bound to the object referenced! </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a2">_5_any_template.cpp</a>.</dd>
-</dl>
-
-</div>
-</div>
-<a id="ga56d1fe32eadd3e57d34611a42fc845a2" name="ga56d1fe32eadd3e57d34611a42fc845a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga56d1fe32eadd3e57d34611a42fc845a2">&#9670;&#160;</a></span>mutref</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="#ga56d1fe32eadd3e57d34611a42fc845a2">anyxx::mutref</a> = observer&lt;mutable_void&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Proxy to capture the dispatch target type erased by mutable reference An any with such a proxy is lifetime bound to the object referenced! </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a3">_5_any_template.cpp</a>.</dd>
-</dl>
-
-</div>
-</div>
 <a id="ga56505144f855bfd01c879bf63c62f09c" name="ga56505144f855bfd01c879bf63c62f09c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga56505144f855bfd01c879bf63c62f09c">&#9670;&#160;</a></span>shared</h2>
 

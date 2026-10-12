@@ -1,6 +1,5 @@
 var anyxx_8hpp =
 [
-    [ "anyxx::observeable_v_table", "structanyxx_1_1observeable__v__table.html", "structanyxx_1_1observeable__v__table" ],
     [ "anyxx::any&lt; Trait, Proxy &gt;", "classanyxx_1_1any.html", "classanyxx_1_1any" ],
     [ "anyxx::using_&lt; Value &gt;", "structanyxx_1_1using__.html", "structanyxx_1_1using__" ],
     [ "anyxx::using_cref&lt; Value &gt;", "structanyxx_1_1using__cref.html", "structanyxx_1_1using__cref" ],
@@ -25,9 +24,7 @@ var anyxx_8hpp =
     [ "VANY_DISPACH", "group__vany__macros.html#ga93a6d3c140de4e4c95f863b88385a27c", null ],
     [ "VANY_DISPACH_DECLARE", "group__vany__macros.html#ga0a538605bcb4ae50bd736f0802af2c8b", null ],
     [ "anyxx::any_trait_class", "anyxx_8hpp.html#a41a5f0115a3c735c76b8e40c6043993d", null ],
-    [ "anyxx::cref", "group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf", null ],
     [ "anyxx::make_vany", "anyxx_8hpp.html#a5b8337d31962b6107d1748ec5dc2ee3b", null ],
-    [ "anyxx::mutref", "group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2", null ],
     [ "anyxx::shared", "group__proxies.html#ga56505144f855bfd01c879bf63c62f09c", null ],
     [ "anyxx::use_as", "anyxx_8hpp.html#a92917959a2ef4d14ddf6e22473220820", null ],
     [ "anyxx::use_as_", "anyxx_8hpp.html#aaa85b7012fceca3593ab029de12dd61c", null ],

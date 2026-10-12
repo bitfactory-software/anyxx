@@ -17,6 +17,5 @@ var searchData=
   ['monoid_20the_20hello_20world_20of_20type_20classes_14',['Chapter 2: Monoid, the &quot;Hello World&quot; of type classes',['../subpage2.html',1,'main']]],
   ['move_5fto_15',['move_to',['../group__casts.html#ga0ad81aaf23ab3d32a02a12cec57c0946',1,'anyxx::move_to()'],['../md_docs_2Proxy__overview.html#autotoc_md5',1,'move_to']]],
   ['multi_20dispatch_20matrix_16',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md14',1,'']]],
-  ['multi_20dispatch_20type_20erased_20binary_20operator_17',['Showcase 3: &lt;em&gt;Any++&lt;/em&gt; Open Multi Dispatch, (Type Erased Binary Operator)',['../index.html#autotoc_md31',1,'']]],
-  ['mutref_18',['mutref',['../group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2',1,'anyxx']]]
+  ['multi_20dispatch_20type_20erased_20binary_20operator_17',['Showcase 3: &lt;em&gt;Any++&lt;/em&gt; Open Multi Dispatch, (Type Erased Binary Operator)',['../index.html#autotoc_md31',1,'']]]
 ];

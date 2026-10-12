@@ -95,10 +95,12 @@ $(function(){initNavTree('anyxx_8hpp.html','',''); });
 <p>C++ header only library for external polymorphism.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;bit_factory/infra/config.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/compute_val_proxy_size.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/dll_mode.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/utilities.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/errors/cast_error.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/errors/type_mismatch_error.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/observeable.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/small_object_size.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/voidness.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/v_table_data.hpp&gt;</code><br />
@@ -108,7 +110,6 @@ $(function(){initNavTree('anyxx_8hpp.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:anyxx_3A_3Aobserveable_5Fv_5Ftable" id="r_anyxx_3A_3Aobserveable_5Fv_5Ftable"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1observeable__v__table.html">anyxx::observeable_v_table</a></td></tr>
 <tr class="memitem:anyxx_3A_3Aunique" id="r_anyxx_3A_3Aunique"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1unique.html">anyxx::unique</a></td></tr>
 <tr class="memitem:anyxx_3A_3Acow" id="r_anyxx_3A_3Acow"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1cow.html">anyxx::cow</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Proxy to manage the captured object as value via copy-on-write.  <a href="structanyxx_1_1cow.html#details">More...</a><br /></td></tr>
@@ -195,11 +196,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a554eb25dc0742eb08d38968bd3ba6add" id="r_a554eb25dc0742eb08d38968bd3ba6add"><td class="memTemplParams" colspan="2"><a id="a554eb25dc0742eb08d38968bd3ba6add" name="a554eb25dc0742eb08d38968bd3ba6add"></a>
-template&lt;voidness Voidness&gt; </td></tr>
-<tr class="memitem:a554eb25dc0742eb08d38968bd3ba6add template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::observer</b> = Voidness</td></tr>
-<tr class="memitem:ga13249a9ab9228bed2d13f8be41984cbf" id="r_ga13249a9ab9228bed2d13f8be41984cbf"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a> = observer&lt;const_void&gt;</td></tr>
-<tr class="memitem:ga56d1fe32eadd3e57d34611a42fc845a2" id="r_ga56d1fe32eadd3e57d34611a42fc845a2"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2">anyxx::mutref</a> = observer&lt;mutable_void&gt;</td></tr>
 <tr class="memitem:ac95774b5b2d689feed50405f9b8b049f" id="r_ac95774b5b2d689feed50405f9b8b049f"><td class="memTemplParams" colspan="2"><a id="ac95774b5b2d689feed50405f9b8b049f" name="ac95774b5b2d689feed50405f9b8b049f"></a>
 template&lt;is_proxy Data&gt; </td></tr>
 <tr class="memitem:ac95774b5b2d689feed50405f9b8b049f template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::data_void</b> = proxy_trait&lt;Data&gt;::void_t</td></tr>
@@ -259,9 +255,6 @@ template&lt;typename Model, typename Param&gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a695fba58c2869d89e6d47df77a06265b" id="r_a695fba58c2869d89e6d47df77a06265b"><td class="memTemplParams" colspan="2"><a id="a695fba58c2869d89e6d47df77a06265b" name="a695fba58c2869d89e6d47df77a06265b"></a>
-template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a695fba58c2869d89e6d47df77a06265b template"><td class="memItemLeft">constexpr std::size_t&#160;</td><td class="memItemRight"><b>anyxx::compute_val_proxy_size</b> (std::size_t default_size)</td></tr>
 <tr class="memitem:a44ae4ba72a85a764ac7ae56c5d7ee383" id="r_a44ae4ba72a85a764ac7ae56c5d7ee383"><td class="memItemLeft"><a id="a44ae4ba72a85a764ac7ae56c5d7ee383" name="a44ae4ba72a85a764ac7ae56c5d7ee383"></a>
 constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::is_const_correct_call_for_proxy_and_self</b> (bool call_is_const, bool proxy_is_const, bool self_is_const, bool exact)</td></tr>
 <tr class="memitem:a255ef796b4b603d1058e4e6914ebb171" id="r_a255ef796b4b603d1058e4e6914ebb171"><td class="memTemplParams" colspan="2"><a id="a255ef796b4b603d1058e4e6914ebb171" name="a255ef796b4b603d1058e4e6914ebb171"></a>
@@ -363,7 +356,7 @@ template&lt;is_any From, is_any Any&gt; </td></tr>
 <tr class="memitem:aeea586073f95dbe0eb5ba77e4fea03eb template"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><b>anyxx::is_derived_from</b> (Any const &amp;<a class="el" href="classanyxx_1_1any.html">any</a>)</td></tr>
 <tr class="memitem:a90108db2347c96c6df0bdcf1867bc35f" id="r_a90108db2347c96c6df0bdcf1867bc35f"><td class="memTemplParams" colspan="2"><a id="a90108db2347c96c6df0bdcf1867bc35f" name="a90108db2347c96c6df0bdcf1867bc35f"></a>
 template&lt;typename To&gt; </td></tr>
-<tr class="memitem:a90108db2347c96c6df0bdcf1867bc35f template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unchecked_v_table_downcast_to</b> (<a class="el" href="structanyxx_1_1observeable__v__table.html">observeable_v_table</a> *v_table)</td></tr>
+<tr class="memitem:a90108db2347c96c6df0bdcf1867bc35f template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unchecked_v_table_downcast_to</b> (observeable_v_table *v_table)</td></tr>
 <tr class="memitem:ab72256fa6ae0ee7708e8f8cdf6c09b39" id="r_ab72256fa6ae0ee7708e8f8cdf6c09b39"><td class="memTemplParams" colspan="2"><a id="ab72256fa6ae0ee7708e8f8cdf6c09b39" name="ab72256fa6ae0ee7708e8f8cdf6c09b39"></a>
 template&lt;typename To&gt; </td></tr>
 <tr class="memitem:ab72256fa6ae0ee7708e8f8cdf6c09b39 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unchecked_v_table_downcast_to</b> (auto *v_table)</td></tr>
@@ -450,9 +443,9 @@ template&lt;typename Concrete&gt; </td></tr>
 template&lt;typename Concrete&gt; </td></tr>
 <tr class="memitem:a2562295c3e8cbf12251dd59af7acca36 template"><td class="memItemLeft">mutable_void&#160;</td><td class="memItemRight"><b>anyxx::invoke_copy_constructor</b> (mutable_void placement, const_void from)</td></tr>
 <tr class="memitem:a12865ab1955caa31b7d9e9b7c3df296c" id="r_a12865ab1955caa31b7d9e9b7c3df296c"><td class="memItemLeft"><a id="a12865ab1955caa31b7d9e9b7c3df296c" name="a12865ab1955caa31b7d9e9b7c3df296c"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (const_referenceable, observeable,,,,,(using default_proxy_t=<a class="el" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">cref</a>;))</td></tr>
+&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (const_referenceable, observeable,,,,,(using default_proxy_t=cref;))</td></tr>
 <tr class="memitem:aad663512ba9630e0df0f6bc64df36cb6" id="r_aad663512ba9630e0df0f6bc64df36cb6"><td class="memItemLeft"><a id="aad663512ba9630e0df0f6bc64df36cb6" name="aad663512ba9630e0df0f6bc64df36cb6"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (mutable_referenceable, observeable,,,,,(using default_proxy_t=<a class="el" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2">mutref</a>;))</td></tr>
+&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (mutable_referenceable, observeable,,,,,(using default_proxy_t=mutref;))</td></tr>
 <tr class="memitem:a08248e6de5ef3a3bd64ecb7ea9b4e57f" id="r_a08248e6de5ef3a3bd64ecb7ea9b4e57f"><td class="memItemLeft"><a id="a08248e6de5ef3a3bd64ecb7ea9b4e57f" name="a08248e6de5ef3a3bd64ecb7ea9b4e57f"></a>
 &#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (moveable, observeable,,,,(ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),(using default_proxy_t=<a class="el" href="structanyxx_1_1val.html">val</a>&lt;&gt;;))</td></tr>
 <tr class="memitem:abe7fb25099a5d3418edcfcda6f4e04de" id="r_abe7fb25099a5d3418edcfcda6f4e04de"><td class="memItemLeft"><a id="abe7fb25099a5d3418edcfcda6f4e04de" name="abe7fb25099a5d3418edcfcda6f4e04de"></a>
@@ -978,7 +971,7 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">                                =</div>
 <div class="line"><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;T&gt;</a> &amp;&amp; is_type_class_impl&lt;T&gt;::value</div>
-<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:142</div></div>
+<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:74</div></div>
 </div><!-- fragment -->
 </div>
 </div>
