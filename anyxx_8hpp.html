@@ -134,155 +134,15 @@ $(function(){initNavTree('anyxx_8hpp.html','',''); });
 <code>#include &lt;bit_factory/infra/config.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/v23/any.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/v23/preprocessor_meta_class.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/v23/v_table_data.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/v23/v_table_holder/v_table_holder_dyn.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/v23/v_table_holder/v_table_holder_static.hpp&gt;</code><br />
 </div>
 <p><a href="anyxx_8hpp_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:a44c9c7deb09b4012e8faa190d44dd010" id="r_a44c9c7deb09b4012e8faa190d44dd010"><td class="memItemLeft"><a id="a44c9c7deb09b4012e8faa190d44dd010" name="a44c9c7deb09b4012e8faa190d44dd010"></a>
-#define&#160;</td><td class="memItemRight"><b>ANY_CLASS_TYPE_INFO</b>&#160;&#160;&#160;ANY_V_TABLE_DATA(std::type_info const*, type_info_, &amp;typeid(Concrete))</td></tr>
-<tr class="memitem:af0ab11924c412a39face808c89fcaaee" id="r_af0ab11924c412a39face808c89fcaaee"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#af0ab11924c412a39face808c89fcaaee">ANY_CAN_TYPE_SAVE_DOWNCAST</a></td></tr>
-<tr class="memitem:a8343f5148bedf87ad25ce1d3ba1272f8" id="r_a8343f5148bedf87ad25ce1d3ba1272f8"><td class="memItemLeft"><a id="a8343f5148bedf87ad25ce1d3ba1272f8" name="a8343f5148bedf87ad25ce1d3ba1272f8"></a>
-#define&#160;</td><td class="memItemRight"><b>ANY_CAN_TYPE_SAVE_CROSSCAST</b>&#160;&#160;&#160;ANY_V_TABLE_DATA(meta_data*, meta_data_, nullptr)</td></tr>
-<tr class="memitem:a8bd9323a555eba38917cf0629e5c903d" id="r_a8bd9323a555eba38917cf0629e5c903d"><td class="memItemLeft"><a id="a8bd9323a555eba38917cf0629e5c903d" name="a8bd9323a555eba38917cf0629e5c903d"></a>
-#define&#160;</td><td class="memItemRight"><b>ANY_MODEL_SIZE</b>&#160;&#160;&#160;ANY_V_TABLE_DATA(model_size_t, model_size, compute_model_size&lt;Concrete&gt;())</td></tr>
-<tr class="memitem:a7e642e30b1fde464dc667f33746f6368" id="r_a7e642e30b1fde464dc667f33746f6368"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a7e642e30b1fde464dc667f33746f6368">ANY_COPY_CONSTRUCTOR</a></td></tr>
-<tr class="memitem:a1a7879557318cd0cbf2d1e7e24c89ac4" id="r_a1a7879557318cd0cbf2d1e7e24c89ac4"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a1a7879557318cd0cbf2d1e7e24c89ac4">ANY_HAS_DELETE</a></td></tr>
-<tr class="memitem:ad7720b600986a8d2a7752a8c20364270" id="r_ad7720b600986a8d2a7752a8c20364270"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ad7720b600986a8d2a7752a8c20364270">ANY_MOVE_CONSTRUCTOR</a></td></tr>
-<tr class="memitem:af581a4434969e566de1cb296998efcfc" id="r_af581a4434969e566de1cb296998efcfc"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#af581a4434969e566de1cb296998efcfc">ANY_DESTRUCTOR</a></td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a635d420429d93cb3592ab4a7d7e87584" id="r_a635d420429d93cb3592ab4a7d7e87584"><td class="memTemplParams" colspan="2"><a id="a635d420429d93cb3592ab4a7d7e87584" name="a635d420429d93cb3592ab4a7d7e87584"></a>
-template&lt;typename Concrete&gt; </td></tr>
-<tr class="memitem:a635d420429d93cb3592ab4a7d7e87584 template"><td class="memItemLeft">mutable_void&#160;</td><td class="memItemRight"><b>anyxx::invoke_move_constructor</b> (mutable_void placement, mutable_void from)</td></tr>
-<tr class="memitem:a2562295c3e8cbf12251dd59af7acca36" id="r_a2562295c3e8cbf12251dd59af7acca36"><td class="memTemplParams" colspan="2"><a id="a2562295c3e8cbf12251dd59af7acca36" name="a2562295c3e8cbf12251dd59af7acca36"></a>
-template&lt;typename Concrete&gt; </td></tr>
-<tr class="memitem:a2562295c3e8cbf12251dd59af7acca36 template"><td class="memItemLeft">mutable_void&#160;</td><td class="memItemRight"><b>anyxx::invoke_copy_constructor</b> (mutable_void placement, const_void from)</td></tr>
-<tr class="memitem:a12865ab1955caa31b7d9e9b7c3df296c" id="r_a12865ab1955caa31b7d9e9b7c3df296c"><td class="memItemLeft"><a id="a12865ab1955caa31b7d9e9b7c3df296c" name="a12865ab1955caa31b7d9e9b7c3df296c"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (const_referenceable, observeable,,,,,(using default_proxy_t=cref;))</td></tr>
-<tr class="memitem:aad663512ba9630e0df0f6bc64df36cb6" id="r_aad663512ba9630e0df0f6bc64df36cb6"><td class="memItemLeft"><a id="aad663512ba9630e0df0f6bc64df36cb6" name="aad663512ba9630e0df0f6bc64df36cb6"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (mutable_referenceable, observeable,,,,,(using default_proxy_t=mutref;))</td></tr>
-<tr class="memitem:a08248e6de5ef3a3bd64ecb7ea9b4e57f" id="r_a08248e6de5ef3a3bd64ecb7ea9b4e57f"><td class="memItemLeft"><a id="a08248e6de5ef3a3bd64ecb7ea9b4e57f" name="a08248e6de5ef3a3bd64ecb7ea9b4e57f"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (moveable, observeable,,,,(ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),(using default_proxy_t=val&lt;&gt;;))</td></tr>
-<tr class="memitem:abe7fb25099a5d3418edcfcda6f4e04de" id="r_abe7fb25099a5d3418edcfcda6f4e04de"><td class="memItemLeft"><a id="abe7fb25099a5d3418edcfcda6f4e04de" name="abe7fb25099a5d3418edcfcda6f4e04de"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (copyable, moveable,,,,(ANY_COPY_CONSTRUCTOR),())</td></tr>
-<tr class="memitem:a3ca4e89e132c52af5e462aacddcf9104" id="r_a3ca4e89e132c52af5e462aacddcf9104"><td class="memItemLeft"><a id="a3ca4e89e132c52af5e462aacddcf9104" name="a3ca4e89e132c52af5e462aacddcf9104"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (save_observable, observeable,,,,(ANY_CLASS_TYPE_INFO),())</td></tr>
-<tr class="memitem:ac82eb516d8a2a7d61057e2718dcb66ea" id="r_ac82eb516d8a2a7d61057e2718dcb66ea"><td class="memItemLeft"><a id="ac82eb516d8a2a7d61057e2718dcb66ea" name="ac82eb516d8a2a7d61057e2718dcb66ea"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (save_moveable, save_observable,,,,(ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),(using default_proxy_t=val&lt;&gt;;))</td></tr>
-<tr class="memitem:a6c4714d9ca71bd36418fcccb4e9165e2" id="r_a6c4714d9ca71bd36418fcccb4e9165e2"><td class="memItemLeft"><a id="a6c4714d9ca71bd36418fcccb4e9165e2" name="a6c4714d9ca71bd36418fcccb4e9165e2"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (save_copyable, save_moveable,,,,(ANY_COPY_CONSTRUCTOR),())</td></tr>
-<tr class="memitem:a141cdc18d5e8a99ad3cedda7418309b2" id="r_a141cdc18d5e8a99ad3cedda7418309b2"><td class="memItemLeft"><a id="a141cdc18d5e8a99ad3cedda7418309b2" name="a141cdc18d5e8a99ad3cedda7418309b2"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_castable, save_observable,,,,(ANY_CAN_TYPE_SAVE_DOWNCAST, ANY_CAN_TYPE_SAVE_CROSSCAST),())</td></tr>
-<tr class="memitem:a3eb05cd657f0334d8c6b1350d3f322e4" id="r_a3eb05cd657f0334d8c6b1350d3f322e4"><td class="memItemLeft"><a id="a3eb05cd657f0334d8c6b1350d3f322e4" name="a3eb05cd657f0334d8c6b1350d3f322e4"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_deletable, dynamic_castable,,,,(ANY_HAS_DELETE),(using default_proxy_t=shared;))</td></tr>
-<tr class="memitem:a72bcf80656f8e5a5b99c6d90b862116f" id="r_a72bcf80656f8e5a5b99c6d90b862116f"><td class="memItemLeft"><a id="a72bcf80656f8e5a5b99c6d90b862116f" name="a72bcf80656f8e5a5b99c6d90b862116f"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_smart_ptr, dynamic_deletable,,,,(ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR),())</td></tr>
-<tr class="memitem:a5ae2096d910a2544ece3c6a80b098bb3" id="r_a5ae2096d910a2544ece3c6a80b098bb3"><td class="memItemLeft"><a id="a5ae2096d910a2544ece3c6a80b098bb3" name="a5ae2096d910a2544ece3c6a80b098bb3"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_moveable, dynamic_castable,,,,(ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),(using default_proxy_t=val&lt;&gt;;))</td></tr>
-<tr class="memitem:aa54b08ee4eec2de75e1b5bf3199df524" id="r_aa54b08ee4eec2de75e1b5bf3199df524"><td class="memItemLeft"><a id="aa54b08ee4eec2de75e1b5bf3199df524" name="aa54b08ee4eec2de75e1b5bf3199df524"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_copyable, dynamic_moveable,,,,(ANY_COPY_CONSTRUCTOR),())</td></tr>
-</table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>C++ header only library for external polymorphism. </p>
 <p>for Microsoft C++, you must enable the C-Preprocessor with this flag: /Zc:preprocessor (see CMakeLists.txt for example) </p>
-</div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
-<a id="af0ab11924c412a39face808c89fcaaee" name="af0ab11924c412a39face808c89fcaaee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0ab11924c412a39face808c89fcaaee">&#9670;&#160;</a></span>ANY_CAN_TYPE_SAVE_DOWNCAST</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ANY_CAN_TYPE_SAVE_DOWNCAST</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">ANY_V_TABLE_DATA(                                                          \</div>
-<div class="line">    is_derived_from_t, is_derived_from_, +[](<span class="keyword">const</span> std::type_info&amp; from) { \</div>
-<div class="line">      <span class="keywordflow">return</span> static_is_derived_from(from);                                 \</div>
-<div class="line">    })</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a7e642e30b1fde464dc667f33746f6368" name="a7e642e30b1fde464dc667f33746f6368"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e642e30b1fde464dc667f33746f6368">&#9670;&#160;</a></span>ANY_COPY_CONSTRUCTOR</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ANY_COPY_CONSTRUCTOR</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">ANY_V_TABLE_DATA(copy_constructor_t, copy_constructor,                  \</div>
-<div class="line">                 []([[maybe_unused]] mutable_void placement,            \</div>
-<div class="line">                    [[maybe_unused]] const_void from) -&gt; mutable_void { \</div>
-<div class="line">                   <span class="keywordflow">return</span> invoke_copy_constructor&lt;Concrete&gt;(placement,  \</div>
-<div class="line">                                                            from);      \</div>
-<div class="line">                 })</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="af581a4434969e566de1cb296998efcfc" name="af581a4434969e566de1cb296998efcfc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af581a4434969e566de1cb296998efcfc">&#9670;&#160;</a></span>ANY_DESTRUCTOR</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ANY_DESTRUCTOR</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">ANY_V_TABLE_DATA(destructor_t, destructor, [](mutable_void data) { \</div>
-<div class="line">  std::destroy_at(<span class="keyword">static_cast&lt;</span>Concrete*<span class="keyword">&gt;</span>(data));                   \</div>
-<div class="line">})</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a1a7879557318cd0cbf2d1e7e24c89ac4" name="a1a7879557318cd0cbf2d1e7e24c89ac4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1a7879557318cd0cbf2d1e7e24c89ac4">&#9670;&#160;</a></span>ANY_HAS_DELETE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ANY_HAS_DELETE</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">ANY_V_TABLE_DATA(delete_t, delete_, [](mutable_void data) { \</div>
-<div class="line">  if (data) <span class="keyword">delete</span> <span class="keyword">static_cast&lt;</span>Concrete*<span class="keyword">&gt;</span>(data);            \</div>
-<div class="line">})</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="ad7720b600986a8d2a7752a8c20364270" name="ad7720b600986a8d2a7752a8c20364270"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad7720b600986a8d2a7752a8c20364270">&#9670;&#160;</a></span>ANY_MOVE_CONSTRUCTOR</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ANY_MOVE_CONSTRUCTOR</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">ANY_V_TABLE_DATA(move_constructor_t, move_constructor,                    \</div>
-<div class="line">                 []([[maybe_unused]] mutable_void placement,              \</div>
-<div class="line">                    [[maybe_unused]] mutable_void from) -&gt; mutable_void { \</div>
-<div class="line">                   <span class="keywordflow">return</span> invoke_move_constructor&lt;Concrete&gt;(placement,    \</div>
-<div class="line">                                                            from);        \</div>
-<div class="line">                 })</div>
-</div><!-- fragment -->
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>
