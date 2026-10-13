@@ -3,10 +3,12 @@
 #include <array>
 #include <bit_factory/anyxx/ANY_UNPAREN.hpp>
 #include <bit_factory/anyxx/any_unerase_cast.hpp>
+#include <bit_factory/anyxx/any_constructibile_for.hpp>
 #include <bit_factory/anyxx/proxies/dyn/moveable_from.hpp>
 #include <bit_factory/anyxx/proxies/dyn/borrowable_from.hpp>
 #include <bit_factory/v26/any/bases.hpp>
 #include <bit_factory/v26/any/facade.hpp>
+#include <bit_factory/v26/any/default_proxy.hpp>
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/any/v_table.hpp>
 #include <bit_factory/v26/trait_translation/deduced_typenames.hpp>
@@ -15,15 +17,12 @@
 #include <utility>
 #include <vector>
 
-namespace anyxx26 {
-
-template <typename Any>
-concept is_any = anyxx::is_any<Any>;
+namespace anyxx {
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 constexpr decltype(auto) preprocess_constructed_with(auto&& constructed_with) {
     using ConstructedWith = decltype(constructed_with);
-    using trait_declaration_t = anyxx26::trait_declaration_t<Trait, Args...>;
+    using trait_declaration_t = anyxx::trait_declaration_t<Trait, Args...>;
     if constexpr (requires (ConstructedWith constructed_with){ { trait_declaration_t::preprocess_constructed_with(constructed_with) }; }) {
         return trait_declaration_t::preprocess_constructed_with(std::forward<ConstructedWith>(constructed_with));
     } else {
@@ -37,7 +36,7 @@ using preprocess_constructed_with_t =
 
 template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct any_base : deduced_typenames<Trait, Args...> {
-  using trait_declaration_t = anyxx26::trait_declaration_t<Trait, Args...>;
+  using trait_declaration_t = anyxx::trait_declaration_t<Trait, Args...>;
   using dyn_self_t = any<Trait, Args...>;
   using dyn_self_cref_t = any<Trait, anyxx::cref, Args...>;
   using dyn_self_mutref_t = any<Trait, anyxx::mutref, Args...>;
@@ -103,14 +102,14 @@ struct any_base : deduced_typenames<Trait, Args...> {
     return *this;
   }
 
-  template <anyxx26::is_any Other>
+  template <anyxx::is_any Other>
   explicit(false) constexpr any_base(const Other& other)  // NOLINT(noExplicitConstructor)
       requires(anyxx::borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
         anyxx::is_any_derived_from_v<Other, any_base>)
       : v_table_(v_table_cast<v_table_t>(other.v_table_)),
       proxy_(anyxx::borrow_proxy_as<proxy_t>(other.proxy_, other.v_table_)) {
   }
-  template <anyxx26::is_any Other>
+  template <anyxx::is_any Other>
   constexpr any_base& operator=(Other const& other)
       requires(anyxx::borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
         anyxx::is_any_derived_from_v<Other, any_base>)
@@ -126,13 +125,13 @@ struct any_base : deduced_typenames<Trait, Args...> {
       : v_table_(v_table) {
       proxy_trait_t::move_to(proxy_, nullptr, std::move(proxy), v_table);
   }
-  template <anyxx26::is_any Other>
+  template <anyxx::is_any Other>
   explicit(false) constexpr any_base(Other&& other) noexcept  // NOLINT(noExplicitConstructor)
       requires(anyxx::moveable_from<proxy_t, typename Other::proxy_t> &&
         anyxx::is_any_derived_from_v<Other, any_base>)
       : any_base(std::move(other.proxy_), v_table_cast<v_table_t>(release_v_table(other))) {
   }
-  template <anyxx26::is_any Other>
+  template <anyxx::is_any Other>
   constexpr any_base& operator=(Other&& other) noexcept
       requires(anyxx::moveable_from<proxy_t, typename Other::proxy_t> &&
         anyxx::is_any_derived_from_v<Other, any_base>)
@@ -229,14 +228,6 @@ __dyn_OP_MUTATING(op_greater_greater_equals, >>=)
 #undef __dyn_OP0_MUTATING
 
 
-
-template <anyxx::is_any ToAny, typename FromVTable>
-  requires has_trait_declaration<ToAny>&& has_trait_declaration<FromVTable> && 
-           anyxx::is_any_derived_from_v<typename ToAny::v_table_t, FromVTable>
-constexpr auto unchecked_v_table_downcast_to(FromVTable*  from) {
-    return unchecked_v_table_downcast_to<typename ToAny::v_table_t>(from);
-}
-
 /// \brief Safe downcast to an unerased type using runtime information from
 /// the v-Tables.
 /// \ingroup casts
@@ -260,7 +251,7 @@ inline constexpr auto get_v_table(any<Trait, Args...> const& any) {
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 inline constexpr auto release_v_table(any<Trait, Args...>& any) { return std::exchange(any.v_table_, nullptr); }
 
-}  // namespace anyxx26
+}  // namespace anyxx
 
 /// \def ANY26_REGISTER_MODEL
 /// \brief Register a model class for a specific trait. Must
@@ -274,5 +265,5 @@ inline constexpr auto release_v_table(any<Trait, Args...>& any) { return std::ex
 #define ANY26_REGISTER_MODEL(class_, interface_, ...)                         \
   namespace {                                                                 \
   static auto __ = anyxx::bind_v_table_to_meta_data                           \
-        <anyxx26::v_table<interface_ __VA_OPT__(, __VA_ARGS__)>, ANY_UNPAREN(class_)>(); \
+        <anyxx::v_table<interface_ __VA_OPT__(, __VA_ARGS__)>, ANY_UNPAREN(class_)>(); \
   }

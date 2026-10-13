@@ -2,7 +2,7 @@
 
 #include <bit_factory/anyxx/ext/dispatch.hpp>
 
-namespace anyxx26 {
+namespace anyxx {
 
 struct dispatch_table {
     using type = anyxx::dispatch_table_t*;
@@ -12,5 +12,5 @@ struct dispatch_table {
     }
 };
 
-}  // namespace anyxx26
+}  // namespace anyxx
 

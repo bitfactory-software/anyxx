@@ -6,7 +6,7 @@
 #include <bit_factory/v26/meta/utilities.hpp>
 #include <bit_factory/v26/trait_translation/is_const_function.hpp>
 
-namespace anyxx26 {
+namespace anyxx {
 
 consteval auto fitting_dyn_parameter_type(std::meta::info self_t){
     return [self_t](std::meta::info candidate_type, std::meta::info declaration_type) {
@@ -71,8 +71,8 @@ consteval std::meta::info find_function_impl(auto fitting_parameter_type, std::m
 }
 
 consteval std::meta::info find_function_impl(std::meta::info interface_function, std::meta::info trait_template, std::meta::info mapped_type, auto args) {
-    return find_function_impl(anyxx26::fitting_dyn_parameter_type(mapped_type), interface_function, trait_template, mapped_type, args);
+    return find_function_impl(anyxx::fitting_dyn_parameter_type(mapped_type), interface_function, trait_template, mapped_type, args);
 }
 
 
-}  // namespace anyxx26::meta
+}  // namespace anyxx::meta

@@ -2,7 +2,7 @@
 
 #include <bit_factory/v26/any.hpp>
 
-namespace anyxx26 {
+namespace anyxx {
 
 template <is_trait Trait, typename Self, typename Arg0, typename... Args>
 struct function;

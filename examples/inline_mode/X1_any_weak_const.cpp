@@ -22,7 +22,7 @@ void observe(int expected_use_count) {
 
   CHECK(get_proxy(any_widget_weak).use_count() == expected_use_count);
   // we have to make a copy of shared pointer before usage:
-  auto any_widget_shared_const = lock(any_widget_weak);
+  auto any_widget_shared_const = lock<any_widget<shared>>(any_widget_weak);
   if (expected_use_count > 0)
     CHECK(any_widget_shared_const);
   else
@@ -53,7 +53,7 @@ static std::map<int, any_widget<weak>> cache;  // out of function for CHECK
 static std::mutex cache_mutex;
 any_widget<shared> make_widget(int id) {
   std::lock_guard hold{cache_mutex};
-  return *lock(cache[id]).or_else([&] -> std::optional<any_widget<shared>> {
+  return *lock<any_widget<shared>>(cache[id]).or_else([&] -> std::optional<any_widget<shared>> {
     auto s = load_widget(id);
     cache[id] = s;
     return s;

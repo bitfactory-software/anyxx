@@ -1,11 +1,9 @@
 #include <array>
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <bit_factory/v26/any.hpp>
-#include <bit_factory/v26/trait_as.hpp>
 #include <print>
 
-using namespace anyxx26;
+using namespace anyxx;
 
 namespace {
 
@@ -20,7 +18,7 @@ struct mapable {
 };
 
 template <typename Self, typename Value>
-struct mapable<anyxx26::model_map, Self, Value> {
+struct mapable<anyxx::model_map, Self, Value> {
     //static Value const& at(Self const& self, std::size_t i) {
     //    return self.at(i);
     //}
@@ -41,7 +39,7 @@ concept has_set_all_to =requires(T t, int const& value) {
 
 }
 
-TEST_CASE("anyxx26 const correctness overloading any") {
+TEST_CASE("anyxx const correctness overloading any") {
     {
         std::vector<int> v1{1, 2};
         any<mapable, anyxx::cref, int> m{v1};
@@ -69,10 +67,10 @@ TEST_CASE("anyxx26 const correctness overloading any") {
     }
 }
 
-TEST_CASE("anyxx26 const correctness overloading trait_as") {
+TEST_CASE("anyxx const correctness overloading trait_as") {
     consteval{
-        //constexpr auto trait_declaration = anyxx26::trait_declaration_t<mapable, int>;
-        //constexpr auto trait_model_map = anyxx26::trait_model_map<mapable, std::vector<int>>;
+        //constexpr auto trait_declaration = anyxx::trait_declaration_t<mapable, int>;
+        //constexpr auto trait_model_map = anyxx::trait_model_map<mapable, std::vector<int>>;
         constexpr auto spec = ^^mapable<declaration, std::vector<int>, int>::size;
         constexpr auto target = find_candidate_in_target<spec, std::vector<int>, void, void const*>();
         static_assert(target == ^^std::vector<int>::size);
@@ -98,7 +96,7 @@ TEST_CASE("anyxx26 const correctness overloading trait_as") {
 
     {
         std::vector<int> v1{ 1, 2 };
-        auto const m = using_<std::vector<int>>::as<mapable, int>(v1);
+        auto const m = trait_as<std::vector<int>, mapable, int>(v1);
         decltype(auto) v = m.at(0);
         std::println("{}", v);
         static_assert(std::same_as<decltype(v), int const&>);
@@ -110,7 +108,7 @@ TEST_CASE("anyxx26 const correctness overloading trait_as") {
     }
     {
         std::vector<int> v1{ 1, 2 };
-        auto m = using_<std::vector<int>>::as<mapable, int>(v1);
+        auto m = trait_as<std::vector<int>, mapable, int>(v1);
         decltype(auto) v = m.at(0);
         std::println("{}", v);
         static_assert(std::same_as<decltype(v), int&>);
@@ -135,7 +133,7 @@ struct pointable_to {
     bool operator!=(Self const&) const;
 };
 }
-TEST_CASE("anyxx26 pointable_to trait_as") {
+TEST_CASE("anyxx pointable_to trait_as") {
     using tt = trait_as<int*, pointable_to, int>;
     consteval{
         constexpr auto interface_specs_with_target = std::define_static_array(make_interface_specs_with_target<int*, pointable_to, int>());

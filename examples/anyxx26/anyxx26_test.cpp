@@ -1,17 +1,15 @@
 #include <array>
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <bit_factory/v26/any.hpp>
 #include <bit_factory/v26/meta/print_members.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
-#include <bit_factory/v26/trait_as.hpp>
 #include <meta>
 #include <print>
 #include <string>
 #include <utility>
 #include <vector>
 
-using namespace anyxx26;
+using namespace anyxx;
 
 namespace {
 
@@ -27,12 +25,12 @@ void print(std::vector<any<stringable>> const& things) {
 }
 
 template <>
-struct stringable<anyxx26::model_map, int> {
+struct stringable<anyxx::model_map, int> {
     static std::string as_string(int const& self) { return std::to_string(self); }
 };
 
 template <>
-struct stringable<anyxx26::model_map, std::string> {
+struct stringable<anyxx::model_map, std::string> {
   static std::string as_string(std::string const& self) { return self; }
 };
 
@@ -40,7 +38,7 @@ struct foo {
   double f;
 };
 template <>
-struct stringable<anyxx26::model_map, foo> {
+struct stringable<anyxx::model_map, foo> {
   static std::string as_string(foo const& self) {
     return "foo: " + std::to_string(self.f);
   }
@@ -78,7 +76,7 @@ void dump_type(){
 template <template <typename, typename...> typename Trait, typename Concrete, typename... Args>
 void dump_impl(){
     constexpr auto ctx = std::meta::access_context::current();
-    template for(constexpr auto m : define_static_array(members_of(^^Trait<void*, Args..., anyxx26::declaration>, ctx))) {
+    template for(constexpr auto m : define_static_array(members_of(^^Trait<void*, Args..., anyxx::declaration>, ctx))) {
         if constexpr(has_identifier(m) && is_function(m)) {
             constexpr auto fi = find_function_impl<^^Trait, Concrete, m, Args...>();
             std::println("{} -> {}", std::meta::display_string_of(m), std::meta::display_string_of(fi));
@@ -101,7 +99,7 @@ consteval std::meta::info test_make_dyn_facade_call() {
 
 }
 
-TEST_CASE("anyxx26 make_dyn_facade_call") {
+TEST_CASE("anyxx make_dyn_facade_call") {
   using facade_call = [:test_make_dyn_facade_call<any_base<stringable, anyxx::cref>>():];
   struct dummy_dyn : any_base<stringable, anyxx::cref>, facade_call {
     using any_base<stringable, anyxx::cref>::any_base;
@@ -114,7 +112,7 @@ TEST_CASE("anyxx26 make_dyn_facade_call") {
   CHECK(s == "4711");
 }
 
-TEST_CASE("anyxx26 hello world") {
+TEST_CASE("anyxx hello world") {
 
   //dump_all<parent_of(^^stringable<void*>)>();
   //dump_type<stringable<void*>>();
@@ -147,7 +145,7 @@ struct add1 {
 };
 }  // namespace
 
-TEST_CASE("anyxx26 mutable hello world") {
+TEST_CASE("anyxx mutable hello world") {
   //dump_type<addable<void*>>();
   //dump_impl<addable, add1>();
 
@@ -178,7 +176,7 @@ struct base_and_derived {
 
 }  // namespace
 
-TEST_CASE("anyxx26 derived trait") {
+TEST_CASE("anyxx derived trait") {
 
   base_and_derived a1{"a1"};
   auto dyn1 = any<base_trait>{a1};
@@ -206,31 +204,31 @@ TEST_CASE("anyxx26 derived trait") {
   CHECK(dyn6.basef() == "base a3");
 }
 
-TEST_CASE("anyxx26 v_table_data") {
+TEST_CASE("anyxx v_table_data") {
 
   base_and_derived a1{ "a1" };
-  any<anyxx26::save_observable> d1{a1};
-  //meta::print_members<any<anyxx26::save_observable>>();
-  //meta::print_members<any<anyxx26::save_observable>::v_table_t::fptrs_t>();
+  any<anyxx::save_observable> d1{a1};
+  //meta::print_members<any<anyxx::save_observable>>();
+  //meta::print_members<any<anyxx::save_observable>::v_table_t::fptrs_t>();
   std::println("{}", d1.v_table_->type_info_->name());
   if(auto p = unerase_cast<base_and_derived>(d1)){
       CHECK(p->name == "a1");
   } else{
       CHECK(false);
   }
-  [[maybe_unused]] constexpr auto member_type = ^^anyxx26::save_observable<declaration, declaration>::type_info_::type;
+  [[maybe_unused]] constexpr auto member_type = ^^anyxx::save_observable<declaration, declaration>::type_info_::type;
   static_assert(std::meta::is_type(member_type));
   static_assert(std::meta::is_type_alias(member_type));
   static_assert(std::meta::is_pointer_type(member_type));
   constexpr auto ctx = std::meta::access_context::current();
-  constexpr static auto members1 = define_static_array(members_of(^^anyxx26::save_observable<declaration, declaration>, ctx));
+  constexpr static auto members1 = define_static_array(members_of(^^anyxx::save_observable<declaration, declaration>, ctx));
   constexpr auto type_info_struct_meta = members1[0];
   using type = [:type_info_struct_meta:]::type;
   static_assert(std::meta::is_type(^^type));
   static_assert(std::meta::is_type_alias(^^type));
   static_assert(std::meta::is_pointer_type(^^type));
   static_assert(dealias(^^type) == ^^std::type_info const*);
-  static_assert(std::same_as<type, anyxx26::save_observable<declaration, declaration>::type_info_::type>);
+  static_assert(std::same_as<type, anyxx::save_observable<declaration, declaration>::type_info_::type>);
   //constexpr auto member_type1 = ^^[:type_info_struct_meta:]::type;
 }
 
@@ -268,7 +266,7 @@ struct add_test {
 
 using int_ptr = int*;
 template <>
-struct operators<anyxx26::model_map, int_ptr> {
+struct operators<anyxx::model_map, int_ptr> {
     static bool equal(int_ptr const& self, int_ptr const& other) {
         return self == other;
     }
@@ -276,14 +274,14 @@ struct operators<anyxx26::model_map, int_ptr> {
 
 }
 
-TEST_CASE("anyxx26 operators") {
+TEST_CASE("anyxx operators") {
     {
         any<operators> ops{add_test{}};
         auto r1 = ops + 1;
         static_assert(^^decltype(r1) == ^^decltype(ops));
         CHECK(unerase_cast<add_test>(r1)->i == 1);
-        //anyxx26::meta::print_members<any<operators>::v_table_t::fptrs_t>();
-        anyxx26::meta::print_members<decltype(any<operators, anyxx::val<>>::op_plus_plus)>();
+        //anyxx::meta::print_members<any<operators>::v_table_t::fptrs_t>();
+        anyxx::meta::print_members<decltype(any<operators, anyxx::val<>>::op_plus_plus)>();
         auto& r2 = ++r1;
         CHECK(&unerase_cast<add_test>(r1)->i != &unerase_cast<add_test>(ops)->i);
         CHECK(&unerase_cast<add_test>(r1)->i == &unerase_cast<add_test>(r2)->i);

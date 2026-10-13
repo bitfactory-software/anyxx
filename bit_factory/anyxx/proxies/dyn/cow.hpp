@@ -137,7 +137,7 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
     if (!v.unique()) {
       if constexpr (is_copy_constructor_v_table<VTable>) {
         auto holder_size =
-            sizeof(cow::holder<>) - sizeof(void*) + model_size(v_table).size;
+            sizeof(cow::holder<>) - sizeof(void*) + get_model_size(v_table).size;
         auto holder =
             new (static_cast<cow::holder_base*>(::operator new(holder_size)))
                 cow::holder_base;

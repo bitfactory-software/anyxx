@@ -5,7 +5,7 @@
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
 
-namespace anyxx26 {
+namespace anyxx {
 
 template <typename TraitAs, std::meta::info Spec>
 consteval std::meta::info translate_trait_as_return_type() {
@@ -63,4 +63,4 @@ constexpr decltype(auto) forward_trait_as_param(Arg arg) {
     }
 }
 
-}  // namespace anyxx26::meta
+}  // namespace anyxx::meta

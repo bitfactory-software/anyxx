@@ -5,7 +5,7 @@
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
 
-namespace anyxx26 {
+namespace anyxx {
 
 consteval bool is_const_function(std::meta::info f) {
     if(is_static_member(f)) {
@@ -15,4 +15,4 @@ consteval bool is_const_function(std::meta::info f) {
     }
 }
 
-}  // namespace anyxx26::meta
+}  // namespace anyxx::meta

@@ -12,7 +12,7 @@
 #include <string>   
 #include <algorithm>
 
-namespace anyxx26 {
+namespace anyxx {
 
 
 template <typename AnyBase, bool const_, std::meta::info f, std::size_t v_table_index, typename R, typename... Args>
@@ -29,7 +29,7 @@ constexpr R dyn_facade_call(auto&& self, Args... args) {
     auto v_table_ptr = base->v_table_;
     using fptrs_t = typename v_table_t::fptrs_t;
     auto fptrs = static_cast<fptrs_t*>(v_table_ptr);
-    auto constexpr vf = anyxx26::meta::get_data_member_by_id(^^fptrs_t, v_table_name_of(f, v_table_index));
+    auto constexpr vf = anyxx::meta::get_data_member_by_id(^^fptrs_t, v_table_name_of(f, v_table_index));
     auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
     if constexpr(std::same_as<typename[:return_type_of(f):], declaration&>) {
         if constexpr(const_) {
@@ -112,4 +112,4 @@ consteval std::meta::info make_dyn_facade() {
     return meta::make_struct_with(dyn_facade_overloaded_calls<AnyBase>());
 };
 
-}  // namespace anyxx26
+}  // namespace anyxx

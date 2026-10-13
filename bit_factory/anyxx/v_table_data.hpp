@@ -112,8 +112,8 @@ inline void deallocate(T v_table, mutable_void data) {
   }
 }
 
-inline model_size_t model_size(std::nullptr_t) { return {0, true}; }
-inline model_size_t model_size(is_model_size_v_table auto* v_table) {
+inline model_size_t get_model_size(std::nullptr_t) { return {0, true}; }
+inline model_size_t get_model_size(is_model_size_v_table auto* v_table) {
   return v_table ? v_table->model_size : model_size_t{0, true};
 }
 inline mutable_void copy_construct_at(is_copy_constructor_v_table auto* v_table,
@@ -134,7 +134,7 @@ inline mutable_void move_construct(is_move_constructor_v_table auto* v_table,
   return move_construct_at(v_table, allocate(v_table), from);
 }
 template <typename T>
-inline void delete_(T v_table, mutable_void& data) noexcept {
+inline void invoke_delete_(T v_table, mutable_void& data) noexcept {
   if (!data) return;
   if constexpr (!std::same_as<T, std::nullptr_t>) {
     assert(v_table);

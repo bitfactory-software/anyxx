@@ -4,7 +4,7 @@
 #include <bit_factory/v26/anys/range/iterators.hpp>
 #include <ranges>
 
-namespace anyxx26 {
+namespace anyxx {
 
 template <typename Sentinel, typename Iterator>
 struct sentinel_for{

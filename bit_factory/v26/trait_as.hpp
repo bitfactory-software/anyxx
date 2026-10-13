@@ -5,7 +5,7 @@
 #include <bit_factory/v26/trait_as/trait_facade.hpp>
 #include <meta>
 
-namespace anyxx26 {
+namespace anyxx {
 
 template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
 class trait_as : public[:make_trait_facade<V, Trait, Args...>():], 
@@ -21,11 +21,11 @@ class trait_as : public[:make_trait_facade<V, Trait, Args...>():],
     friend constexpr V& get_value(trait_as& self) { return self.value_; };
 };
 
-template <typename V>
-struct using_ {
-  template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-  using as = trait_as<V, Trait, Args...>;
-};
+//template <typename V>
+//struct using_ {
+//  template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+//  using as = trait_as<V, Trait, Args...>;
+//};
 
 template <template <is_trait, typename, typename...> typename Trait, typename... Args>
 constexpr auto as(auto&& value){
@@ -98,4 +98,4 @@ __dyn_OP_MUTATING(op_greater_greater_equals, >>=)
 #undef __dyn_OP0
 #undef __dyn_OP0_MUTATING
 
-}  // namespace anyxx26
+}  // namespace anyxx

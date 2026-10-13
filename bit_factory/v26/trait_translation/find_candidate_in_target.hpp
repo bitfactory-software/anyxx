@@ -5,7 +5,7 @@
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/trait_translation/is_defaulted_function_spec.hpp>
 
-namespace anyxx26 {
+namespace anyxx {
 
 template <std::meta::info spec, typename Target, typename R, typename VoidSelf, typename... Args>
 consteval std::meta::info find_candidate_in_target() {
@@ -43,4 +43,4 @@ consteval std::meta::info find_candidate_in() {
     return[:find_candidate_in_target_f:]();
 }
 
-}  // namespace anyxx26
+}  // namespace anyxx

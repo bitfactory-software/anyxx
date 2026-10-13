@@ -6,7 +6,7 @@
 #include <bit_factory/v26/meta/utilities.hpp>
 #include <bit_factory/v26/trait_translation/spec.hpp>
 
-namespace anyxx26 {
+namespace anyxx {
 
 consteval std::meta::info make_v_table_fptr_param_type(bool self, std::meta::info p) {
     auto type = type_of(p);
@@ -73,4 +73,4 @@ consteval std::meta::info make_v_table_members_type() {
     return meta::make_struct_with(fptrs);
 }
 
-}  // namespace anyxx26
+}  // namespace anyxx

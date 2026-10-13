@@ -2,7 +2,7 @@
 
 #include <bit_factory/v26/any/keywords.hpp>
 
-namespace anyxx26 {
+namespace anyxx {
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 concept has_deduced_typenames = requires { typename Trait<declaration, declaration, Args...>::typenames; };
@@ -18,4 +18,4 @@ consteval std::meta::info compute_deduced_typenames() {
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 using deduced_typenames = [:compute_deduced_typenames<Trait, Args...>():];
 
-}  // namespace anyxx26
+}  // namespace anyxx

@@ -1,12 +1,11 @@
-#include <bit_factory/v26/any.hpp>
-#include <bit_factory/anyxx/any_get_type_info.hpp>
+#include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <any>
 #include <typeindex>
 
-using namespace anyxx26;
+using namespace anyxx;
 
-TEST_CASE("anyxx26 std any equivalents") {
+TEST_CASE("anyxx std any equivalents") {
   {
     std::any a1 = 42;
     CHECK(*std::any_cast<int>(&a1) == 42);

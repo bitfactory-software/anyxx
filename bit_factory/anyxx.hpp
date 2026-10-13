@@ -46,6 +46,8 @@
 #include <bit_factory/anyxx/proxies/static/using_cref.hpp>
 #include <bit_factory/anyxx/proxies/static/using_.hpp>
 #ifdef ANYXX_26
+#include <bit_factory/v26/any.hpp>
+#include <bit_factory/v26/trait_as.hpp>
 #else
 #include <bit_factory/anyxx/proxies/static/vany.hpp>
 #include <bit_factory/v23/any.hpp>

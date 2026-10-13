@@ -10,7 +10,7 @@
 #include <string>   
 #include <algorithm>
 
-namespace anyxx26 {
+namespace anyxx {
 
 struct overload_set_spec {
     std::string name;
@@ -40,4 +40,4 @@ consteval overload_sets_spec make_overload_sets_specs() {
 }
 
 
-}  // namespace anyxx26
+}  // namespace anyxx

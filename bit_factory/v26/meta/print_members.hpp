@@ -4,7 +4,7 @@
 #include <print>
 #include <bit_factory/v26/meta/utilities.hpp>
 
-namespace anyxx26::meta {
+namespace anyxx::meta {
 
 template <typename T>
 void print_members(std::string const& indent = {}) {
@@ -47,4 +47,4 @@ void print_members(std::string const& indent = {}) {
   }
 }
 
-}  // namespace anyxx26::meta
+}  // namespace anyxx::meta

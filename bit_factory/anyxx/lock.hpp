@@ -11,14 +11,12 @@ namespace anyxx {
 
 /// \brief Lock a shared \ref any.
 /// \ingroup casts
-template <is_any FromAny>
+template <is_any ToAny, is_any FromAny>
   requires std::same_as<typename FromAny::proxy_t, weak>
 auto lock(FromAny const& from_interface) {
-  using to_any_t = any<typename FromAny::trait_t, shared>;
-  static_assert(is_any<to_any_t>);
-  using return_t = std::optional<to_any_t>;
+  using return_t = std::optional<ToAny>;
   if (auto locked = get_proxy(from_interface).lock())
-    return return_t{to_any_t{std::move(locked), get_v_table(from_interface)}};
+    return return_t{ ToAny{std::move(locked), get_v_table(from_interface)}};
   return return_t{};
 }
 

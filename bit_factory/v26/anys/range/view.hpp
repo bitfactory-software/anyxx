@@ -3,7 +3,7 @@
 #include <bit_factory/v26/anys/range/view_base.hpp>
 #include <bit_factory/v26/anys/range/sentinels.hpp>
 
-namespace anyxx26 {
+namespace anyxx {
 
 template <is_trait Trait, typename Self, typename Category, typename Value, typename Ref = Value&>
 struct view : view_base<Trait, Self, Category, Value, Ref> {

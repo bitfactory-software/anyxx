@@ -3,6 +3,7 @@
 #include <bit_factory/anyxx/config.hpp>
 
 #include <bit_factory/anyxx/any_concept.hpp>
+#include <bit_factory/anyxx/any_forward.hpp>
 
 namespace anyxx {
 
@@ -40,7 +41,8 @@ inline auto get_proxy_ptr(Any&& any) {
 template <typename To>
   requires(!is_any<To>)
 auto unchecked_v_table_downcast_to(auto* v_table) {
-  return static_cast<To*>(v_table);
+    auto void_p = static_cast<void*>(v_table);
+    return static_cast<To*>(void_p);
 }
 template <typename To>
   requires is_any<To>
@@ -60,11 +62,6 @@ inline To unchecked_downcast_to(From from)
 {
   return To{std::move(from.proxy_),
             unchecked_v_table_downcast_to<To>(get_v_table(from))};
-}
-
-template <typename Trait, is_proxy Proxy>
-inline auto release_v_table(any<Trait, Proxy>& from) {
-  return from.release_v_table();
 }
 
 /// \defgroup casts Casts

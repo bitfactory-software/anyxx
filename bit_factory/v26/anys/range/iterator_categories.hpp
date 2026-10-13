@@ -3,7 +3,7 @@
 #include <bit_factory/v26/any.hpp>
 #include <bit_factory/v26/anys/range/iterators.hpp>
 
-namespace anyxx26 {
+namespace anyxx {
 
 struct input {
     template <typename Self, typename Trait, typename Value, typename Ref = Value&>

@@ -13,7 +13,7 @@
 #include <bit_factory/v26/trait_translation/trait_facade_decorator.hpp>
 #include <meta>
 
-namespace anyxx26 {
+namespace anyxx {
 
 template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info static_facade_named_overloaded_calls(overload_set_spec_with_target const& spec){
@@ -40,4 +40,4 @@ consteval std::meta::info make_trait_facade() {
     return meta::make_struct_with(static_facade_overloaded_calls<V, Trait, Args...>());
 };
 
-}  // namespace anyxx26
+}  // namespace anyxx

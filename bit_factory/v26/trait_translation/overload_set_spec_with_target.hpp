@@ -8,7 +8,7 @@
 #include <meta>
 #include <vector>
 
-namespace anyxx26 {
+namespace anyxx {
 
 struct interface_spec_with_target : interface_spec {
     std::meta::info target;
@@ -58,4 +58,4 @@ consteval overload_sets_spec_with_target make_overload_sets_specs_with_target() 
     return specs;
 }
 
-}  // namespace anyxx26
+}  // namespace anyxx

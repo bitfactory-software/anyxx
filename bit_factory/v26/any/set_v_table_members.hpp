@@ -13,7 +13,7 @@
 #include <utility>
 #include <vector>
 
-namespace anyxx26 {
+namespace anyxx {
 
 template <std::meta::info Member, typename TypedSelf, typename R, typename VoidSelf, typename... Args>
 constexpr R invoke_member(VoidSelf self, Args... args) {
@@ -216,7 +216,7 @@ consteval std::meta::info make_set_base_v_table_members();
 template <typename VTable, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, typename Concrete, std::meta::info FunctionPointers>
 void set_v_table_members(VTable* v_table) {
     template for(constexpr auto v_table_spec : define_static_array(get_interface_specs(^^typename VTable::trait_declaration_t))){
-        constexpr auto v_table_entry = anyxx26::meta::get_data_member_by_id(FunctionPointers, v_table_name_of(v_table_spec));
+        constexpr auto v_table_entry = anyxx::meta::get_data_member_by_id(FunctionPointers, v_table_name_of(v_table_spec));
         if constexpr(is_v_table_data(v_table_spec)) {
             v_table->[:v_table_entry:] = [:v_table_spec.member:]::template init<Concrete>(v_table);
         } else {
@@ -228,4 +228,4 @@ void set_v_table_members(VTable* v_table) {
     }
 }
 
-}  // namespace anyxx26
+}  // namespace anyxx

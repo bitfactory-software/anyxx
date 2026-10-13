@@ -155,7 +155,7 @@ struct proxy_trait<val<SmallObjectSize, Nullable>>
               copy_construct_at(v_table, local_data, data_ptr);
               return local_data;
             }},
-        v, v_table->model_size);
+        v, get_model_size(v_table));
     return v;
   }
 
@@ -214,7 +214,7 @@ struct proxy_trait<val<SmallObjectSize, Nullable>>
               t = std::move(f);
               return (mutable_void)&t;
             }},
-        to, model_size(v_table_to), from, v_table_from->model_size);
+        to, get_model_size(v_table_to), from, get_model_size(v_table_from));
     from.ptr_ = nullptr;
   }
   // TODO implement move from unique
@@ -229,7 +229,7 @@ struct proxy_trait<val<SmallObjectSize, Nullable>>
   //                              return move_construct(v_table,
   //                              local.data());
   //                            }},
-  //                  v, v_table->model_size);
+  //                  v, get_model_size(v_table));
   //  proxy_trait<unique>::move_to(to, to_v_table, unique{data_ptr}, v_table);
   //}
 
@@ -290,7 +290,7 @@ struct proxy_trait<val<SmallObjectSize, Nullable>>
                     t = f;
                     return (mutable_void)&t;
                   }},
-        to, model_size(to_v_table), from, from_v_table->model_size);
+        to, get_model_size(to_v_table), from, get_model_size(from_v_table));
   }
 
   static void destroy(val<SmallObjectSize, Nullable>& v, auto* v_table) {
@@ -303,7 +303,7 @@ struct proxy_trait<val<SmallObjectSize, Nullable>>
               if (v_table) destruct(v_table, local.data());
             },
             [&]([[maybe_unused]] local_data<true, SmallObjectSize>& local) {}},
-        v, model_size(v_table));
+        v, get_model_size(v_table));
   }
 
   static void* get_proxy_ptr_in(val<SmallObjectSize, Nullable> const& v,
@@ -321,7 +321,7 @@ struct proxy_trait<val<SmallObjectSize, Nullable>>
                 [[maybe_unused]] local_data<Trivial, SmallObjectSize>& local) {
               return v.ptr_;
             }},
-        v, model_size(v_table));
+        v, get_model_size(v_table));
   }
 
   template <typename ConstructedWith>

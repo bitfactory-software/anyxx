@@ -60,7 +60,7 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
     mutable_void old = nullptr;
     std::swap(to.ptr, old);
     std::swap(to.ptr, from.ptr);
-    delete_(v_table_to, old);
+    invoke_delete_(v_table_to, old);
   }
 
   template <typename VTable>
@@ -75,7 +75,7 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
 
   static void destroy(unique& u, is_delete_v_table auto* v_table) {
     assert(v_table || !u.ptr);
-    if (v_table) delete_(v_table, u.ptr);
+    if (v_table) invoke_delete_(v_table, u.ptr);
   }
 
   template <typename ConstructedWith>

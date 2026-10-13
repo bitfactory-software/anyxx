@@ -5,7 +5,7 @@
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
 
-namespace anyxx26 {
+namespace anyxx {
 
 template <typename R, typename V>
 consteval std::meta::info translate_impl_return_type() {
@@ -81,4 +81,4 @@ consteval std::meta::info translate_facade_return_type(std::meta::info return_ty
     }
 }
 
-}  // namespace anyxx26::meta
+}  // namespace anyxx::meta

@@ -8,7 +8,7 @@
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 
-using namespace anyxx26;
+using namespace anyxx;
 
 static_assert(has_deduced_typenames<input_iterator, int>);
 static_assert(has_identifier(compute_deduced_typenames<input_iterator, int>()));

@@ -124,11 +124,11 @@ TEST_CASE("assign construct borrow_as") {
                                         from_t::v_table_t>);
     auto vv1 = from_t{std::make_shared<std::string>(s1)};
     auto vv2 = borrow_as<to_t>(vv1);
-    CHECK(get_proxy_ptr(vv1) == get_proxy_ptr(*lock(*vv2)));
+    CHECK(get_proxy_ptr(vv1) == get_proxy_ptr(*lock<from_t>(*vv2)));
     to_t vv3 = vv1;
-    CHECK(get_proxy_ptr(*lock(vv3)) == get_proxy_ptr(vv1));
+    CHECK(get_proxy_ptr(*lock<from_t>(vv3)) == get_proxy_ptr(vv1));
     to_t vv4{vv1};
-    CHECK(get_proxy_ptr(*lock(vv4)) == get_proxy_ptr(vv1));
+    CHECK(get_proxy_ptr(*lock<from_t>(vv4)) == get_proxy_ptr(vv1));
   }
   {
     using from_t = any<dynamic_copyable>;

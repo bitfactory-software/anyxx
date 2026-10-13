@@ -1,12 +1,10 @@
 #pragma once
 
-#include <array>
-#include <bit_factory/anyxx/any_concept.hpp>
 #include <bit_factory/anyxx/observeable.hpp>
 #include <bit_factory/anyxx/proxies/proxy_concept.hpp>
 #include <meta>
 
-namespace anyxx26 {
+namespace anyxx {
 
 struct declaration {};
 struct model_map {};
@@ -21,9 +19,6 @@ struct v_table;
 
 template <template <is_trait, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct any_base;
-
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-struct any;
 
 template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
 class trait_as;
@@ -74,46 +69,5 @@ consteval std::meta::info trait_declaration(){
 template<template<typename, typename...> typename TraitTemplate, typename... Args>
 using trait_declaration_t = TraitTemplate<declaration, declaration, Args...>;
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-concept specifies_default_proxy_t = requires { typename trait_declaration_t<Trait, Args...>::default_proxy_t; };
-
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-consteval std::meta::info compute_default_proxy_t() {
-    if constexpr(specifies_default_proxy_t<Trait, Args...>) {
-        return ^^typename trait_declaration_t<Trait, Args...>::default_proxy_t;
-    } else {
-        return ^^anyxx::cref;
-    }
-}
-
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-using default_proxy_t = [:compute_default_proxy_t<Trait, Args...>():];
-
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-using dyn_self_val_t = any<Trait, Args...>;
-
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-using dyn_self_cref_t = any<Trait, anyxx::cref, Args...>;
-
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-using dyn_self_mutref_t = any<Trait, anyxx::mutref, Args...>;
-
 struct empty_t {};
-
-template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
-struct any_base;
-
-template <typename HasTraitDeclaration>
-concept has_trait_declaration =
-    requires {
-      typename HasTraitDeclaration::trait_declaration_t;
-    };
-
-}  // namespace anyxx26
-
-namespace anyxx {
-template <anyxx26::has_trait_declaration Derived,
-          anyxx26::has_trait_declaration Base>
-constexpr bool is_any_derived_from_v<Derived, Base> =
-    std::derived_from<typename Derived::trait_declaration_t, typename Base::trait_declaration_t>;
 }

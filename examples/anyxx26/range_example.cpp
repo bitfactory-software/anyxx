@@ -9,9 +9,9 @@
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 
-using namespace anyxx26;
+using namespace anyxx;
 
-TEST_CASE("anyxx26 iterators sentinel equality") {
+TEST_CASE("anyxx iterators sentinel equality") {
 
 	std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
 
@@ -107,7 +107,7 @@ private:
 };
 }
 
-TEST_CASE("anyxx26 iterators ranges") {
+TEST_CASE("anyxx iterators ranges") {
 
 	std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
     std::array<int, 5> const const_arr{ 1, 2, 3, 4, 5 };

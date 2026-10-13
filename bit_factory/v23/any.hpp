@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bit_factory/anyxx/any_concept.hpp>
+#include <bit_factory/anyxx/any_constructibile_for.hpp>
 #include <bit_factory/anyxx/proxies/proxy_concept.hpp>
 #include <bit_factory/anyxx/proxies/dyn/borrowable_from.hpp>
 #include <bit_factory/anyxx/proxies/dyn/moveable_from.hpp>
@@ -11,13 +12,6 @@
 #include <bit_factory/v23/v_table_holder/v_table_holder_forward.hpp>
 
 namespace anyxx {
-
-template <typename TraitDerived, is_proxy ProxyDerived, typename TraitBase,
-          is_proxy ProxyBase>
-constexpr bool is_any_derived_from_v<any<TraitDerived, ProxyDerived>,
-                                     any<TraitBase, ProxyBase>> =
-    std::derived_from<typename any<TraitDerived, ProxyDerived>::v_table_t,
-                      typename any<TraitBase, ProxyBase>::v_table_t>;
 
 /// \brief The core class template to control dispatch for external
 /// polymorphism
@@ -212,6 +206,10 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
   friend inline To unchecked_downcast_to(From from)
     requires(is_any_derived_from<To, From>);
 
+  friend inline auto release_v_table(any& from) {
+      return from.release_v_table();
+  }
+
   explicit operator bool() const
     requires proxy_trait_t::allow_any_default_constructibile
   {
@@ -280,6 +278,7 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
     return std::forward<Self>(self);
   }
 };
+
 
 /// A template to get an \ref any trait for a type
 /// See also \ref using_::as.

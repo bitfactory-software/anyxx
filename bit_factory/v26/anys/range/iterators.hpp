@@ -3,7 +3,7 @@
 #include <bit_factory/v26/any.hpp>
 #include <ranges>
 
-namespace anyxx26 {
+namespace anyxx {
 
 template <is_trait Trait, typename Self, typename Value, typename Ref = Value&>
 struct input_iterator : save_copyable<Trait, Self> {

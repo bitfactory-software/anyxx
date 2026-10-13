@@ -1,6 +1,7 @@
+#include <bit_factory/anyxx.hpp>
+
 #include <algorithm>
 #include <bit_factory/v26/anys/range/iterators.hpp>
-#include <bit_factory/v26/trait_as.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
 #include <list>
@@ -49,7 +50,7 @@ struct node : node_base {
 };
 }  // namespace
 
-namespace anyxx26 {
+namespace anyxx {
 template <typename ValueType, typename Reference>
 struct input_iterator<model_map, node_base*, ValueType, Reference> {
     static node_base*& op_plus_plus(node_base*& x) {
@@ -63,11 +64,11 @@ struct input_iterator<model_map, node_base const*, ValueType, Reference> {
     }
 };
 
-}  // namespace anyxx26
+}  // namespace anyxx
 namespace {
 
-using node_iterator = anyxx26::using_<node_base*>::as<anyxx26::forward_iterator, node_base>;
-using node_const_iterator = anyxx26::using_<node_base const*>::as<anyxx26::forward_iterator, node_base const>;
+using node_iterator = anyxx::trait_as<node_base*, anyxx::forward_iterator, node_base>;
+using node_const_iterator = anyxx::trait_as<node_base const*, anyxx::forward_iterator, node_base const>;
 static_assert(std::forward_iterator<node_iterator>);
 static_assert(std::forward_iterator<node_const_iterator>);
 

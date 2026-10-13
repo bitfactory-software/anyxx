@@ -1,5 +1,4 @@
 ﻿#include <bit_factory/v26/v_table_data/dispatch_table.hpp>
-#include <bit_factory/v26/any.hpp>
 #include <bit_factory/anyxx/ext/dispatch.hpp>
 #include <bit_factory/anyxx.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
@@ -11,13 +10,13 @@ using namespace anyxx;
 
 namespace _21_Tree_TE_interface_dispatch {
 
-template <anyxx26::is_trait Trait, typename Self>
-struct node : anyxx26::copyable<Trait, Self> {
+template <anyxx::is_trait Trait, typename Self>
+struct node : anyxx::copyable<Trait, Self> {
     using default_proxy_t = anyxx::cow;
-    using dispatch_table [[= anyxx26::v_table_data]] = anyxx26::dispatch_table;
+    using dispatch_table [[= anyxx::v_table_data]] = anyxx::dispatch_table;
 };
 
-using any_node = anyxx26::any<node>;
+using any_node = anyxx::any<node>;
 static_assert(is_open_dispatch_v_table<any_node::v_table_t>);
 
 struct Plus {

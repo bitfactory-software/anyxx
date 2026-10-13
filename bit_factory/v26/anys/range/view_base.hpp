@@ -4,7 +4,7 @@
 #include <bit_factory/v26/anys/range/iterators.hpp>
 #include <bit_factory/v26/anys/range/iterator_categories.hpp>
 
-namespace anyxx26 {
+namespace anyxx {
 
 template <is_trait Trait, typename Self, typename Category, typename Value, typename Ref = Value&>
 struct view_base : copyable<Trait, Self> {

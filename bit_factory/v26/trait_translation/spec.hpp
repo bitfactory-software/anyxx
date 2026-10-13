@@ -5,7 +5,7 @@
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
 
-namespace anyxx26 {
+namespace anyxx {
 
 struct interface_spec {
   std::meta::info declaration_trait;
@@ -64,4 +64,4 @@ consteval std::vector<interface_spec> get_interface_specs(std::meta::info declar
     }
 }
 
-}  // namespace anyxx26
+}  // namespace anyxx

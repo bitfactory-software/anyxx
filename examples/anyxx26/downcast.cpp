@@ -1,13 +1,12 @@
 #include <array>
 #include <bit_factory/anyxx.hpp>
-#include <bit_factory/v26/any.hpp>
 #include <bit_factory/v26/anys/function.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <format>
 #include <string>
 #include <vector>
 
-using namespace anyxx26;
+using namespace anyxx;
 
 namespace {
 
@@ -47,7 +46,7 @@ std::string decoration_handler(any<base> const& thing) {
 
 }  // namespace
 
-TEST_CASE("anyxx26 downcast") {
+TEST_CASE("anyxx downcast") {
 
     int i = 4711;
     std::string s = "hello world";

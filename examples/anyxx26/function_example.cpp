@@ -2,7 +2,7 @@
 #include <bit_factory/v26/meta/print_members.hpp>
 #include <catch2/catch_test_macros.hpp>
 
-using namespace anyxx26;
+using namespace anyxx;
 
 namespace {
 
@@ -17,7 +17,7 @@ concept is_callable = requires(Func const& f, int i) {
 
 }  // namespace
 
-TEST_CASE("anyxx26 std function equivalents") {
+TEST_CASE("anyxx std function equivalents") {
   {
     any<function, int(int) const> f{ [](int x) { return x + 2; }};
     CHECK(f(40) == 42);

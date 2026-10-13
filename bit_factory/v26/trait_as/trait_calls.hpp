@@ -4,7 +4,7 @@
 #include <bit_factory/v26/trait_translation/spec.hpp>
 #include <bit_factory/v26/trait_as/signature_translation.hpp>
 
-namespace anyxx26 {
+namespace anyxx {
 
 template <typename V, std::meta::info Target, std::meta::info Spec, typename TraitAs, typename... Args>
 struct const_trait_model_map_call {
@@ -270,4 +270,4 @@ consteval std::meta::info make_static_facade_call(interface_spec_with_target con
     }
 }
 
-}  // namespace anyxx26
+}  // namespace anyxx

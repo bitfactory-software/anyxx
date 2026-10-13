@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <cctype>
 
-namespace anyxx26::meta {
+namespace anyxx::meta {
 
 template<typename E, bool Enumerable = std::meta::is_enumerable_type(^^ E)>
     requires std::is_enum_v<E>
@@ -54,7 +54,7 @@ consteval std::string_view function_name_of(std::meta::info in) {
     if(has_identifier(in)) {
         return identifier_of(in);
     } else if(is_operator_function(in)) {
-        return anyxx26::meta::enum_to_string(operator_of(in));
+        return anyxx::meta::enum_to_string(operator_of(in));
     } else {
         return {};
     }
@@ -73,7 +73,7 @@ consteval std::meta::info get_type_of_single_public_base(std::meta::info trait_s
 }
 
 consteval bool is_op_spec(std::meta::info spec, std::meta::operators op){
-    if (has_identifier(spec) && identifier_of(spec) == anyxx26::meta::enum_to_string(op)){
+    if (has_identifier(spec) && identifier_of(spec) == anyxx::meta::enum_to_string(op)){
         return true;
     }
     if (is_operator_function(spec) && operator_of(spec) == op){
@@ -96,4 +96,4 @@ consteval std::meta::info get_member_by_function_name(std::meta::info in, std::s
     return {};
 }
 
-}  // namespace anyxx26::meta
+}  // namespace anyxx::meta
