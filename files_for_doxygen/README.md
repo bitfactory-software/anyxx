@@ -218,7 +218,7 @@ to provide custom behavior for unrelated types using traits.
 // -->
 
 #include <bit_factory/anyxx.hpp>
-#include <bit_factory/anyxx/open_dispatch/dispatch.hpp>
+#include <bit_factory/anyxx/ext/dispatch.hpp>
 #include <compare>
 #include <string>
 #include <sstream>
@@ -310,7 +310,7 @@ That trick initializes a static variable with automatic name at each usage site 
 #endif
 // -->
 #include <bit_factory/anyxx.hpp>
-#include <bit_factory/anyxx/open_dispatch/dispatch.hpp>
+#include <bit_factory/anyxx/ext/dispatch.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 #include <sstream>

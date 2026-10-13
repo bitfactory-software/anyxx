@@ -1,5 +1,5 @@
 #include <bit_factory/anyxx.hpp>
-#include <bit_factory/anyxx/open_dispatch/dispatch.hpp>
+#include <bit_factory/anyxx/ext/dispatch.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
