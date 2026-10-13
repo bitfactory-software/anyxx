@@ -23,11 +23,11 @@ concept is_typed_any = is_any<E> && requires(E e) {
   { E::is_const } -> std::convertible_to<bool>;
 };
 
-template <typename ConstructedWith, typename Proxy, typename Trait>
+template <typename ConstructedWith, typename Proxy, typename Any>
 concept constructibile_for =
 (proxy_trait<Proxy>::template is_constructibile_from<
     ConstructedWith>::value) ||
-    (erased_constructibile_for<ConstructedWith, Proxy, any<Trait, Proxy>> &&
+    (erased_constructibile_for<ConstructedWith, Proxy, Any> &&
         !is_proxy_holder<ConstructedWith> &&
         !is_typed_any<std::remove_cvref_t<ConstructedWith>>);
 

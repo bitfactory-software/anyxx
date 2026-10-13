@@ -73,7 +73,7 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
   /// \ref value.
   template <typename ConstructedWith>
   explicit(false) any(ConstructedWith&& constructed_with)  // NOLINT
-    requires constructibile_for<ConstructedWith, proxy_impl_t, trait_t> &&
+    requires constructibile_for<ConstructedWith, proxy_impl_t, any> &&
              (!std::same_as<any, std::decay_t<ConstructedWith>>) &&
              (!is_lifetime_bound<proxy_impl_t>)
       : proxy_(
@@ -86,7 +86,7 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
   template <typename ConstructedWith>
   explicit(false)
       any(ConstructedWith&& constructed_with LIFETIMEBOUND)  // NOLINT
-    requires constructibile_for<ConstructedWith, proxy_impl_t, trait_t> &&
+    requires constructibile_for<ConstructedWith, proxy_impl_t, any> &&
              (!std::same_as<any, std::decay_t<ConstructedWith>>) &&
              (is_lifetime_bound<proxy_impl_t>)
       : proxy_(
