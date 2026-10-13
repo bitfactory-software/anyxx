@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['borrow_5fas_0',['borrow_as',['../group__casts.html#ga57a33d0becfcd08748cf97fd2b51aa16',1,'anyxx']]]
+  ['clone_5fto_0',['clone_to',['../group__casts.html#gaf2b7730650bc77681cf299e2a6e77157',1,'anyxx']]]
 ];

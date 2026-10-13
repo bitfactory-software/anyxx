@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['explicit_0',['explicit',['../classanyxx_1_1any.html#ac954871f1b92aeb60ffbd85dcaa004ec',1,'anyxx::any::explicit(false) any(ConstructedWith &amp;&amp;const ructed_with)'],['../classanyxx_1_1any.html#ae1160f15169b99263d11e92c0e6d715f',1,'anyxx::any::explicit(false) any(ConstructedWith &amp;&amp;const ructed_with LIFETIMEBOUND)']]]
+  ['move_5fto_0',['move_to',['../group__casts.html#ga0ad81aaf23ab3d32a02a12cec57c0946',1,'anyxx']]]
 ];

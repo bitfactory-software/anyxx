@@ -219,7 +219,7 @@ $(function(){initNavTree('md_docs_2Traits__inner__working.html','',''); });
 <ul>
 <li><span class="tt">trait1_default_model_map&lt;T&gt;</span> provides a static implementation of the required trait functions (e.g., <span class="tt">fn1</span>), calling the corresponding member function on the underlying type.</li>
 <li><span class="tt">trait1_model_map&lt;T&gt;</span> inherits from the default model map, and is specialized for <span class="tt">std::variant</span> types to support visitation and recursive dispatch.</li>
-<li>For concrete types that are <span class="tt">std::variant</span>, this model map specialization dispatches to the active alternative, and recursively calls the appropriate model map for that alternative, or forwards the call if the alternative is itself an <span class="tt"><a class="el" href="classanyxx_1_1any.html" title="The core class template to control dispatch for external polymorphism.">anyxx::any</a></span>.</li>
+<li>For concrete types that are <span class="tt">std::variant</span>, this model map specialization dispatches to the active alternative, and recursively calls the appropriate model map for that alternative, or forwards the call if the alternative is itself an <span class="tt">anyxx::any</span>.</li>
 </ul>
 </li>
 <li><b>Open Dispatch Support</b>: <br  />
@@ -265,7 +265,7 @@ $(function(){initNavTree('md_docs_2Traits__inner__working.html','',''); });
 <li><b>Static Dispatch:</b> <br  />
  If the type is known at compile time, calls are forwarded directly to the concrete implementation.</li>
 <li><b>Dynamic Dispatch:</b> <br  />
- If the type is erased (e.g., stored in an <span class="tt"><a class="el" href="classanyxx_1_1any.html" title="The core class template to control dispatch for external polymorphism.">anyxx::any</a></span>), calls are routed through the vtable, which uses function pointers set up for the actual type stored.</li>
+ If the type is erased (e.g., stored in an <span class="tt">anyxx::any</span>), calls are routed through the vtable, which uses function pointers set up for the actual type stored.</li>
 <li><b>Open Dispatch:</b> <br  />
  The infrastructure supports open (multi-method) dispatch, allowing runtime selection of the correct function implementation based on the actual types involved.</li>
 </ul>

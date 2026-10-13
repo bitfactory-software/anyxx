@@ -1,7 +1,6 @@
 var annotated_dup =
 [
     [ "anyxx", null, [
-      [ "any", "classanyxx_1_1any.html", "classanyxx_1_1any" ],
       [ "hook", "classanyxx_1_1hook.html", null ],
       [ "key", "structanyxx_1_1key.html", null ],
       [ "factory", "classanyxx_1_1factory.html", null ],

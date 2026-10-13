@@ -1,6 +1,5 @@
 var anyxx_8hpp =
 [
-    [ "anyxx::any&lt; Trait, Proxy &gt;", "classanyxx_1_1any.html", "classanyxx_1_1any" ],
     [ "anyxx::key&lt; Tag &gt;", "structanyxx_1_1key.html", null ],
     [ "anyxx::factory&lt; Any, Key, Args &gt;", "classanyxx_1_1factory.html", null ],
     [ "anyxx::members&lt; InObject &gt;", "structanyxx_1_1members.html", null ],
