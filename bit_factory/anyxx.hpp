@@ -7,7 +7,9 @@
     /Zc:preprocessor (see CMakeLists.txt for example)
 */
 
+#include <bit_factory/anyxx/any_concept.hpp>
 #include <bit_factory/anyxx/compute_val_proxy_size.hpp>
+#include <bit_factory/anyxx/crosscast_runtime.hpp>
 #include <bit_factory/anyxx/dll_mode.hpp>
 #include <bit_factory/anyxx/errors/cast_error.hpp>
 #include <bit_factory/anyxx/errors/type_mismatch_error.hpp>
@@ -37,64 +39,10 @@
 
 namespace anyxx {
 
-class meta_data;
-
-/// Requirements for a trait type
-template <typename T>
-concept has_v_table = requires { typename T::v_table_t; };
-
 struct dynamic_castable;
 struct dynamic_deletable;
 struct dynamic_moveable;
 struct dynamic_copyable;
-template <typename Trait, is_proxy Proxy = typename Trait::default_proxy_t>
-class any;
-
-template <typename I>
-concept is_any_impl = is_proxy_holder_impl<I> &&
-                      requires(I::proxy_t ed) { typename I::v_table_t; };
-template <typename I>
-concept is_any = is_any_impl<std::decay_t<I>>;
-
-template <class E>
-concept is_typed_any = is_any<E> && requires(E e) {
-  typename E::proxy_trait_t;
-  typename E::value_t;
-  { E::is_const } -> std::convertible_to<bool>;
-};
-
-template <typename ConstructedWith, typename Proxy, typename Trait>
-concept constructibile_for =
-    (proxy_trait<Proxy>::template is_constructibile_from<
-        ConstructedWith>::value) ||
-    (erased_constructibile_for<ConstructedWith, Proxy, any<Trait, Proxy>> &&
-     !is_proxy_holder<ConstructedWith> &&
-     !is_typed_any<std::remove_cvref_t<ConstructedWith>>);
-
-static_assert(std::is_const_v<std::remove_reference_t<int const&>>);
-static_assert(!std::is_const_v<std::remove_reference_t<int&>>);
-static_assert(!std::is_const_v<std::remove_reference_t<int>>);
-
-// --------------------------------------------------------------------------------
-// meta data
-
-class meta_data;
-
-template <typename TYPE>
-auto& runtime_implementation();
-
-#ifdef ANY_DLL_MODE
-template <typename T>
-meta_data& get_meta_data();
-#else
-template <typename T>
-meta_data& get_meta_data() {
-  return runtime_implementation<std::decay_t<T>>();
-}
-#endif
-
-template <typename Proxy>
-using static_dispatch_t = typename proxy_trait<Proxy>::static_dispatch_t;
 
 template <typename Proxy, typename Trait>
 using proxy_model_map_t =
@@ -150,13 +98,6 @@ struct v_table_holder<Proxy, Trait> : v_table_deduced_type_t<Trait> {
   }
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
-
-template <typename VTable, typename Concrete>
-auto bind_v_table_to_meta_data() {
-  auto v_table = v_table_instance<VTable, Concrete>();
-  get_meta_data<Concrete>().register_v_table(v_table);
-  return v_table;
-}
 
 template <typename Proxy, typename Trait>
 concept is_proxy_compatible_with_trait =
@@ -680,26 +621,6 @@ concept is_open_dispatch_v_table = requires(VTable* v_table) {
   { v_table->dispatch_table } -> std::convertible_to<dispatch_table_t*>;
 };
 
-template <is_any ToAny, is_dynamic_castable_v_table FromVTable>
-  requires is_dynamic_castable_v_table<typename ToAny::v_table_t>
-auto query_v_table(FromVTable* from)
-    -> std::expected<typename ToAny::v_table_t*, anyxx::cast_error> {
-  using v_table_t = typename ToAny::v_table_t;
-  if (from->is_derived_from_(typeid(v_table_t)))
-    return reinterpret_cast<v_table_t*>(from);
-  if constexpr (is_meta_data_v_table<FromVTable>) {
-    if (auto meta_data = from->meta_data_; meta_data) {
-      return meta_data->template get_v_table<v_table_t>();
-    } else {
-      return std::unexpected(
-          anyxx::cast_error{typeid(v_table_t), *from->type_info_});
-    }
-  } else {
-    return std::unexpected(
-        anyxx::cast_error{typeid(v_table_t), *from->type_info_});
-  }
-}
-
 // --------------------------------------------------------------------------------
 // any parameter translation
 
@@ -1128,60 +1049,6 @@ TRAIT_EX_(dynamic_moveable, dynamic_castable, , , ,
           (using default_proxy_t = val<>;));
 
 TRAIT_EX_(dynamic_copyable, dynamic_moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
-
-class meta_data {
-  const std::type_info& type_info_;
-
-  struct i_table_entry {
-    void* v_table_ = nullptr;
-    std::type_index type_index_;
-
-    template <typename VTable>
-    i_table_entry(VTable* v_table)
-        : v_table_(v_table), type_index_(typeid(*v_table)) {}
-  };
-
-  std::vector<i_table_entry> i_table_;
-
- public:
-  template <typename CLASS>
-  explicit constexpr meta_data(std::in_place_type_t<CLASS>)
-      : type_info_(typeid(CLASS)) {}
-
-  constexpr const std::type_info& get_type_info() const { return type_info_; }
-
-  auto& get_i_table() { return i_table_; }
-  auto& get_i_table() const { return i_table_; }
-
-  template <typename VTable>
-  VTable* find_v_table() const {
-    if (auto found =
-            std::ranges::find(get_i_table(), std::type_index(typeid(VTable)),
-                              &i_table_entry::type_index_);
-        found != get_i_table().end())
-      return static_cast<VTable*>(found->v_table_);
-    return nullptr;
-  }
-
-  template <typename VTable>
-  std::expected<VTable*, cast_error> get_v_table() const {
-    if (auto v_table = find_v_table<VTable>(); v_table) return v_table;
-    return std::unexpected(
-        cast_error{.to = typeid(VTable), .from = get_type_info()});
-  }
-  template <typename VTable>
-  auto register_v_table(VTable* v_table) {
-    v_table->meta_data_ = this;
-    if (!find_v_table<VTable>()) i_table_.push_back({v_table});
-    return v_table;
-  }
-};
-
-template <typename TYPE>
-auto& runtime_implementation() {
-  static meta_data meta_data_{std::in_place_type<TYPE>};
-  return meta_data_;
-}
 
 // --------------------------------------------------------------------------------
 // hook

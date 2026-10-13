@@ -75,6 +75,9 @@ template <typename Proxy>
 concept is_lifetime_bound =
     is_proxy<Proxy> && proxy_trait<Proxy>::is_lifetime_bound;
 
+template <typename Proxy>
+using static_dispatch_t = typename proxy_trait<Proxy>::static_dispatch_t;
+
 template <bool ToIsConst, bool FromIsConst, bool FromIsWeak>
 concept const_correct_move_to_from =
     !FromIsWeak && ((ToIsConst == FromIsConst) || !FromIsConst);

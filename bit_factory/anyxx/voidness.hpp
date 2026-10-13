@@ -1,5 +1,7 @@
 #pragma once
 
+#include <concepts>
+
 namespace anyxx {
 
 using const_void = void const*;
