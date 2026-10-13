@@ -153,4 +153,25 @@ void check_type_match(is_type_info_v_table auto* v_table) {
   if (!type_match<U>(v_table)) throw type_mismatch_error("type mismatch");
 }
 
+template <typename Concrete>
+mutable_void invoke_move_constructor([[maybe_unused]] mutable_void placement,
+    [[maybe_unused]] mutable_void from) {
+    static_assert(std::is_move_constructible_v<Concrete>);
+    auto typed_placement = static_cast<Concrete*>(placement);
+    auto typed_from = static_cast<Concrete*>(from);
+    [[maybe_unused]] auto constructed =
+        std::construct_at<Concrete>(typed_placement, std::move(*typed_from));
+    assert(placement == constructed);
+    std::destroy_at(typed_from);
+    return placement;
+}
+
+template <typename Concrete>
+    requires std::copy_constructible<Concrete>
+mutable_void invoke_copy_constructor([[maybe_unused]] mutable_void placement,
+    [[maybe_unused]] const_void from) {
+    return std::construct_at<Concrete>(static_cast<Concrete*>(placement),
+        *static_cast<Concrete const*>(from));
+}
+
 }  // namespace anyxx
