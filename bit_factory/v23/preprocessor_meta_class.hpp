@@ -2,6 +2,8 @@
 
 #include <bit_factory/infra/config.hpp>
 #include <bit_factory/anyxx/ANY_UNPAREN.hpp>
+#include <bit_factory/v23/default_proxy.hpp>
+#include <bit_factory/v23/signature_handling.hpp>
 
 // --------------------------------------------------------------------------------
 // any meta class, derived from this gem:

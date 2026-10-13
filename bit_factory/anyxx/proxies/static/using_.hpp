@@ -49,7 +49,7 @@ struct proxy_trait<using_<V>> : basic_proxy_trait<using_<V>> {
   }
 
   static auto get_proxy_ptr_in(auto& val,
-                               [[maybe_unused]] observeable_v_table* v_table) {
+                               [[maybe_unused]] auto* v_table) {
     return val;
   }
 

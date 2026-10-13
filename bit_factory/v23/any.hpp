@@ -2,6 +2,11 @@
 
 #include <bit_factory/anyxx/any_concept.hpp>
 #include <bit_factory/anyxx/proxies/proxy_concept.hpp>
+#include <bit_factory/anyxx/proxies/dyn/borrowable_from.hpp>
+#include <bit_factory/anyxx/proxies/dyn/moveable_from.hpp>
+#include <bit_factory/anyxx/proxies/static/trait_class.hpp>
+#include <bit_factory/anyxx/proxies/static/using_cref.hpp>
+#include <bit_factory/anyxx/proxies/static/using_.hpp>
 #include <bit_factory/anyxx/voidness.hpp>
 #include <bit_factory/v23/v_table_holder/v_table_holder_forward.hpp>
 
