@@ -16,8 +16,7 @@
 namespace anyxx26 {
 
 template <typename Any>
-concept is_any = anyxx::is_any<Any> && 
-    requires { typename Any::trait_declaration_t; };
+concept is_any = anyxx::is_any<Any>;
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 constexpr decltype(auto) preprocess_constructed_with(auto&& constructed_with) {
