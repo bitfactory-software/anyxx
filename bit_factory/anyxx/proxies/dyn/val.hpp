@@ -1,11 +1,11 @@
 #pragma once
 
 #include <bit_factory/anyxx/proxies/basic_proxy_trait.hpp>
-#include <bit_factory/anyxx/proxies/proxy_concept.hpp>
 #include <bit_factory/anyxx/proxies/dyn/cow.hpp>
+#include <bit_factory/anyxx/proxies/proxy_concept.hpp>
 #include <bit_factory/anyxx/small_object_size.hpp>
-#include <bit_factory/anyxx/voidness.hpp>
 #include <bit_factory/anyxx/utilities.hpp>
+#include <bit_factory/anyxx/voidness.hpp>
 
 namespace anyxx {
 
@@ -31,8 +31,8 @@ struct local_data : std::array<std::byte, SmallObjectSize> {
 /// be constructed in place in the allocated memory with the other arguments
 /// forwarded
 /// \ingroup proxies
-template <typename Nullable = std::false_type,
-          std::size_t SmallObjectSize = small_object_size>
+template <std::size_t SmallObjectSize = small_object_size,
+          typename Nullable = std::false_type>
 struct val {
   union data_union {
     data_union(cow::holder_base* cow_holder) : heap(cow{cow_holder}) {}
@@ -69,7 +69,8 @@ struct val {
   }
 };
 
-using nullable_val = val<std::true_type>;
+template <std::size_t SmallObjectSize = small_object_size>
+using nullable_val = val<SmallObjectSize, std::true_type>;
 
 template <std::size_t SmallObjectSize, typename V>
 auto visit_value(auto&& visitor, V&& v, model_size_t size) -> decltype(auto) {
@@ -86,7 +87,7 @@ auto visit_value(auto&& visitor, V&& v, model_size_t size) -> decltype(auto) {
 };
 
 template <typename Nullable, std::size_t SmallObjectSize, typename V2>
-auto visit_value(auto&& visitor, val<Nullable, SmallObjectSize>& v1,
+auto visit_value(auto&& visitor, val<SmallObjectSize, Nullable>& v1,
                  model_size_t size1, V2&& v2, model_size_t size2)
     -> decltype(auto) {
   if (size1.size > SmallObjectSize) {
@@ -126,8 +127,8 @@ auto visit_value(auto&& visitor, val<Nullable, SmallObjectSize>& v1,
 };
 
 template <typename Nullable, std::size_t SmallObjectSize>
-struct proxy_trait<val<Nullable, SmallObjectSize>>
-    : basic_proxy_trait<val<Nullable, SmallObjectSize>> {
+struct proxy_trait<val<SmallObjectSize, Nullable>>
+    : basic_proxy_trait<val<SmallObjectSize, Nullable>> {
   using void_t = void*;
   using static_dispatch_t = void_t;
   template <typename V>
@@ -149,7 +150,7 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
   static auto clone_from([[maybe_unused]] mutable_void data_ptr,
                          [[maybe_unused]] auto* v_table) {
     assert(v_table);
-    val<Nullable, SmallObjectSize> v;
+    val<SmallObjectSize, Nullable> v;
     v.ptr_ = visit_value<SmallObjectSize>(
         overloads{
             [&](cow& heap) {
@@ -165,9 +166,9 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
     return v;
   }
 
-  static void move_to(val<Nullable, SmallObjectSize>& to,
+  static void move_to(val<SmallObjectSize, Nullable>& to,
                       [[maybe_unused]] auto v_table_to,
-                      val<Nullable, SmallObjectSize>&& from,
+                      val<SmallObjectSize, Nullable>&& from,
                       [[maybe_unused]] auto* v_table_from) {
     if (v_table_from == nullptr && v_table_to == nullptr) return;
     to.ptr_ = visit_value(
@@ -243,9 +244,9 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
   inline static constexpr bool can_copy_construct_from() {
     return is_copy_constructor_v_table<VTable>;
   }
-  static void copy_construct_from(val<Nullable, SmallObjectSize>& to,
+  static void copy_construct_from(val<SmallObjectSize, Nullable>& to,
                                   auto to_v_table,
-                                  val<Nullable, SmallObjectSize> const& from,
+                                  val<SmallObjectSize, Nullable> const& from,
                                   auto* from_v_table) {
     if (!from_v_table) return;
     to.ptr_ = visit_value(
@@ -299,7 +300,7 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
         to, model_size(to_v_table), from, from_v_table->model_size);
   }
 
-  static void destroy(val<Nullable, SmallObjectSize>& v, auto* v_table) {
+  static void destroy(val<SmallObjectSize, Nullable>& v, auto* v_table) {
     visit_value<SmallObjectSize>(
         overloads{
             [&](cow& heap) {
@@ -312,11 +313,11 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
         v, model_size(v_table));
   }
 
-  static void* get_proxy_ptr_in(val<Nullable, SmallObjectSize> const& v,
+  static void* get_proxy_ptr_in(val<SmallObjectSize, Nullable> const& v,
                                 [[maybe_unused]] auto* v_table) {
     return v.ptr_;
   }
-  static void* get_proxy_ptr_in(val<Nullable, SmallObjectSize>& v,
+  static void* get_proxy_ptr_in(val<SmallObjectSize, Nullable>& v,
                                 auto* v_table) {
     return visit_value<SmallObjectSize>(
         overloads{
@@ -335,17 +336,17 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
 
   template <typename V>
   static auto construct_in_place(V&& v) {
-    return val<Nullable, SmallObjectSize>(std::in_place_type<std::decay_t<V>>,
+    return val<SmallObjectSize, Nullable>(std::in_place_type<std::decay_t<V>>,
                                           std::forward<V>(v));
   }
   template <typename T, typename... Args>
   static auto construct_type_in_place(Args&&... args) {
-    return val<Nullable, SmallObjectSize>(std::in_place_type<T>,
+    return val<SmallObjectSize, Nullable>(std::in_place_type<T>,
                                           std::forward<Args>(args)...);
   }
   template <typename ConstructedWith>
   static auto erase(ConstructedWith&& v) {
-    return val<Nullable, SmallObjectSize>(
+    return val<SmallObjectSize, Nullable>(
         std::in_place_type<std::decay_t<ConstructedWith>>,
         std::forward<ConstructedWith>(v));
   }

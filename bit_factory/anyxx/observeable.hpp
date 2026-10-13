@@ -21,7 +21,7 @@ struct observeable_v_table {
 
   struct deduced_type {};
 
-  using val_nullable = std::false_type;
+  using val_is_nullable = std::false_type;
   static constexpr std::size_t val_proxy_size = small_object_size;
 
   /// Type-erasing constructor
@@ -60,7 +60,7 @@ struct observeable {
   using model_map = observeable_map<T>;
 
   using v_table_t = observeable_v_table;
-  using val_nullable = typename v_table_t::val_nullable;
+  using val_is_nullable = typename v_table_t::val_is_nullable;
   static constexpr std::size_t val_proxy_size = v_table_t::val_proxy_size;
 };
 

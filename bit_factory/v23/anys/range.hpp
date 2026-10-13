@@ -90,7 +90,7 @@ TRAIT_TEMPLATE_EX_(
     , ())
 
 template <typename ValueType, typename Reference,
-          typename Proxy = val<std::true_type, iterator_val_proxy_size>>
+          typename Proxy = nullable_val<iterator_val_proxy_size>>
 using any_input_iterator = any<input_iterator<ValueType, Reference>, Proxy>;
 static_assert(std::input_iterator<any_input_iterator<int, int>>);
 
@@ -101,7 +101,7 @@ TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator, input_iterator,
                    , ())
 
 template <typename ValueType, typename Reference,
-          typename Proxy = val<std::true_type, iterator_val_proxy_size>>
+          typename Proxy = nullable_val<iterator_val_proxy_size>>
 using any_forward_iterator = any<forward_iterator<ValueType, Reference>, Proxy>;
 static_assert(std::forward_iterator<any_forward_iterator<int, int>>);
 
@@ -115,7 +115,7 @@ TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), bidirectional_iterator,
                    , ())
 
 template <typename ValueType, typename Reference,
-          typename Proxy = val<std::true_type, iterator_val_proxy_size>>
+          typename Proxy = nullable_val<iterator_val_proxy_size>>
 using any_bidirectional_iterator =
     any<bidirectional_iterator<ValueType, Reference>, Proxy>;
 static_assert(
@@ -144,7 +144,7 @@ TRAIT_TEMPLATE_EX_(
     , ())
 
 template <typename ValueType, typename Reference,
-          typename Proxy = val<std::true_type, iterator_val_proxy_size>>
+          typename Proxy = nullable_val<iterator_val_proxy_size>>
 using any_random_access_iterator =
     any<random_access_iterator<ValueType, Reference>, Proxy>;
 
@@ -221,11 +221,11 @@ struct forward_trait_to_map<Traited, AnyForwardRange const&> {
 };
 
 static_assert(
-    any_forward_iterator<self, self>::v_table_t::val_nullable::value == true);
+    any_forward_iterator<self, self>::v_table_t::val_is_nullable::value == true);
 static_assert(
     std::same_as<any_forward_iterator<self, self>::v_table_t::any_value_t,
                  any<forward_iterator<self, self>,
-                     val<std::true_type, iterator_val_proxy_size>>>);
+                     nullable_val<iterator_val_proxy_size>>>);
 static_assert(std::forward_iterator<any_forward_iterator<self, self>>);
 static_assert(std::ranges::forward_range<any_forward_range<self, self>>);
 

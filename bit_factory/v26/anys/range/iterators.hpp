@@ -7,7 +7,7 @@ namespace anyxx26 {
 
 template <is_trait Trait, typename Self, typename Value, typename Ref = Value&>
 struct input_iterator : save_copyable<Trait, Self> {
-    using default_proxy_t = anyxx::val<std::true_type>;
+    using default_proxy_t = anyxx::nullable_val<>;
 
     bool operator==(Self const&) const;
     bool operator!=(Self const&) const;

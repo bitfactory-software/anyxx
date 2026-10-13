@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bit_factory/anyxx/config.hpp>
+
 #include <bit_factory/anyxx/any_concept.hpp>
 
 namespace anyxx {

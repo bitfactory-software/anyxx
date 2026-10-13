@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bit_factory/infra/config.hpp>
+#include <bit_factory/anyxx/config.hpp>
 #include <variant>
 #include <type_traits>
 

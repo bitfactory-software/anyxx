@@ -1,6 +1,7 @@
 #pragma once
 
-#include <bit_factory/infra/config.hpp>
+#include <bit_factory/anyxx/config.hpp>
+
 #include <bit_factory/anyxx/ANY_UNPAREN.hpp>
 #include <bit_factory/v23/default_proxy.hpp>
 #include <bit_factory/v23/signature_handling.hpp>
@@ -72,10 +73,10 @@
   _detail_EXPAND_(_detail_ANYXX_FORWARD_PARAM_LIST_H(__VA_ARGS__))
 
 #define _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_H(b, c, param_type, ...)      \
-  anyxx::v_table_to_map<Concrete, ANY_UNPAREN(param_type)>::                \
-      template forward<decltype(c)>(std::forward<decltype(c)>(c)) __VA_OPT__( \
-          , _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_A _detail_PARENS(         \
-                b, _detail_CONCAT(b, c), __VA_ARGS__))
+  anyxx::v_table_to_map<Concrete, ANY_UNPAREN(param_type)>::template forward< \
+      decltype(c)>(std::forward<decltype(c)>(c))                              \
+      __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_A _detail_PARENS(  \
+                       b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_A() \
   _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_H
 #define _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(...) \
@@ -83,7 +84,7 @@
 
 #define _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_H(b, c, param_type,    \
                                                          ...)                 \
-  anyxx::forward_trait_to_map<traited_t, ANY_UNPAREN(param_type)>::         \
+  anyxx::forward_trait_to_map<traited_t, ANY_UNPAREN(param_type)>::           \
       template forward<decltype(c)>(std::forward<decltype(c)>(c)) __VA_OPT__( \
           , _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_A _detail_PARENS(  \
                 b, _detail_CONCAT(b, c), __VA_ARGS__))
@@ -101,11 +102,10 @@
   _detail_EXPAND_(_detail_ANYXX_JACKET_PARAM_LIST_H(__VA_ARGS__))
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
-#define _detail_ANYXX_V_TABLE_PARAM_LIST_H(b, c, param_type, ...)    \
-  [[maybe_unused]] anyxx::v_table_param<any_value_t,                 \
-                                        ANY_UNPAREN(param_type)> c \
-  __VA_OPT__(, _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(    \
-                   b, _detail_CONCAT(b, c), __VA_ARGS__))
+#define _detail_ANYXX_V_TABLE_PARAM_LIST_H(b, c, param_type, ...)             \
+  [[maybe_unused]] anyxx::v_table_param<any_value_t, ANY_UNPAREN(param_type)> \
+      c __VA_OPT__(, _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(       \
+                         b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_V_TABLE_PARAM_LIST_A() _detail_ANYXX_V_TABLE_PARAM_LIST_H
 #define _detail_ANYXX_V_TABLE_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_V_TABLE_PARAM_LIST_H(__VA_ARGS__))
@@ -118,16 +118,16 @@
 #define _detail_ANYXX_MAP_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_MAP_PARAM_LIST_H(__VA_ARGS__))
 
-#define _detail_ANYXX_CONCEPT_PARAM_LIST_H(b, c, param_type, ...)     \
+#define _detail_ANYXX_CONCEPT_PARAM_LIST_H(b, c, param_type, ...)   \
   [[maybe_unused]] anyxx::concept_arg<T, ANY_UNPAREN(param_type)> c \
-  __VA_OPT__(, _detail_ANYXX_CONCEPT_PARAM_LIST_A _detail_PARENS(     \
+  __VA_OPT__(, _detail_ANYXX_CONCEPT_PARAM_LIST_A _detail_PARENS(   \
                    b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_CONCEPT_PARAM_LIST_A() _detail_ANYXX_CONCEPT_PARAM_LIST_H
 #define _detail_ANYXX_CONCEPT_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_CONCEPT_PARAM_LIST_H(__VA_ARGS__))
 
 #define _detail_ANYXX_EXACT_PARAM_LIST_H(b, c, param_type, ...) \
-  [[maybe_unused]] ANY_UNPAREN(param_type) c __VA_OPT__(      \
+  [[maybe_unused]] ANY_UNPAREN(param_type) c __VA_OPT__(        \
       , _detail_ANYXX_EXACT_PARAM_LIST_A _detail_PARENS(        \
             b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_EXACT_PARAM_LIST_A() _detail_ANYXX_EXACT_PARAM_LIST_H
@@ -228,13 +228,13 @@
       [[maybe_unused]] this Map const& map,                                   \
       [[maybe_unused]] auto const_& x __VA_OPT__(                             \
           , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))            \
-      -> anyxx::map_return<T, ANY_UNPAREN(type)>                            \
+      -> anyxx::map_return<T, ANY_UNPAREN(type)>                              \
     requires(anyxx::mapf_concept(requires(T const_ x __VA_OPT__(              \
         , _detail_ANYXX_CONCEPT_PARAM_LIST_H(a, sig_, __VA_ARGS__))) {        \
       {                                                                       \
         mapf_concept_lhs(__VA_OPT__(                                          \
             _detail_ANYXX_CONCEPT_ARG_LIST_H(a, sig_, __VA_ARGS__)))          \
-      } -> std::convertible_to<anyxx::map_return<T, ANY_UNPAREN(type)>>;    \
+      } -> std::convertible_to<anyxx::map_return<T, ANY_UNPAREN(type)>>;      \
     }))                                                                       \
   {                                                                           \
     using namespace anyxx;                                                    \
@@ -251,7 +251,7 @@
     {                                                                         \
       model_map.name(model __VA_OPT__(                                        \
           , _detail_ANYXX_CONCEPT_ARG_LIST_H(a, sig_, __VA_ARGS__)))          \
-    } -> std::convertible_to<anyxx::map_return<T, ANY_UNPAREN(type)>>;      \
+    } -> std::convertible_to<anyxx::map_return<T, ANY_UNPAREN(type)>>;        \
   };
 
 #define _detail_ANYXX_CONCEPT_STATIC_FN_H(l) _detail_ANYXX_CONCEPT_STATIC_FN l
@@ -262,8 +262,7 @@
     {                                                                         \
       model_map.name(trait_class __VA_OPT__(                                  \
           , _detail_ANYXX_CONCEPT_ARG_LIST_H(a, sig_, __VA_ARGS__)))          \
-    }                                                                         \
-    -> std::convertible_to<anyxx::map_return<T, ANY_UNPAREN(return_type)>>; \
+    } -> std::convertible_to<anyxx::map_return<T, ANY_UNPAREN(return_type)>>; \
   };
 
 #define _detail_ANYXX_CONCEPT_TYPE_H(l) _detail_ANYXX_CONCEPT_TYPE l
@@ -272,7 +271,7 @@
                              _detail_ANYXX_OPTIONAL_TEMPLATE(               \
                                  _detail_REMOVE_PARENS(template_params))    \
                                  name _detail_ANYXX_DUMMY_INT_PARAM_LIST(   \
-                                     ANY_UNPAREN(template_params)),       \
+                                     ANY_UNPAREN(template_params)),         \
                          anyxx::undefined>;
 
 //_detail_ANYXX_CONCEPT_TYPE_H((), value_type, anyxx::undefined,
@@ -286,7 +285,7 @@
       _detail_REMOVE_PARENS(template_params)) AYXFORCEDINLINE auto         \
   name([[maybe_unused]] auto trait_class __VA_OPT__(                       \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))             \
-      -> anyxx::map_return<T, ANY_UNPAREN(return_type)> {                \
+      -> anyxx::map_return<T, ANY_UNPAREN(return_type)> {                  \
     using namespace anyxx;                                                 \
     return _detail_REMOVE_PARENS(body).template                            \
     operator()<anyxx::use_as<T, typename decltype(trait_class)::trait_t>>( \
@@ -409,7 +408,7 @@
 #define _detail_ANYXX_FUNCTION_PTR_DECL(                                   \
     access, overload, type, name, name_ext, exact_const, const_, map_body, \
     mapf_concept, mapf_concept_lhs, ...)                                   \
-  anyxx::v_table_return<any_value_t, ANY_UNPAREN(type)> (*name##const_)( \
+  anyxx::v_table_return<any_value_t, ANY_UNPAREN(type)> (*name##const_)(   \
       void const_* __VA_OPT__(                                             \
           , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
 
@@ -419,13 +418,13 @@
   name##const_ = [](void const_* _vp __VA_OPT__(                           \
                      , _detail_ANYXX_V_TABLE_PARAM_LIST(                   \
                            a, _sig, __VA_ARGS__))) -> decltype(auto) {     \
-    if constexpr (std::same_as<anyxx::self&, ANY_UNPAREN(type)>) {       \
+    if constexpr (std::same_as<anyxx::self&, ANY_UNPAREN(type)>) {         \
       model_map{}.name(                                                    \
           *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )     \
               __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(          \
                   a, _sig, __VA_ARGS__)));                                 \
-      return anyxx::handle_self_ref_return<ANY_UNPAREN(type)>{}();       \
-    } else if constexpr (std::same_as<anyxx::self, ANY_UNPAREN(type)>) { \
+      return anyxx::handle_self_ref_return<ANY_UNPAREN(type)>{}();         \
+    } else if constexpr (std::same_as<anyxx::self, ANY_UNPAREN(type)>) {   \
       using proxy_t = typename any_value_t::proxy_t;                       \
       return any_value_t{                                                  \
           anyxx::erased<proxy_t>(model_map{}.name(                         \
@@ -463,7 +462,7 @@
                                                                                \
     if constexpr (!self_t::is_dyn) {                                           \
       using traited_t = typename self_t::rep_type;                             \
-      if constexpr (std::same_as<void, ANY_UNPAREN(type)>) {                 \
+      if constexpr (std::same_as<void, ANY_UNPAREN(type)>) {                   \
         return static_dispatch_map_t<T>{}.name(                                \
             get_proxy_value(self) __VA_OPT__(, )                               \
                 __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(     \
@@ -477,7 +476,7 @@
             std::forward<Self>(self));                                         \
       }                                                                        \
     } else {                                                                   \
-      if constexpr (std::same_as<void, ANY_UNPAREN(type)>) {                 \
+      if constexpr (std::same_as<void, ANY_UNPAREN(type)>) {                   \
         return get_v_table(self)->name##const_(                                \
             anyxx::get_proxy_ptr(std::forward<self_t const_&>(self))           \
                 __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig,         \
@@ -615,18 +614,19 @@
                                                                                \
     using v_table_t = n##_v_table;                                             \
                                                                                \
-    using val_nullable =                                                       \
+    using val_is_nullable =                                                    \
         std::conditional_t<anyxx::is_type_complete<n##_is_nullable>,           \
                            std::true_type,                                     \
-                           typename v_table_base_t::val_nullable>;             \
+                           typename v_table_base_t::val_is_nullable>;          \
                                                                                \
     static constexpr std::size_t val_proxy_size =                              \
         anyxx::compute_val_proxy_size<n##_val_size>(                           \
             v_table_base_t::val_proxy_size);                                   \
                                                                                \
-    using any_value_t = anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(     \
-                                       any_template_params),                   \
-                                   anyxx::val<val_nullable, val_proxy_size>>;  \
+    using any_value_t =                                                        \
+        anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
+                       any_template_params),                                   \
+                   anyxx::val<val_proxy_size, val_is_nullable>>;               \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       if constexpr (anyxx::is_dynamic_castable_v_table<v_table_base_t>) {      \
@@ -662,16 +662,17 @@
     using model_map =                                                          \
         n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)>; \
                                                                                \
-    using val_nullable =                                                       \
+    using val_is_nullable =                                                    \
         std::conditional_t<anyxx::is_type_complete<n##_is_nullable>,           \
-                           std::true_type, typename base_t::val_nullable>;     \
+                           std::true_type, typename base_t::val_is_nullable>;  \
                                                                                \
     static constexpr std::size_t val_proxy_size =                              \
         anyxx::compute_val_proxy_size<n##_val_size>(base_t::val_proxy_size);   \
                                                                                \
-    using any_value_t = anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(     \
-                                       any_template_params),                   \
-                                   anyxx::val<val_nullable, val_proxy_size>>;  \
+    using any_value_t =                                                        \
+        anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
+                       any_template_params),                                   \
+                   anyxx::val<val_proxy_size, val_is_nullable>>;               \
                                                                                \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \

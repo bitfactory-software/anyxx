@@ -18,7 +18,7 @@ sentinel_for(Range&& range) -> sentinel_for<std::ranges::sentinel_t<Range>, std:
 
 template <is_trait Trait, typename Self, typename Value, typename Ref = Value&>
 struct sentinel : copyable<Trait, Self> {
-    using default_proxy_t = anyxx::val<std::true_type>;
+    using default_proxy_t = anyxx::nullable_val<>;
 
     static bool equal(Self const& self, any<input_iterator, anyxx::cref, Value, Ref> const& it){
         return self.value == *unerase_cast<typename Self::iterator_type>(it);

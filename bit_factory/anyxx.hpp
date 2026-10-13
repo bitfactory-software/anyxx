@@ -7,6 +7,8 @@
     /Zc:preprocessor (see CMakeLists.txt for example)
 */
 
+#include <bit_factory/anyxx/config.hpp>
+
 #include <bit_factory/anyxx/ANY_UNIQUE_NAME.hpp>
 #include <bit_factory/anyxx/any_access.hpp>
 #include <bit_factory/anyxx/any_concept.hpp>
@@ -44,7 +46,6 @@
 #include <bit_factory/anyxx/proxies/static/using_cref.hpp>
 #include <bit_factory/anyxx/proxies/static/using_.hpp>
 #include <bit_factory/anyxx/proxies/static/vany.hpp>
-#include <bit_factory/infra/config.hpp>
 #include <bit_factory/v23/any.hpp>
 #include <bit_factory/v23/preprocessor_meta_class.hpp>
 #include <bit_factory/v23/v_table_data.hpp>
