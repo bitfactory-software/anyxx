@@ -24,9 +24,8 @@ var searchData=
   ['concepts_20haskell_20type_20classes_20rust_20traits_20a_20short_20introduction_21',['Chapter 1: C++0x Concepts, Haskell type classes, Rust traits, a short introduction',['../subpage1.html',1,'main']]],
   ['concepts_20rust_20traits_20haskell_20type_20classes_22',['Any++, C++0x Concepts, Rust Traits, Haskell Type Classes',['../main.html',1,'']]],
   ['conclusions_23',['Further directions and conclusions',['../subpage5.html',1,'main']]],
-  ['configuration_20macro_24',['Any++ configuration macro',['../group__anyxx__config.html',1,'']]],
-  ['const_20in_20any_25',['Handling &lt;span class=&quot;tt&quot;&gt;const&lt;/span&gt; in &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Constness.html',1,'']]],
-  ['context_20of_20any_26',['Terms and Definitions in Context of &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2terms__and__definitions.html',1,'']]],
-  ['crosscast_27',['Crosscast',['../md_docs_2terms__and__definitions.html#autotoc_md20',1,'']]],
-  ['crosscast_20factory_20serialization_28',['Showcase 5: &lt;em&gt;Any++&lt;/em&gt; Crosscast + Factory = Serialization',['../index.html#autotoc_md33',1,'']]]
+  ['const_20in_20any_24',['Handling &lt;span class=&quot;tt&quot;&gt;const&lt;/span&gt; in &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Constness.html',1,'']]],
+  ['context_20of_20any_25',['Terms and Definitions in Context of &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2terms__and__definitions.html',1,'']]],
+  ['crosscast_26',['Crosscast',['../md_docs_2terms__and__definitions.html#autotoc_md20',1,'']]],
+  ['crosscast_20factory_20serialization_27',['Showcase 5: &lt;em&gt;Any++&lt;/em&gt; Crosscast + Factory = Serialization',['../index.html#autotoc_md33',1,'']]]
 ];
