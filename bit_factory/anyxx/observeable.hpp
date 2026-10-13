@@ -10,7 +10,6 @@
 #include <bit_factory/anyxx/small_object_size.hpp>
 #include <bit_factory/anyxx/voidness.hpp>
 #include <bit_factory/anyxx/v_table_data.hpp>
-#include <bit_factory/v23/preprocessor_meta_class.hpp>
 
 namespace anyxx {
 
