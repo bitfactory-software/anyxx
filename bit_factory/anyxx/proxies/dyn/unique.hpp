@@ -1,15 +1,12 @@
 #pragma once
 
-/*! \file bit_factory/anyxx.hpp
-    \brief C++ header only library for external polymorphism.
-
-    for Microsoft C++, you must enable the C-Preprocessor with this flag:
-    /Zc:preprocessor (see CMakeLists.txt for example)
-*/
-
 #include <bit_factory/anyxx/proxies/basic_proxy_trait.hpp>
 #include <bit_factory/anyxx/proxies/proxy_concept.hpp>
 #include <bit_factory/anyxx/voidness.hpp>
+#include <utility>
+#include <cassert>          
+#include <memory>          
+
 
 namespace anyxx {
 

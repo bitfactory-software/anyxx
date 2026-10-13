@@ -13,10 +13,14 @@
 #include <bit_factory/anyxx/any_get_meta_data.hpp>
 #include <bit_factory/anyxx/any_get_type_info.hpp>
 #include <bit_factory/anyxx/any_unerase_cast.hpp>
+#include <bit_factory/anyxx/borrow_as.hpp>
+#include <bit_factory/anyxx/clone_to.hpp>
 #include <bit_factory/anyxx/compute_val_proxy_size.hpp>
 #include <bit_factory/anyxx/crosscast_runtime.hpp>
 #include <bit_factory/anyxx/dll_mode.hpp>
 #include <bit_factory/anyxx/downcast.hpp>
+#include <bit_factory/anyxx/lock.hpp>
+#include <bit_factory/anyxx/move_to.hpp>
 #include <bit_factory/anyxx/observeable.hpp>
 #include <bit_factory/anyxx/small_object_size.hpp>
 #include <bit_factory/anyxx/utilities.hpp>
@@ -47,70 +51,6 @@
 #include <bit_factory/v23/v_table_holder/v_table_holder_static.hpp>
 
 namespace anyxx {
-
-
-// --------------------------------------------------------------------------------
-// any borrow, clone, lock, move
-
-template <is_any ToAny, is_proxy FromProxy, typename FromVTable>
-  requires borrowable_from<typename ToAny::proxy_t, FromProxy, FromVTable>
-std::expected<ToAny, cast_error> borrow_as(FromProxy const& from,
-                                           FromVTable* from_v_table) {
-  using to = typename ToAny::proxy_t;
-  return query_v_table<ToAny>(from_v_table).transform([&](auto v_table) {
-    return ToAny{borrow_proxy_as<to>(from, v_table), v_table};
-  });
-}
-
-/// \brief Safe crosscast via runtime information to another \ref any without
-/// changing the ownership.
-/// \ingroup casts
-template <is_any ToAny, is_any FromAny>
-  requires borrowable_from<typename ToAny::proxy_t,
-                                 typename FromAny::proxy_t,
-                                 typename FromAny::v_table_t>
-std::expected<ToAny, cast_error> borrow_as(FromAny const& from) {
-  if constexpr (is_any_derived_from<FromAny, ToAny>) {
-    return {ToAny{from}};
-  } else if constexpr (is_any_derived_from<ToAny, FromAny>) {
-    return *downcast_to<ToAny>(from);
-  } else {
-    return borrow_as<ToAny>(get_proxy(from), get_v_table(from));
-  }
-}
-
-/// \brief Clone via runtime information.
-/// \ingroup casts
-template <is_any ToAny, is_any FromAny>
-std::expected<ToAny, cast_error> clone_to(FromAny const& from) {
-  using vv_to_t = typename ToAny::proxy_t;
-  static_assert(is_proxy<vv_to_t>);
-  return query_v_table<ToAny>(get_v_table(from)).transform([&](auto v_table) {
-    return ToAny{clone_to<vv_to_t>(get_proxy(from), v_table), v_table};
-  });
-}
-
-/// \brief Lock a shared \ref any.
-/// \ingroup casts
-template <is_any FromAny>
-  requires std::same_as<typename FromAny::proxy_t, weak>
-auto lock(FromAny const& from_interface) {
-  using to_any_t = any<typename FromAny::trait_t, shared>;
-  static_assert(is_any<to_any_t>);
-  using return_t = std::optional<to_any_t>;
-  if (auto locked = get_proxy(from_interface).lock())
-    return return_t{to_any_t{std::move(locked), get_v_table(from_interface)}};
-  return return_t{};
-}
-
-/// \brief Move ownership to another \ref any. Uses runtime information to
-/// crosscast, if necessary.
-/// \ingroup casts
-template <is_any ToAny, is_any FromAny>
-ToAny move_to(FromAny&& from) {
-  auto to_v_table = query_v_table<ToAny>(release_v_table(from));
-  return ToAny{move_proxy(std::move(from)), *to_v_table};
-}
 
 template <typename Concrete>
 mutable_void invoke_move_constructor([[maybe_unused]] mutable_void placement,

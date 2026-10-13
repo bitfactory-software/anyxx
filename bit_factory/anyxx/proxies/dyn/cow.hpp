@@ -3,6 +3,9 @@
 #include <bit_factory/anyxx/proxies/basic_proxy_trait.hpp>
 #include <bit_factory/anyxx/proxies/proxy_concept.hpp>
 #include <bit_factory/anyxx/voidness.hpp>
+#include <atomic>
+#include <cstddef>
+#include <utility>
 
 namespace anyxx {
 

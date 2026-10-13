@@ -5,6 +5,7 @@
 #include <bit_factory/anyxx/proxies/dyn/cow.hpp>
 #include <bit_factory/anyxx/small_object_size.hpp>
 #include <bit_factory/anyxx/voidness.hpp>
+#include <bit_factory/anyxx/utilities.hpp>
 
 namespace anyxx {
 
