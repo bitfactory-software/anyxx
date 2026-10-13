@@ -100,10 +100,14 @@ $(function(){initNavTree('anyxx_8hpp.html','',''); });
 <code>#include &lt;bit_factory/anyxx/any_get_meta_data.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/any_get_type_info.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/any_unerase_cast.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/borrow_as.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/clone_to.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/compute_val_proxy_size.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/crosscast_runtime.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/dll_mode.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/downcast.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/lock.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/move_to.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/observeable.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/small_object_size.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/utilities.hpp&gt;</code><br />
@@ -151,25 +155,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af65ce4f85fffe89d7973a3c5f691e6df" id="r_af65ce4f85fffe89d7973a3c5f691e6df"><td class="memTemplParams" colspan="2"><a id="af65ce4f85fffe89d7973a3c5f691e6df" name="af65ce4f85fffe89d7973a3c5f691e6df"></a>
-template&lt;is_any ToAny, is_proxy FromProxy, typename FromVTable&gt; </td></tr>
-<tr class="memitem:af65ce4f85fffe89d7973a3c5f691e6df template"><td class="memItemLeft">std::expected&lt; ToAny, cast_error &gt;&#160;</td><td class="memItemRight"><b>anyxx::borrow_as</b> (FromProxy const &amp;from, FromVTable *from_v_table)</td></tr>
-<tr class="memitem:a57a33d0becfcd08748cf97fd2b51aa16" id="r_a57a33d0becfcd08748cf97fd2b51aa16"><td class="memTemplParams" colspan="2"><a id="a57a33d0becfcd08748cf97fd2b51aa16" name="a57a33d0becfcd08748cf97fd2b51aa16"></a>
-template&lt;is_any ToAny, is_any FromAny&gt; </td></tr>
-<tr class="memitem:a57a33d0becfcd08748cf97fd2b51aa16 template"><td class="memItemLeft">std::expected&lt; ToAny, cast_error &gt;&#160;</td><td class="memItemRight"><b>anyxx::borrow_as</b> (FromAny const &amp;from)</td></tr>
-<tr class="memdesc:a57a33d0becfcd08748cf97fd2b51aa16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe crosscast via runtime information to another any without changing the ownership. <br /></td></tr>
-<tr class="memitem:af2b7730650bc77681cf299e2a6e77157" id="r_af2b7730650bc77681cf299e2a6e77157"><td class="memTemplParams" colspan="2"><a id="af2b7730650bc77681cf299e2a6e77157" name="af2b7730650bc77681cf299e2a6e77157"></a>
-template&lt;is_any ToAny, is_any FromAny&gt; </td></tr>
-<tr class="memitem:af2b7730650bc77681cf299e2a6e77157 template"><td class="memItemLeft">std::expected&lt; ToAny, cast_error &gt;&#160;</td><td class="memItemRight"><b>anyxx::clone_to</b> (FromAny const &amp;from)</td></tr>
-<tr class="memdesc:af2b7730650bc77681cf299e2a6e77157"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clone via runtime information. <br /></td></tr>
-<tr class="memitem:ae988a6a809ee2910690366e1e4c7ae67" id="r_ae988a6a809ee2910690366e1e4c7ae67"><td class="memTemplParams" colspan="2"><a id="ae988a6a809ee2910690366e1e4c7ae67" name="ae988a6a809ee2910690366e1e4c7ae67"></a>
-template&lt;is_any FromAny&gt; </td></tr>
-<tr class="memitem:ae988a6a809ee2910690366e1e4c7ae67 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::lock</b> (FromAny const &amp;from_interface)</td></tr>
-<tr class="memdesc:ae988a6a809ee2910690366e1e4c7ae67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lock a shared any. <br /></td></tr>
-<tr class="memitem:a0ad81aaf23ab3d32a02a12cec57c0946" id="r_a0ad81aaf23ab3d32a02a12cec57c0946"><td class="memTemplParams" colspan="2"><a id="a0ad81aaf23ab3d32a02a12cec57c0946" name="a0ad81aaf23ab3d32a02a12cec57c0946"></a>
-template&lt;is_any ToAny, is_any FromAny&gt; </td></tr>
-<tr class="memitem:a0ad81aaf23ab3d32a02a12cec57c0946 template"><td class="memItemLeft">ToAny&#160;</td><td class="memItemRight"><b>anyxx::move_to</b> (FromAny &amp;&amp;from)</td></tr>
-<tr class="memdesc:a0ad81aaf23ab3d32a02a12cec57c0946"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move ownership to another any. Uses runtime information to crosscast, if necessary. <br /></td></tr>
 <tr class="memitem:a635d420429d93cb3592ab4a7d7e87584" id="r_a635d420429d93cb3592ab4a7d7e87584"><td class="memTemplParams" colspan="2"><a id="a635d420429d93cb3592ab4a7d7e87584" name="a635d420429d93cb3592ab4a7d7e87584"></a>
 template&lt;typename Concrete&gt; </td></tr>
 <tr class="memitem:a635d420429d93cb3592ab4a7d7e87584 template"><td class="memItemLeft">mutable_void&#160;</td><td class="memItemRight"><b>anyxx::invoke_move_constructor</b> (mutable_void placement, mutable_void from)</td></tr>

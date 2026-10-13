@@ -126,7 +126,7 @@ $(function(){initNavTree('21_Tree_any_borrow_as_8cpp-example.html','',''); });
 <div class="line">  <span class="keywordflow">return</span> deserialize_factory.construct(type, archive);</div>
 <div class="line">}</div>
 <div class="line">any&lt;node, unique&gt; deserialize_any_node(std::istream&amp; archive) {</div>
-<div class="line">  <span class="keywordflow">return</span> <a id="_a0" name="_a0"></a><a class="code hl_function" href="anyxx_8hpp.html#a0ad81aaf23ab3d32a02a12cec57c0946">move_to&lt;any&lt;node, unique&gt;</a>&gt;(deserialize(archive));</div>
+<div class="line">  <span class="keywordflow">return</span> move_to&lt;any&lt;node, unique&gt;&gt;(deserialize(archive));</div>
 <div class="line">}</div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><span class="keyword">auto</span> register_deserialize_binary(std::string <span class="keyword">const</span>&amp; key) {</div>
@@ -192,16 +192,15 @@ $(function(){initNavTree('21_Tree_any_borrow_as_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">  std::stringstream archive{</div>
 <div class="line">      <span class="stringliteral">&quot;Plus Integer 1 Plus Times Integer 2 Integer 3 Integer 4 &quot;</span>};</div>
-<div class="line">  <span class="keyword">auto</span> expr = <a class="code hl_function" href="anyxx_8hpp.html#a0ad81aaf23ab3d32a02a12cec57c0946">move_to&lt;any_node&lt;unique&gt;</a>&gt;(deserialize(archive));</div>
+<div class="line">  <span class="keyword">auto</span> expr = move_to&lt;any_node&lt;unique&gt;&gt;(deserialize(archive));</div>
 <div class="line">  CHECK(expr.value() == 11);</div>
 <div class="line">  std::stringstream serialized;</div>
 <div class="line">  borrow_as&lt;any_serializeable&lt;cref&gt;&gt;(expr)-&gt;serialize(serialized);</div>
 <div class="line">  std::println(<span class="stringliteral">&quot;{}&quot;</span>, serialized.str());</div>
-<div class="line">  <span class="keyword">auto</span> expr2 = <a class="code hl_function" href="anyxx_8hpp.html#a0ad81aaf23ab3d32a02a12cec57c0946">move_to&lt;any_node&lt;unique&gt;</a>&gt;(deserialize(serialized));</div>
+<div class="line">  <span class="keyword">auto</span> expr2 = move_to&lt;any_node&lt;unique&gt;&gt;(deserialize(serialized));</div>
 <div class="line">  CHECK(expr2.value() == 11);</div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="aanyxx_8hpp_html_a0ad81aaf23ab3d32a02a12cec57c0946"><div class="ttname"><a href="anyxx_8hpp.html#a0ad81aaf23ab3d32a02a12cec57c0946">anyxx::move_to</a></div><div class="ttdeci">ToAny move_to(FromAny &amp;&amp;from)</div><div class="ttdoc">Move ownership to another any. Uses runtime information to crosscast, if necessary.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:110</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
