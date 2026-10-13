@@ -5,6 +5,8 @@
 
 #include <cassert>
 #include <typeinfo>
+#include <type_traits>
+#include <memory>
 
 namespace anyxx {
 
