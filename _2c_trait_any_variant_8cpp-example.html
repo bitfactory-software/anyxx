@@ -265,7 +265,7 @@ $(function(){initNavTree('_2c_trait_any_variant_8cpp-example.html','',''); });
 <div class="line">    });</div>
 <div class="line"><span class="keyword">auto</span> __ = vany_compare.define&lt;concrete_value, custom&gt;(</div>
 <div class="line">    [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; lhs, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; rhs) -&gt; std::partial_ordering {</div>
-<div class="line">      <span class="keywordflow">return</span> <a id="a2" name="a2"></a>anyxx::trait_as&lt;value&gt;(lhs).to_string() &lt;=&gt; rhs.answer;</div>
+<div class="line">      <span class="keywordflow">return</span> anyxx::trait_as&lt;value&gt;(lhs).to_string() &lt;=&gt; rhs.answer;</div>
 <div class="line">    });</div>
 <div class="line"><span class="keyword">auto</span> __ = vany_compare.define&lt;custom, concrete_value&gt;(</div>
 <div class="line">    [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; lhs, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; rhs) -&gt; std::partial_ordering {</div>
@@ -314,8 +314,8 @@ $(function(){initNavTree('_2c_trait_any_variant_8cpp-example.html','',''); });
 <div class="line">  CHECK(vvi0 == vvbf);</div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="agroup__vany__macros_html_ga0a538605bcb4ae50bd736f0802af2c8b"><div class="ttname"><a href="group__vany__macros.html#ga0a538605bcb4ae50bd736f0802af2c8b">VANY_DISPACH_DECLARE</a></div><div class="ttdeci">#define VANY_DISPACH_DECLARE(export_, name, vany, signature, static_dispatch)</div><div class="ttdoc">Declare a singleton object for open vany dispatch.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1453</div></div>
-<div class="ttc" id="agroup__vany__macros_html_ga93a6d3c140de4e4c95f863b88385a27c"><div class="ttname"><a href="group__vany__macros.html#ga93a6d3c140de4e4c95f863b88385a27c">VANY_DISPACH</a></div><div class="ttdeci">#define VANY_DISPACH(namespace_, name)</div><div class="ttdoc">Define a vany dispatch singleton object in a source file.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1472</div></div>
+<div class="ttc" id="agroup__vany__macros_html_ga0a538605bcb4ae50bd736f0802af2c8b"><div class="ttname"><a href="group__vany__macros.html#ga0a538605bcb4ae50bd736f0802af2c8b">VANY_DISPACH_DECLARE</a></div><div class="ttdeci">#define VANY_DISPACH_DECLARE(export_, name, vany, signature, static_dispatch)</div><div class="ttdoc">Declare a singleton object for open vany dispatch.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1404</div></div>
+<div class="ttc" id="agroup__vany__macros_html_ga93a6d3c140de4e4c95f863b88385a27c"><div class="ttname"><a href="group__vany__macros.html#ga93a6d3c140de4e4c95f863b88385a27c">VANY_DISPACH</a></div><div class="ttdeci">#define VANY_DISPACH(namespace_, name)</div><div class="ttdoc">Define a vany dispatch singleton object in a source file.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1423</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

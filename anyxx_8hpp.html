@@ -198,16 +198,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a92917959a2ef4d14ddf6e22473220820" id="r_a92917959a2ef4d14ddf6e22473220820"><td class="memTemplParams" colspan="2">template&lt;typename Type, typename Trait&gt; </td></tr>
-<tr class="memitem:a92917959a2ef4d14ddf6e22473220820 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a> = any&lt;Trait, using_&lt;Type&gt;&gt;</td></tr>
-<tr class="memitem:a83407b9419ab07b50701cc802fa04551" id="r_a83407b9419ab07b50701cc802fa04551"><td class="memTemplParams" colspan="2">template&lt;typename Type, typename Trait&gt; </td></tr>
-<tr class="memitem:a83407b9419ab07b50701cc802fa04551 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a83407b9419ab07b50701cc802fa04551">anyxx::use_as_cref</a> = any&lt;Trait, using_cref&lt;Type&gt;&gt;</td></tr>
-<tr class="memitem:aaa85b7012fceca3593ab029de12dd61c" id="r_aaa85b7012fceca3593ab029de12dd61c"><td class="memTemplParams" colspan="2">template&lt;typename Type, template&lt; typename... &gt; typename Trait, typename... Ts&gt; </td></tr>
-<tr class="memitem:aaa85b7012fceca3593ab029de12dd61c template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#aaa85b7012fceca3593ab029de12dd61c">anyxx::use_as_</a> = any&lt;Trait&lt;Ts...&gt;, using_&lt;Type&gt;&gt;</td></tr>
-<tr class="memitem:a2e85dd054654528100674b1615b37aa8" id="r_a2e85dd054654528100674b1615b37aa8"><td class="memTemplParams" colspan="2">template&lt;typename Type, template&lt; typename... &gt; typename Trait, typename... Ts&gt; </td></tr>
-<tr class="memitem:a2e85dd054654528100674b1615b37aa8 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a2e85dd054654528100674b1615b37aa8">anyxx::use_as_cref_</a> = any&lt;Trait&lt;Ts...&gt;, using_cref&lt;Type&gt;&gt;</td></tr>
-<tr class="memitem:a41a5f0115a3c735c76b8e40c6043993d" id="r_a41a5f0115a3c735c76b8e40c6043993d"><td class="memTemplParams" colspan="2">template&lt;typename Type, typename Trait&gt; </td></tr>
-<tr class="memitem:a41a5f0115a3c735c76b8e40c6043993d template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a41a5f0115a3c735c76b8e40c6043993d">anyxx::any_trait_class</a> = any&lt;Trait, trait_class&lt;Type&gt;&gt;</td></tr>
 <tr class="memitem:a8bbf3a5ecbebb69c8e2fbb9e43aa8668" id="r_a8bbf3a5ecbebb69c8e2fbb9e43aa8668"><td class="memItemLeft"><a id="a8bbf3a5ecbebb69c8e2fbb9e43aa8668" name="a8bbf3a5ecbebb69c8e2fbb9e43aa8668"></a>
 using&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_function_t</b> = void (*)()</td></tr>
 <tr class="memitem:af1b2210c46c777f7206059caa46d91d0" id="r_af1b2210c46c777f7206059caa46d91d0"><td class="memItemLeft"><a id="af1b2210c46c777f7206059caa46d91d0" name="af1b2210c46c777f7206059caa46d91d0"></a>
@@ -294,10 +284,6 @@ template&lt;typename U, typename Any&gt; </td></tr>
 template&lt;typename U, typename Any&gt; </td></tr>
 <tr class="memitem:ga9ba68fb72727630cbb77b5104a93d2b8 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unerase_cast_if</b> (Any const &amp;o)</td></tr>
 <tr class="memdesc:ga9ba68fb72727630cbb77b5104a93d2b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe downcast to an unerased type using runtime information from the v-Tables. <br /></td></tr>
-<tr class="memitem:aa0a344700732ba661e0fb701ef1eba2c" id="r_aa0a344700732ba661e0fb701ef1eba2c"><td class="memTemplParams" colspan="2">template&lt;typename Trait, typename T&gt; </td></tr>
-<tr class="memitem:aa0a344700732ba661e0fb701ef1eba2c template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#aa0a344700732ba661e0fb701ef1eba2c">anyxx::trait_as</a> (T &amp;&amp;v)</td></tr>
-<tr class="memitem:abd61608594394c90276eec4d088a9430" id="r_abd61608594394c90276eec4d088a9430"><td class="memTemplParams" colspan="2">template&lt;typename Trait, typename T&gt; </td></tr>
-<tr class="memitem:abd61608594394c90276eec4d088a9430 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#abd61608594394c90276eec4d088a9430">anyxx::trait_as_cref</a> (T const &amp;v)</td></tr>
 <tr class="memitem:a9d9ca1a9aa463aa620c1dfb58dda2c60" id="r_a9d9ca1a9aa463aa620c1dfb58dda2c60"><td class="memTemplParams" colspan="2"><a id="a9d9ca1a9aa463aa620c1dfb58dda2c60" name="a9d9ca1a9aa463aa620c1dfb58dda2c60"></a>
 template&lt;typename VTable, typename Concrete&gt; </td></tr>
 <tr class="memitem:a9d9ca1a9aa463aa620c1dfb58dda2c60 template"><td class="memItemLeft">VTable *&#160;</td><td class="memItemRight"><b>anyxx::v_table_instance</b> ()</td></tr>
@@ -558,101 +544,6 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 </div>
 </div>
 <a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
-<a id="a41a5f0115a3c735c76b8e40c6043993d" name="a41a5f0115a3c735c76b8e40c6043993d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41a5f0115a3c735c76b8e40c6043993d">&#9670;&#160;</a></span>any_trait_class</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Type, typename Trait&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="#a41a5f0115a3c735c76b8e40c6043993d">anyxx::any_trait_class</a> = any&lt;Trait, trait_class&lt;Type&gt;&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Helper type alias template to get a trait_class for a type dispatch. Has no data member, so it doesn't capture any value and has no size</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Type</td><td>The captured type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2e_trait_algebra_8cpp-example.html#a2">_2e_trait_algebra.cpp</a>.</dd>
-</dl>
-
-</div>
-</div>
-<a id="a92917959a2ef4d14ddf6e22473220820" name="a92917959a2ef4d14ddf6e22473220820"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92917959a2ef4d14ddf6e22473220820">&#9670;&#160;</a></span>use_as</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Type, typename Trait&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a> = any&lt;Trait, using_&lt;Type&gt;&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>A template to get an any trait for a type See also using_::as. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2e_trait_algebra_8cpp-example.html#_a1">_2e_trait_algebra.cpp</a>.</dd>
-</dl>
-
-</div>
-</div>
-<a id="aaa85b7012fceca3593ab029de12dd61c" name="aaa85b7012fceca3593ab029de12dd61c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa85b7012fceca3593ab029de12dd61c">&#9670;&#160;</a></span>use_as_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Type, template&lt; typename... &gt; typename Trait, typename... Ts&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="#aaa85b7012fceca3593ab029de12dd61c">anyxx::use_as_</a> = any&lt;Trait&lt;Ts...&gt;, using_&lt;Type&gt;&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>A template to get an templatetd any trait for a type See also using_::as. </p>
-
-</div>
-</div>
-<a id="a83407b9419ab07b50701cc802fa04551" name="a83407b9419ab07b50701cc802fa04551"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a83407b9419ab07b50701cc802fa04551">&#9670;&#160;</a></span>use_as_cref</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Type, typename Trait&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="#a83407b9419ab07b50701cc802fa04551">anyxx::use_as_cref</a> = any&lt;Trait, using_cref&lt;Type&gt;&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>A template to get an any trait for a type See also using_cref::as. </p>
-
-</div>
-</div>
-<a id="a2e85dd054654528100674b1615b37aa8" name="a2e85dd054654528100674b1615b37aa8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e85dd054654528100674b1615b37aa8">&#9670;&#160;</a></span>use_as_cref_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Type, template&lt; typename... &gt; typename Trait, typename... Ts&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="#a2e85dd054654528100674b1615b37aa8">anyxx::use_as_cref_</a> = any&lt;Trait&lt;Ts...&gt;, using_cref&lt;Type&gt;&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>A template to get an templatetd any trait for a type See also using_cref::as. </p>
-
-</div>
-</div>
 <a id="a0948b1d7e5622e60576d26510b568ff4" name="a0948b1d7e5622e60576d26510b568ff4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0948b1d7e5622e60576d26510b568ff4">&#9670;&#160;</a></span>v_table_param</h2>
 
@@ -687,49 +578,6 @@ template&lt;typename AnyValue, typename Return&gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line"> </div>
 <div class="line">translate_sig_map&lt;Return&gt;::template v_table_return&lt;AnyValue&gt;</div>
 </div><!-- fragment -->
-</div>
-</div>
-<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="aa0a344700732ba661e0fb701ef1eba2c" name="aa0a344700732ba661e0fb701ef1eba2c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa0a344700732ba661e0fb701ef1eba2c">&#9670;&#160;</a></span>trait_as()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Trait, typename T&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto anyxx::trait_as </td>
-          <td>(</td>
-          <td class="paramtype">T &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>A factory function to bind an object as a model to an any with a trait. See also using_::as. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a0">_2b_trait_monoid.cpp</a>, <a class="el" href="_2c_trait_any_variant_8cpp-example.html#a2">_2c_trait_any_variant.cpp</a>, <a class="el" href="_2d_trait_self_8cpp-example.html#_a0">_2d_trait_self.cpp</a>, and <a class="el" href="_2e_trait_algebra_8cpp-example.html#_a0">_2e_trait_algebra.cpp</a>.</dd>
-</dl>
-
-</div>
-</div>
-<a id="abd61608594394c90276eec4d088a9430" name="abd61608594394c90276eec4d088a9430"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abd61608594394c90276eec4d088a9430">&#9670;&#160;</a></span>trait_as_cref()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Trait, typename T&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto anyxx::trait_as_cref </td>
-          <td>(</td>
-          <td class="paramtype">T const &amp;</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>A factory function to bind a const&amp; as a model to an any with a trait. See also using_cref::as. </p>
-
 </div>
 </div>
 <a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>

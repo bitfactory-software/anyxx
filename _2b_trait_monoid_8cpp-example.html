@@ -113,7 +113,7 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">           ANY_FN_DEF(<span class="keyword">public</span>, anyxx::self, op, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
 <div class="line">                      [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">                        std::println(<span class="stringliteral">&quot;op-default {}&quot;</span>, <span class="keyword">typeid</span>(T).name());</div>
-<div class="line">                        <span class="keyword">auto</span> self = <a id="a0" name="a0"></a>anyxx::trait_as&lt;monoid&gt;(x);</div>
+<div class="line">                        <span class="keyword">auto</span> self = anyxx::trait_as&lt;monoid&gt;(x);</div>
 <div class="line">                        <span class="keywordflow">return</span> get_proxy(self.concat(std::vector{</div>
 <div class="line">                            anyxx::trait_as&lt;monoid&gt;(r)}));  <span class="comment">// NOLINT</span></div>
 <div class="line">                      }),</div>

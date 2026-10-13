@@ -27,8 +27,7 @@ var searchData=
   ['any_5fsingleton_24',['ANY_SINGLETON',['../group__singleton__macros.html#gab55747625c4054406c3f615c19ab1499',1,'anyxx.hpp']]],
   ['any_5fsingleton_20macros_25',['ANY_SINGLETON macros',['../group__singleton__macros.html',1,'']]],
   ['any_5fsingleton_5fdeclare_26',['ANY_SINGLETON_DECLARE',['../group__singleton__macros.html#ga3f285810c0716bfa028b613342d910d1',1,'anyxx.hpp']]],
-  ['any_5ftrait_5fclass_27',['any_trait_class',['../anyxx_8hpp.html#a41a5f0115a3c735c76b8e40c6043993d',1,'anyxx']]],
-  ['anyxx_2ehpp_28',['anyxx.hpp',['../anyxx_8hpp.html',1,'']]],
-  ['as_20visitor_29',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md32',1,'']]],
-  ['available_20on_20vcpkg_3a_30',['Available on vcpkg:',['../index.html#autotoc_md25',1,'']]]
+  ['anyxx_2ehpp_27',['anyxx.hpp',['../anyxx_8hpp.html',1,'']]],
+  ['as_20visitor_28',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md32',1,'']]],
+  ['available_20on_20vcpkg_3a_29',['Available on vcpkg:',['../index.html#autotoc_md25',1,'']]]
 ];
