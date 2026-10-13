@@ -120,6 +120,8 @@ $(function(){initNavTree('anyxx_8hpp.html','',''); });
 <code>#include &lt;bit_factory/anyxx/small_object_size.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/utilities.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/v_table_data.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/v23/v_table_holder/v_table_holder_dyn.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/v23/v_table_holder/v_table_holder_static.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/voidness.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/infra/config.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/v23/preprocessor_meta_class.hpp&gt;</code><br />
@@ -197,16 +199,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a280c14413f3939d9a8a1dbb3e9f5d5af" id="r_a280c14413f3939d9a8a1dbb3e9f5d5af"><td class="memTemplParams" colspan="2">template&lt;typename Proxy, typename Trait&gt; </td></tr>
-<tr class="memitem:a280c14413f3939d9a8a1dbb3e9f5d5af template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a280c14413f3939d9a8a1dbb3e9f5d5af">anyxx::proxy_model_map_t</a></td></tr>
-<tr class="memitem:abaae2b5143325572d5a47e8c496f59c1" id="r_abaae2b5143325572d5a47e8c496f59c1"><td class="memTemplParams" colspan="2">template&lt;typename Proxy, typename Trait&gt; </td></tr>
-<tr class="memitem:abaae2b5143325572d5a47e8c496f59c1 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#abaae2b5143325572d5a47e8c496f59c1">anyxx::proxy_deduced_type_t</a></td></tr>
-<tr class="memitem:a121320b29994d588b3b08ec04e2feeb3" id="r_a121320b29994d588b3b08ec04e2feeb3"><td class="memTemplParams" colspan="2"><a id="a121320b29994d588b3b08ec04e2feeb3" name="a121320b29994d588b3b08ec04e2feeb3"></a>
-template&lt;typename Trait&gt; </td></tr>
-<tr class="memitem:a121320b29994d588b3b08ec04e2feeb3 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::v_table_t</b> = typename Trait ::v_table_t</td></tr>
-<tr class="memitem:a24cf93bd12362e92ab379a1b0336b8e2" id="r_a24cf93bd12362e92ab379a1b0336b8e2"><td class="memTemplParams" colspan="2"><a id="a24cf93bd12362e92ab379a1b0336b8e2" name="a24cf93bd12362e92ab379a1b0336b8e2"></a>
-template&lt;typename Trait&gt; </td></tr>
-<tr class="memitem:a24cf93bd12362e92ab379a1b0336b8e2 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::v_table_deduced_type_t</b> = typename v_table_t&lt;Trait&gt;::deduced_type</td></tr>
 <tr class="memitem:a92917959a2ef4d14ddf6e22473220820" id="r_a92917959a2ef4d14ddf6e22473220820"><td class="memTemplParams" colspan="2">template&lt;typename Type, typename Trait&gt; </td></tr>
 <tr class="memitem:a92917959a2ef4d14ddf6e22473220820 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a> = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;Trait, using_&lt;Type&gt;&gt;</td></tr>
 <tr class="memitem:a83407b9419ab07b50701cc802fa04551" id="r_a83407b9419ab07b50701cc802fa04551"><td class="memTemplParams" colspan="2">template&lt;typename Type, typename Trait&gt; </td></tr>
@@ -595,42 +587,6 @@ template&lt;typename Type, typename Trait&gt; </div>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2e_trait_algebra_8cpp-example.html#a2">_2e_trait_algebra.cpp</a>.</dd>
 </dl>
 
-</div>
-</div>
-<a id="abaae2b5143325572d5a47e8c496f59c1" name="abaae2b5143325572d5a47e8c496f59c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abaae2b5143325572d5a47e8c496f59c1">&#9670;&#160;</a></span>proxy_deduced_type_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Proxy, typename Trait&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using anyxx::proxy_deduced_type_t</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line"> </div>
-<div class="line"><span class="keyword">typename</span> proxy_model_map_t&lt;Proxy, Trait&gt;::deduced_type</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a280c14413f3939d9a8a1dbb3e9f5d5af" name="a280c14413f3939d9a8a1dbb3e9f5d5af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a280c14413f3939d9a8a1dbb3e9f5d5af">&#9670;&#160;</a></span>proxy_model_map_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Proxy, typename Trait&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using anyxx::proxy_model_map_t</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line"> </div>
-<div class="line"><span class="keyword">typename</span> Trait::template model_map&lt;static_dispatch_t&lt;Proxy&gt;&gt;</div>
-</div><!-- fragment -->
 </div>
 </div>
 <a id="a92917959a2ef4d14ddf6e22473220820" name="a92917959a2ef4d14ddf6e22473220820"></a>
