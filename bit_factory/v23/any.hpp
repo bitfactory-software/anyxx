@@ -276,4 +276,54 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
   }
 };
 
+/// A template to get an \ref any trait for a type
+/// See also \ref using_::as.
+template <typename Type, typename Trait>
+using use_as = any<Trait, using_<Type>>;
+
+/// A template to get an \ref any trait for a type
+/// See also \ref using_cref::as.
+template <typename Type, typename Trait>
+using use_as_cref = any<Trait, using_cref<Type>>;
+
+/// A template to get an templatetd \ref any trait for a type
+/// See also \ref using_::as.
+template <typename Type, template <typename...> typename Trait, typename... Ts>
+using use_as_ = any<Trait<Ts...>, using_<Type>>;
+
+/// A template to get an templatetd \ref any trait for a type
+/// See also \ref using_cref::as.
+template <typename Type, template <typename...> typename Trait, typename... Ts>
+using use_as_cref_ = any<Trait<Ts...>, using_cref<Type>>;
+
+/// A factory function to bind an object as a model to an \ref any with a \ref
+/// trait.
+/// See also \ref using_::as.
+template <typename Trait, typename T>
+auto trait_as(T&& v) {
+    return any<Trait, using_<std::decay_t<T>>>{std::forward<T>(v)};
+}
+
+/// A factory function to bind a const& as a model to an \ref any with a \ref
+/// trait.
+/// See also \ref using_cref::as.
+template <typename Trait, typename T>
+auto trait_as_cref(T const& v) {
+    return any<Trait, using_cref<std::decay_t<T>>>{v};
+}
+
+/// Helper type alias template to get a \ref trait_class for a type
+/// dispatch. Has no data member, so it doesn't capture any value and has no
+/// size
+///
+/// \tparam Type The captured type
+template <typename Type, typename Trait>
+using any_trait_class = any<Trait, trait_class<Type>>;
+
+/// A object template to get a \ref trait_class object for a type as a \ref
+/// trait.
+/// See also \ref using_::as.
+template <typename Type, typename Trait>
+static inline any_trait_class<Type, Trait> trait_class_;
+
 }  // namespace anyxx
