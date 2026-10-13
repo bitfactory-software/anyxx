@@ -45,12 +45,16 @@
 #include <bit_factory/anyxx/proxies/static/trait_class.hpp>
 #include <bit_factory/anyxx/proxies/static/using_cref.hpp>
 #include <bit_factory/anyxx/proxies/static/using_.hpp>
+#ifdef ANYXX_26
+#else
 #include <bit_factory/anyxx/proxies/static/vany.hpp>
 #include <bit_factory/v23/any.hpp>
 #include <bit_factory/v23/preprocessor_meta_class.hpp>
 #include <bit_factory/v23/v_table_data.hpp>
 #include <bit_factory/v23/v_table_holder/v_table_holder_dyn.hpp>
 #include <bit_factory/v23/v_table_holder/v_table_holder_static.hpp>
+#endif  // !ANYXX_26
+
 
 /**
    \example _1_any_shape.cpp
