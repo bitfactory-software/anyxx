@@ -6,8 +6,7 @@ var indexSectionsWithContent =
   3: "abcdelmotu",
   4: "au",
   5: "acdfmv",
-  6: "01234567:abcdefhijlmoprstuvw",
-  7: "h"
+  6: "01234567:abcdefhijlmoprstuvw"
 };
 
 var indexSectionNames =
@@ -18,8 +17,7 @@ var indexSectionNames =
   3: "functions",
   4: "typedefs",
   5: "groups",
-  6: "pages",
-  7: "concepts"
+  6: "pages"
 };
 
 var indexSectionLabels =
@@ -30,7 +28,6 @@ var indexSectionLabels =
   3: "Functions",
   4: "Typedefs",
   5: "Modules",
-  6: "Pages",
-  7: "Concepts"
+  6: "Pages"
 };
 

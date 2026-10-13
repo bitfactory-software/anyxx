@@ -94,7 +94,9 @@ $(function(){initNavTree('anyxx_8hpp.html','',''); });
 
 <p>C++ header only library for external polymorphism.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;bit_factory/anyxx/compute_val_proxy_size.hpp&gt;</code><br />
+<div class="textblock"><code>#include &lt;bit_factory/anyxx/any_concept.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/compute_val_proxy_size.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/crosscast_runtime.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/dll_mode.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/errors/cast_error.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/errors/type_mismatch_error.hpp&gt;</code><br />
@@ -138,11 +140,6 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A tag to indicate that the corresponding function parameter is an <a class="el" href="classanyxx_1_1any.html" title="any">any</a> used for dispatch.  <a href="structanyxx_1_1virtual__.html#details">More...</a><br /></td></tr>
 <tr class="memitem:anyxx_3A_3Adispatch_3C_20R_28Args_2E_2E_2E_29_3E" id="r_anyxx_3A_3Adispatch_3C_20R_28Args_2E_2E_2E_29_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html">anyxx::dispatch&lt; R(Args...)&gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open dispatch method. Solves the expression problem.  <a href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#details">More...</a><br /></td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-concepts" class="groupheader"><a id="concepts" name="concepts"></a>
-Concepts</h2></td></tr>
-<tr class="memitem:anyxx_3A_3Ahas_5Fv_5Ftable" id="r_anyxx_3A_3Ahas_5Fv_5Ftable"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="conceptanyxx_1_1has__v__table.html">anyxx::has_v_table</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requirements for a trait type. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -200,9 +197,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:aec5473f1849561491cbfe887f2a12270" id="r_aec5473f1849561491cbfe887f2a12270"><td class="memTemplParams" colspan="2"><a id="aec5473f1849561491cbfe887f2a12270" name="aec5473f1849561491cbfe887f2a12270"></a>
-template&lt;typename Proxy&gt; </td></tr>
-<tr class="memitem:aec5473f1849561491cbfe887f2a12270 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::static_dispatch_t</b> = typename proxy_trait&lt;Proxy&gt;::static_dispatch_t</td></tr>
 <tr class="memitem:a280c14413f3939d9a8a1dbb3e9f5d5af" id="r_a280c14413f3939d9a8a1dbb3e9f5d5af"><td class="memTemplParams" colspan="2">template&lt;typename Proxy, typename Trait&gt; </td></tr>
 <tr class="memitem:a280c14413f3939d9a8a1dbb3e9f5d5af template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a280c14413f3939d9a8a1dbb3e9f5d5af">anyxx::proxy_model_map_t</a></td></tr>
 <tr class="memitem:abaae2b5143325572d5a47e8c496f59c1" id="r_abaae2b5143325572d5a47e8c496f59c1"><td class="memTemplParams" colspan="2">template&lt;typename Proxy, typename Trait&gt; </td></tr>
@@ -244,15 +238,6 @@ template&lt;typename Model, typename Param&gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a1c0c5e219bb387e03a62628bcb9f6042" id="r_a1c0c5e219bb387e03a62628bcb9f6042"><td class="memTemplParams" colspan="2"><a id="a1c0c5e219bb387e03a62628bcb9f6042" name="a1c0c5e219bb387e03a62628bcb9f6042"></a>
-template&lt;typename TYPE&gt; </td></tr>
-<tr class="memitem:a1c0c5e219bb387e03a62628bcb9f6042 template"><td class="memItemLeft">auto &amp;&#160;</td><td class="memItemRight"><b>anyxx::runtime_implementation</b> ()</td></tr>
-<tr class="memitem:a32cdb4d9efa7cee6a30bd4f7feb09024" id="r_a32cdb4d9efa7cee6a30bd4f7feb09024"><td class="memTemplParams" colspan="2"><a id="a32cdb4d9efa7cee6a30bd4f7feb09024" name="a32cdb4d9efa7cee6a30bd4f7feb09024"></a>
-template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a32cdb4d9efa7cee6a30bd4f7feb09024 template"><td class="memItemLeft">meta_data &amp;&#160;</td><td class="memItemRight"><b>anyxx::get_meta_data</b> ()</td></tr>
-<tr class="memitem:aab243e28ae1ec0abbc49057a5d0af1e6" id="r_aab243e28ae1ec0abbc49057a5d0af1e6"><td class="memTemplParams" colspan="2"><a id="aab243e28ae1ec0abbc49057a5d0af1e6" name="aab243e28ae1ec0abbc49057a5d0af1e6"></a>
-template&lt;typename VTable, typename Concrete&gt; </td></tr>
-<tr class="memitem:aab243e28ae1ec0abbc49057a5d0af1e6 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::bind_v_table_to_meta_data</b> ()</td></tr>
 <tr class="memitem:aeb744d3528f74dfbb51f29520e3a02e9" id="r_aeb744d3528f74dfbb51f29520e3a02e9"><td class="memTemplParams" colspan="2"><a id="aeb744d3528f74dfbb51f29520e3a02e9" name="aeb744d3528f74dfbb51f29520e3a02e9"></a>
 template&lt;is_any Any&gt; </td></tr>
 <tr class="memitem:aeb744d3528f74dfbb51f29520e3a02e9 template"><td class="memItemLeft">auto &amp;&#160;</td><td class="memItemRight"><b>anyxx::get_proxy</b> (Any const &amp;<a class="el" href="classanyxx_1_1any.html">any</a>)</td></tr>
@@ -339,9 +324,6 @@ dispatch_table_function_t&#160;</td><td class="memItemRight"><b>anyxx::get_funct
 dispatch_table_dispatch_index_t&#160;</td><td class="memItemRight"><b>anyxx::get_multi_dispatch_index_at</b> (dispatch_table_t *table, std::size_t index)</td></tr>
 <tr class="memitem:a9588c842cb05a6cf4a1cd1fb1a47831d" id="r_a9588c842cb05a6cf4a1cd1fb1a47831d"><td class="memItemLeft"><a id="a9588c842cb05a6cf4a1cd1fb1a47831d" name="a9588c842cb05a6cf4a1cd1fb1a47831d"></a>
 void&#160;</td><td class="memItemRight"><b>anyxx::set_multi_dispatch_index_at</b> (dispatch_table_t *table, std::size_t index_multi_dispatch, dispatch_table_dispatch_index_t dispatch_index_of_class_in_dispatch_matrix)</td></tr>
-<tr class="memitem:a75fb9c6aa7c1aea3470919e33151e4b8" id="r_a75fb9c6aa7c1aea3470919e33151e4b8"><td class="memTemplParams" colspan="2"><a id="a75fb9c6aa7c1aea3470919e33151e4b8" name="a75fb9c6aa7c1aea3470919e33151e4b8"></a>
-template&lt;is_any ToAny, is_dynamic_castable_v_table FromVTable&gt; </td></tr>
-<tr class="memitem:a75fb9c6aa7c1aea3470919e33151e4b8 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::query_v_table</b> (FromVTable *from) -&gt; std::expected&lt; typename ToAny::v_table_t *, anyxx::cast_error &gt;</td></tr>
 <tr class="memitem:ab5b32db521081a3c5ae50b467aed1454" id="r_ab5b32db521081a3c5ae50b467aed1454"><td class="memTemplParams" colspan="2"><a id="ab5b32db521081a3c5ae50b467aed1454" name="ab5b32db521081a3c5ae50b467aed1454"></a>
 template&lt;typename V, is_any Any&gt; </td></tr>
 <tr class="memitem:ab5b32db521081a3c5ae50b467aed1454 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::as</b> (Any source)</td></tr>

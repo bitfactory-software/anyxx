@@ -32,7 +32,6 @@ var NAVTREE =
     [ "Terms and Definitions in Context of <span class=\"tt\">Any++</span>", "md_docs_2terms__and__definitions.html", null ],
     [ "The Inner Working Of <span class=\"tt\">Traits</span> In <span class=\"tt\">Any++</span>", "md_docs_2Traits__inner__working.html", null ],
     [ "Topics", "topics.html", "topics" ],
-    [ "Concepts", "concepts.html", "concepts" ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
