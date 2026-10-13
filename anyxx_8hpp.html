@@ -149,19 +149,6 @@ Macros</h2></td></tr>
 <tr class="memitem:ad7720b600986a8d2a7752a8c20364270" id="r_ad7720b600986a8d2a7752a8c20364270"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ad7720b600986a8d2a7752a8c20364270">ANY_MOVE_CONSTRUCTOR</a></td></tr>
 <tr class="memitem:af581a4434969e566de1cb296998efcfc" id="r_af581a4434969e566de1cb296998efcfc"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#af581a4434969e566de1cb296998efcfc">ANY_DESTRUCTOR</a></td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:a0948b1d7e5622e60576d26510b568ff4" id="r_a0948b1d7e5622e60576d26510b568ff4"><td class="memTemplParams" colspan="2">template&lt;typename AnyValue, typename Param&gt; </td></tr>
-<tr class="memitem:a0948b1d7e5622e60576d26510b568ff4 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a0948b1d7e5622e60576d26510b568ff4">anyxx::v_table_param</a></td></tr>
-<tr class="memitem:afcf89ad7feead5ca31f56788619800bc" id="r_afcf89ad7feead5ca31f56788619800bc"><td class="memTemplParams" colspan="2">template&lt;typename AnyValue, typename Return&gt; </td></tr>
-<tr class="memitem:afcf89ad7feead5ca31f56788619800bc template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#afcf89ad7feead5ca31f56788619800bc">anyxx::v_table_return</a></td></tr>
-<tr class="memitem:afaa22b9dd5a3e091b08415a23947c3fd" id="r_afaa22b9dd5a3e091b08415a23947c3fd"><td class="memTemplParams" colspan="2"><a id="afaa22b9dd5a3e091b08415a23947c3fd" name="afaa22b9dd5a3e091b08415a23947c3fd"></a>
-template&lt;typename Model, typename Param&gt; </td></tr>
-<tr class="memitem:afaa22b9dd5a3e091b08415a23947c3fd template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::map_return</b> = translate_sig_map&lt;Param&gt;::template map_return&lt;Model&gt;</td></tr>
-<tr class="memitem:a91833bc160420585e36e9d899b552ab2" id="r_a91833bc160420585e36e9d899b552ab2"><td class="memTemplParams" colspan="2"><a id="a91833bc160420585e36e9d899b552ab2" name="a91833bc160420585e36e9d899b552ab2"></a>
-template&lt;typename Model, typename Param&gt; </td></tr>
-<tr class="memitem:a91833bc160420585e36e9d899b552ab2 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::concept_arg</b> = translate_sig_map&lt;Param&gt;::template concept_arg&lt;Model&gt;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:af65ce4f85fffe89d7973a3c5f691e6df" id="r_af65ce4f85fffe89d7973a3c5f691e6df"><td class="memTemplParams" colspan="2"><a id="af65ce4f85fffe89d7973a3c5f691e6df" name="af65ce4f85fffe89d7973a3c5f691e6df"></a>
@@ -213,12 +200,6 @@ template&lt;typename Concrete&gt; </td></tr>
 &#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_moveable, dynamic_castable,,,,(ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),(using default_proxy_t=val&lt;&gt;;))</td></tr>
 <tr class="memitem:aa54b08ee4eec2de75e1b5bf3199df524" id="r_aa54b08ee4eec2de75e1b5bf3199df524"><td class="memItemLeft"><a id="aa54b08ee4eec2de75e1b5bf3199df524" name="aa54b08ee4eec2de75e1b5bf3199df524"></a>
 &#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_copyable, dynamic_moveable,,,,(ANY_COPY_CONSTRUCTOR),())</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a29667826b79a098315e0b2a5918feafc" id="r_a29667826b79a098315e0b2a5918feafc"><td class="memTemplParams" colspan="2"><a id="a29667826b79a098315e0b2a5918feafc" name="a29667826b79a098315e0b2a5918feafc"></a>
-template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a29667826b79a098315e0b2a5918feafc template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::is_use_as_</b> = is_use_as__impl&lt;std::decay_t&lt;T&gt;&gt;::value</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>C++ header only library for external polymorphism. </p>
@@ -313,43 +294,6 @@ template&lt;typename T&gt; </td></tr>
 <div class="line">                   <span class="keywordflow">return</span> invoke_move_constructor&lt;Concrete&gt;(placement,    \</div>
 <div class="line">                                                            from);        \</div>
 <div class="line">                 })</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
-<a id="a0948b1d7e5622e60576d26510b568ff4" name="a0948b1d7e5622e60576d26510b568ff4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0948b1d7e5622e60576d26510b568ff4">&#9670;&#160;</a></span>v_table_param</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename AnyValue, typename Param&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using anyxx::v_table_param</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line"> </div>
-<div class="line">translate_sig_map&lt;Param&gt;::template v_table_param&lt;AnyValue&gt;</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="afcf89ad7feead5ca31f56788619800bc" name="afcf89ad7feead5ca31f56788619800bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afcf89ad7feead5ca31f56788619800bc">&#9670;&#160;</a></span>v_table_return</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename AnyValue, typename Return&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using anyxx::v_table_return</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line"> </div>
-<div class="line">translate_sig_map&lt;Return&gt;::template v_table_return&lt;AnyValue&gt;</div>
 </div><!-- fragment -->
 </div>
 </div>
