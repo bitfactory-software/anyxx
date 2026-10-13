@@ -46,12 +46,6 @@ struct dynamic_deletable;
 struct dynamic_moveable;
 struct dynamic_copyable;
 
-template <typename DerivedAny, typename BaseAny>
-constexpr bool is_any_derived_from_v = false;
-
-template <typename DerivedAny, typename BaseAny>
-concept is_any_derived_from = is_any_derived_from_v<DerivedAny, BaseAny>;
-
 template <typename TraitDerived, is_proxy ProxyDerived, typename TraitBase,
           is_proxy ProxyBase>
 constexpr bool is_any_derived_from_v<any<TraitDerived, ProxyDerived>,

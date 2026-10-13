@@ -31,4 +31,11 @@ concept constructibile_for =
         !is_proxy_holder<ConstructedWith> &&
         !is_typed_any<std::remove_cvref_t<ConstructedWith>>);
 
+
+template <typename DerivedAny, typename BaseAny>
+constexpr bool is_any_derived_from_v = false;
+
+template <typename DerivedAny, typename BaseAny>
+concept is_any_derived_from = is_any_derived_from_v<DerivedAny, BaseAny>;
+
 }  // namespace anyxx
