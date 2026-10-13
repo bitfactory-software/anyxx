@@ -1,6 +1,7 @@
 ﻿// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/open_dispatch/dispatch.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>

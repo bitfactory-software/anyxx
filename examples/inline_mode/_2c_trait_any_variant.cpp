@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/open_dispatch/dispatch_vany.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <compare>
 #include <concepts>

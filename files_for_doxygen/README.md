@@ -169,10 +169,11 @@ git clone - c core.symlinks = true https://github.com/bitfactory-software/anyxx
 // <!--
 #endif
 // -->
-namespace showcase2 {
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
+
+namespace showcase2 {
 
 struct circle {};
 struct square {
@@ -215,11 +216,15 @@ to provide custom behavior for unrelated types using traits.
 // <!--
 #endif
 // -->
-namespace showcase3 {
+
 #include <bit_factory/anyxx.hpp>
-#include <catch2/catch_test_macros.hpp>
+#include <bit_factory/anyxx/open_dispatch/dispatch.hpp>
 #include <compare>
 #include <string>
+#include <sstream>
+#include <vector>
+
+namespace showcase3 {
 
 namespace ayx = anyxx;
 
@@ -304,10 +309,14 @@ That trick initializes a static variable with automatic name at each usage site 
 // <!--
 #endif
 // -->
-namespace showcase4 {
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/open_dispatch/dispatch.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
+#include <sstream>
+#include <vector>
+
+namespace showcase4 {
 
 namespace ayx = anyxx;
 
@@ -367,10 +376,11 @@ This is the so-called "Open Visitor Pattern" implemented via open dispatch O(1) 
 // <!--
 #endif
 // -->
-namespace showcase5 {
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
+
+namespace showcase5 {
 
 namespace ayx = anyxx;
 

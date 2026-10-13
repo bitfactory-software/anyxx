@@ -4,6 +4,7 @@
 #include <bit_factory/anyxx/errors/type_mismatch_error.hpp>
 
 #include <cassert>
+#include <typeinfo>
 
 namespace anyxx {
 
