@@ -29,6 +29,5 @@ var searchData=
   ['const_20in_20any_26',['Handling &lt;span class=&quot;tt&quot;&gt;const&lt;/span&gt; in &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Constness.html',1,'']]],
   ['context_20of_20any_27',['Terms and Definitions in Context of &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2terms__and__definitions.html',1,'']]],
   ['crosscast_28',['Crosscast',['../md_docs_2terms__and__definitions.html#autotoc_md20',1,'']]],
-  ['crosscast_29',['ANY_META_CLASS macros for crosscast',['../group__meta__class__macros.html',1,'']]],
-  ['crosscast_20factory_20serialization_30',['Showcase 5: &lt;em&gt;Any++&lt;/em&gt; Crosscast + Factory = Serialization',['../index.html#autotoc_md33',1,'']]]
+  ['crosscast_20factory_20serialization_29',['Showcase 5: &lt;em&gt;Any++&lt;/em&gt; Crosscast + Factory = Serialization',['../index.html#autotoc_md33',1,'']]]
 ];

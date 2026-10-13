@@ -16,18 +16,7 @@ var searchData=
   ['any_20usage_13',['Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage',['../index.html#autotoc_md24',1,'']]],
   ['any_20versus_20typed_5fany_14',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md16',1,'']]],
   ['any_20with_20model_20map_15',['Showcase 2: &lt;em&gt;Any++&lt;/em&gt; with Model Map',['../index.html#autotoc_md30',1,'']]],
-  ['any_5fdispatch_5fcount_16',['ANY_DISPATCH_COUNT',['../group__dispatch__macros.html#ga32b666e74d79e7b7c3742af2b38d3f43',1,'anyxx.hpp']]],
-  ['any_5fdispatch_5fcount_5ffwd_17',['ANY_DISPATCH_COUNT_FWD',['../group__dispatch__macros.html#ga4c6118f1ec66be826490068afce507a4',1,'anyxx.hpp']]],
-  ['any_5fdispatch_5ffor_18',['ANY_DISPATCH_FOR',['../group__dispatch__macros.html#gadd935835248281ded77dd94b587509ac',1,'anyxx.hpp']]],
-  ['any_5fdispatch_5ffor_5ffwd_19',['ANY_DISPATCH_FOR_FWD',['../group__dispatch__macros.html#ga1373b948d1de7ce120d00aedb00a0e6b',1,'anyxx.hpp']]],
-  ['any_5fmeta_5fclass_20',['ANY_META_CLASS',['../group__meta__class__macros.html#ga94ede558e44a0fd9d6a0a4e56bd68734',1,'anyxx.hpp']]],
-  ['any_5fmeta_5fclass_20macros_20for_20crosscast_21',['ANY_META_CLASS macros for crosscast',['../group__meta__class__macros.html',1,'']]],
-  ['any_5fmeta_5fclass_5ffwd_22',['ANY_META_CLASS_FWD',['../group__meta__class__macros.html#ga7d04ec93bbe9774ea87b00affe3f960b',1,'anyxx.hpp']]],
-  ['any_5fregister_5fmodel_23',['ANY_REGISTER_MODEL',['../group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac',1,'anyxx.hpp']]],
-  ['any_5fsingleton_24',['ANY_SINGLETON',['../group__singleton__macros.html#gab55747625c4054406c3f615c19ab1499',1,'anyxx.hpp']]],
-  ['any_5fsingleton_20macros_25',['ANY_SINGLETON macros',['../group__singleton__macros.html',1,'']]],
-  ['any_5fsingleton_5fdeclare_26',['ANY_SINGLETON_DECLARE',['../group__singleton__macros.html#ga3f285810c0716bfa028b613342d910d1',1,'anyxx.hpp']]],
-  ['anyxx_2ehpp_27',['anyxx.hpp',['../anyxx_8hpp.html',1,'']]],
-  ['as_20visitor_28',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md32',1,'']]],
-  ['available_20on_20vcpkg_3a_29',['Available on vcpkg:',['../index.html#autotoc_md25',1,'']]]
+  ['anyxx_2ehpp_16',['anyxx.hpp',['../anyxx_8hpp.html',1,'']]],
+  ['as_20visitor_17',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md32',1,'']]],
+  ['available_20on_20vcpkg_3a_18',['Available on vcpkg:',['../index.html#autotoc_md25',1,'']]]
 ];

@@ -416,6 +416,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/factory.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
@@ -457,8 +458,8 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line">  archive &gt;&gt; c.radius;</div>
 <div class="line">  <span class="keywordflow">return</span> c;</div>
 <div class="line">});</div>
-<div class="line"><a class="code hl_define" href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a>(circle, figure);</div>
-<div class="line"><a class="code hl_define" href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a>(circle, serializable);</div>
+<div class="line">ANY_REGISTER_MODEL(circle, figure);</div>
+<div class="line">ANY_REGISTER_MODEL(circle, serializable);</div>
 <div class="line"> </div>
 <div class="line">ANY_MODEL_MAP((square), serializable) {</div>
 <div class="line">  <span class="keyword">static</span> <span class="keywordtype">void</span> serialize(square <span class="keyword">const</span>&amp; self, std::ostream&amp; os) {</div>
@@ -470,8 +471,8 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line">  archive &gt;&gt; s.edge_length;</div>
 <div class="line">  <span class="keywordflow">return</span> s;</div>
 <div class="line">});</div>
-<div class="line"><a class="code hl_define" href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a>(square, figure);</div>
-<div class="line"><a class="code hl_define" href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a>(square, serializable);</div>
+<div class="line">ANY_REGISTER_MODEL(square, figure);</div>
+<div class="line">ANY_REGISTER_MODEL(square, serializable);</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> areas(std::stringstream&amp; os,</div>
 <div class="line">           std::vector&lt;ayx::any&lt;figure, ayx::val&lt;&gt;&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
@@ -503,7 +504,6 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="ttc" id="agroup__meta__class__macros_html_ga3449a1cb25287d73a1e8db0fe95f2dac"><div class="ttname"><a href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a></div><div class="ttdeci">#define ANY_REGISTER_MODEL(class_, interface_,...)</div><div class="ttdoc">Register a model class for a specific any interface. Must be in global namespace.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:653</div></div>
 </div><!-- fragment --><p> Showcase 5 demonstrates how to use <span class="tt">Any++</span> to combine cross-casting and factory patterns for serialization and deserialization of type-erased objects.</p><ul>
 <li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with an <span class="tt">area()</span> method and serializable state (<span class="tt">radius</span> or <span class="tt">edge_length</span>).</li>
 <li>Two traits are declared: <span class="tt">figure</span> (with an <span class="tt">area()</span> method) and <span class="tt">serializable</span> (with a <span class="tt">serialize(std::ostream&amp;)</span> method).</li>

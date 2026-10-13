@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['dispatch_5f_20macros_0',['DISPATCH_ macros',['../group__dispatch__macros.html',1,'']]]
+  ['macro_0',['Any++ configuration macro',['../group__anyxx__config.html',1,'']]]
 ];

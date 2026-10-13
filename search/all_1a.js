@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['upcast_20vs_20downcast_0',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md18',1,'']]],
-  ['usage_1',['usage',['../index.html#autotoc_md24',1,'Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage'],['../index.html#autotoc_md34',1,'Showcase 6: Basic &lt;em&gt;Any++&lt;/em&gt; std::variant usage']]],
-  ['usage_3a_20vany_2',['Showcase 7: Basic &lt;em&gt;Any++&lt;/em&gt; open std::variant usage: &apos;vany&apos;',['../index.html#autotoc_md35',1,'']]],
-  ['useage_20in_20cmakelists_20txt_3a_3',['Useage in CMakeLists.txt:',['../index.html#autotoc_md26',1,'']]],
-  ['using_20c_2023_20library_20tech_20steve_20downey_4',['Chapter 3: Concept Maps using C++23 Library Tech, Steve Downey',['../subpage3.html',1,'main']]]
+  ['v_5ftable_0',['v_table',['../md_docs_2terms__and__definitions.html#autotoc_md12',1,'']]],
+  ['v_5ftable_20instance_1',['v_table instance',['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'']]],
+  ['vany_2',['Showcase 7: Basic &lt;em&gt;Any++&lt;/em&gt; open std::variant usage: &apos;vany&apos;',['../index.html#autotoc_md35',1,'']]],
+  ['vcpkg_3a_3',['Available on vcpkg:',['../index.html#autotoc_md25',1,'']]],
+  ['versus_20typed_5fany_4',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md16',1,'']]],
+  ['visitor_5',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md32',1,'']]],
+  ['vs_20downcast_6',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md18',1,'']]],
+  ['vs_20dynamic_20cast_7',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]]
 ];

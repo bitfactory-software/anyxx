@@ -6,10 +6,9 @@ var searchData=
   ['dispatch_20dispatch_5ftable_20dispatch_5ftable_20instance_20multi_20dispatch_20matrix_3',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md14',1,'']]],
   ['dispatch_20matrix_4',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md14',1,'']]],
   ['dispatch_20type_20erased_20binary_20operator_5',['Showcase 3: &lt;em&gt;Any++&lt;/em&gt; Open Multi Dispatch, (Type Erased Binary Operator)',['../index.html#autotoc_md31',1,'']]],
-  ['dispatch_5f_20macros_6',['DISPATCH_ macros',['../group__dispatch__macros.html',1,'']]],
-  ['dispatch_5ftable_20dispatch_5ftable_20instance_20multi_20dispatch_20matrix_7',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md14',1,'']]],
-  ['dispatch_5ftable_20instance_20multi_20dispatch_20matrix_8',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md14',1,'']]],
-  ['downcast_9',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md18',1,'']]],
-  ['downey_10',['Chapter 3: Concept Maps using C++23 Library Tech, Steve Downey',['../subpage3.html',1,'main']]],
-  ['dynamic_20cast_11',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]]
+  ['dispatch_5ftable_20dispatch_5ftable_20instance_20multi_20dispatch_20matrix_6',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md14',1,'']]],
+  ['dispatch_5ftable_20instance_20multi_20dispatch_20matrix_7',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md14',1,'']]],
+  ['downcast_8',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md18',1,'']]],
+  ['downey_9',['Chapter 3: Concept Maps using C++23 Library Tech, Steve Downey',['../subpage3.html',1,'main']]],
+  ['dynamic_20cast_10',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]]
 ];

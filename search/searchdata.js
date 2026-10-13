@@ -1,30 +1,27 @@
 var indexSectionsWithContent =
 {
-  0: "01234567:abcdefhijklmoprstuvw",
-  1: "fkm",
-  2: "a",
-  3: "bclm",
-  4: "acdfmv",
-  5: "01234567:abcdefhijlmoprstuvw"
+  0: "01234567:abcdefhijlmoprstuvw",
+  1: "a",
+  2: "bclm",
+  3: "acm",
+  4: "01234567:abcdefhijlmoprstuvw"
 };
 
 var indexSectionNames =
 {
   0: "all",
-  1: "classes",
-  2: "files",
-  3: "functions",
-  4: "groups",
-  5: "pages"
+  1: "files",
+  2: "functions",
+  3: "groups",
+  4: "pages"
 };
 
 var indexSectionLabels =
 {
   0: "All",
-  1: "Classes",
-  2: "Files",
-  3: "Functions",
-  4: "Modules",
-  5: "Pages"
+  1: "Files",
+  2: "Functions",
+  3: "Modules",
+  4: "Pages"
 };
 

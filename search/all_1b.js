@@ -1,14 +1,6 @@
 var searchData=
 [
-  ['v_5ftable_0',['v_table',['../md_docs_2terms__and__definitions.html#autotoc_md12',1,'']]],
-  ['v_5ftable_20instance_1',['v_table instance',['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'']]],
-  ['vany_2',['Showcase 7: Basic &lt;em&gt;Any++&lt;/em&gt; open std::variant usage: &apos;vany&apos;',['../index.html#autotoc_md35',1,'']]],
-  ['vany_5fdispach_3',['VANY_DISPACH',['../group__vany__macros.html#ga93a6d3c140de4e4c95f863b88385a27c',1,'anyxx.hpp']]],
-  ['vany_5fdispach_20macros_4',['VANY_DISPACH macros',['../group__vany__macros.html',1,'']]],
-  ['vany_5fdispach_5fdeclare_5',['VANY_DISPACH_DECLARE',['../group__vany__macros.html#ga0a538605bcb4ae50bd736f0802af2c8b',1,'anyxx.hpp']]],
-  ['vcpkg_3a_6',['Available on vcpkg:',['../index.html#autotoc_md25',1,'']]],
-  ['versus_20typed_5fany_7',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md16',1,'']]],
-  ['visitor_8',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md32',1,'']]],
-  ['vs_20downcast_9',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md18',1,'']]],
-  ['vs_20dynamic_20cast_10',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]]
+  ['with_20model_20map_0',['Showcase 2: &lt;em&gt;Any++&lt;/em&gt; with Model Map',['../index.html#autotoc_md30',1,'']]],
+  ['working_20of_20traits_20in_20any_1',['The Inner Working Of &lt;span class=&quot;tt&quot;&gt;Traits&lt;/span&gt; In &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Traits__inner__working.html',1,'']]],
+  ['world_20of_20type_20classes_2',['Chapter 2: Monoid, the &quot;Hello World&quot; of type classes',['../subpage2.html',1,'main']]]
 ];
