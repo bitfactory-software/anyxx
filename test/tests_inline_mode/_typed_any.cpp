@@ -1,3 +1,4 @@
+#include <bit_factory/anyxx/ext/typed_any.hpp>
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
