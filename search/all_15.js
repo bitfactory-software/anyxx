@@ -9,6 +9,5 @@ var searchData=
   ['open_20multi_20dispatch_20type_20erased_20binary_20operator_6',['Showcase 3: &lt;em&gt;Any++&lt;/em&gt; Open Multi Dispatch, (Type Erased Binary Operator)',['../index.html#autotoc_md31',1,'']]],
   ['open_20std_3a_3avariant_20usage_3a_20vany_7',['Showcase 7: Basic &lt;em&gt;Any++&lt;/em&gt; open std::variant usage: &apos;vany&apos;',['../index.html#autotoc_md35',1,'']]],
   ['operator_8',['Showcase 3: &lt;em&gt;Any++&lt;/em&gt; Open Multi Dispatch, (Type Erased Binary Operator)',['../index.html#autotoc_md31',1,'']]],
-  ['operator_28_29_9',['operator()',['../classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a7e8628df49b55d4cfa4ef8c8c5adae2c',1,'anyxx::dispatch&lt; R(Args...)&gt;']]],
-  ['overview_10',['Overview',['../md_docs_2Proxy__overview.html#autotoc_md2',1,'']]]
+  ['overview_9',['Overview',['../md_docs_2Proxy__overview.html#autotoc_md2',1,'']]]
 ];

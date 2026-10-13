@@ -95,6 +95,7 @@ $(function(){initNavTree('21_Tree_any_dispatch_8cpp-example.html','',''); });
 <div class="fragment"><div class="line"><span class="comment">// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp</span></div>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/open_dispatch/dispatch.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/benchmark/catch_benchmark.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
@@ -127,7 +128,7 @@ $(function(){initNavTree('21_Tree_any_dispatch_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="comment">//-----------------------------------------------------------------------------</span></div>
 <div class="line"><span class="comment">// open dispatch evaluate, returns int, dispatched via an any_node;</span></div>
-<div class="line"><a id="_a0" name="_a0"></a><a class="code hl_class" href="classanyxx_1_1dispatch.html">dispatch</a>&lt;int(<a id="_a1" name="_a1"></a><a class="code hl_struct" href="structanyxx_1_1virtual__.html">virtual_&lt;any_node&gt;</a>)&gt; evaluate;</div>
+<div class="line">dispatch&lt;int(virtual_&lt;any_node&gt;)&gt; evaluate;</div>
 <div class="line"><span class="keyword">auto</span> __ = evaluate.define&lt;Plus&gt;([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; expr) {</div>
 <div class="line">  <span class="keywordflow">return</span> evaluate(expr.left_) + evaluate(expr.right_);</div>
 <div class="line">});</div>
@@ -138,7 +139,7 @@ $(function(){initNavTree('21_Tree_any_dispatch_8cpp-example.html','',''); });
 <div class="line"><span class="comment">//</span></div>
 <div class="line"><span class="comment">//-----------------------------------------------------------------------------</span></div>
 <div class="line"><span class="comment">// render as Forth</span></div>
-<div class="line"><a class="code hl_class" href="classanyxx_1_1dispatch.html">dispatch</a>&lt;std::string(<a class="code hl_struct" href="structanyxx_1_1virtual__.html">virtual_&lt;any_node&gt;</a>)&gt; as_forth;</div>
+<div class="line">dispatch&lt;std::string(virtual_&lt;any_node&gt;)&gt; as_forth;</div>
 <div class="line"><span class="keyword">auto</span> __ = as_forth.define&lt;Plus&gt;([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; expr) {</div>
 <div class="line">  <span class="keywordflow">return</span> as_forth(expr.left_) + <span class="stringliteral">&quot; &quot;</span> + as_forth(expr.right_) + <span class="stringliteral">&quot; +&quot;</span>;</div>
 <div class="line">});</div>
@@ -150,7 +151,7 @@ $(function(){initNavTree('21_Tree_any_dispatch_8cpp-example.html','',''); });
 <div class="line"><span class="comment">//</span></div>
 <div class="line"><span class="comment">//-----------------------------------------------------------------------------</span></div>
 <div class="line"><span class="comment">// render as Lisp</span></div>
-<div class="line"><a class="code hl_class" href="classanyxx_1_1dispatch.html">dispatch</a>&lt;std::string(<a class="code hl_struct" href="structanyxx_1_1virtual__.html">virtual_&lt;any_node&gt;</a>)&gt; as_lisp;</div>
+<div class="line">dispatch&lt;std::string(virtual_&lt;any_node&gt;)&gt; as_lisp;</div>
 <div class="line"><span class="keyword">auto</span> __ = as_lisp.define&lt;Plus&gt;([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; expr) {</div>
 <div class="line">  <span class="keywordflow">return</span> <span class="stringliteral">&quot;(plus &quot;</span> + as_lisp(expr.left_) + <span class="stringliteral">&quot; &quot;</span> + as_lisp(expr.right_) + <span class="stringliteral">&quot;)&quot;</span>;</div>
 <div class="line">});</div>
@@ -188,8 +189,6 @@ $(function(){initNavTree('21_Tree_any_dispatch_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">}  <span class="comment">// namespace _21_Tree_TE_interface_dispatch</span></div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="aclassanyxx_1_1dispatch_html"><div class="ttname"><a href="classanyxx_1_1dispatch.html">anyxx::dispatch</a></div><div class="ttdoc">Open dispatch method. Solves the expression problem. See dispatch&lt;R(Args...)&gt; for details.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:920</div></div>
-<div class="ttc" id="astructanyxx_1_1virtual___html"><div class="ttname"><a href="structanyxx_1_1virtual__.html">anyxx::virtual_</a></div><div class="ttdoc">A tag to indicate that the corresponding function parameter is an any used for dispatch.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:754</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

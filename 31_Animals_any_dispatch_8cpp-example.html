@@ -93,6 +93,7 @@ $(function(){initNavTree('31_Animals_any_dispatch_8cpp-example.html','',''); });
 <div class="contents">
 <p>Open multi-dispatch example</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/open_dispatch/dispatch.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/benchmark/catch_benchmark.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
@@ -122,9 +123,9 @@ $(function(){initNavTree('31_Animals_any_dispatch_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">struct </span>man {</div>
 <div class="line">  [[nodiscard]] <span class="keyword">auto</span> name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> &amp;<span class="keyword">typeid</span>(*this); }</div>
 <div class="line">};</div>
-<div class="line"><span class="keyword">auto</span> encounter = <a id="_a0" name="_a0"></a><a class="code hl_class" href="classanyxx_1_1dispatch.html">anyxx::dispatch</a>&lt;encounter_result(</div>
-<div class="line">    <a id="_a1" name="_a1"></a><a class="code hl_struct" href="structanyxx_1_1virtual__.html">anyxx::virtual_</a>&lt;any_creature&lt;anyxx::cref&gt;&gt;,</div>
-<div class="line">    <a class="code hl_struct" href="structanyxx_1_1virtual__.html">anyxx::virtual_</a>&lt;any_creature&lt;anyxx::cref&gt;&gt;)&gt;{};</div>
+<div class="line"><span class="keyword">auto</span> encounter = anyxx::dispatch&lt;encounter_result(</div>
+<div class="line">    anyxx::virtual_&lt;any_creature&lt;anyxx::cref&gt;&gt;,</div>
+<div class="line">    anyxx::virtual_&lt;any_creature&lt;anyxx::cref&gt;&gt;)&gt;{};</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">auto</span> __ = encounter.define&lt;cat, dog&gt;(</div>
 <div class="line">    [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; l, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) -&gt; encounter_result {</div>
@@ -203,8 +204,6 @@ $(function(){initNavTree('31_Animals_any_dispatch_8cpp-example.html','',''); });
 <div class="line"><span class="preprocessor">#endif  </span><span class="comment">// !_DEBUG</span></div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="aclassanyxx_1_1dispatch_html"><div class="ttname"><a href="classanyxx_1_1dispatch.html">anyxx::dispatch</a></div><div class="ttdoc">Open dispatch method. Solves the expression problem. See dispatch&lt;R(Args...)&gt; for details.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:920</div></div>
-<div class="ttc" id="astructanyxx_1_1virtual___html"><div class="ttname"><a href="structanyxx_1_1virtual__.html">anyxx::virtual_</a></div><div class="ttdoc">A tag to indicate that the corresponding function parameter is an any used for dispatch.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:754</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

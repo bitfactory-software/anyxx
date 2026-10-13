@@ -3,8 +3,6 @@ var anyxx_8hpp =
     [ "anyxx::key&lt; Tag &gt;", "structanyxx_1_1key.html", null ],
     [ "anyxx::factory&lt; Any, Key, Args &gt;", "classanyxx_1_1factory.html", null ],
     [ "anyxx::members&lt; InObject &gt;", "structanyxx_1_1members.html", null ],
-    [ "anyxx::virtual_&lt; Any &gt;", "structanyxx_1_1virtual__.html", null ],
-    [ "anyxx::dispatch&lt; R(Args...)&gt;", "classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html", "classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4" ],
     [ "ANY_DISPATCH_COUNT", "group__dispatch__macros.html#ga32b666e74d79e7b7c3742af2b38d3f43", null ],
     [ "ANY_DISPATCH_COUNT_FWD", "group__dispatch__macros.html#ga4c6118f1ec66be826490068afce507a4", null ],
     [ "ANY_DISPATCH_FOR", "group__dispatch__macros.html#gadd935835248281ded77dd94b587509ac", null ],
@@ -18,7 +16,6 @@ var anyxx_8hpp =
     [ "VANY_DISPACH_DECLARE", "group__vany__macros.html#ga0a538605bcb4ae50bd736f0802af2c8b", null ],
     [ "anyxx::borrow_as", "anyxx_8hpp.html#a57a33d0becfcd08748cf97fd2b51aa16", null ],
     [ "anyxx::clone_to", "anyxx_8hpp.html#af2b7730650bc77681cf299e2a6e77157", null ],
-    [ "anyxx::dispatchs_count", "anyxx_8hpp.html#ad0e4d3c5ff9f0082cf07ef367b55c87a", null ],
     [ "anyxx::lock", "anyxx_8hpp.html#ae988a6a809ee2910690366e1e4c7ae67", null ],
     [ "anyxx::move_to", "anyxx_8hpp.html#a0ad81aaf23ab3d32a02a12cec57c0946", null ]
 ];

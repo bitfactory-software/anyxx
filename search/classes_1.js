@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['factory_0',['factory',['../classanyxx_1_1factory.html',1,'anyxx']]]
+  ['key_0',['key',['../structanyxx_1_1key.html',1,'anyxx']]]
 ];

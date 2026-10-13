@@ -3,7 +3,5 @@ var searchData=
   ['handling_20const_20in_20any_0',['Handling &lt;span class=&quot;tt&quot;&gt;const&lt;/span&gt; in &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Constness.html',1,'']]],
   ['haskell_20type_20classes_1',['Any++, C++0x Concepts, Rust Traits, Haskell Type Classes',['../main.html',1,'']]],
   ['haskell_20type_20classes_20rust_20traits_20a_20short_20introduction_2',['Chapter 1: C++0x Concepts, Haskell type classes, Rust traits, a short introduction',['../subpage1.html',1,'main']]],
-  ['hello_20world_20of_20type_20classes_3',['Chapter 2: Monoid, the &quot;Hello World&quot; of type classes',['../subpage2.html',1,'main']]],
-  ['hook_4',['hook',['../classanyxx_1_1hook.html',1,'anyxx']]],
-  ['hook_3c_20r_28anys_20const_20_26_2e_2e_2e_2c_20args_2e_2e_2e_29_3e_5',['hook&lt; R(Anys const &amp;..., Args...)&gt;',['../classanyxx_1_1hook.html',1,'anyxx']]]
+  ['hello_20world_20of_20type_20classes_3',['Chapter 2: Monoid, the &quot;Hello World&quot; of type classes',['../subpage2.html',1,'main']]]
 ];

@@ -8,8 +8,7 @@ var searchData=
   ['vany_5fdispach_5fdeclare_5',['VANY_DISPACH_DECLARE',['../group__vany__macros.html#ga0a538605bcb4ae50bd736f0802af2c8b',1,'anyxx.hpp']]],
   ['vcpkg_3a_6',['Available on vcpkg:',['../index.html#autotoc_md25',1,'']]],
   ['versus_20typed_5fany_7',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md16',1,'']]],
-  ['virtual_5f_8',['virtual_',['../structanyxx_1_1virtual__.html',1,'anyxx']]],
-  ['visitor_9',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md32',1,'']]],
-  ['vs_20downcast_10',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md18',1,'']]],
-  ['vs_20dynamic_20cast_11',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]]
+  ['visitor_8',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md32',1,'']]],
+  ['vs_20downcast_9',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md18',1,'']]],
+  ['vs_20dynamic_20cast_10',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]]
 ];
