@@ -447,9 +447,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     }                                                                      \
   };
 
-// return any_value_t{ std::move(erased_result),
-//                    anyxx::v_table_instance<Parent, Concrete>() };
-
 #define _detail_ANYXX_V_TABLE_DATA_DECL(type, name, ...) type name;
 
 #define _detail_ANYXX_V_TABLE_DATA_INIT(type, name, ...) name = __VA_ARGS__;

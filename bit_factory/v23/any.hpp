@@ -2,8 +2,8 @@
 
 #include <bit_factory/anyxx/any_concept.hpp>
 #include <bit_factory/anyxx/proxies/proxy_concept.hpp>
-#include <bit_factory/v23/v_table_holder/v_table_holder_forward.hpp>
 #include <bit_factory/anyxx/voidness.hpp>
+#include <bit_factory/v23/v_table_holder/v_table_holder_forward.hpp>
 
 namespace anyxx {
 

@@ -2,6 +2,7 @@
 
 #include <bit_factory/anyxx/any_concept.hpp>
 #include <bit_factory/anyxx/errors/cast_error.hpp>
+#include <bit_factory/anyxx/v_table_instance.hpp>
 #include <bit_factory/anyxx/v_table_data.hpp>
 
 #include <expected>

@@ -32,6 +32,7 @@
 #include <bit_factory/anyxx/proxies/static/vany.hpp>
 #include <bit_factory/anyxx/small_object_size.hpp>
 #include <bit_factory/anyxx/utilities.hpp>
+#include <bit_factory/anyxx/v_table_instance.hpp>
 #include <bit_factory/anyxx/v_table_data.hpp>
 #include <bit_factory/anyxx/voidness.hpp>
 #include <bit_factory/infra/config.hpp>
@@ -169,13 +170,6 @@ template <typename U, typename Any>
   requires is_any<Any> && Any::is_dyn
 inline auto unerase_cast_if(Any const& o) {
   return unerase_cast_if<U>(get_proxy(o), get_v_table(o));
-}
-
-
-template <typename VTable, typename Concrete>
-VTable* v_table_instance() {
-  static VTable v_table{std::in_place_type<Concrete>};
-  return &v_table;
 }
 
 using dispatch_table_function_t = void (*)();
