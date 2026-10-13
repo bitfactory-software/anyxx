@@ -116,7 +116,7 @@ $(function(){initNavTree('X1_any_weak_const_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">  CHECK(get_proxy(any_widget_weak).use_count() == expected_use_count);</div>
 <div class="line">  <span class="comment">// we have to make a copy of shared pointer before usage:</span></div>
-<div class="line">  <span class="keyword">auto</span> any_widget_shared_const = lock(any_widget_weak);</div>
+<div class="line">  <span class="keyword">auto</span> any_widget_shared_const = lock&lt;any_widget&lt;shared&gt;&gt;(any_widget_weak);</div>
 <div class="line">  <span class="keywordflow">if</span> (expected_use_count &gt; 0)</div>
 <div class="line">    CHECK(any_widget_shared_const);</div>
 <div class="line">  <span class="keywordflow">else</span></div>
@@ -147,7 +147,7 @@ $(function(){initNavTree('X1_any_weak_const_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">static</span> std::mutex cache_mutex;</div>
 <div class="line">any_widget&lt;shared&gt; make_widget(<span class="keywordtype">int</span> <span class="keywordtype">id</span>) {</div>
 <div class="line">  std::lock_guard hold{cache_mutex};</div>
-<div class="line">  <span class="keywordflow">return</span> *lock(cache[<span class="keywordtype">id</span>]).or_else([&amp;] -&gt; std::optional&lt;any_widget&lt;shared&gt;&gt; {</div>
+<div class="line">  <span class="keywordflow">return</span> *lock&lt;any_widget&lt;shared&gt;&gt;(cache[id]).or_else([&amp;] -&gt; std::optional&lt;any_widget&lt;shared&gt;&gt; {</div>
 <div class="line">    <span class="keyword">auto</span> s = load_widget(<span class="keywordtype">id</span>);</div>
 <div class="line">    cache[id] = s;</div>
 <div class="line">    <span class="keywordflow">return</span> s;</div>
