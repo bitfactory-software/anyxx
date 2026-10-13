@@ -3,6 +3,7 @@
 #include <string>
 #include <print>
 #include <catch2/catch_test_macros.hpp>
+#include <bit_factory/anyxx/ext/members.hpp>
 // cppcheck-suppress-begin [noExplicitConstructor,duplInheritedMember,functionConst]
 #include <bit_factory/anyxx.hpp>
 // cppcheck-suppress-end [noExplicitConstructor,duplInheritedMember,functionConst]

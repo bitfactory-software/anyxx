@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ANY_SINGLETON.hpp>
 
 #include "../layer_0_architecture/architecture.hpp"
 

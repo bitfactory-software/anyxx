@@ -99,3 +99,42 @@ class dispatch_vany {
 
 }  // namespace anyxx
 
+/// \addtogroup vany_macros VANY_DISPACH macros
+/// \brief Macros to reduce boilerplate for declaring/defining open
+/// dispatch with \ref vany_variant. Only neccessary for DLL
+/// scenarios
+///  @{
+
+/// \brief Declare a singleton object for open \ref vany dispatch.
+/// \param export_ To supply an export macro in a DLL scenario.
+/// \param name Name of the dispatch.
+/// \param vany Type of \ref vany.
+/// \param signature Signature of the \ref dispatch.
+/// \param static_dispatch Static constexpr visitor for the non-any
+/// members of
+///        the \ref vany.
+///
+/// See also \ref VANY_DISPACH, \ref ANY_SINGLETON_DECLARE.
+#define VANY_DISPACH_DECLARE(export_, name, vany, signature, static_dispatch) \
+  constexpr static inline auto name##_static_dispatch =                       \
+      anyxx::overloads{_detail_REMOVE_PARENS(static_dispatch)};               \
+                                                                              \
+  using name##_vany = vany;                                                   \
+  using name##_dynamic_dispatch =                                             \
+      anyxx::dispatch<_detail_REMOVE_PARENS(signature)>;                      \
+                                                                              \
+  ANY_SINGLETON_DECLARE(                                                      \
+      , name,                                                                 \
+      anyxx::dispatch_vany<name##_vany, name##_dynamic_dispatch,              \
+                           name##_static_dispatch>)
+
+/// \brief Define a \ref vany dispatch singleton object in a source
+/// file.
+/// \param namespace_ The namespace for the singleton.
+/// \param name Name of the singleton.
+///
+/// See also \ref VANY_DISPACH_DECLARE, \ref ANY_SINGLETON.
+#define VANY_DISPACH(namespace_, name) ANY_SINGLETON(namespace_, name);
+///  @}
+
+

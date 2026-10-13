@@ -4,6 +4,7 @@
 #include <bit_factory/anyxx/errors/cast_error.hpp>
 #include <bit_factory/anyxx/v_table_instance.hpp>
 #include <bit_factory/anyxx/v_table_data.hpp>
+#include <bit_factory/anyxx/ANY_UNPAREN.hpp>
 
 #include <expected>
 #include <vector>
@@ -110,3 +111,57 @@ auto bind_v_table_to_meta_data() {
 }
 
 }  // namespace anyxx
+
+#ifdef ANY_DLL_MODE
+
+#define ANY_META_CLASS_FWD(export_, ...) \
+  template <>                            \
+  export_ anyxx::meta_data& anyxx::get_meta_data<__VA_ARGS__>();
+
+#define ANY_META_CLASS(...)                                             \
+  template <>                                                           \
+  anyxx::meta_data& anyxx::get_meta_data<std::decay_t<__VA_ARGS__>>() { \
+    return runtime_implementation<__VA_ARGS__>();                       \
+  }
+
+#else
+
+/// \addtogroup meta_class_macros ANY_META_CLASS macros for crosscast
+/// \brief Macros to define static runtime type data for a \ref
+/// model. Only neccessary for DLL \b and crosscast scenarios.
+/// @{
+
+/// \def ANY_META_CLASS_FWD
+/// \brief Declare access to the meta data for a specific model any.
+/// Must be in global namespace.
+/// \param export_ To supply an export macro in a DLL scenario
+/// \param ... Type of the model
+#define ANY_META_CLASS_FWD(...)
+/// \def ANY_META_CLASS
+/// \brief Define the meta data for a specific model any. Must be in
+/// global namespace.
+/// \param ... Type of the model
+#define ANY_META_CLASS(...)
+
+#endif
+
+#define ANY_META_CLASS_STATIC(...)  \
+  ANY_META_CLASS_FWD(, __VA_ARGS__) \
+  ANY_META_CLASS(__VA_ARGS__)
+
+/// \def ANY_REGISTER_MODEL
+/// \brief Register a model class for a specific any interface. Must
+/// be in global namespace.
+/// \param class_ The model class with fully qualified name. Must be
+/// parenthesized
+/// \param interface_ Name of the \ref any (without any_ prefix).
+/// \param ... Optional template parameters for the model class.
+///
+/// See also \ref casts.
+#define ANY_REGISTER_MODEL(class_, interface_, ...)                           \
+  namespace {                                                                 \
+  static auto __ = anyxx::bind_v_table_to_meta_data<                          \
+      interface_##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(__VA_ARGS__), \
+      ANY_UNPAREN(class_)>();                                               \
+  }
+/// @}

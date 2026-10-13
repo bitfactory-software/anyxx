@@ -1,22 +1,14 @@
 #pragma once
 
 #include <bit_factory/infra/config.hpp>
+#include <bit_factory/anyxx/ANY_UNPAREN.hpp>
 
 // --------------------------------------------------------------------------------
 // any meta class, derived from this gem:
 // https://github.com/AlexCodesApps/dynamic_interface
 
-#define ANYXX_EXTRACT(...) ANYXX_EXTRACT __VA_ARGS__
-#define ANYXX_NOTHING_ANYXX_EXTRACT
-#define ANYXX_PASTE(x, ...) x##__VA_ARGS__
-#define ANYXX_EVALUATING_PASTE(x, ...) ANYXX_PASTE(x, __VA_ARGS__)
-#define ANYXX_UNPAREN(x) ANYXX_EVALUATING_PASTE(ANYXX_NOTHING_, ANYXX_EXTRACT x)
-// usage:
-static_assert(std::same_as<ANYXX_UNPAREN(int), int>);
-static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
-
 #define ANYXX_JACKET_RETURN(...) \
-  anyxx::jacket_return<ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>
+  anyxx::jacket_return<ANY_UNPAREN(ANY_UNPAREN(__VA_ARGS__))>
 
 #define _detail_EXPAND(...) \
   _detail_EXPAND4(          \
@@ -78,7 +70,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   _detail_EXPAND_(_detail_ANYXX_FORWARD_PARAM_LIST_H(__VA_ARGS__))
 
 #define _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_H(b, c, param_type, ...)      \
-  anyxx::v_table_to_map<Concrete, ANYXX_UNPAREN(param_type)>::                \
+  anyxx::v_table_to_map<Concrete, ANY_UNPAREN(param_type)>::                \
       template forward<decltype(c)>(std::forward<decltype(c)>(c)) __VA_OPT__( \
           , _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_A _detail_PARENS(         \
                 b, _detail_CONCAT(b, c), __VA_ARGS__))
@@ -89,7 +81,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 #define _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_H(b, c, param_type,    \
                                                          ...)                 \
-  anyxx::forward_trait_to_map<traited_t, ANYXX_UNPAREN(param_type)>::         \
+  anyxx::forward_trait_to_map<traited_t, ANY_UNPAREN(param_type)>::         \
       template forward<decltype(c)>(std::forward<decltype(c)>(c)) __VA_OPT__( \
           , _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_A _detail_PARENS(  \
                 b, _detail_CONCAT(b, c), __VA_ARGS__))
@@ -109,7 +101,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 #define _detail_ANYXX_V_TABLE_PARAM_LIST_H(b, c, param_type, ...)    \
   [[maybe_unused]] anyxx::v_table_param<any_value_t,                 \
-                                        ANYXX_UNPAREN(param_type)> c \
+                                        ANY_UNPAREN(param_type)> c \
   __VA_OPT__(, _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(    \
                    b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_V_TABLE_PARAM_LIST_A() _detail_ANYXX_V_TABLE_PARAM_LIST_H
@@ -125,7 +117,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   _detail_EXPAND_(_detail_ANYXX_MAP_PARAM_LIST_H(__VA_ARGS__))
 
 #define _detail_ANYXX_CONCEPT_PARAM_LIST_H(b, c, param_type, ...)     \
-  [[maybe_unused]] anyxx::concept_arg<T, ANYXX_UNPAREN(param_type)> c \
+  [[maybe_unused]] anyxx::concept_arg<T, ANY_UNPAREN(param_type)> c \
   __VA_OPT__(, _detail_ANYXX_CONCEPT_PARAM_LIST_A _detail_PARENS(     \
                    b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_CONCEPT_PARAM_LIST_A() _detail_ANYXX_CONCEPT_PARAM_LIST_H
@@ -133,7 +125,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   _detail_EXPAND_(_detail_ANYXX_CONCEPT_PARAM_LIST_H(__VA_ARGS__))
 
 #define _detail_ANYXX_EXACT_PARAM_LIST_H(b, c, param_type, ...) \
-  [[maybe_unused]] ANYXX_UNPAREN(param_type) c __VA_OPT__(      \
+  [[maybe_unused]] ANY_UNPAREN(param_type) c __VA_OPT__(      \
       , _detail_ANYXX_EXACT_PARAM_LIST_A _detail_PARENS(        \
             b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_EXACT_PARAM_LIST_A() _detail_ANYXX_EXACT_PARAM_LIST_H
@@ -234,13 +226,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       [[maybe_unused]] this Map const& map,                                   \
       [[maybe_unused]] auto const_& x __VA_OPT__(                             \
           , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))            \
-      -> anyxx::map_return<T, ANYXX_UNPAREN(type)>                            \
+      -> anyxx::map_return<T, ANY_UNPAREN(type)>                            \
     requires(anyxx::mapf_concept(requires(T const_ x __VA_OPT__(              \
         , _detail_ANYXX_CONCEPT_PARAM_LIST_H(a, sig_, __VA_ARGS__))) {        \
       {                                                                       \
         mapf_concept_lhs(__VA_OPT__(                                          \
             _detail_ANYXX_CONCEPT_ARG_LIST_H(a, sig_, __VA_ARGS__)))          \
-      } -> std::convertible_to<anyxx::map_return<T, ANYXX_UNPAREN(type)>>;    \
+      } -> std::convertible_to<anyxx::map_return<T, ANY_UNPAREN(type)>>;    \
     }))                                                                       \
   {                                                                           \
     using namespace anyxx;                                                    \
@@ -257,7 +249,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     {                                                                         \
       model_map.name(model __VA_OPT__(                                        \
           , _detail_ANYXX_CONCEPT_ARG_LIST_H(a, sig_, __VA_ARGS__)))          \
-    } -> std::convertible_to<anyxx::map_return<T, ANYXX_UNPAREN(type)>>;      \
+    } -> std::convertible_to<anyxx::map_return<T, ANY_UNPAREN(type)>>;      \
   };
 
 #define _detail_ANYXX_CONCEPT_STATIC_FN_H(l) _detail_ANYXX_CONCEPT_STATIC_FN l
@@ -269,7 +261,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       model_map.name(trait_class __VA_OPT__(                                  \
           , _detail_ANYXX_CONCEPT_ARG_LIST_H(a, sig_, __VA_ARGS__)))          \
     }                                                                         \
-    -> std::convertible_to<anyxx::map_return<T, ANYXX_UNPAREN(return_type)>>; \
+    -> std::convertible_to<anyxx::map_return<T, ANY_UNPAREN(return_type)>>; \
   };
 
 #define _detail_ANYXX_CONCEPT_TYPE_H(l) _detail_ANYXX_CONCEPT_TYPE l
@@ -278,7 +270,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                              _detail_ANYXX_OPTIONAL_TEMPLATE(               \
                                  _detail_REMOVE_PARENS(template_params))    \
                                  name _detail_ANYXX_DUMMY_INT_PARAM_LIST(   \
-                                     ANYXX_UNPAREN(template_params)),       \
+                                     ANY_UNPAREN(template_params)),       \
                          anyxx::undefined>;
 
 //_detail_ANYXX_CONCEPT_TYPE_H((), value_type, anyxx::undefined,
@@ -292,7 +284,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       _detail_REMOVE_PARENS(template_params)) AYXFORCEDINLINE auto         \
   name([[maybe_unused]] auto trait_class __VA_OPT__(                       \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))             \
-      -> anyxx::map_return<T, ANYXX_UNPAREN(return_type)> {                \
+      -> anyxx::map_return<T, ANY_UNPAREN(return_type)> {                \
     using namespace anyxx;                                                 \
     return _detail_REMOVE_PARENS(body).template                            \
     operator()<anyxx::use_as<T, typename decltype(trait_class)::trait_t>>( \
@@ -415,7 +407,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_FUNCTION_PTR_DECL(                                   \
     access, overload, type, name, name_ext, exact_const, const_, map_body, \
     mapf_concept, mapf_concept_lhs, ...)                                   \
-  anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(type)> (*name##const_)( \
+  anyxx::v_table_return<any_value_t, ANY_UNPAREN(type)> (*name##const_)( \
       void const_* __VA_OPT__(                                             \
           , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
 
@@ -425,13 +417,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   name##const_ = [](void const_* _vp __VA_OPT__(                           \
                      , _detail_ANYXX_V_TABLE_PARAM_LIST(                   \
                            a, _sig, __VA_ARGS__))) -> decltype(auto) {     \
-    if constexpr (std::same_as<anyxx::self&, ANYXX_UNPAREN(type)>) {       \
+    if constexpr (std::same_as<anyxx::self&, ANY_UNPAREN(type)>) {       \
       model_map{}.name(                                                    \
           *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )     \
               __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(          \
                   a, _sig, __VA_ARGS__)));                                 \
-      return anyxx::handle_self_ref_return<ANYXX_UNPAREN(type)>{}();       \
-    } else if constexpr (std::same_as<anyxx::self, ANYXX_UNPAREN(type)>) { \
+      return anyxx::handle_self_ref_return<ANY_UNPAREN(type)>{}();       \
+    } else if constexpr (std::same_as<anyxx::self, ANY_UNPAREN(type)>) { \
       using proxy_t = typename any_value_t::proxy_t;                       \
       return any_value_t{                                                  \
           anyxx::erased<proxy_t>(model_map{}.name(                         \
@@ -469,7 +461,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     if constexpr (!self_t::is_dyn) {                                           \
       using traited_t = typename self_t::rep_type;                             \
-      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
+      if constexpr (std::same_as<void, ANY_UNPAREN(type)>) {                 \
         return static_dispatch_map_t<T>{}.name(                                \
             get_proxy_value(self) __VA_OPT__(, )                               \
                 __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(     \
@@ -483,7 +475,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
             std::forward<Self>(self));                                         \
       }                                                                        \
     } else {                                                                   \
-      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
+      if constexpr (std::same_as<void, ANY_UNPAREN(type)>) {                 \
         return get_v_table(self)->name##const_(                                \
             anyxx::get_proxy_ptr(std::forward<self_t const_&>(self))           \
                 __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig,         \

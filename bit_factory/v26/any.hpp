@@ -2,6 +2,7 @@
 
 #include <array>
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ANY_UNPAREN.hpp>
 #include <bit_factory/v26/any/bases.hpp>
 #include <bit_factory/v26/any/facade.hpp>
 #include <bit_factory/v26/any/keywords.hpp>
@@ -272,5 +273,5 @@ inline constexpr auto release_v_table(any<Trait, Args...>& any) { return std::ex
 #define ANY26_REGISTER_MODEL(class_, interface_, ...)                         \
   namespace {                                                                 \
   static auto __ = anyxx::bind_v_table_to_meta_data                           \
-        <anyxx26::v_table<interface_ __VA_OPT__(, __VA_ARGS__)>, ANYXX_UNPAREN(class_)>(); \
+        <anyxx26::v_table<interface_ __VA_OPT__(, __VA_ARGS__)>, ANY_UNPAREN(class_)>(); \
   }

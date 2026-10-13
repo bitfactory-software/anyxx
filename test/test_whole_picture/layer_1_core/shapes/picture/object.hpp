@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bit_factory/anyxx/ext/members.hpp>
 #include <bit_factory/anyxx.hpp>
 #include <test/test_whole_picture/layer_0_architecture/draw/picture.hpp>
 #include <test/test_whole_picture/layer_1_core/core.hpp>
