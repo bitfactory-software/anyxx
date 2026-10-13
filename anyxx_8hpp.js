@@ -16,12 +16,9 @@ var anyxx_8hpp =
     [ "ANY_SINGLETON_DECLARE", "group__singleton__macros.html#ga3f285810c0716bfa028b613342d910d1", null ],
     [ "VANY_DISPACH", "group__vany__macros.html#ga93a6d3c140de4e4c95f863b88385a27c", null ],
     [ "VANY_DISPACH_DECLARE", "group__vany__macros.html#ga0a538605bcb4ae50bd736f0802af2c8b", null ],
-    [ "anyxx::borrow_as", "group__casts.html#ga57a33d0becfcd08748cf97fd2b51aa16", null ],
-    [ "anyxx::clone_to", "group__casts.html#gaf2b7730650bc77681cf299e2a6e77157", null ],
+    [ "anyxx::borrow_as", "anyxx_8hpp.html#a57a33d0becfcd08748cf97fd2b51aa16", null ],
+    [ "anyxx::clone_to", "anyxx_8hpp.html#af2b7730650bc77681cf299e2a6e77157", null ],
     [ "anyxx::dispatchs_count", "anyxx_8hpp.html#ad0e4d3c5ff9f0082cf07ef367b55c87a", null ],
-    [ "anyxx::downcast_to", "group__casts.html#gaaa84d41ecbddabea5e87a73438b29eef", null ],
-    [ "anyxx::lock", "group__casts.html#gae988a6a809ee2910690366e1e4c7ae67", null ],
-    [ "anyxx::move_to", "group__casts.html#ga0ad81aaf23ab3d32a02a12cec57c0946", null ],
-    [ "anyxx::unerase_cast", "group__casts.html#ga503c7a4639146953d0f21603ef83241e", null ],
-    [ "anyxx::unerase_cast_if", "group__casts.html#ga9ba68fb72727630cbb77b5104a93d2b8", null ]
+    [ "anyxx::lock", "anyxx_8hpp.html#ae988a6a809ee2910690366e1e4c7ae67", null ],
+    [ "anyxx::move_to", "anyxx_8hpp.html#a0ad81aaf23ab3d32a02a12cec57c0946", null ]
 ];

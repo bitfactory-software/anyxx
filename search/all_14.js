@@ -14,7 +14,7 @@ var searchData=
   ['model_20map_11',['Showcase 2: &lt;em&gt;Any++&lt;/em&gt; with Model Map',['../index.html#autotoc_md30',1,'']]],
   ['model_20map_12',['Model map',['../md_docs_2terms__and__definitions.html#autotoc_md11',1,'']]],
   ['monoid_20the_20hello_20world_20of_20type_20classes_13',['Chapter 2: Monoid, the &quot;Hello World&quot; of type classes',['../subpage2.html',1,'main']]],
-  ['move_5fto_14',['move_to',['../group__casts.html#ga0ad81aaf23ab3d32a02a12cec57c0946',1,'anyxx::move_to()'],['../md_docs_2Proxy__overview.html#autotoc_md5',1,'move_to']]],
+  ['move_5fto_14',['move_to',['../anyxx_8hpp.html#a0ad81aaf23ab3d32a02a12cec57c0946',1,'anyxx::move_to()'],['../md_docs_2Proxy__overview.html#autotoc_md5',1,'move_to']]],
   ['multi_20dispatch_20matrix_15',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md14',1,'']]],
   ['multi_20dispatch_20type_20erased_20binary_20operator_16',['Showcase 3: &lt;em&gt;Any++&lt;/em&gt; Open Multi Dispatch, (Type Erased Binary Operator)',['../index.html#autotoc_md31',1,'']]]
 ];

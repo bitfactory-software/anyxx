@@ -289,7 +289,7 @@ $(function(){initNavTree('anyxx__range_8hpp_source.html','',''); });
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span><span class="keyword">struct </span>v_table_to_map&lt;Concrete, AnyForwardRange const&amp;&gt; {</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>  <span class="keyword">static</span> <span class="keyword">auto</span> forward(<span class="keyword">auto</span> <span class="keyword">const</span>&amp; any_range) {</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="keywordflow">return</span> std::views::transform(any_range, [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; any) {</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>      <span class="keywordflow">return</span> *<a class="code hl_function" href="group__casts.html#ga503c7a4639146953d0f21603ef83241e">unerase_cast&lt;Concrete&gt;</a>(any);</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>      <span class="keywordflow">return</span> *unerase_cast&lt;Concrete&gt;(any);</div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    });</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>  }</div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>};</div>
@@ -302,7 +302,7 @@ $(function(){initNavTree('anyxx__range_8hpp_source.html','',''); });
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                                 []&lt;<span class="keyword">typename</span> T&gt;(T <span class="keyword">const</span>&amp; any) -&gt; Traited {</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                                   <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (is_any&lt;T&gt;) {</div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                                     <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (T::is_dyn) {</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                                       <span class="keywordflow">return</span> *<a class="code hl_function" href="group__casts.html#ga503c7a4639146953d0f21603ef83241e">unerase_cast&lt;Traited&gt;</a>(any);</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                                       <span class="keywordflow">return</span> *unerase_cast&lt;Traited&gt;(any);</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                                     } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                                       <span class="keywordflow">return</span> get_proxy_value(any);</div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                                     }</div>
@@ -330,7 +330,6 @@ $(function(){initNavTree('anyxx__range_8hpp_source.html','',''); });
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>}  <span class="comment">// namespace anyxx</span></div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="agroup__casts_html_ga503c7a4639146953d0f21603ef83241e"><div class="ttname"><a href="group__casts.html#ga503c7a4639146953d0f21603ef83241e">anyxx::unerase_cast</a></div><div class="ttdeci">auto unerase_cast(Any const &amp;o)</div><div class="ttdoc">Safe downcast to an unerased type using runtime information from the v-Tables.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:162</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
