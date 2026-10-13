@@ -7,13 +7,22 @@
     /Zc:preprocessor (see CMakeLists.txt for example)
 */
 
+#include <bit_factory/anyxx/any_access.hpp>
 #include <bit_factory/anyxx/any_concept.hpp>
+#include <bit_factory/anyxx/any_get_meta_data.hpp>
+#include <bit_factory/anyxx/any_get_type_info.hpp>
+#include <bit_factory/anyxx/any_unerase_cast.hpp>
 #include <bit_factory/anyxx/compute_val_proxy_size.hpp>
 #include <bit_factory/anyxx/crosscast_runtime.hpp>
 #include <bit_factory/anyxx/dll_mode.hpp>
-#include <bit_factory/anyxx/errors/cast_error.hpp>
-#include <bit_factory/anyxx/errors/type_mismatch_error.hpp>
+#include <bit_factory/anyxx/downcast.hpp>
 #include <bit_factory/anyxx/observeable.hpp>
+#include <bit_factory/anyxx/small_object_size.hpp>
+#include <bit_factory/anyxx/utilities.hpp>
+#include <bit_factory/anyxx/v_table_instance.hpp>
+#include <bit_factory/anyxx/v_table_data.hpp>
+#include <bit_factory/anyxx/voidness.hpp>
+#include <bit_factory/anyxx/errors/type_mismatch_error.hpp>
 #include <bit_factory/anyxx/proxies/basic_proxy_trait.hpp>
 #include <bit_factory/anyxx/proxies/proxy_concept.hpp>
 #include <bit_factory/anyxx/proxies/unerase_cast.hpp>
@@ -30,11 +39,6 @@
 #include <bit_factory/anyxx/proxies/static/using_cref.hpp>
 #include <bit_factory/anyxx/proxies/static/using_.hpp>
 #include <bit_factory/anyxx/proxies/static/vany.hpp>
-#include <bit_factory/anyxx/small_object_size.hpp>
-#include <bit_factory/anyxx/utilities.hpp>
-#include <bit_factory/anyxx/v_table_instance.hpp>
-#include <bit_factory/anyxx/v_table_data.hpp>
-#include <bit_factory/anyxx/voidness.hpp>
 #include <bit_factory/infra/config.hpp>
 #include <bit_factory/v23/any.hpp>
 #include <bit_factory/v23/preprocessor_meta_class.hpp>
@@ -47,130 +51,6 @@ struct dynamic_castable;
 struct dynamic_deletable;
 struct dynamic_moveable;
 struct dynamic_copyable;
-
-template <is_any Any>
-inline auto& get_proxy(Any const& any) {
-  return any.proxy_;
-}
-template <is_any Any>
-inline auto& get_proxy(Any& any) {
-  return any.proxy_;
-}
-template <typename Any>
-  requires is_any<std::decay_t<Any>> && (!std::decay_t<Any>::is_dyn)
-inline auto& get_proxy_value(Any&& any) {
-  return get_proxy(std::forward<Any>(any)).value_;
-}
-template <typename Any>
-  requires is_any<std::decay_t<Any>> && (!std::decay_t<Any>::is_dyn)
-inline auto const& get_proxy_value(Any const& any) {
-  return get_proxy(any).value_;
-}
-template <is_any Any>
-inline decltype(auto) move_proxy(Any&& any) {
-  return std::move(any.proxy_);
-}
-template <is_any Any>
-inline auto get_proxy_ptr_const(Any const& any) {
-  return get_proxy_ptr(get_proxy(any), get_v_table(any));
-}
-template <is_any Any>
-inline auto get_proxy_ptr(Any&& any) {
-  return get_proxy_ptr(get_proxy(std::forward<Any>(any)), get_v_table(any));
-}
-
-template <is_any Any>
-  requires is_meta_data_v_table<typename Any::v_table_t>
-inline const auto& get_meta_data(Any const& any) {
-  return *get_v_table(any)->meta_data_;
-}
-
-template <is_any Any>
-  requires is_type_info_v_table<typename Any::v_table_t>
-inline std::type_info const& get_type_info(Any const& any) {
-  return *get_v_table(any)->type_info_;
-}
-
-template <is_any Any>
-  requires is_dynamic_castable_v_table<typename Any::v_table_t>
-bool is_derived_from(const std::type_info& from, Any const& any) {
-  return get_v_table(any)->is_derived_from_(from);
-}
-template <is_any From, is_any Any>
-  requires is_dynamic_castable_v_table<typename From::v_table_t> &&
-           is_dynamic_castable_v_table<typename Any::v_table_t>
-bool is_derived_from(Any const& any) {
-  return is_derived_from(typeid(typename From::v_table_t), any);
-}
-
-template <typename To>
-  requires(!is_any<To>)
-auto unchecked_v_table_downcast_to(observeable_v_table* v_table) {
-  return static_cast<To*>(v_table);
-}
-template <typename To>
-  requires is_any<To>
-auto unchecked_v_table_downcast_to(auto* v_table) {
-  return unchecked_v_table_downcast_to<typename To::v_table_t>(v_table);
-}
-
-template <typename Any>
-  requires is_any<Any> && Any::is_dyn
-inline auto get_v_table(Any const& any) {
-  return unchecked_v_table_downcast_to<Any>(any.get_v_table_ptr());
-}
-
-template <is_any To, is_any From>
-inline To unchecked_downcast_to(From from)
-  requires(is_any_derived_from<To, From>)
-{
-  return To{std::move(from.proxy_),
-            unchecked_v_table_downcast_to<To>(get_v_table(from))};
-}
-
-template <typename Trait, is_proxy Proxy>
-inline auto release_v_table(any<Trait, Proxy>& from) {
-  return from.release_v_table();
-}
-
-/// \defgroup casts Casts
-/// \brief Mix and match downcast, crosscast, and obtain \ref any with other
-///
-/// IMPORTANT: For crosscasts to work, the models must be registered with the
-/// \ref ANY_REGISTER_MODEL macro.
-
-/// \brief Safe downcast to a derived trait using runtime information from the
-/// v-Tables.
-/// \ingroup casts
-template <is_any To, is_any From>
-inline std::optional<To> downcast_to(From from)
-  requires(is_any_derived_from<To, From>)
-{
-  if (is_derived_from<To>(from))
-    return {unchecked_downcast_to<To>(std::move(from))};
-  return {};
-}
-
-template <typename U, is_any Any>
-inline auto unchecked_unerase_cast(Any const& o) {
-  return unchecked_unerase_cast<U>(get_proxy(o), get_v_table(o));
-}
-/// \brief Safe downcast to an unerased type using runtime information from
-/// the v-Tables.
-/// \ingroup casts
-template <typename U, typename Any>
-  requires is_any<Any> && Any::is_dyn
-inline auto unerase_cast(Any const& o) {
-  return unerase_cast<U>(get_proxy(o), get_v_table(o));
-}
-/// \brief Safe downcast to an unerased type using runtime information from
-/// the v-Tables.
-/// \ingroup casts
-template <typename U, typename Any>
-  requires is_any<Any> && Any::is_dyn
-inline auto unerase_cast_if(Any const& o) {
-  return unerase_cast_if<U>(get_proxy(o), get_v_table(o));
-}
 
 using dispatch_table_function_t = void (*)();
 using dispatch_table_dispatch_index_t = std::size_t;

@@ -3,6 +3,8 @@
 #include <bit_factory/anyxx/voidness.hpp>
 #include <bit_factory/anyxx/errors/type_mismatch_error.hpp>
 
+#include <cassert>
+
 namespace anyxx {
 
 using allocate_t = mutable_void (*)();
