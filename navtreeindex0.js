@@ -19,8 +19,6 @@ var NAVTREEINDEX0 =
 "_5_any_template_8cpp-example.html":[7,10],
 "anyxx_8hpp.html":[6,0,0,0],
 "anyxx_8hpp_source.html":[6,0,0,0],
-"anyxx__function_8hpp_source.html":[6,0,0,1],
-"anyxx__range_8hpp_source.html":[6,0,0,2],
 "dir_eb67b5398ef30c32781357839f7fb767.html":[6,0,0],
 "examples.html":[7],
 "files.html":[6,0],
