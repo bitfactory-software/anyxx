@@ -1,9 +1,11 @@
 #pragma once
 
 #include <array>
-#include <bit_factory/anyxx.hpp>
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/any/v_table.hpp>
+#include <bit_factory/anyxx/proxies/dyn/shared.hpp>
+#include <bit_factory/anyxx/proxies/dyn/val.hpp>
+#include <bit_factory/anyxx/v_table_data.hpp>
 
 namespace anyxx26 {
 

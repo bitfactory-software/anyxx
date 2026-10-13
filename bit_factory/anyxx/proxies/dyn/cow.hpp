@@ -3,8 +3,10 @@
 #include <bit_factory/anyxx/proxies/basic_proxy_trait.hpp>
 #include <bit_factory/anyxx/proxies/proxy_concept.hpp>
 #include <bit_factory/anyxx/voidness.hpp>
+#include <bit_factory/anyxx/v_table_data.hpp>
 #include <atomic>
 #include <cstddef>
+#include <cassert>
 #include <utility>
 
 namespace anyxx {

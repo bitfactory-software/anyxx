@@ -1,7 +1,9 @@
 #pragma once
 
 #include <array>
-#include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/any_concept.hpp>
+#include <bit_factory/anyxx/observeable.hpp>
+#include <bit_factory/anyxx/proxies/proxy_concept.hpp>
 #include <meta>
 
 namespace anyxx26 {

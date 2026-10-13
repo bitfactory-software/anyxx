@@ -9,13 +9,6 @@
 
 namespace anyxx {
 
-template <typename Model>
-constexpr inline model_size_t compute_model_size() {
-  return {.size = sizeof(Model),
-          .trivial = std::is_trivially_default_constructible_v<Model> &&
-                     std::is_trivially_copyable_v<Model>};
-}
-
 template <bool Trivial, std::size_t SmallObjectSize>
 struct local_data : std::array<std::byte, SmallObjectSize> {
   static constexpr inline bool is_trivial = Trivial;

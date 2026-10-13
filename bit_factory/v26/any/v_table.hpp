@@ -1,6 +1,7 @@
 #pragma once
 
-#include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/v_table_instance.hpp>
+#include <bit_factory/anyxx/crosscast_runtime.hpp>
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/any/signature_translation.hpp>
 #include <bit_factory/v26/any/set_v_table_members.hpp>

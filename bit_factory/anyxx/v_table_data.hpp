@@ -41,6 +41,12 @@ struct model_size_t {
   std::size_t size;
   bool trivial;
 };
+template <typename Model>
+constexpr inline model_size_t compute_model_size() {
+    return { .size = sizeof(Model),
+            .trivial = std::is_trivially_default_constructible_v<Model> &&
+                       std::is_trivially_copyable_v<Model> };
+}
 template <typename VTable>
 concept is_model_size_v_table = requires(VTable* v_table) {
   { v_table->model_size } -> std::convertible_to<model_size_t>;

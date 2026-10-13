@@ -1,4 +1,5 @@
 #include <bit_factory/v26/any.hpp>
+#include <bit_factory/anyxx/any_get_type_info.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <any>
 #include <typeindex>

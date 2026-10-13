@@ -1,7 +1,6 @@
 #pragma once
 
 #include <array>
-#include <bit_factory/anyxx.hpp>
 #include <bit_factory/v26/any/facade.hpp>
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/any/signature_translation.hpp>
