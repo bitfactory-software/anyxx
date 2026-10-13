@@ -33,6 +33,8 @@
 #include <bit_factory/anyxx/small_object_size.hpp>
 #include <bit_factory/anyxx/utilities.hpp>
 #include <bit_factory/anyxx/v_table_data.hpp>
+#include <bit_factory/v23/v_table_holder/v_table_holder_dyn.hpp>
+#include <bit_factory/v23/v_table_holder/v_table_holder_static.hpp>
 #include <bit_factory/anyxx/voidness.hpp>
 #include <bit_factory/infra/config.hpp>
 #include <bit_factory/v23/preprocessor_meta_class.hpp>
@@ -43,67 +45,6 @@ struct dynamic_castable;
 struct dynamic_deletable;
 struct dynamic_moveable;
 struct dynamic_copyable;
-
-template <typename Proxy, typename Trait>
-using proxy_model_map_t =
-    typename Trait::template model_map<static_dispatch_t<Proxy>>;
-
-template <typename Proxy, typename Trait>
-using proxy_deduced_type_t =
-    typename proxy_model_map_t<Proxy, Trait>::deduced_type;
-
-template <typename Trait>
-using v_table_t = typename Trait ::v_table_t;
-
-template <typename Trait>
-using v_table_deduced_type_t = typename v_table_t<Trait>::deduced_type;
-
-template <typename Proxy, typename Trait>
-struct v_table_holder;
-
-template <typename Proxy, typename Trait>
-  requires(!is_dyn<Proxy>)
-struct v_table_holder<Proxy, Trait> : proxy_deduced_type_t<Proxy, Trait> {
-  struct v_table_t {};
-
-  v_table_holder() = default;
-  explicit v_table_holder(v_table_t*) {}
-  static void set_v_table_ptr(auto) {}
-  static auto get_v_table_ptr() { return nullptr; }
-  template <typename...>
-  static void init_v_table() {}
-  static auto release_v_table() { return nullptr; }
-};
-
-template <typename Proxy, typename Trait>
-  requires is_dyn<Proxy>
-struct v_table_holder<Proxy, Trait> : v_table_deduced_type_t<Trait> {
- public:
-  using v_table_t = Trait::v_table_t;
-
- private:
-  v_table_t* v_table_ = nullptr;
-
- public:
-  v_table_holder() = default;
-  explicit v_table_holder(v_table_t* v_table) : v_table_(v_table) {}
-  void set_v_table_ptr(v_table_t* v_table) { v_table_ = v_table; }
-  // cppcheck-suppress-begin [functionConst, functionStatic]
-  auto get_v_table_ptr() const { return v_table_; }
-  // cppcheck-suppress-end [functionConst, functionStatic]
-  template <typename ProxyImpl, typename Concrete>
-  void init_v_table() {
-    v_table_ =
-        v_table_instance<v_table_t, anyxx::unerased<ProxyImpl, Concrete>>();
-  }
-  auto release_v_table() { return std::exchange(v_table_, nullptr); }
-};
-
-template <typename Proxy, typename Trait>
-concept is_proxy_compatible_with_trait =
-    is_proxy<Proxy> && has_v_table<Trait> &&
-    proxy_trait<Proxy>::template is_compatible_with_v_table<
-        typename Trait::v_table_t>();
 
 template <typename DerivedAny, typename BaseAny>
 constexpr bool is_any_derived_from_v = false;
@@ -156,10 +97,6 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
   using rep_type = typename model_map_t::rep_type;
   using proxy_impl_t = typename proxy_trait_t::template proxy_impl<rep_type>;
   static constexpr bool is_dyn = anyxx::is_dyn<Proxy>;
-  // static_assert(is_proxy_compatible_with_trait<Proxy, Trait>,
-  //               "If the proxy is dynamic, the trait must provide a v-table "
-  //               "compatible with the proxy.");
-  //  static_assert(!is_dyn || has_v_table<Trait>); has issues in clang...
 
  protected:
   proxy_impl_t proxy_{};
@@ -2147,9 +2084,5 @@ static_assert(is_copy_constructor_v_table<dynamic_copyable_v_table>);
 static_assert(is_move_constructor_v_table<dynamic_copyable_v_table>);
 static_assert(is_destructor_v_table<dynamic_copyable_v_table>);
 static_assert(is_delete_v_table<dynamic_deletable_v_table>);
-
-static_assert(is_proxy_compatible_with_trait<cref, observeable>);
-static_assert(!is_proxy_compatible_with_trait<val<>, observeable>);
-static_assert(is_proxy_compatible_with_trait<val<>, dynamic_copyable>);
 
 }  // namespace anyxx
