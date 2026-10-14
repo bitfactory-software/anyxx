@@ -142,7 +142,7 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">       ANY_OP_MAP_NAMED_FRIEND(<span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">template &lt;typename T&gt;</div>
-<div class="line"><span class="keyword">using</span> optional = anyxx::any&lt;nullable, anyxx::using_&lt;T&gt;&gt;;</div>
+<div class="line"><span class="keyword">using</span> optional = anyxx::any&lt;anyxx::using_&lt;T&gt;, nullable&gt;;</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><span class="keyword">struct </span>reference_wrapper {</div>
@@ -211,13 +211,13 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>{</div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><span class="keywordtype">bool</span> fun(anyxx::any&lt;_2p_lib::equal_comparable, anyxx::using_&lt;T&gt;&gt; <span class="keyword">const</span>&amp; l,</div>
-<div class="line">         anyxx::any&lt;_2p_lib::equal_comparable, anyxx::using_&lt;T&gt;&gt; <span class="keyword">const</span>&amp; r) {</div>
+<div class="line"><span class="keywordtype">bool</span> fun(anyxx::any&lt;anyxx::using_&lt;T&gt;, _2p_lib::equal_comparable&gt; <span class="keyword">const</span>&amp; l,</div>
+<div class="line">         anyxx::any&lt;anyxx::using_&lt;T&gt;, _2p_lib::equal_comparable&gt; <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">  <span class="keywordflow">return</span> r == l;</div>
 <div class="line">}</div>
 <div class="line"><span class="keyword">static_assert</span>(</div>
 <div class="line">    _2p_lib::is_equal_comparable_model&lt;</div>
-<div class="line">        anyxx::any&lt;_2p_lib::equal_comparable, anyxx::using_&lt;_2p_app::foo&gt;&gt;&gt;);</div>
+<div class="line">        anyxx::any&lt;anyxx::using_&lt;_2p_app::foo&gt;, _2p_lib::equal_comparable&gt;&gt;);</div>
 <div class="line">}  <span class="comment">// namespace</span></div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;_2p test optional 2&quot;</span>) {</div>
@@ -227,6 +227,10 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">  optional&lt;foo&gt; a1{foo{42}};</div>
 <div class="line">  <span class="comment">//+++ the point of this example: no overhead for &#39;empty&#39; indicator!</span></div>
+<div class="line">  <span class="keyword">static_assert</span>(std::same_as&lt;optional&lt;foo&gt;::rep_type, foo&gt;);</div>
+<div class="line">  <span class="keyword">static_assert</span>(std::same_as&lt;using_&lt;foo&gt;, optional&lt;foo&gt;::proxy_t&gt;);</div>
+<div class="line">  <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>(a1) &lt;= 16);</div>
+<div class="line">  <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>(foo) == 16);</div>
 <div class="line">  <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>(a1) == <span class="keyword">sizeof</span>(foo));</div>
 <div class="line">  <span class="comment">//---</span></div>
 <div class="line">  CHECK(a1.has_value());</div>

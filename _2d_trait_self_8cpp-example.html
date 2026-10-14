@@ -103,7 +103,7 @@ $(function(){initNavTree('_2d_trait_self_8cpp-example.html','',''); });
 <div class="line">                            [&amp;x](T <span class="keyword">const</span>&amp; y) { <span class="keywordflow">return</span> x == y; })))</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Proxy = anyxx::val&lt;&gt;, <span class="keyword">typename</span> Base = anyxx::dynamic_copyable&gt;</div>
-<div class="line"><span class="keyword">using</span> any_has_equal = anyxx::any&lt;has_equal&lt;Base&gt;, Proxy&gt;;</div>
+<div class="line"><span class="keyword">using</span> any_has_equal = anyxx::any&lt;Proxy, has_equal&lt;Base&gt;&gt;;</div>
 <div class="line"> </div>
 <div class="line">}  <span class="comment">// namespace example_2d</span></div>
 <div class="line"> </div>
@@ -138,7 +138,7 @@ $(function(){initNavTree('_2d_trait_self_8cpp-example.html','',''); });
 <div class="line">                   ([&amp;x](T <span class="keyword">const</span>&amp; y) { <span class="keywordflow">return</span> x + y; }))))</div>
 <div class="line"> </div>
 <div class="line">template &lt;typename Proxy = anyxx::val&lt;&gt;&gt;</div>
-<div class="line">using any_has_plus = anyxx::any&lt;has_plus, Proxy&gt;;</div>
+<div class="line">using any_has_plus = anyxx::any&lt;Proxy, has_plus&gt;;</div>
 <div class="line"> </div>
 <div class="line">}  <span class="comment">// namespace example_2d</span></div>
 <div class="line"> </div>

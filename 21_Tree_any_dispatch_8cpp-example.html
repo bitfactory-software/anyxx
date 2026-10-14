@@ -106,7 +106,7 @@ $(function(){initNavTree('21_Tree_any_dispatch_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">namespace </span>_21_Tree_TE_interface_dispatch {</div>
 <div class="line"> </div>
 <div class="line">TRAIT_EX(node, , , , (ANY_OPEN_DISPATCH), ())</div>
-<div class="line"><span class="keyword">using </span>any_node = anyxx::any&lt;node, anyxx::cow&gt;;</div>
+<div class="line"><span class="keyword">using </span>any_node = anyxx::any&lt;anyxx::cow, node&gt;;</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>Plus {</div>
 <div class="line">  Plus(any_node left, any_node right)</div>

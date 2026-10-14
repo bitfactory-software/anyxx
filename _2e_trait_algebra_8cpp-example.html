@@ -206,7 +206,7 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line">  <span class="keyword">static_assert</span>(is_semigroup_model&lt;P1&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(is_monoid_model&lt;P1&gt;);</div>
-<div class="line">  any&lt;monoid, using_&lt;P1&gt;&gt; m{p1};</div>
+<div class="line">  any&lt;using_&lt;P1&gt;, monoid&gt; m{p1};</div>
 <div class="line">  test_monoid(m, r);</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -226,7 +226,7 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>algebra;</div>
 <div class="line">  <span class="keyword">using namespace </span>std::string_literals;</div>
 <div class="line"> </div>
-<div class="line">  <span class="keyword">using </span>int_monoid = any&lt;monoid, using_&lt;int&gt;&gt;;</div>
+<div class="line">  <span class="keyword">using </span>int_monoid = any&lt;using_&lt;int&gt;, monoid&gt;;</div>
 <div class="line">  int_monoid x{2};</div>
 <div class="line">  int_monoid y{x};</div>
 <div class="line">  int_monoid z = y;</div>
@@ -242,9 +242,9 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">                                    observeable_v_table&gt;);</div>
 <div class="line"> </div>
 <div class="line">  {</div>
-<div class="line">    any&lt;monoid, using_&lt;int&gt;&gt; im{999};</div>
+<div class="line">    any&lt;using_&lt;int&gt;, monoid&gt; im{999};</div>
 <div class="line">    <span class="keyword">static_assert</span>(is_proxy&lt;trait_class&lt;int&gt;&gt;);</div>
-<div class="line">    <span class="keyword">static_assert</span>(is_any&lt;any&lt;monoid, trait_class&lt;int&gt;&gt;&gt;);</div>
+<div class="line">    <span class="keyword">static_assert</span>(is_any&lt;any&lt;trait_class&lt;int&gt;, monoid&gt;&gt;);</div>
 <div class="line">    <span class="keywordtype">bool</span> eq0 = im.identity() == trait_as&lt;monoid&gt;(0);</div>
 <div class="line">    CHECK(eq0);</div>
 <div class="line">    <span class="keyword">auto</span> x1 = im.concat(std::vector{trait_as&lt;monoid&gt;(1), trait_as&lt;monoid&gt;(2)});</div>
@@ -252,7 +252,7 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">    CHECK(x1 == y2);</div>
 <div class="line">  }</div>
 <div class="line">  {</div>
-<div class="line">    any&lt;monoid, using_&lt;std::string&gt;&gt; sm{<span class="stringliteral">&quot;XXX&quot;</span>};</div>
+<div class="line">    any&lt;using_&lt;std::string&gt;, monoid&gt; sm{<span class="stringliteral">&quot;XXX&quot;</span>};</div>
 <div class="line">    <span class="keyword">auto</span> i = sm.identity();</div>
 <div class="line"> </div>
 <div class="line">    CHECK(sm.identity() == trait_as&lt;monoid&gt;(<span class="stringliteral">&quot;&quot;</span>s));</div>
@@ -270,15 +270,15 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line"> </div>
 <div class="line">  test_monoid((1), std::vector{2, 3});</div>
-<div class="line">  test_monoid&lt;any&lt;monoid, using_&lt;int&gt;&gt;&gt;(</div>
-<div class="line">      trait_as&lt;monoid&gt;(1), std::vector&lt;any&lt;monoid, using_&lt;int&gt;&gt;&gt;{{2}, {3}});</div>
-<div class="line">  test_monoid((1), std::vector&lt;any&lt;monoid, using_&lt;int&gt;&gt;&gt;{{2}, {3}});</div>
-<div class="line">  test_monoid&lt;any&lt;monoid, using_&lt;int&gt;&gt;&gt;(trait_as&lt;monoid&gt;(1), std::vector{2, 3});</div>
+<div class="line">  test_monoid&lt;any&lt;using_&lt;int&gt;, monoid&gt;&gt;(</div>
+<div class="line">      trait_as&lt;monoid&gt;(1), std::vector&lt;any&lt;using_&lt;int&gt;, monoid&gt;&gt;{{2}, {3}});</div>
+<div class="line">  test_monoid((1), std::vector&lt;any&lt;using_&lt;int&gt;, monoid&gt;&gt;{{2}, {3}});</div>
+<div class="line">  test_monoid&lt;any&lt;using_&lt;int&gt;, monoid&gt;&gt;(trait_as&lt;monoid&gt;(1), std::vector{2, 3});</div>
 <div class="line"> </div>
 <div class="line">  test_monoid((<span class="stringliteral">&quot;1&quot;</span>s), std::vector{<span class="stringliteral">&quot;2&quot;</span>s, <span class="stringliteral">&quot;3&quot;</span>s});</div>
-<div class="line">  test_monoid&lt;any&lt;monoid, using_&lt;std::string&gt;&gt;&gt;(</div>
+<div class="line">  test_monoid&lt;any&lt;using_&lt;std::string&gt;, monoid&gt;&gt;(</div>
 <div class="line">      trait_as&lt;monoid&gt;(<span class="stringliteral">&quot;1&quot;</span>s),</div>
-<div class="line">      std::vector&lt;any&lt;monoid, using_&lt;std::string&gt;&gt;&gt;{{<span class="stringliteral">&quot;2&quot;</span>s}, {<span class="stringliteral">&quot;3&quot;</span>s}});</div>
+<div class="line">      std::vector&lt;any&lt;using_&lt;std::string&gt;, monoid&gt;&gt;{{<span class="stringliteral">&quot;2&quot;</span>s}, {<span class="stringliteral">&quot;3&quot;</span>s}});</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">//  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});</span></div>
 <div class="line">}</div>
@@ -293,7 +293,7 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">requires</span>(!anyxx::is_any&lt;P1&gt;)</div>
 <div class="line"><span class="keywordtype">void</span> test_group(P1 <span class="keyword">const</span>&amp; p1, std::ranges::forward_range <span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">  <span class="keyword">static_assert</span>(is_group_model&lt;P1&gt;);</div>
-<div class="line">  <span class="keyword">using </span>any_group = anyxx::any&lt;group, anyxx::using_&lt;P1&gt;&gt;;</div>
+<div class="line">  <span class="keyword">using </span>any_group = anyxx::any&lt;anyxx::using_&lt;P1&gt;, group&gt;;</div>
 <div class="line">  test_group_traited&lt;any_group&gt;(any_group{p1}, r);</div>
 <div class="line">}</div>
 <div class="line"><span class="keyword">template</span> &lt;anyxx::is_any Group&gt;</div>
@@ -321,7 +321,7 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">  CHECK(c1);</div>
 <div class="line">  <span class="keyword">auto</span> g_concat = g.concat(r);</div>
 <div class="line">  <span class="keyword">static_assert</span>(</div>
-<div class="line">      std::same_as&lt;<span class="keyword">decltype</span>(g_concat), anyxx::any&lt;group, anyxx::using_&lt;int&gt;&gt;&gt;);</div>
+<div class="line">      std::same_as&lt;<span class="keyword">decltype</span>(g_concat), anyxx::any&lt;anyxx::using_&lt;int&gt;, group&gt;&gt;);</div>
 <div class="line">  <span class="keyword">auto</span> c2 =</div>
 <div class="line">      g_concat == std::ranges::fold_left(</div>
 <div class="line">                      r, g.identity(),</div>
@@ -344,17 +344,17 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>algebra_test;</div>
 <div class="line"> </div>
 <div class="line">  <span class="keyword">auto</span> g = trait_class_&lt;int, group&gt;.identity();</div>
-<div class="line">  <span class="keyword">static_assert</span>(std::same_as&lt;<span class="keyword">decltype</span>(g), any&lt;group, using_&lt;int&gt;&gt;&gt;);</div>
+<div class="line">  <span class="keyword">static_assert</span>(std::same_as&lt;<span class="keyword">decltype</span>(g), any&lt;using_&lt;int&gt;, group&gt;&gt;);</div>
 <div class="line"> </div>
 <div class="line">  {</div>
-<div class="line">    anyxx::any&lt;monoid, using_&lt;int&gt;&gt; m1{0};</div>
-<div class="line">    anyxx::any&lt;monoid, using_&lt;int&gt;&gt; m2{std::move(m1)};</div>
-<div class="line">    anyxx::any&lt;group, using_&lt;int&gt;&gt; g1{0};</div>
-<div class="line">    anyxx::any&lt;group, using_&lt;int&gt;&gt; g2{std::move(g1)};</div>
+<div class="line">    anyxx::any&lt;using_&lt;int&gt;, monoid&gt; m1{0};</div>
+<div class="line">    anyxx::any&lt;using_&lt;int&gt;, monoid&gt; m2{std::move(m1)};</div>
+<div class="line">    anyxx::any&lt;using_&lt;int&gt;, group&gt; g1{0};</div>
+<div class="line">    anyxx::any&lt;using_&lt;int&gt;, group&gt; g2{std::move(g1)};</div>
 <div class="line">  }</div>
 <div class="line">  test_group((1), std::vector{2, 3});</div>
-<div class="line">  test_group&lt;any&lt;group, using_&lt;int&gt;&gt;&gt;(</div>
-<div class="line">      trait_as&lt;group&gt;(1), std::vector&lt;any&lt;group, using_&lt;int&gt;&gt;&gt;{{2}, {3}});</div>
+<div class="line">  test_group&lt;any&lt;using_&lt;int&gt;, group&gt;&gt;(</div>
+<div class="line">      trait_as&lt;group&gt;(1), std::vector&lt;any&lt;using_&lt;int&gt;, group&gt;&gt;{{2}, {3}});</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>algebra_test {</div>
@@ -387,7 +387,7 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>algebra_test;</div>
 <div class="line"> </div>
 <div class="line">  <span class="keyword">auto</span> <span class="keywordtype">id</span> = trait_class_&lt;int_mul, monoid&gt;.identity();</div>
-<div class="line">  <span class="keyword">static_assert</span>(std::same_as&lt;<span class="keyword">decltype</span>(id), any&lt;monoid, using_&lt;int_mul&gt;&gt;&gt;);</div>
+<div class="line">  <span class="keyword">static_assert</span>(std::same_as&lt;<span class="keyword">decltype</span>(id), any&lt;using_&lt;int_mul&gt;, monoid&gt;&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(!is_group_model&lt;int_mul&gt;);</div>
 <div class="line">  <span class="comment">// trait_class_&lt;int_mul, monoid&gt;.op(id); // should not compile, because</span></div>
 <div class="line">  <span class="comment">// trait_class_ is not an object.</span></div>

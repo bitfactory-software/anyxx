@@ -124,7 +124,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">                   [&amp;x]() { <span class="keywordflow">return</span> std::format(<span class="stringliteral">&quot;{}&quot;</span>, x); })))</div>
 <div class="line"> </div>
 <div class="line">template &lt;typename Proxy&gt;</div>
-<div class="line"><span class="keyword">using</span> any_stringable = anyxx::any&lt;stringable, Proxy&gt;;</div>
+<div class="line"><span class="keyword">using</span> any_stringable = anyxx::any&lt;Proxy, stringable&gt;;</div>
 <div class="line"> </div>
 <div class="line">TRAIT_(node, anyxx::dynamic_copyable,</div>
 <div class="line">       (ANY_FN_DEF(<span class="keyword">public</span>, anyxx::self, sum,</div>
@@ -137,7 +137,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">                     <span class="keywordflow">return</span> s;</div>
 <div class="line">                   })));</div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Proxy = anyxx::val&lt;&gt;&gt;</div>
-<div class="line"><span class="keyword">using </span>any_node = anyxx::any&lt;node, Proxy&gt;;</div>
+<div class="line"><span class="keyword">using </span>any_node = anyxx::any&lt;Proxy, node&gt;;</div>
 <div class="line"> </div>
 <div class="line">}  <span class="comment">// namespace example_3</span></div>
 <div class="line"> </div>
@@ -336,7 +336,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">static_assert</span>(std::is_trivially_copy_constructible_v&lt;<span class="keyword">decltype</span>(v2)&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(std::is_trivially_copy_assignable_v&lt;<span class="keyword">decltype</span>(v2)&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>(v2) &lt;= anyxx::small_object_size);</div>
-<div class="line">  <span class="keyword">using </span>stringable_int = any&lt;stringable, using_&lt;int&gt;&gt;;</div>
+<div class="line">  <span class="keyword">using </span>stringable_int = any&lt;anyxx::using_&lt;int&gt;, stringable&gt;;</div>
 <div class="line">  any_forward_range&lt;stringable_int, stringable_int&gt; r{</div>
 <div class="line">      v2};</div>
 <div class="line">  std::string result;</div>
@@ -394,8 +394,8 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">};</div>
 <div class="line">}  <span class="comment">// namespace anyxx</span></div>
 <div class="line"><span class="keyword">namespace </span>{</div>
-<div class="line"><span class="keyword">using </span>node_iterator = anyxx::any&lt;anyxx::forward_iterator&lt;node_base, node_base&amp;&gt;, anyxx::using_&lt;node_base*&gt;&gt;;</div>
-<div class="line"><span class="keyword">using </span>node_const_iterator = anyxx::any&lt;anyxx::forward_iterator&lt;node_base const, node_base const&amp;&gt;, anyxx::using_&lt;node_base*&gt;&gt;;</div>
+<div class="line"><span class="keyword">using </span>node_iterator = anyxx::any&lt;anyxx::using_&lt;node_base*&gt;, anyxx::forward_iterator&lt;node_base, node_base&amp;&gt;&gt;;</div>
+<div class="line"><span class="keyword">using </span>node_const_iterator = anyxx::any&lt;anyxx::using_&lt;node_base*&gt;, anyxx::forward_iterator&lt;node_base const, node_base const&amp;&gt;&gt;;</div>
 <div class="line">}  <span class="comment">// namespace</span></div>
 <div class="line"><span class="keyword">namespace </span>anyxx {</div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Node, <span class="keyword">typename</span> Iterator&gt;</div>
@@ -408,8 +408,8 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">}  <span class="comment">// namespace anyxx</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>{</div>
-<div class="line"><span class="keyword">using </span>node_range = anyxx::any&lt;anyxx::range&lt;node_iterator&gt;, anyxx::using_&lt;node_base*&gt;&gt;;</div>
-<div class="line"><span class="keyword">using </span>node_const_range = anyxx::any&lt;anyxx::range&lt;node_const_iterator&gt;, anyxx::using_&lt;node_base*&gt;&gt;;</div>
+<div class="line"><span class="keyword">using </span>node_range = anyxx::any&lt;anyxx::using_&lt;node_base*&gt;, anyxx::range&lt;node_iterator&gt;&gt;;</div>
+<div class="line"><span class="keyword">using </span>node_const_range = anyxx::any&lt;anyxx::using_&lt;node_base*&gt;, anyxx::range&lt;node_const_iterator&gt;&gt;;</div>
 <div class="line">}  <span class="comment">// namespace</span></div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;example 3 iterator adaptor &quot;</span>) {</div>

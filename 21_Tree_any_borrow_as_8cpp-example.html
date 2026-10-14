@@ -118,15 +118,15 @@ $(function(){initNavTree('21_Tree_any_borrow_as_8cpp-example.html','',''); });
 <div class="line">  <span class="keywordflow">return</span> s;</div>
 <div class="line">}</div>
 <div class="line">ANY_SINGLETON_DECLARE(, deserialize_factory,</div>
-<div class="line">                      factory&lt;any&lt;serializeable, unique&gt;, std::string, std::istream&amp;&gt;);</div>
+<div class="line">                      factory&lt;any&lt;unique, serializeable&gt;, std::string, std::istream&amp;&gt;);</div>
 <div class="line"> </div>
-<div class="line">any&lt;serializeable, unique&gt; deserialize(std::istream&amp; archive) {</div>
+<div class="line">any&lt;unique, serializeable&gt; deserialize(std::istream&amp; archive) {</div>
 <div class="line">  std::string type;</div>
 <div class="line">  archive &gt;&gt; type;</div>
 <div class="line">  <span class="keywordflow">return</span> deserialize_factory.construct(type, archive);</div>
 <div class="line">}</div>
-<div class="line">any&lt;node, unique&gt; deserialize_any_node(std::istream&amp; archive) {</div>
-<div class="line">  <span class="keywordflow">return</span> move_to&lt;any&lt;node, unique&gt;&gt;(deserialize(archive));</div>
+<div class="line">any&lt;unique, node&gt; deserialize_any_node(std::istream&amp; archive) {</div>
+<div class="line">  <span class="keywordflow">return</span> move_to&lt;any&lt;unique, node&gt;&gt;(deserialize(archive));</div>
 <div class="line">}</div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><span class="keyword">auto</span> register_deserialize_binary(std::string <span class="keyword">const</span>&amp; key) {</div>

@@ -151,8 +151,8 @@ $(function(){initNavTree('_2f_trait_equal_comparable_8cpp-example.html','',''); 
 <div class="line"><span class="comment">// Because the Proxy type of the trait is a template parameter, this algorithm</span></div>
 <div class="line"><span class="comment">// can be used both for static AND dynamic dispatch!</span></div>
 <div class="line"><span class="keyword">template</span> &lt;anyxx::is_proxy Proxy&gt;</div>
-<div class="line"><span class="keywordtype">void</span> test_equal_comparable_(anyxx::any&lt;equal_comparable, Proxy&gt; <span class="keyword">const</span>&amp; a,</div>
-<div class="line">                            anyxx::any&lt;equal_comparable, Proxy&gt; <span class="keyword">const</span>&amp; b) {</div>
+<div class="line"><span class="keywordtype">void</span> test_equal_comparable_(anyxx::any&lt;Proxy, equal_comparable&gt; <span class="keyword">const</span>&amp; a,</div>
+<div class="line">                            anyxx::any&lt;Proxy, equal_comparable&gt; <span class="keyword">const</span>&amp; b) {</div>
 <div class="line">  CHECK((a == b) == (b == a));</div>
 <div class="line">  CHECK((a != b) == (b != a));</div>
 <div class="line">  CHECK((a == b) != (b != a));</div>
@@ -209,9 +209,9 @@ $(function(){initNavTree('_2f_trait_equal_comparable_8cpp-example.html','',''); 
 <div class="line">}</div>
 <div class="line"><span class="comment">// 2. Dynamic dispatch usage.</span></div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;equal_comparable dynamic&quot;</span>) {</div>
-<div class="line">  <span class="keyword">using </span>any_equal_comparable =</div>
-<div class="line">      anyxx::any&lt;lib_2f::equal_comparable, anyxx::val&lt;&gt;&gt;;</div>
-<div class="line">  std::vector&lt;std::pair&lt;any_equal_comparable, any_equal_comparable&gt;&gt; v{</div>
+<div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
+<div class="line">  <span class="keyword">using namespace </span>lib_2f;</div>
+<div class="line">  std::vector&lt;std::pair&lt;any&lt;val&lt;&gt;, equal_comparable&gt;, any&lt;val&lt;&gt;, equal_comparable&gt;&gt;&gt; v{</div>
 <div class="line">      {app_2f::b_type{<span class="stringliteral">&quot;A&quot;</span>}, app_2f::b_type{<span class="stringliteral">&quot;A&quot;</span>}},</div>
 <div class="line">      {app_2f::b_type{<span class="stringliteral">&quot;A&quot;</span>}, app_2f::b_type{<span class="stringliteral">&quot;B&quot;</span>}},</div>
 <div class="line">      {3, 3},</div>
@@ -230,8 +230,8 @@ $(function(){initNavTree('_2f_trait_equal_comparable_8cpp-example.html','',''); 
 <div class="line">    <span class="comment">// This behaviour is enforced by the \ref anyxx::self keyword type.</span></div>
 <div class="line">    <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line">    <span class="keyword">using namespace </span>lib_2f;</div>
-<div class="line">    any&lt;equal_comparable, val&lt;&gt;&gt; a{42};</div>
-<div class="line">    any&lt;equal_comparable, val&lt;&gt;&gt; b{3.14};</div>
+<div class="line">    any&lt;equal_comparable&gt; a{42};</div>
+<div class="line">    any&lt;equal_comparable&gt; b{3.14};</div>
 <div class="line">    CHECK_THROWS_AS(a == b, type_mismatch_error);</div>
 <div class="line">  }</div>
 <div class="line">}</div>
