@@ -36,15 +36,15 @@ std::string func(any<cref, slick_stringable> x) { return x(); }
 TEST_CASE("slick_stringable observeable_v_table") {
   {
     X f("hallo");
-    any<slick_stringable> a{f};
+    any_<slick_stringable> a{f};
     // bool derived = is_derived_from(typeid(slick_stringable), a);
     // CHECK(!derived);
     CHECK(a() == f());
 
-    any<slick_stringable> b = a;
-    any<slick_stringable> c = std::move(b);
-    any<slick_stringable> d{a};
-    any<slick_stringable> e{std::move(d)};
+    any_<slick_stringable> b = a;
+    any_<slick_stringable> c = std::move(b);
+    any_<slick_stringable> d{a};
+    any_<slick_stringable> e{std::move(d)};
     auto eq = a() == func(e);
     a = e;
     CHECK(eq);
@@ -68,7 +68,7 @@ TEST_CASE("slick_stringable observeable_v_table") {
 TEST_CASE("any lifetime cast") {
   const any_stringable<shared> sc{std::make_shared<X>("hallo")};
   REQUIRE(sc() == "hallo");
-  REQUIRE(is_derived_from<any<dynamic_deletable>>(sc));
+  REQUIRE(is_derived_from<any_<dynamic_deletable>>(sc));
 
   static_assert(
       std::same_as<std::decay_t<std::remove_pointer_t<void const*>>, void>);

@@ -13,21 +13,21 @@ TEST_CASE("_data_conversion clone") {
   {
     auto vv1 = any<cref, dynamic_smart_ptr>(s1);
     static_assert(anyxx::is_any<decltype(vv1)>);
-    auto vv2 = clone_to<any<dynamic_smart_ptr>>(vv1);
+    auto vv2 = clone_to<any_<dynamic_smart_ptr>>(vv1);
     CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
     CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
   }
   {
     auto vv1 = any<cref, dynamic_smart_ptr>(s1);
-    auto vv2 = clone_to<any<dynamic_smart_ptr>>(vv1);
+    auto vv2 = clone_to<any_<dynamic_smart_ptr>>(vv1);
     CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
     CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
   }
   {
     auto vv1 = any<mutref, dynamic_smart_ptr>(s1);
-    auto vv2 = clone_to<any<dynamic_smart_ptr>>(vv1);
+    auto vv2 = clone_to<any_<dynamic_smart_ptr>>(vv1);
     CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
     CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
@@ -40,14 +40,14 @@ TEST_CASE("_data_conversion clone") {
     CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
   }
   {
-    auto vv1 = any<dynamic_smart_ptr>(std::make_shared<std::string>(s1));
-    auto vv2 = clone_to<any<dynamic_smart_ptr>>(vv1);
+    auto vv1 = any_<dynamic_smart_ptr>(std::make_shared<std::string>(s1));
+    auto vv2 = clone_to<any_<dynamic_smart_ptr>>(vv1);
     CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
     CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
   }
   {
-    auto vv1 = any<dynamic_smart_ptr>(std::make_shared<std::string>(s1));
+    auto vv1 = any_<dynamic_smart_ptr>(std::make_shared<std::string>(s1));
     auto vv2 = clone_to<any<unique, dynamic_smart_ptr>>(vv1);
     CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
@@ -55,7 +55,7 @@ TEST_CASE("_data_conversion clone") {
   }
   {
     auto vv1 = any<unique, dynamic_smart_ptr>(std::make_unique<std::string>(s1));
-    auto vv2 = clone_to<any<dynamic_smart_ptr>>(vv1);
+    auto vv2 = clone_to<any_<dynamic_smart_ptr>>(vv1);
     CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
     CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
@@ -85,7 +85,7 @@ TEST_CASE("_data_conversion move") {
   }
   {
     auto vv1 = any<unique, dynamic_deletable>(std::make_unique<std::string>(s1));
-    auto vv2 = move_to<any<dynamic_deletable>>(std::move(vv1));
+    auto vv2 = move_to<any_<dynamic_deletable>>(std::move(vv1));
     CHECK(s1 == *unchecked_unerase_cast<std::string>(vv2));
 #pragma warning(push)
 #pragma warning(disable : 26800)

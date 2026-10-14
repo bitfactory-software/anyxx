@@ -136,8 +136,8 @@ TEST_CASE("equal_comparable dynamic") {
     // This behaviour is enforced by the \ref anyxx::self keyword type.
     using namespace anyxx;
     using namespace lib_2f;
-    any<equal_comparable> a{42};
-    any<equal_comparable> b{3.14};
+    any_<equal_comparable> a{42};
+    any_<equal_comparable> b{3.14};
     CHECK_THROWS_AS(a == b, type_mismatch_error);
   }
 }

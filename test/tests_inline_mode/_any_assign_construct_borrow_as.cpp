@@ -11,8 +11,8 @@ using namespace anyxx;
 TEST_CASE("assign construct borrow_as") {
   std::string s1 = "hallo";
   {
-    using from_t = any<observeable>;
-    using to_t = any<observeable>;
+    using from_t = any_<observeable>;
+    using to_t = any_<observeable>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t,
                                         from_t::v_table_t>);
     auto vv1 = from_t(s1);
@@ -25,7 +25,7 @@ TEST_CASE("assign construct borrow_as") {
   }
   {
     using from_t = any<mutref, observeable>;
-    using to_t = any<observeable>;
+    using to_t = any_<observeable>;
     auto vv1 = from_t(s1);
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t,
                                         from_t::v_table_t>);
@@ -131,7 +131,7 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr(*lock<from_t>(vv4)) == get_proxy_ptr(vv1));
   }
   {
-    using from_t = any<dynamic_copyable>;
+    using from_t = any_<dynamic_copyable>;
     using to_t = any<cref, dynamic_copyable>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t,
                                         from_t::v_table_t>);
@@ -144,7 +144,7 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr_const(vv4) == get_proxy_ptr_const(vv1));
   }
   {
-    using from_t = any<dynamic_copyable>;
+    using from_t = any_<dynamic_copyable>;
     using to_t = any<mutref, dynamic_copyable>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t,
                                         from_t::v_table_t>);

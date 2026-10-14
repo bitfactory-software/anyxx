@@ -87,7 +87,7 @@ struct square {
 TRAIT_(drawable, anyxx::dynamic_copyable, (ANY_FN(std::string, draw, (), const)))
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any<drawable>> const& drawables) {
+          std::vector<anyxx::any_<drawable>> const& drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
 
@@ -191,7 +191,7 @@ ANY_MODEL_MAP((square), drawable) {
 };
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any<drawable>> const& drawables) {
+          std::vector<anyxx::any_<drawable>> const& drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
 
@@ -237,12 +237,12 @@ TRAIT_EX_(figure, anyxx::dynamic_copyable,
           (ANY_FN(std::string, name, (), const)), , ,
           (ANY_OPEN_DISPATCH), ())
 
-anyxx::dispatch<std::partial_ordering(anyxx::virtual_<anyxx::any<figure>>,
-                                      anyxx::virtual_<anyxx::any<figure>>)>
+anyxx::dispatch<std::partial_ordering(anyxx::virtual_<anyxx::any_<figure>>,
+                                      anyxx::virtual_<anyxx::any_<figure>>)>
     compare_edges;
 
-[[nodiscard]] std::partial_ordering operator<=>(anyxx::any<figure> const& l,
-                                                anyxx::any<figure> const& r) {
+[[nodiscard]] std::partial_ordering operator<=>(anyxx::any_<figure> const& l,
+                                                anyxx::any_<figure> const& r) {
   return compare_edges(l, r);
 }
 
@@ -256,9 +256,9 @@ auto __ = compare_edges.define<square, circle>(
     [](auto const&, auto const&) { return std::partial_ordering::greater; });
 
 void compare_each(std::stringstream& os,
-                  std::vector<anyxx::any<figure>> const& figures) {
+                  std::vector<anyxx::any_<figure>> const& figures) {
   std::string sep;
-  for (auto const& l : figures)
+  for (auto const& l: figures)
     for (auto const& r : figures) {
       os << std::exchange(sep, ", ") << l.name() << " ";
       if (auto c = l <=> r; c == std::partial_ordering::equivalent)
@@ -287,7 +287,7 @@ TEST_CASE("Showcase3") {
 Showcase 3 demonstrates how to use the Any++ library to implement open multi-dispatch (type-erased binary operators) in C++. In this example:
 - Two types, `circle` and `square`, are defined, each with a `name()` method.
 - A `figure` trait is declared using the `Any++` macro system, specifying a `name()` function.
-- The `ANY` macro is an extension of the `TRAIT` macro. It defines the requested behavior (trait interface) and additionally creates a typedef for an `any` 
+- The `ANY` macro is an extension of the `TRAIT` macro. It defines the requested behavior (trait interface) and additionally creates a typedef for an `any_` 
   type, named `any_<first parameter of macro>`, that uses this trait. The generated trait itself has a template parameter for the Proxy type, 
   which is defaulted to the last parameter of the `ANY` macro.
 - The `dispatch<R(Args...)>` mechanism is used to define a type-erased, runtime-resolved binary operator (`operator<=>`) for comparing two `any_figure<>` objects.
@@ -326,7 +326,7 @@ struct square {
 TRAIT_EX_(figure, anyxx::dynamic_copyable,
           (ANY_FN(std::string, name, (), const)), , ,
           (ANY_OPEN_DISPATCH), ())
-using any_figure = anyxx::any<figure>;
+using any_figure = anyxx::any_<figure>;
 
 ayx::dispatch<std::string(ayx::virtual_<any_figure>)> latin, italian;
 
@@ -393,7 +393,7 @@ ANY_(figure, ayx::dynamic_copyable, (ANY_FN(double, area, (), const)), ayx::val<
 ANY_(serializable, ayx::dynamic_copyable,
     (ANY_FN(void, serialize, (std::ostream&), const)), ayx::cref)
 
-ayx::factory<ayx::any<serializable>, std::string, std::istream&>
+ayx::factory<ayx::any_<serializable>, std::string, std::istream&>
     deserialize;
 
 [[nodiscard]] any_figure<> deserialize_any_figure(std::istream& archive) {

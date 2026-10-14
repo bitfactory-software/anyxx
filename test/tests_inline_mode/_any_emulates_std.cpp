@@ -146,30 +146,30 @@ TEST_CASE("std emulated function") {
     static_assert(std::is_same_v<decltype(hello_world), std::string>);
     CHECK(hello_world == "hello world!");
 
-    any<function<std::string(std::string const&), const_, observeable>>
+    any_<function<std::string(std::string const&), const_, observeable>>
         any_f_cref{f};
     CHECK(any_f_cref("C++") == "C++ world!");
-    any<function<std::string(std::string const&), mutable_, observeable>>
+    any_<function<std::string(std::string const&), mutable_, observeable>>
         any_f_mref{f};
     CHECK(any_f_mref("C++") == "C++ world!");
 
     auto const f_const = [](std::string const& in) {
       return in + " const world!";
     };
-    any<function<std::string(std::string const&), const_, observeable>>
+    any_<function<std::string(std::string const&), const_, observeable>>
         any_f_cref_const{f_const};
     CHECK(any_f_cref_const("C++") == "C++ const world!");
     static_assert(
         std::is_constructible_v<
-            any<function<std::string(std::string const&), const_, observeable>>,
+            any_<function<std::string(std::string const&), const_, observeable>>,
             decltype(f_const)>);
     static_assert(
-        !std::is_constructible_v<any<function<std::string(std::string const&),
+        !std::is_constructible_v<any_<function<std::string(std::string const&),
                                               mutable_, observeable>>,
                                  decltype(f_const)>);
   }
   {
-    any<function<std::string(std::string const&), mutable_, moveable>> f{
+    any_<function<std::string(std::string const&), mutable_, moveable>> f{
         [](std::string const& in) { return in + " world!"; }};
     auto result = f("hello");
     CHECK(result == "hello world!");
@@ -183,7 +183,7 @@ TEST_CASE("std emulated function") {
     // auto f3 = f2; // does not compile as expected, because f2 is move-only
   }
   {
-    any<function<std::string(std::string const&), const_, moveable>> f{
+    any_<function<std::string(std::string const&), const_, moveable>> f{
         [](std::string const& in) { return in + " world!"; }};
     auto result = f("hello");
     CHECK(result == "hello world!");
@@ -199,7 +199,7 @@ TEST_CASE("std emulated function") {
 }
 
 TEST_CASE("std emulated any") {
-  using any = anyxx::any<anyxx::save_copyable>;
+  using any = anyxx::any_<anyxx::save_copyable>;
   {
     auto a1 = any(std::string{"hallo"});
     CHECK(*unerase_cast<std::string>(a1) == "hallo");

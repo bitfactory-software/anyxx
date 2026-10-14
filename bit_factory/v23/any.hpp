@@ -282,7 +282,7 @@ class ANYXX_USE_EBO any<Proxy, Trait> : public v_table_holder<Proxy, Trait>, pub
 };
 
 template <typename Trait>
-class ANYXX_USE_EBO any<Trait> : public any<typename Trait::default_proxy_t, Trait>{
+class ANYXX_USE_EBO any_ : public any<typename Trait::default_proxy_t, Trait>{
   using any<typename Trait::default_proxy_t, Trait>::any;
 };
 
