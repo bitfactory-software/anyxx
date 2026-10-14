@@ -42,7 +42,7 @@ concept has_set_all_to =requires(T t, int const& value) {
 TEST_CASE("anyxx const correctness overloading any") {
     {
         std::vector<int> v1{1, 2};
-        any<mapable, anyxx::cref, int> m{v1};
+        any<anyxx::cref, mapable, int> m{v1};
         decltype(auto) v = m.at(0);
         std::println("{}", v);
         static_assert(std::same_as<decltype(v), int const&>);
@@ -50,11 +50,11 @@ TEST_CASE("anyxx const correctness overloading any") {
         CHECK(m.at(1) == 2);
         CHECK(m[1] == 2);
         CHECK(m.size() == 2);
-        static_assert(!has_set_all_to<any<mapable, anyxx::cref, int>>);
+        static_assert(!has_set_all_to<any<anyxx::cref, mapable, int>>);
     }
     {
         std::vector<int> v1{ 1, 2 };
-        any<mapable, anyxx::mutref, int> m{ v1 };
+        any<anyxx::mutref, mapable, int> m{ v1 };
         decltype(auto) v = m.at(0);
         std::println("{}", v);
         static_assert(std::same_as<decltype(v), int&>);
@@ -63,7 +63,7 @@ TEST_CASE("anyxx const correctness overloading any") {
         CHECK(m[1] == 2);
         m.set_all_to(42);
         CHECK(m.size() == 2);
-        static_assert(has_set_all_to<any<mapable, anyxx::mutref, int>>);
+        static_assert(has_set_all_to<any<anyxx::mutref, mapable, int>>);
     }
 }
 
@@ -104,7 +104,7 @@ TEST_CASE("anyxx const correctness overloading trait_as") {
         CHECK(m.at(1) == 2);
         CHECK(m[1] == 2);
         CHECK(m.size() == 2);
-        static_assert(!has_set_all_to<any<mapable, anyxx::cref, int>>);
+        static_assert(!has_set_all_to<any<anyxx::cref, mapable, int>>);
     }
     {
         std::vector<int> v1{ 1, 2 };
@@ -117,7 +117,7 @@ TEST_CASE("anyxx const correctness overloading trait_as") {
         CHECK(m[1] == 2);
         CHECK(m.size() == 2);
         m.set_all_to(42);
-        static_assert(has_set_all_to<any<mapable, anyxx::mutref, int>>);
+        static_assert(has_set_all_to<any<anyxx::mutref, mapable, int>>);
     }
 }
 

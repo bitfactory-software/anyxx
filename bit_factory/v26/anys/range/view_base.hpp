@@ -20,7 +20,7 @@ struct view_base : copyable<Trait, Self> {
       }
     }
 
-    static any<Category::template iterator, Value, Ref> begin(Self const& self) {
+    static any_<Category::template iterator, Value, Ref> begin(Self const& self) {
         static_assert(std::ranges::view<Self>, "Self must be a view");
         static_assert(requires (Self s, Self const& sc) {
             requires std::same_as<decltype(begin(s)), decltype(begin(sc))>;

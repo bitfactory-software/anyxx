@@ -19,33 +19,33 @@ concept is_callable = requires(Func const& f, int i) {
 
 TEST_CASE("anyxx std function equivalents") {
   {
-    any<function, int(int) const> f{ [](int x) { return x + 2; }};
+    any_<function, int(int) const> f{ [](int x) { return x + 2; }};
     CHECK(f(40) == 42);
   }
   {
-    any<function, int(int)> f{[](int x) { return x + 2; }};
+    any_<function, int(int)> f{[](int x) { return x + 2; }};
     CHECK(f(40) == 42);
   }
   {
-    any<function, int(int)> f{[y = 1](int x) mutable{ return x + ++y + 2; }};
+    any_<function, int(int)> f{[y = 1](int x) mutable{ return x + ++y + 2; }};
     CHECK(f(40) == 44);
     CHECK(f(40) == 45);
   }
   {
       // +++ this code does not compile, as expected
-      //any<function, int(int) const> f{[y = 1](int x) mutable{ return x + ++y + 2; }};
+      //any_<function, int(int) const> f{[y = 1](int x) mutable{ return x + ++y + 2; }};
       // -- this code does not compile, as expected
   }
   {
     auto lambda = +[](int x) { return x + 2; };
-    using function = any<function, const_referenceable, int(int) const>;
+    using function = any_<function, const_referenceable, int(int) const>;
     function f{lambda};
     CHECK(f(40) == 42);
   }
   {
     auto const_lambda = +[](int x) { return x + 2; };
     auto mutable_lambda = [&](int x) mutable { return x + 2; };
-    using function = any<function, mutable_referenceable, int(int)>;
+    using function = any_<function, mutable_referenceable, int(int)>;
     function f_mutable_lambda{mutable_lambda};
     function f_const_lambda{const_lambda};
     static_assert(std::is_invocable_v<decltype(f_mutable_lambda), int>);
@@ -69,7 +69,7 @@ TEST_CASE("anyxx std function equivalents") {
     // function f_mutable_lambda{ mutable_lambda };
     // ---
     auto const_lambda = [](int x) { return x + 2; };
-    using function = any<function, mutable_referenceable, int(int) const>;
+    using function = any_<function, mutable_referenceable, int(int) const>;
     function f_const_lambda{const_lambda};
     static_assert(std::is_invocable_v<decltype(f_const_lambda), int>);
     f_const_lambda(1);
@@ -84,7 +84,7 @@ TEST_CASE("anyxx std function equivalents") {
   {
     auto const_lambda = [](int x) { return x + 2; };
     [[maybe_unused]] auto mutable_lambda = [&](int x) mutable { return x + 2; };
-    using function = any<function, const_referenceable, int(int) const>;
+    using function = any_<function, const_referenceable, int(int) const>;
     // +++ this code does not compile, as expected
     //[[maybe_unused]] function f_mutable_lambda{ mutable_lambda };
     // ---
@@ -95,7 +95,7 @@ TEST_CASE("anyxx std function equivalents") {
   }
   {
     auto p1 = std::make_unique<int>(42);
-    using function = any<function, moveable<>, int(int)>;
+    using function = any_<function, moveable<>, int(int)>;
     function f_moveable{[p = std::move(p1)](int x) { return x + ++*p; }};
     static_assert(!std::is_copy_constructible_v<function>);
     static_assert(std::is_move_constructible_v<function>);

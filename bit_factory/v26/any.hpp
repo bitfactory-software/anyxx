@@ -37,9 +37,9 @@ using preprocess_constructed_with_t =
 template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct any_base : deduced_typenames<Trait, Args...> {
   using trait_declaration_t = anyxx::trait_declaration_t<Trait, Args...>;
-  using dyn_self_t = any<Trait, Args...>;
-  using dyn_self_cref_t = any<Trait, anyxx::cref, Args...>;
-  using dyn_self_mutref_t = any<Trait, anyxx::mutref, Args...>;
+  using dyn_self_t = any_<Trait, Args...>;
+  using dyn_self_cref_t = any<anyxx::cref, Trait, Args...>;
+  using dyn_self_mutref_t = any<anyxx::mutref, Trait, Args...>;
   using proxy_t = Proxy;
   using proxy_trait_t = anyxx::proxy_trait<proxy_t>;
   using void_t = typename proxy_trait_t::void_t;
@@ -148,41 +148,42 @@ template <template <is_trait, typename, typename...> typename Trait, anyxx::is_p
 struct any_with_facade : any_base<Trait, Proxy, Args...>, [:make_dyn_facade<any_base<Trait, Proxy, Args...>>() :] {
     using any_base<Trait, Proxy, Args...>::any_base;
 };
-template <template <is_trait, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
-struct any<Trait, Proxy, Args...> : any_with_facade<Trait, Proxy, Args...>, trait_facade_decorator_t<any<Trait, Proxy, Args...>, Trait, Args...> {
+template <anyxx::is_proxy Proxy, template <is_trait, typename, typename...> typename Trait, typename... Args>
+struct any_with_decorator : any_with_facade<Trait, Proxy, Args...>, trait_facade_decorator_t<any<Proxy, Trait, Args...>, Trait, Args...> {
     using any_with_facade<Trait, Proxy, Args...>::any_with_facade;
 };
-template <template <is_trait, typename, typename...> typename Trait>
-struct any<Trait> : any<Trait, default_proxy_t<Trait>> {
-    using any<Trait, default_proxy_t<Trait>>::any;
+
+template <typename Proxy, template <is_trait, typename, typename...> typename Trait, typename... Args>
+struct any : any_with_decorator<Proxy, Trait, Args...> {
+    using any_with_decorator<Proxy, Trait, Args...>::any_with_decorator;
 };
-template <template <is_trait, typename, typename...> typename Trait, typename Arg0, typename... Args>
-struct any<Trait, Arg0, Args...> : any<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...> {
-    using any<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>::any;
+template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+struct any_: any_with_decorator<default_proxy_t<Trait, Args...>, Trait, Args...> {
+    using any_with_decorator<default_proxy_t<Trait, Args...>, Trait, Args...>::any_with_decorator;
 };
 
 #define __dyn_OP_CONST(function, op) \
-template <template <typename, typename, typename...> typename Trait, typename Other, typename... Args> \
-    requires (requires(any<Trait, Args...> const& lhs, Other const& rhs){ {lhs.function(rhs)}; }) \
-constexpr decltype(auto) operator op (any<Trait, Args...> const& lhs, Other const& rhs) { \
+template <is_any Any, typename Other> \
+    requires (requires(Any const& lhs, Other const& rhs){ {lhs.function(rhs)}; }) \
+constexpr decltype(auto) operator op (Any const& lhs, Other const& rhs) { \
     return lhs.function(rhs); \
 }
 #define __dyn_OP_MUTATING(function, op) \
-template <template <typename, typename, typename...> typename Trait, typename Other, typename... Args> \
-    requires (requires(any<Trait, Args...>& lhs, Other const& rhs){ {lhs.function(rhs)}; }) \
-constexpr decltype(auto) operator op (any<Trait, Args...>& lhs, Other const& rhs) { \
+template <is_any Any, typename Other> \
+    requires (requires(Any& lhs, Other const& rhs){ {lhs.function(rhs)}; }) \
+constexpr decltype(auto) operator op (Any& lhs, Other const& rhs) { \
     return lhs.function(rhs); \
 }
 #define __dyn_OP0(function, op) \
-template <template <typename, typename, typename...> typename Trait, typename... Args> \
-    requires (requires(any<Trait, Args...> const& lhs){ {lhs.function()}; }) \
-constexpr decltype(auto) operator op (any<Trait, Args...> const& lhs) { \
+template <is_any Any> \
+    requires (requires(Any const& lhs){ {lhs.function()}; }) \
+constexpr decltype(auto) operator op (Any const& lhs) { \
     return lhs.function(); \
 }
 #define __dyn_OP0_MUTATING(function, op) \
-template <template <typename, typename, typename...> typename Trait, typename... Args> \
-    requires (requires(any<Trait, Args...>& lhs){ {lhs.function()}; }) \
-constexpr decltype(auto) operator op (any<Trait, Args...>& lhs) { \
+template <is_any Any> \
+    requires (requires(Any& lhs){ {lhs.function()}; }) \
+constexpr decltype(auto) operator op (Any& lhs) { \
     return lhs.function(); \
 }
 
@@ -231,25 +232,29 @@ __dyn_OP_MUTATING(op_greater_greater_equals, >>=)
 /// \brief Safe downcast to an unerased type using runtime information from
 /// the v-Tables.
 /// \ingroup casts
-template <typename U, template <typename, typename, typename...> typename Trait, typename... Args>
-inline constexpr auto unerase_cast(any<Trait, Args...> const& o) {
+template <typename U, template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+inline constexpr auto unerase_cast(any<Proxy, Trait, Args...> const& o) {
     return anyxx::unerase_cast_if<U>(o.proxy_, o.v_table_);
 }
 /// \brief Safe downcast to an unerased type using runtime information from
 /// the v-Tables.
 /// \ingroup casts
-template <typename U, template <typename, typename, typename...> typename Trait, typename... Args>
-inline constexpr auto unerase_cast_if(any<Trait, Args...> const& o) {
+template <typename U, template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+inline constexpr auto unerase_cast_if(any<Proxy, Trait, Args...> const& o) {
     return anyxx::unerase_cast_if<U>(o.proxy_, o.v_table_);
 }
 
+template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+inline constexpr auto get_v_table(any<Proxy, Trait, Args...> const& any) {
+    return v_table_cast<typename any<Proxy, Trait, Args...>::v_table_t>(any.v_table_);
+}
 template <template <typename, typename, typename...> typename Trait, typename... Args>
-inline constexpr auto get_v_table(any<Trait, Args...> const& any) {
-    return v_table_cast<typename any<Trait, Args...>::v_table_t>(any.v_table_);
+inline constexpr auto get_v_table(any_<Trait, Args...> const& any) {
+    return v_table_cast<typename any_<Trait, Args...>::v_table_t>(any.v_table_);
 }
 
-template <template <typename, typename, typename...> typename Trait, typename... Args>
-inline constexpr auto release_v_table(any<Trait, Args...>& any) { return std::exchange(any.v_table_, nullptr); }
+template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+inline constexpr auto release_v_table(any<Proxy, Trait, Args...>& any) { return std::exchange(any.v_table_, nullptr); }
 
 }  // namespace anyxx
 

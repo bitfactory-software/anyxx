@@ -8,7 +8,7 @@ namespace anyxx {
 template <is_trait Trait, typename Self, typename Category, typename Value, typename Ref = Value&>
 struct sized_view : view_base<Trait, Self, Category, Value, Ref> {
 
-    static any<sized_sentinel, Value, Ref> end(Self const& self) {
+    static any_<sized_sentinel, Value, Ref> end(Self const& self) {
         return sentinel_for(self);
     }
     static std::ptrdiff_t reserve_hint(Self const& self) {
