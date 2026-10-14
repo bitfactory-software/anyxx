@@ -41,7 +41,7 @@ TRAIT_EX_(monoid, anyxx::dynamic_copyable,
           , , , ())
 
 template <typename Proxy = anyxx::val<>>
-using any_monoid = anyxx::any<monoid, Proxy>;
+using any_monoid = anyxx::any<Proxy, monoid>;
 
 }  // namespace example_2b
 
@@ -68,7 +68,7 @@ void test_monoid_traited(
 template <typename P1>
   requires(!anyxx::is_any<P1>)
 void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
-  using any_monoid = anyxx::any<monoid, anyxx::using_<P1>>;
+  using any_monoid = anyxx::any<anyxx::using_<P1>, monoid>;
   test_monoid_traited<any_monoid>(any_monoid{p1}, r);
 }
 template <anyxx::is_any Monoid>
@@ -131,8 +131,8 @@ TEST_CASE("example 2b monoid a") {
   using namespace anyxx;
 
   test_monoid((1), std::vector{2, 3});
-  test_monoid<any<monoid, using_<int>>>(
-      trait_as<monoid>(1), std::vector<any<monoid, using_<int>>>{{2}, {3}});
+  test_monoid<any<using_<int>, monoid>>(
+      trait_as<monoid>(1), std::vector<any<using_<int>, monoid>>{{2}, {3}});
 
   //  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
 }
@@ -142,9 +142,9 @@ TEST_CASE("example 2b monoid b") {
   using namespace anyxx;
 
   test_monoid("1"s, std::vector{"2"s, "3"s});
-  test_monoid<any<monoid, using_<std::string>>>(
+  test_monoid<any<using_<std::string>, monoid>>(
       trait_as<monoid>("1"s),
-      std::vector<any<monoid, using_<std::string>>>{{"2"s}, {"3"s}});
+      std::vector<any<using_<std::string>, monoid>>{{"2"s}, {"3"s}});
 }
 TEST_CASE("example 2b monoid c") {
   using namespace example_2b;

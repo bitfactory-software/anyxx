@@ -22,7 +22,7 @@ template<> struct Shape_model_map<Circle> {
 };
 
 TEST_CASE("ShapesAny++23") {
-    std::initializer_list<any<Shape, unique>> shapes = {Circle{5.0}};
+    std::initializer_list<any<unique, Shape>> shapes = {Circle{5.0}};
     for(const auto& shape : shapes) {
         std::println("Area: {}", shape.area());;
     }

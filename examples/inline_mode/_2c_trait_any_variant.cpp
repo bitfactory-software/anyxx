@@ -1,6 +1,6 @@
 #include <algorithm>
-#include <bit_factory/anyxx/ANY_SINGLETON.hpp>
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ANY_SINGLETON.hpp>
 #include <bit_factory/anyxx/ext/dispatch_vany.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <compare>
@@ -29,20 +29,17 @@ TRAIT_EX_(value, anyxx::dynamic_copyable,
                         ss >> std::boolalpha >> x;
                       })),
           , , (ANY_OPEN_DISPATCH), ())
-template <typename Proxy = anyxx::shared>
-using any_value = anyxx::any<value, Proxy>;
+using any_value = anyxx::any<value>;
 
-template <typename Proxy = anyxx::shared>
-using vany_value =
-    anyxx::make_vany<any_value, Proxy, bool, int, double, std::string>;
-using concrete_value = anyxx::vany_type_trait<vany_value<>>::concrete_variant;
-using any_in_variant = anyxx::vany_type_trait<vany_value<>>::any_in_variant;
+using vany_value = anyxx::make_vany<any_value, bool, int, double, std::string>;
+using concrete_value = anyxx::vany_type_trait<vany_value>::concrete_variant;
+using any_in_variant = anyxx::vany_type_trait<vany_value>::any_in_variant;
 
-static_assert(anyxx::is_proxy<anyxx::using_<
-                  anyxx::vany_variant<any_value, anyxx::shared, bool, int>>>);
+static_assert(
+    anyxx::is_proxy<anyxx::using_<anyxx::vany_variant<any_value, bool, int>>>);
 static_assert(
     std::same_as<concrete_value, std::variant<bool, int, double, std::string>>);
-static_assert(std::same_as<any_in_variant, any_value<anyxx::shared>>);
+static_assert(std::same_as<any_in_variant, any_value>);
 
 }  // namespace example_2c
 
@@ -61,7 +58,7 @@ TEST_CASE("example 2ca static_ simple variant") {
   using namespace anyxx;
 
   using any_variant =
-      any_value<using_<std::variant<bool, int, double, std::string>>>;
+      any<using_<std::variant<bool, int, double, std::string>>, value>;
 
   CHECK(any_variant{true}.to_string() == "true");
   CHECK(any_variant{42}.to_string() == "42");
@@ -74,24 +71,22 @@ TEST_CASE("example 2cb static_ any variant") {
   using namespace std::string_literals;
   using namespace anyxx;
 
-  static_assert(
-      constructibile_for<any_value<shared>, vany_value<>::proxy_t, value>);
-  vany_value<> vv_custom_43 =
-      any_value<shared>{std::in_place_type<custom>, "43"};
-  vany_value<> vv_custom_42 = {any_value<shared>{std::in_place, custom{"42"}}};
+  static_assert(constructibile_for<any_value, vany_value::proxy_t, value>);
+  vany_value vv_custom_43 = any_value{std::in_place_type<custom>, "43"};
+  vany_value vv_custom_42 = {any_value{std::in_place, custom{"42"}}};
 
-  CHECK(vany_value<>{true}.to_string() == "true");
+  CHECK(vany_value{true}.to_string() == "true");
   CHECK(vv_custom_42.to_string() == "{42}");
   CHECK(vv_custom_43.to_string() == "{43}");
 
-  vany_value<anyxx::val<>> b{true};
-  static_assert(anyxx::is_proxy<vany_value<>::proxy_t>);
-  static_assert(!anyxx::is_const_data<vany_value<>::proxy_t>);
-  static_assert(!anyxx::is_const_data<vany_value<anyxx::val<>>::proxy_t>);
+  vany_value b{true};
+  static_assert(anyxx::is_proxy<vany_value::proxy_t>);
+  static_assert(!anyxx::is_const_data<vany_value::proxy_t>);
+  static_assert(!anyxx::is_const_data<vany_value::proxy_t>);
   b.from_string("false");
   CHECK(b.to_string() == "false");
-  vany_value<anyxx::val<>> vv_custom_FS{
-      any_value<anyxx::val<>>{std::in_place_type<custom>}};
+  vany_value vv_custom_FS{
+      any_value{std::in_place_type<custom>}};
   vv_custom_FS.from_string("{43}");
   CHECK(vv_custom_FS.to_string() == "{43}");
 }
@@ -99,8 +94,8 @@ TEST_CASE("example 2cb static_ any variant") {
 namespace example_2c {
 
 VANY_DISPACH_DECLARE(
-    , vany_stream, vany_value<>,
-    (void(anyxx::virtual_<any_value<anyxx::shared>>, std::ostream&)),
+    , vany_stream, vany_value,
+    (void(anyxx::virtual_<any_value>, std::ostream&)),
     ([](const std::string& s,
         std::ostream& os) { os << "String: " << s << ", "; },
      [](int i, std::ostream& os) { os << "Int: " << i << ", "; },
@@ -124,15 +119,14 @@ TEST_CASE("example 2cc static_ any variant single open dispatch") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;
-  vany_value<> vv1{std::string{"hello"}};
-  vany_value<> vv2{int{42}};
-  vany_value<> vv3{
-      any_value<shared>{std::in_place_type<custom>, "Hello world!"}};
+  vany_value vv1{std::string{"hello"}};
+  vany_value vv2{int{42}};
+  vany_value vv3{any_value{std::in_place_type<custom>, "Hello world!"}};
 
   std::stringstream ss;
   vany_stream(vv1, ss);
   vany_stream(vv2, ss);
-  vany_stream(vany_value<>{true}, ss);
+  vany_stream(vany_value{true}, ss);
   vany_stream(vv3, ss);
   CHECK(ss.str() == "String: hello, Int: 42, Bool: true, Custom: Hello world!");
 }
@@ -140,9 +134,9 @@ TEST_CASE("example 2cc static_ any variant single open dispatch") {
 namespace example_2c {
 
 VANY_DISPACH_DECLARE(
-    , vany_compare, vany_value<>,
-    (std::partial_ordering(anyxx::virtual_<any_value<anyxx::shared>>,
-                           anyxx::virtual_<any_value<anyxx::shared>>)),
+    , vany_compare, vany_value,
+    (std::partial_ordering(anyxx::virtual_<any_value>,
+                           anyxx::virtual_<any_value>)),
     ([]<typename T>(T&& t, T&& u) -> std::partial_ordering
        requires(!anyxx::is_any<T>)
      { return std::forward<T>(t) <=> std::forward<T>(u); },
@@ -158,13 +152,13 @@ VANY_DISPACH_DECLARE(
      [](std::floating_point auto lhs, std::floating_point auto rhs)
          -> std::partial_ordering { return lhs <=> rhs; }));
 
-auto operator<=>(const vany_value<>& lhs, const vany_value<>& rhs) {
+auto operator<=>(const vany_value& lhs, const vany_value& rhs) {
   return vany_compare(lhs, rhs);
 }
-auto operator==(const vany_value<>& lhs, const vany_value<>& rhs) {
+auto operator==(const vany_value& lhs, const vany_value& rhs) {
   return (lhs <=> rhs) == std::weak_ordering::equivalent;
 }
-auto operator!=(const vany_value<>& lhs, const vany_value<>& rhs) {
+auto operator!=(const vany_value& lhs, const vany_value& rhs) {
   return (lhs <=> rhs) != std::weak_ordering::equivalent;
 }
 
@@ -194,15 +188,14 @@ TEST_CASE("example 2cd static_ any variant double dispatch") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;
-  vany_value<> vv1{"hello"s};
-  vany_value<> vvbt{bool{true}};
-  vany_value<> vvbf{bool{false}};
-  vany_value<> vvi{int{42}};
-  vany_value<> vvi0{int{0}};
-  vany_value<> vvf{double{42.0}};
-  vany_value<> vv3{
-      any_value<shared>{std::in_place_type<custom>, "Hello world!"}};
-  vany_value<> vv4{any_value<shared>{std::in_place_type<custom>, "hello"}};
+  vany_value vv1{"hello"s};
+  vany_value vvbt{bool{true}};
+  vany_value vvbf{bool{false}};
+  vany_value vvi{int{42}};
+  vany_value vvi0{int{0}};
+  vany_value vvf{double{42.0}};
+  vany_value vv3{any_value{std::in_place_type<custom>, "Hello world!"}};
+  vany_value vv4{any_value{std::in_place_type<custom>, "hello"}};
 
   bool x = vany_compare(vv1, vv1) == std::partial_ordering::equivalent;
   CHECK(x);

@@ -23,9 +23,9 @@ concept is_typed_any = is_any<E> && requires(E e) {
 };
 
 template <typename DerivedAny, typename BaseAny>
-constexpr bool is_any_derived_from_v = false;
+struct is_any_derived_from_v;
 
 template <typename DerivedAny, typename BaseAny>
-concept is_any_derived_from = is_any_derived_from_v<DerivedAny, BaseAny>;
+concept is_any_derived_from = is_any_derived_from_v<DerivedAny, BaseAny>::value;
 
 }  // namespace anyxx

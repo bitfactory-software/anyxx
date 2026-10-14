@@ -15,7 +15,7 @@ namespace {
 TRAIT_EX(thing, (ANY_FN(std::string, name, (), const)), , , (ANY_OPEN_DISPATCH),
          ())
 template <typename Proxy = anyxx::shared>
-using any_thing = anyxx::any<thing, Proxy>;
+using any_thing = anyxx::any<Proxy, thing>;
 
 }  // namespace
 

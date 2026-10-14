@@ -25,9 +25,9 @@ concept has_trait_declaration =
     typename HasTraitDeclaration::trait_declaration_t;
 };
 
-template <has_trait_declaration Derived,
-    has_trait_declaration Base>
-constexpr bool is_any_derived_from_v<Derived, Base> =
-std::derived_from<typename Derived::trait_declaration_t, typename Base::trait_declaration_t>;
+template <typename Derived, typename Base>
+struct is_any_derived_from_v {
+    static constexpr bool value = std::derived_from<typename Derived::trait_declaration_t, typename Base::trait_declaration_t>;
+};
 
 }  // namespace anyxx

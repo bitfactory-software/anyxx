@@ -26,10 +26,10 @@ ANY_(stringable, dynamic_deletable, (ANY_OP(std::string, (), (), const)), )
 TRAIT_(slick_stringable, observeable, (ANY_OP(std::string, (), (), const)))
 
 struct Y {
-  any<slick_stringable, mutref> xxx;
+  any<mutref, slick_stringable> xxx;
 };
 
-std::string func(any<slick_stringable, cref> x) { return x(); }
+std::string func(any<cref, slick_stringable> x) { return x(); }
 
 }  // namespace
 
@@ -53,14 +53,14 @@ TEST_CASE("slick_stringable observeable_v_table") {
   }
   {
     X f("hallo");
-    const any<slick_stringable, mutref> a{f};
+    const any<mutref, slick_stringable> a{f};
     // bool derived = is_derived_from(typeid(slick_stringable), a);
     // CHECK(!derived);
     CHECK(a() == f());
   }
   {
     X f("hallo");
-    Y y{.xxx = any<slick_stringable, mutref>{f}};
+    Y y{.xxx = any<mutref, slick_stringable>{f}};
   }
 }
 
@@ -92,7 +92,7 @@ TEST_CASE("any lifetime cast") {
   REQUIRE(co() == "hallo");
   static_assert(std::same_as<any_stringable<cref>::v_table_t,
                              any_stringable<shared>::v_table_t>);
-  REQUIRE(is_derived_from<any<dynamic_deletable, cref>>(co));
+  REQUIRE(is_derived_from<any<cref, dynamic_deletable>>(co));
 
   any_stringable<unique> u{std::make_unique<X>("hallo")};  // NOLINT
   REQUIRE(u() == "hallo");

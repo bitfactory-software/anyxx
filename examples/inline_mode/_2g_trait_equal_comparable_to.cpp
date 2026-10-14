@@ -17,7 +17,7 @@ TRAIT_TEMPLATE(
 
 template <typename L, typename R>
 using trait_as_equal_comparable_to =
-    anyxx::any<equal_comparable_to<R>, anyxx::using_<L>>;
+    anyxx::any<anyxx::using_<L>, equal_comparable_to<R>>;
 
 // no memory overhead because EBO and there is no vtable: The
 // trait uses static dispatch only.

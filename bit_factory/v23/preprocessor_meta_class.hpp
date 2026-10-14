@@ -1,8 +1,7 @@
 #pragma once
 
-#include <bit_factory/anyxx/config.hpp>
-
 #include <bit_factory/anyxx/ANY_UNPAREN.hpp>
+#include <bit_factory/anyxx/config.hpp>
 #include <bit_factory/v23/default_proxy.hpp>
 #include <bit_factory/v23/signature_handling.hpp>
 
@@ -624,9 +623,9 @@
             v_table_base_t::val_proxy_size);                                   \
                                                                                \
     using any_value_t =                                                        \
-        anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
-                       any_template_params),                                   \
-                   anyxx::val<val_proxy_size, val_is_nullable>>;               \
+        anyxx::any<anyxx::val<val_proxy_size, val_is_nullable>,                \
+                   n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
+                       any_template_params)>;                                  \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       if constexpr (anyxx::is_dynamic_castable_v_table<v_table_base_t>) {      \
@@ -652,7 +651,8 @@
         std::in_place_type_t<Parent> parent = std::in_place_type<Parent>);     \
   };                                                                           \
                                                                                \
-  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n     \
+  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params)              \
+      struct ANYXX_USE_EBO n                                                   \
       : BASE                                                                   \
         _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params) {           \
     using base_t =                                                             \
@@ -670,9 +670,9 @@
         anyxx::compute_val_proxy_size<n##_val_size>(base_t::val_proxy_size);   \
                                                                                \
     using any_value_t =                                                        \
-        anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
-                       any_template_params),                                   \
-                   anyxx::val<val_proxy_size, val_is_nullable>>;               \
+        anyxx::any<anyxx::val<val_proxy_size, val_is_nullable>,                \
+                   n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
+                       any_template_params)>;                                  \
                                                                                \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
@@ -840,14 +840,13 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param
-#define ANY_META_FUNCTION(pure_template_params,                                \
-                          any_template_params_with_defaults, n)                \
-                                                                               \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(                                 \
-      any_template_params_with_defaults)>                                      \
-  using any_##n =                                                              \
-      anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(pure_template_params), \
-                 Proxy>;
+#define ANY_META_FUNCTION(pure_template_params,                             \
+                          any_template_params_with_defaults, n)             \
+                                                                            \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(                              \
+      any_template_params_with_defaults)>                                   \
+  using any_##n = anyxx::any<Proxy, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \
+                                        pure_template_params)>;
 
 ////////////////////////////////////////////////////////////////////////////////
 

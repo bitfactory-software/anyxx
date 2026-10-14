@@ -112,7 +112,7 @@ void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
   using namespace anyxx;
   static_assert(is_semigroup_model<P1>);
   static_assert(is_monoid_model<P1>);
-  any<monoid, using_<P1>> m{p1};
+  any<using_<P1>, monoid> m{p1};
   test_monoid(m, r);
 }
 
@@ -132,7 +132,7 @@ TEST_CASE("algebra basics") {
   using namespace algebra;
   using namespace std::string_literals;
 
-  using int_monoid = any<monoid, using_<int>>;
+  using int_monoid = any<using_<int>, monoid>;
   int_monoid x{2};
   int_monoid y{x};
   int_monoid z = y;
@@ -148,9 +148,9 @@ TEST_CASE("algebra basics") {
                                     observeable_v_table>);
 
   {
-    any<monoid, using_<int>> im{999};
+    any<using_<int>, monoid> im{999};
     static_assert(is_proxy<trait_class<int>>);
-    static_assert(is_any<any<monoid, trait_class<int>>>);
+    static_assert(is_any<any<trait_class<int>, monoid>>);
     bool eq0 = im.identity() == trait_as<monoid>(0);
     CHECK(eq0);
     auto x1 = im.concat(std::vector{trait_as<monoid>(1), trait_as<monoid>(2)});
@@ -158,7 +158,7 @@ TEST_CASE("algebra basics") {
     CHECK(x1 == y2);
   }
   {
-    any<monoid, using_<std::string>> sm{"XXX"};
+    any<using_<std::string>, monoid> sm{"XXX"};
     auto i = sm.identity();
 
     CHECK(sm.identity() == trait_as<monoid>(""s));
@@ -176,15 +176,15 @@ TEST_CASE("algebra monoid") {
   using namespace anyxx;
 
   test_monoid((1), std::vector{2, 3});
-  test_monoid<any<monoid, using_<int>>>(
-      trait_as<monoid>(1), std::vector<any<monoid, using_<int>>>{{2}, {3}});
-  test_monoid((1), std::vector<any<monoid, using_<int>>>{{2}, {3}});
-  test_monoid<any<monoid, using_<int>>>(trait_as<monoid>(1), std::vector{2, 3});
+  test_monoid<any<using_<int>, monoid>>(
+      trait_as<monoid>(1), std::vector<any<using_<int>, monoid>>{{2}, {3}});
+  test_monoid((1), std::vector<any<using_<int>, monoid>>{{2}, {3}});
+  test_monoid<any<using_<int>, monoid>>(trait_as<monoid>(1), std::vector{2, 3});
 
   test_monoid(("1"s), std::vector{"2"s, "3"s});
-  test_monoid<any<monoid, using_<std::string>>>(
+  test_monoid<any<using_<std::string>, monoid>>(
       trait_as<monoid>("1"s),
-      std::vector<any<monoid, using_<std::string>>>{{"2"s}, {"3"s}});
+      std::vector<any<using_<std::string>, monoid>>{{"2"s}, {"3"s}});
 
   //  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
 }
@@ -199,7 +199,7 @@ template <typename P1>
   requires(!anyxx::is_any<P1>)
 void test_group(P1 const& p1, std::ranges::forward_range auto const& r) {
   static_assert(is_group_model<P1>);
-  using any_group = anyxx::any<group, anyxx::using_<P1>>;
+  using any_group = anyxx::any<anyxx::using_<P1>, group>;
   test_group_traited<any_group>(any_group{p1}, r);
 }
 template <anyxx::is_any Group>
@@ -227,7 +227,7 @@ void test_group_traited(
   CHECK(c1);
   auto g_concat = g.concat(r);
   static_assert(
-      std::same_as<decltype(g_concat), anyxx::any<group, anyxx::using_<int>>>);
+      std::same_as<decltype(g_concat), anyxx::any<anyxx::using_<int>, group>>);
   auto c2 =
       g_concat == std::ranges::fold_left(
                       r, g.identity(),
@@ -250,17 +250,17 @@ TEST_CASE("algebra group") {
   using namespace algebra_test;
 
   auto g = trait_class_<int, group>.identity();
-  static_assert(std::same_as<decltype(g), any<group, using_<int>>>);
+  static_assert(std::same_as<decltype(g), any<using_<int>, group>>);
 
   {
-    anyxx::any<monoid, using_<int>> m1{0};
-    anyxx::any<monoid, using_<int>> m2{std::move(m1)};
-    anyxx::any<group, using_<int>> g1{0};
-    anyxx::any<group, using_<int>> g2{std::move(g1)};
+    anyxx::any<using_<int>, monoid> m1{0};
+    anyxx::any<using_<int>, monoid> m2{std::move(m1)};
+    anyxx::any<using_<int>, group> g1{0};
+    anyxx::any<using_<int>, group> g2{std::move(g1)};
   }
   test_group((1), std::vector{2, 3});
-  test_group<any<group, using_<int>>>(
-      trait_as<group>(1), std::vector<any<group, using_<int>>>{{2}, {3}});
+  test_group<any<using_<int>, group>>(
+      trait_as<group>(1), std::vector<any<using_<int>, group>>{{2}, {3}});
 }
 
 namespace algebra_test {
@@ -293,7 +293,7 @@ TEST_CASE("algebra int_mul monoid") {
   using namespace algebra_test;
 
   auto id = trait_class_<int_mul, monoid>.identity();
-  static_assert(std::same_as<decltype(id), any<monoid, using_<int_mul>>>);
+  static_assert(std::same_as<decltype(id), any<using_<int_mul>, monoid>>);
   static_assert(!is_group_model<int_mul>);
   // trait_class_<int_mul, monoid>.op(id); // should not compile, because
   // trait_class_ is not an object.

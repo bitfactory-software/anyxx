@@ -14,7 +14,7 @@ typename proxy_model_map_t<Proxy, Trait>::deduced_type;
 
 template <typename Proxy, typename Trait>
   requires(!is_dyn<Proxy>)
-struct v_table_holder<Proxy, Trait> : proxy_deduced_type_t<Proxy, Trait> {
+struct ANYXX_USE_EBO v_table_holder<Proxy, Trait> : proxy_deduced_type_t<Proxy, Trait> {
   struct v_table_t {};
 
   v_table_holder() = default;

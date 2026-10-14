@@ -24,15 +24,15 @@ std::ostream& operator<<(std::ostream& s,
   return s;
 }
 ANY_SINGLETON_DECLARE(, deserialize_factory,
-                      factory<any<serializeable, unique>, std::string, std::istream&>);
+                      factory<any<unique, serializeable>, std::string, std::istream&>);
 
-any<serializeable, unique> deserialize(std::istream& archive) {
+any<unique, serializeable> deserialize(std::istream& archive) {
   std::string type;
   archive >> type;
   return deserialize_factory.construct(type, archive);
 }
-any<node, unique> deserialize_any_node(std::istream& archive) {
-  return move_to<any<node, unique>>(deserialize(archive));
+any<unique, node> deserialize_any_node(std::istream& archive) {
+  return move_to<any<unique, node>>(deserialize(archive));
 }
 template <typename T>
 auto register_deserialize_binary(std::string const& key) {

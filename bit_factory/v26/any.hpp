@@ -105,14 +105,14 @@ struct any_base : deduced_typenames<Trait, Args...> {
   template <anyxx::is_any Other>
   explicit(false) constexpr any_base(const Other& other)  // NOLINT(noExplicitConstructor)
       requires(anyxx::borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
-        anyxx::is_any_derived_from_v<Other, any_base>)
+        anyxx::is_any_derived_from<Other, any_base>)
       : v_table_(v_table_cast<v_table_t>(other.v_table_)),
       proxy_(anyxx::borrow_proxy_as<proxy_t>(other.proxy_, other.v_table_)) {
   }
   template <anyxx::is_any Other>
   constexpr any_base& operator=(Other const& other)
       requires(anyxx::borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
-        anyxx::is_any_derived_from_v<Other, any_base>)
+        anyxx::is_any_derived_from<Other, any_base>)
   {
       v_table_ = v_table_cast<v_table_t>(other.v_table_);
       proxy_ = anyxx::borrow_proxy_as<proxy_t>(other.proxy_, other.v_table_);
@@ -128,13 +128,13 @@ struct any_base : deduced_typenames<Trait, Args...> {
   template <anyxx::is_any Other>
   explicit(false) constexpr any_base(Other&& other) noexcept  // NOLINT(noExplicitConstructor)
       requires(anyxx::moveable_from<proxy_t, typename Other::proxy_t> &&
-        anyxx::is_any_derived_from_v<Other, any_base>)
+        anyxx::is_any_derived_from<Other, any_base>)
       : any_base(std::move(other.proxy_), v_table_cast<v_table_t>(release_v_table(other))) {
   }
   template <anyxx::is_any Other>
   constexpr any_base& operator=(Other&& other) noexcept
       requires(anyxx::moveable_from<proxy_t, typename Other::proxy_t> &&
-        anyxx::is_any_derived_from_v<Other, any_base>)
+        anyxx::is_any_derived_from<Other, any_base>)
   {
       proxy_trait_t::move_to(proxy_, v_table_, std::move(other.proxy_), other.v_table_);
       v_table_ = v_table_cast<v_table_t>(release_v_table(other));

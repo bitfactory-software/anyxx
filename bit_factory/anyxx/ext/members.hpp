@@ -20,7 +20,7 @@ std::size_t& members_count() {
 template <typename InObject>
 struct members {
   members() : table_(members_count<InObject>()) {}
-  using any_value_t = any<dynamic_copyable, nullable_val<>>;
+  using any_value_t = any<nullable_val<>, dynamic_copyable>;
   std::vector<any_value_t> table_;
   template <typename Member, typename Arg>
   void set(Member member, Arg&& arg) {

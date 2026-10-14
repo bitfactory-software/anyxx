@@ -37,7 +37,7 @@ struct jacket_return<self> {
     using sig_t = std::decay_t<Sig>;
     if constexpr (is_type_class<typename std::decay_t<Any>::proxy_t>) {
       using target_t =
-          any<typename Any::trait_t, using_<typename Any::proxy_t::value_t>>;
+          any<using_<typename Any::proxy_t::value_t>, typename Any::trait_t>;
       if constexpr (is_any<sig_t>) {
         return target_t{get_proxy_value(std::forward<Sig>(sig))};
       } else {
@@ -75,7 +75,7 @@ struct translate_sig_map {
 template <>
 struct translate_sig_map<self> {
   template <typename AnyValue>
-  using v_table_param = any<dynamic_copyable, cref>;
+  using v_table_param = any<cref, dynamic_copyable>;
   template <typename AnyValue>
   using v_table_return = AnyValue;
   template <typename Model>
@@ -86,7 +86,7 @@ struct translate_sig_map<self> {
 template <>
 struct translate_sig_map<self const&> {
   template <typename AnyValue>
-  using v_table_param = any<dynamic_copyable, cref>;
+  using v_table_param = any<cref, dynamic_copyable>;
   template <typename AnyValue>
   using v_table_return = int;  // dummy
   template <typename Model>
@@ -97,7 +97,7 @@ struct translate_sig_map<self const&> {
 template <>
 struct translate_sig_map<self&> {
   template <typename AnyValue>
-  using v_table_param = any<dynamic_copyable, mutref>;
+  using v_table_param = any<mutref, dynamic_copyable>;
   template <typename AnyValue>
   using v_table_return = int;  // dummy
   template <typename Model>
@@ -109,7 +109,7 @@ template <typename T>
 struct is_use_as__impl : std::false_type {};
 template <typename T, template <typename...> typename Trait,
           typename... TraitArgs>
-struct is_use_as__impl<any<Trait<TraitArgs...>, using_<T>>> : std::true_type {};
+struct is_use_as__impl<any<using_<T>, Trait<TraitArgs...>>> : std::true_type {};
 template <typename T>
 inline constexpr bool is_use_as_ = is_use_as__impl<std::decay_t<T>>::value;
 
@@ -117,7 +117,7 @@ template <typename T>
   requires is_use_as_<T>
 struct translate_sig_map<T> {
   template <typename AnyValue>
-  using v_table_param = any<dynamic_copyable, mutref>;
+  using v_table_param = any<mutref, dynamic_copyable>;
   template <typename AnyValue>
   using v_table_return = int;  // dummy
   template <typename Model>
@@ -205,6 +205,5 @@ struct forward_trait_to_map<Traited, T const&> {
   }
 };
 //---
-
 
 }  // namespace anyxx

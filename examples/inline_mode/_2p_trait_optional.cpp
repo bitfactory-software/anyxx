@@ -48,7 +48,7 @@ TRAIT(nullable,
        ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const)))
 
 template <typename T>
-using optional = anyxx::any<nullable, anyxx::using_<T>>;
+using optional = anyxx::any<anyxx::using_<T>, nullable>;
 
 template <typename T>
 struct reference_wrapper {
@@ -117,13 +117,13 @@ ANY_MODEL_MAP((_2p_app::foo), _2p_lib::nullable) {
 
 namespace {
 template <typename T>
-bool fun(anyxx::any<_2p_lib::equal_comparable, anyxx::using_<T>> const& l,
-         anyxx::any<_2p_lib::equal_comparable, anyxx::using_<T>> const& r) {
+bool fun(anyxx::any<anyxx::using_<T>, _2p_lib::equal_comparable> const& l,
+         anyxx::any<anyxx::using_<T>, _2p_lib::equal_comparable> const& r) {
   return r == l;
 }
 static_assert(
     _2p_lib::is_equal_comparable_model<
-        anyxx::any<_2p_lib::equal_comparable, anyxx::using_<_2p_app::foo>>>);
+        anyxx::any<anyxx::using_<_2p_app::foo>, _2p_lib::equal_comparable>>);
 }  // namespace
 
 TEST_CASE("_2p test optional 2") {
@@ -133,6 +133,10 @@ TEST_CASE("_2p test optional 2") {
 
   optional<foo> a1{foo{42}};
   //+++ the point of this example: no overhead for 'empty' indicator!
+  static_assert(std::same_as<optional<foo>::rep_type, foo>);
+  static_assert(std::same_as<using_<foo>, optional<foo>::proxy_t>);
+  static_assert(sizeof(a1) <= 16);
+  static_assert(sizeof(foo) == 16);
   static_assert(sizeof(a1) == sizeof(foo));
   //---
   CHECK(a1.has_value());

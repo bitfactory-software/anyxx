@@ -39,7 +39,7 @@ struct register_trait {
 };
 
 template <typename ToVtable, typename FromVTable>
-    requires anyxx::is_any_derived_from_v<FromVTable, ToVtable>
+    requires anyxx::is_any_derived_from<FromVTable, ToVtable>
 constexpr ToVtable* v_table_cast(FromVTable* from) {
     auto void_p = static_cast<void*>(from);
     return static_cast<ToVtable*>(void_p);

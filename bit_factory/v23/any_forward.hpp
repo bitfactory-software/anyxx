@@ -4,14 +4,12 @@
 
 namespace anyxx {
 
-template <typename Trait, is_proxy Proxy = typename Trait::default_proxy_t>
+template <typename...>
 class any;
 
-template <typename TraitDerived, is_proxy ProxyDerived, typename TraitBase,
-    is_proxy ProxyBase>
-constexpr bool is_any_derived_from_v<any<TraitDerived, ProxyDerived>,
-    any<TraitBase, ProxyBase>> =
-    std::derived_from<typename any<TraitDerived, ProxyDerived>::v_table_t,
-    typename any<TraitBase, ProxyBase>::v_table_t>;
+template <typename Derived, typename Base>
+struct is_any_derived_from_v {
+	static constexpr bool value = std::derived_from<typename Derived::v_table_t, typename Base::v_table_t>;
+};
 
 }  // namespace anyxx

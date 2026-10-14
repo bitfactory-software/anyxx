@@ -87,7 +87,7 @@ struct square {
 TRAIT_(drawable, anyxx::dynamic_copyable, (ANY_FN(std::string, draw, (), const)))
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any<drawable, anyxx::val<>>> const& drawables) {
+          std::vector<anyxx::any<drawable>> const& drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
 
@@ -191,7 +191,7 @@ ANY_MODEL_MAP((square), drawable) {
 };
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any<drawable, anyxx::val<>>> const& drawables) {
+          std::vector<anyxx::any<drawable>> const& drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
 
@@ -226,8 +226,6 @@ to provide custom behavior for unrelated types using traits.
 
 namespace showcase3 {
 
-namespace ayx = anyxx;
-
 struct circle {
   [[nodiscard]] std::string name() const { return "circle"; }
 };
@@ -238,15 +236,13 @@ struct square {
 TRAIT_EX_(figure, anyxx::dynamic_copyable,
           (ANY_FN(std::string, name, (), const)), , ,
           (ANY_OPEN_DISPATCH), ())
-template <typename Proxy = anyxx::val<>>
-using any_figure = anyxx::any<figure, Proxy>;
 
-ayx::dispatch<std::partial_ordering(ayx::virtual_<any_figure<>>,
-                                    ayx::virtual_<any_figure<>>)>
+anyxx::dispatch<std::partial_ordering(anyxx::virtual_<anyxx::any<figure>>,
+                                      anyxx::virtual_<anyxx::any<figure>>)>
     compare_edges;
 
-[[nodiscard]] std::partial_ordering operator<=>(any_figure<> const& l,
-                                                any_figure<> const& r) {
+[[nodiscard]] std::partial_ordering operator<=>(anyxx::any<figure> const& l,
+                                                anyxx::any<figure> const& r) {
   return compare_edges(l, r);
 }
 
@@ -260,7 +256,7 @@ auto __ = compare_edges.define<square, circle>(
     [](auto const&, auto const&) { return std::partial_ordering::greater; });
 
 void compare_each(std::stringstream& os,
-                  std::vector<ayx::any<figure, ayx::val<>>> const& figures) {
+                  std::vector<anyxx::any<figure>> const& figures) {
   std::string sep;
   for (auto const& l : figures)
     for (auto const& r : figures) {
@@ -330,18 +326,16 @@ struct square {
 TRAIT_EX_(figure, anyxx::dynamic_copyable,
           (ANY_FN(std::string, name, (), const)), , ,
           (ANY_OPEN_DISPATCH), ())
-template <typename Proxy = anyxx::val<>>
-using any_figure = anyxx::any<figure, Proxy>;
+using any_figure = anyxx::any<figure>;
 
-ayx::dispatch<std::string(ayx::virtual_<any_figure<>>)> latin, italian;
+ayx::dispatch<std::string(ayx::virtual_<any_figure>)> latin, italian;
 
 auto __ = latin.define<circle>([](auto const&) { return "orbis"; });
 auto __ = latin.define<square>([](auto const&) { return "quadratum"; });
 auto __ = italian.define<circle>([](auto const&) { return "cerchio"; });
 auto __ = italian.define<square>([](auto const&) { return "quadrato"; });
 
-void translate(std::stringstream& os,
-               std::vector<ayx::any<figure, ayx::val<>>> const& figures) {
+void translate(std::stringstream& os, std::vector<any_figure> const& figures) {
   std::string sep;
   for (auto const& f : figures)
     os << std::exchange(sep, "; ") << f.name() << ": latin = " << latin(f)
@@ -435,7 +429,7 @@ ANY_REGISTER_MODEL(square, figure);
 ANY_REGISTER_MODEL(square, serializable);
 
 void areas(std::stringstream& os,
-           std::vector<ayx::any<figure, ayx::val<>>> const& figures) {
+           std::vector<any_figure<>> const& figures) {
   std::string sep;
   for (auto const& f : figures) os << std::exchange(sep, ", ") << f.area();
 }
@@ -502,7 +496,7 @@ TRAIT(drawable, (ANY_FN(std::string, draw, (), const)))
 using known_shapes = std::variant<circle, square>;
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any<drawable, anyxx::using_<known_shapes>>> const&
+          std::vector<anyxx::any<anyxx::using_<known_shapes>, drawable>> const&
               drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
@@ -553,11 +547,11 @@ ANY_(figure, ayx::dynamic_copyable, (ANY_FN(std::string, draw, (), const)),
      ayx::val<>)
 
 using known_and_unknown_shapes =
-    ayx::make_vany<any_figure, ayx::val<>, circle, square>;
+    ayx::make_vany<any_figure<>, circle, square>;
 static_assert(
     std::same_as<known_and_unknown_shapes,
                  any_figure<ayx::using_<  // see the Any++ logo at the top
-                     std::variant<any_figure<ayx::val<>>, circle, square>>>>);
+                     std::variant<any_figure<>, circle, square>>>>);
 ANY_MODEL_MAP((std::string), figure) {
   static std::string draw(std::string const& s) { return s; };
 };

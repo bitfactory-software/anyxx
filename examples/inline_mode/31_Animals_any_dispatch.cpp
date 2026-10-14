@@ -15,7 +15,7 @@ TRAIT_EX_(creature, anyxx::dynamic_copyable,
           (ANY_FN(std::type_info const*, name, (), const)), , ,
           (ANY_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::val<>>
-using any_creature = anyxx::any<creature, Proxy>;
+using any_creature = anyxx::any<Proxy, creature>;
 }  // namespace
 
 namespace {

@@ -37,8 +37,10 @@ namespace anyxx {
 /// for examples. If the proxy is dynamic (i.e., type erased), the Trait must
 /// conform to the \ref has_v_table concept (that means: must provide a
 /// v-Table).
-template <typename Trait, is_proxy Proxy>
-class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
+template <typename...>
+class any;
+template <is_proxy Proxy, typename Trait>
+class ANYXX_USE_EBO any<Proxy, Trait> : public v_table_holder<Proxy, Trait>, public Trait {
  public:
   using proxy_t = Proxy;
   using proxy_trait_t = proxy_trait<proxy_t>;
@@ -195,7 +197,7 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
   template <is_any Friend>
   friend inline auto get_proxy_ptr(Friend&& any);
 
-  template <typename OtherTrait, is_proxy Other>
+  template <typename...>
   friend class any;
 
   template <typename Friend>
@@ -279,33 +281,38 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
   }
 };
 
+template <typename Trait>
+class ANYXX_USE_EBO any<Trait> : public any<typename Trait::default_proxy_t, Trait>{
+  using any<typename Trait::default_proxy_t, Trait>::any;
+};
+
 
 /// A template to get an \ref any trait for a type
 /// See also \ref using_::as.
 template <typename Type, typename Trait>
-using use_as = any<Trait, using_<Type>>;
+using use_as = any<using_<Type>, Trait>;
 
 /// A template to get an \ref any trait for a type
 /// See also \ref using_cref::as.
 template <typename Type, typename Trait>
-using use_as_cref = any<Trait, using_cref<Type>>;
+using use_as_cref = any<using_cref<Type>, Trait>;
 
 /// A template to get an templatetd \ref any trait for a type
 /// See also \ref using_::as.
 template <typename Type, template <typename...> typename Trait, typename... Ts>
-using use_as_ = any<Trait<Ts...>, using_<Type>>;
+using use_as_ = any<using_<Type>, Trait<Ts...>>;
 
 /// A template to get an templatetd \ref any trait for a type
 /// See also \ref using_cref::as.
 template <typename Type, template <typename...> typename Trait, typename... Ts>
-using use_as_cref_ = any<Trait<Ts...>, using_cref<Type>>;
+using use_as_cref_ = any<using_cref<Type>, Trait<Ts...>>;
 
 /// A factory function to bind an object as a model to an \ref any with a \ref
 /// trait.
 /// See also \ref using_::as.
 template <typename Trait, typename T>
 auto trait_as(T&& v) {
-    return any<Trait, using_<std::decay_t<T>>>{std::forward<T>(v)};
+    return any<using_<std::decay_t<T>>, Trait>{std::forward<T>(v)};
 }
 
 /// A factory function to bind a const& as a model to an \ref any with a \ref
@@ -313,7 +320,7 @@ auto trait_as(T&& v) {
 /// See also \ref using_cref::as.
 template <typename Trait, typename T>
 auto trait_as_cref(T const& v) {
-    return any<Trait, using_cref<std::decay_t<T>>>{v};
+    return any<using_cref<std::decay_t<T>>, Trait>{v};
 }
 
 /// Helper type alias template to get a \ref trait_class for a type
@@ -322,7 +329,7 @@ auto trait_as_cref(T const& v) {
 ///
 /// \tparam Type The captured type
 template <typename Type, typename Trait>
-using any_trait_class = any<Trait, trait_class<Type>>;
+using any_trait_class = any<trait_class<Type>, Trait>;
 
 /// A object template to get a \ref trait_class object for a type as a \ref
 /// trait.

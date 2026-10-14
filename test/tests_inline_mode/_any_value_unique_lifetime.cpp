@@ -284,7 +284,7 @@ TEST_CASE("unique lifetime") {
     CHECK(X::tracker_ == 0);
     {
       auto c = std::make_unique<X>("hallo");
-      any<dynamic_deletable, unique> u{std::move(c)};
+      any<unique, dynamic_deletable> u{std::move(c)};
       CHECK((*unerase_cast<X>(u))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
@@ -293,7 +293,7 @@ TEST_CASE("unique lifetime") {
   {
     CHECK(X::tracker_ == 0);
     {
-      any<dynamic_deletable, unique> u{std::make_unique<X>("hallo")};
+      any<unique, dynamic_deletable> u{std::make_unique<X>("hallo")};
       CHECK((*unerase_cast<X>(u))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
@@ -302,10 +302,10 @@ TEST_CASE("unique lifetime") {
   {
     CHECK(X::tracker_ == 0);
     {
-      any<dynamic_deletable, unique> u{std::make_unique<X>("hallo")};
+      any<unique, dynamic_deletable> u{std::make_unique<X>("hallo")};
       CHECK((*unerase_cast<X>(u))() == "hallo");
       CHECK(X::tracker_ == 1);
-      any<dynamic_deletable, unique> u2{std::make_unique<X>("world")};
+      any<unique, dynamic_deletable> u2{std::make_unique<X>("world")};
       CHECK((*unerase_cast<X>(u2))() == "world");
       CHECK(X::tracker_ == 2);
       u2 = std::move(u);
@@ -316,7 +316,7 @@ TEST_CASE("unique lifetime") {
       CHECK(get_proxy_ptr_const(u2) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u3))() == "hallo");
       CHECK(X::tracker_ == 1);
-      auto u4 = move_to<any<dynamic_deletable, unique>>(std::move(u3));
+      auto u4 = move_to<any<unique, dynamic_deletable>>(std::move(u3));
       CHECK(get_proxy_ptr_const(u3) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u4))() == "hallo");
       CHECK(X::tracker_ == 1);

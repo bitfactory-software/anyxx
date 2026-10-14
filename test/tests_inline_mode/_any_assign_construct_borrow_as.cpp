@@ -24,7 +24,7 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
-    using from_t = any<observeable, mutref>;
+    using from_t = any<mutref, observeable>;
     using to_t = any<observeable>;
     auto vv1 = from_t(s1);
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t,
@@ -37,8 +37,8 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
-    using from_t = any<observeable, mutref>;
-    using to_t = any<observeable, mutref>;
+    using from_t = any<mutref, observeable>;
+    using to_t = any<mutref, observeable>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t,
                                         from_t::v_table_t>);
     auto vv1 = from_t(s1);
@@ -50,8 +50,8 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
-    using from_t = any<dynamic_deletable, shared>;
-    using to_t = any<dynamic_deletable, cref>;
+    using from_t = any<shared, dynamic_deletable>;
+    using to_t = any<cref, dynamic_deletable>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t,
                                         from_t::v_table_t>);
     auto vv1 = from_t(std::make_shared<std::string>(s1));
@@ -63,8 +63,8 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
-    using from_t = any<dynamic_deletable, unique>;
-    using to_t = any<dynamic_deletable, cref>;
+    using from_t = any<unique, dynamic_deletable>;
+    using to_t = any<cref, dynamic_deletable>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t,
                                         from_t::v_table_t>);
     auto vv1 = from_t{std::make_unique<std::string>(s1)};
@@ -76,8 +76,8 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
-    using from_t = any<dynamic_deletable, unique>;
-    using to_t = any<dynamic_deletable, mutref>;
+    using from_t = any<unique, dynamic_deletable>;
+    using to_t = any<mutref, dynamic_deletable>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t,
                                         from_t::v_table_t>);
     auto vv1 = from_t{std::make_unique<std::string>(s1)};
@@ -89,8 +89,8 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
-    using from_t = any<dynamic_deletable, shared>;
-    using to_t = any<dynamic_deletable, shared>;
+    using from_t = any<shared, dynamic_deletable>;
+    using to_t = any<shared, dynamic_deletable>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t,
                                         from_t::v_table_t>);
     auto sp = std::make_shared<std::string>(s1);
@@ -103,8 +103,8 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
-    using from_t = any<dynamic_deletable, weak>;
-    using to_t = any<dynamic_deletable, weak>;
+    using from_t = any<weak, dynamic_deletable>;
+    using to_t = any<weak, dynamic_deletable>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t,
                                         from_t::v_table_t>);
     auto sp = std::make_shared<std::string>(s1);
@@ -118,8 +118,8 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
-    using from_t = any<dynamic_deletable, shared>;
-    using to_t = any<dynamic_deletable, weak>;
+    using from_t = any<shared, dynamic_deletable>;
+    using to_t = any<weak, dynamic_deletable>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t,
                                         from_t::v_table_t>);
     auto vv1 = from_t{std::make_shared<std::string>(s1)};
@@ -132,7 +132,7 @@ TEST_CASE("assign construct borrow_as") {
   }
   {
     using from_t = any<dynamic_copyable>;
-    using to_t = any<dynamic_copyable, cref>;
+    using to_t = any<cref, dynamic_copyable>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t,
                                         from_t::v_table_t>);
     auto vv1 = from_t{s1};
@@ -145,7 +145,7 @@ TEST_CASE("assign construct borrow_as") {
   }
   {
     using from_t = any<dynamic_copyable>;
-    using to_t = any<dynamic_copyable, mutref>;
+    using to_t = any<mutref, dynamic_copyable>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t,
                                         from_t::v_table_t>);
     auto vv1 = from_t{s1};

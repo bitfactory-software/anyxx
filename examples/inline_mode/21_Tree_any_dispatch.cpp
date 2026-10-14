@@ -12,7 +12,7 @@ using namespace anyxx;
 namespace _21_Tree_TE_interface_dispatch {
 
 TRAIT_EX(node, , , , (ANY_OPEN_DISPATCH), ())
-using any_node = anyxx::any<node, anyxx::cow>;
+using any_node = anyxx::any<anyxx::cow, node>;
 
 struct Plus {
   Plus(any_node left, any_node right)
