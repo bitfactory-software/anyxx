@@ -37,10 +37,8 @@ namespace anyxx {
 /// for examples. If the proxy is dynamic (i.e., type erased), the Trait must
 /// conform to the \ref has_v_table concept (that means: must provide a
 /// v-Table).
-template <typename...>
-class any;
 template <is_proxy Proxy, typename Trait>
-class ANYXX_USE_EBO any<Proxy, Trait> : public v_table_holder<Proxy, Trait>, public Trait {
+class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
  public:
   using proxy_t = Proxy;
   using proxy_trait_t = proxy_trait<proxy_t>;
@@ -197,7 +195,7 @@ class ANYXX_USE_EBO any<Proxy, Trait> : public v_table_holder<Proxy, Trait>, pub
   template <is_any Friend>
   friend inline auto get_proxy_ptr(Friend&& any);
 
-  template <typename...>
+  template <is_proxy ProxyFriend, typename TraitFriend>
   friend class any;
 
   template <typename Friend>
