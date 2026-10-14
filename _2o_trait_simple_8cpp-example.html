@@ -100,7 +100,7 @@ $(function(){initNavTree('_2o_trait_simple_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">TRAIT_(trait1, anyxx::dynamic_copyable, (ANY_FN(std::string, fn1, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
-<div class="line">std::string cat(std::vector&lt;anyxx::any&lt;trait1&gt;&gt; <span class="keyword">const</span>&amp; items) {</div>
+<div class="line">std::string cat(std::vector&lt;anyxx::any_&lt;trait1&gt;&gt; <span class="keyword">const</span>&amp; items) {</div>
 <div class="line">  std::string result;</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; item : items) {</div>
 <div class="line">    result += item.fn1();</div>
@@ -129,9 +129,9 @@ $(function(){initNavTree('_2o_trait_simple_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line">  <span class="keyword">using namespace </span>simple;</div>
 <div class="line"> </div>
-<div class="line">  any&lt;trait1&gt; test1{model1{<span class="stringliteral">&quot;model1&quot;</span>}};</div>
+<div class="line">  any_&lt;trait1&gt; test1{model1{<span class="stringliteral">&quot;model1&quot;</span>}};</div>
 <div class="line">  CHECK(test1.fn1() == <span class="stringliteral">&quot;model1&quot;</span>);</div>
-<div class="line">  any&lt;trait1&gt; test2{model2{42}};</div>
+<div class="line">  any_&lt;trait1&gt; test2{model2{42}};</div>
 <div class="line">  CHECK(test2.fn1() == <span class="stringliteral">&quot;42&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line">  CHECK(cat({test1, test2}) == <span class="stringliteral">&quot;model142&quot;</span>);</div>

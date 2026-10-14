@@ -181,7 +181,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">TRAIT_(drawable, anyxx::dynamic_copyable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">void draw(std::stringstream&amp; os,</div>
-<div class="line">          std::vector&lt;anyxx::any&lt;drawable&gt;&gt; const&amp; drawables) {</div>
+<div class="line">          std::vector&lt;anyxx::any_&lt;drawable&gt;&gt; const&amp; drawables) {</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -285,7 +285,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> draw(std::stringstream&amp; os,</div>
-<div class="line">          std::vector&lt;anyxx::any&lt;drawable&gt;&gt; <span class="keyword">const</span>&amp; drawables) {</div>
+<div class="line">          std::vector&lt;anyxx::any_&lt;drawable&gt;&gt; <span class="keyword">const</span>&amp; drawables) {</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -331,12 +331,12 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">          (ANY_FN(std::string, name, (), <span class="keyword">const</span>)), , ,</div>
 <div class="line">          (ANY_OPEN_DISPATCH), ())</div>
 <div class="line"> </div>
-<div class="line">anyxx::dispatch&lt;std::partial_ordering(anyxx::virtual_&lt;anyxx::any&lt;figure&gt;&gt;,</div>
-<div class="line">                                      anyxx::virtual_&lt;anyxx::any&lt;figure&gt;&gt;)&gt;</div>
+<div class="line">anyxx::dispatch&lt;std::partial_ordering(anyxx::virtual_&lt;anyxx::any_&lt;figure&gt;&gt;,</div>
+<div class="line">                                      anyxx::virtual_&lt;anyxx::any_&lt;figure&gt;&gt;)&gt;</div>
 <div class="line">    compare_edges;</div>
 <div class="line"> </div>
-<div class="line">[[nodiscard]] std::partial_ordering operator&lt;=&gt;(anyxx::any&lt;figure&gt; const&amp; l,</div>
-<div class="line">                                                anyxx::any&lt;figure&gt; const&amp; r) {</div>
+<div class="line">[[nodiscard]] std::partial_ordering operator&lt;=&gt;(anyxx::any_&lt;figure&gt; const&amp; l,</div>
+<div class="line">                                                anyxx::any_&lt;figure&gt; const&amp; r) {</div>
 <div class="line">  <span class="keywordflow">return</span> compare_edges(l, r);</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -350,9 +350,9 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">    [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;, <span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> std::partial_ordering::greater; });</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> compare_each(std::stringstream&amp; os,</div>
-<div class="line">                  std::vector&lt;anyxx::any&lt;figure&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
+<div class="line">                  std::vector&lt;anyxx::any_&lt;figure&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
 <div class="line">  std::string sep;</div>
-<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; l : figures)</div>
+<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; l: figures)</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r : figures) {</div>
 <div class="line">      os &lt;&lt; std::exchange(sep, <span class="stringliteral">&quot;, &quot;</span>) &lt;&lt; l.name() &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
 <div class="line">      <span class="keywordflow">if</span> (<span class="keyword">auto</span> c = l &lt;=&gt; r; c == std::partial_ordering::equivalent)</div>
@@ -381,7 +381,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">Showcase 3 demonstrates how to use the Any++ library to implement open multi-dispatch (type-erased binary operators) in C++. In <span class="keyword">this</span> example:</div>
 <div class="line">- Two types, `circle` and `square`, are defined, each with a `name()` method.</div>
 <div class="line">- A `figure` trait is declared <span class="keyword">using </span>the `Any++` macro system, specifying a `name()` function.</div>
-<div class="line">- The `ANY` macro is an extension of the `TRAIT` macro. It defines the requested behavior (trait interface) and additionally creates a <span class="keyword">typedef</span> <span class="keywordflow">for</span> an `any` </div>
+<div class="line">- The `ANY` macro is an extension of the `TRAIT` macro. It defines the requested behavior (trait interface) and additionally creates a <span class="keyword">typedef</span> <span class="keywordflow">for</span> an `any_` </div>
 <div class="line">  type, named `any_&lt;first parameter of macro&gt;`, that uses <span class="keyword">this</span> trait. The generated trait itself has a <span class="keyword">template</span> parameter <span class="keywordflow">for</span> the Proxy type, </div>
 <div class="line">  which is defaulted to the last parameter of the `ANY` macro.</div>
 <div class="line">- The `dispatch&lt;R(Args...)&gt;` mechanism is used to define a type-erased, runtime-resolved binary operator (`operator&lt;=&gt;`) <span class="keywordflow">for</span> comparing two `any_figure&lt;&gt;` objects.</div>
@@ -420,7 +420,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">TRAIT_EX_(figure, anyxx::dynamic_copyable,</div>
 <div class="line">          (ANY_FN(std::string, name, (), <span class="keyword">const</span>)), , ,</div>
 <div class="line">          (ANY_OPEN_DISPATCH), ())</div>
-<div class="line">using any_figure = anyxx::any&lt;figure&gt;;</div>
+<div class="line">using any_figure = anyxx::any_&lt;figure&gt;;</div>
 <div class="line"> </div>
 <div class="line">ayx::dispatch&lt;std::<span class="keywordtype">string</span>(ayx::virtual_&lt;any_figure&gt;)&gt; latin, italian;</div>
 <div class="line"> </div>
@@ -487,7 +487,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">ANY_(serializable, ayx::dynamic_copyable,</div>
 <div class="line">    (ANY_FN(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), <span class="keyword">const</span>)), ayx::cref)</div>
 <div class="line"> </div>
-<div class="line">ayx::factory&lt;ayx::any&lt;serializable&gt;, std::string, std::istream&amp;&gt;</div>
+<div class="line">ayx::factory&lt;ayx::any_&lt;serializable&gt;, std::string, std::istream&amp;&gt;</div>
 <div class="line">    deserialize;</div>
 <div class="line"> </div>
 <div class="line">[[nodiscard]] any_figure&lt;&gt; deserialize_any_figure(std::istream&amp; archive) {</div>
