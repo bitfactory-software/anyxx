@@ -50,46 +50,46 @@ ANY_MODEL_MAP((subscript_operator_test::vector_t),
 TEST_CASE("mutable subscript_operator with mutref") {
   map_t map{{0, "hallo"}};
   any_map_i_to_string_mutable<mutref> m{map};
-  REQUIRE(m[0] == "hallo");
-  m[1] = "world";
-  REQUIRE(m[1] == "world");
-  REQUIRE(map[1] == "world");
+  REQUIRE(m[0u] == "hallo");
+  m[1u] = "world";
+  REQUIRE(m[1u] == "world");
+  REQUIRE(map[1u] == "world");
 }
 
 TEST_CASE("const subscript_operator with cref") {
   vector_t vector{"hallo"};
   any_map_i_to_string_const_and_mutable<cref> v{vector};
-  REQUIRE(v[0] == "hallo");
+  REQUIRE(v[0u] == "hallo");
 }
 TEST_CASE("const subscript_operator with mutref") {
   vector_t vector{"hallo"};
   any_map_i_to_string_const_and_mutable<mutref> v{vector};
-  REQUIRE(v[0] == "hallo");
+  REQUIRE(v[0u] == "hallo");
 }
 
 TEST_CASE("mutable subscript_operator (vector) with mutref") {
   vector_t vector{"hallo", ""};
   any_map_i_to_string_mutable<mutref> v{vector};
-  REQUIRE(v[0] == "hallo");
-  v[1] = "world";
-  REQUIRE(v[1] == "world");
-  REQUIRE(vector[1] == "world");
+  REQUIRE(v[0u] == "hallo");
+  v[1u] = "world";
+  REQUIRE(v[1u] == "world");
+  REQUIRE(vector[1u] == "world");
 
   any_map_i_to_string_const_and_mutable<cref> v_const{vector};
-  REQUIRE(v_const[0] == "hallo");
-  REQUIRE(v_const[1] == "world");
+  REQUIRE(v_const[0u] == "hallo");
+  REQUIRE(v_const[1u] == "world");
 
   any_map_i_to_string_const_derived_mutable<cref> v_const2{vector};
-  REQUIRE(v_const2[0] == "hallo");
-  REQUIRE(v_const2[1] == "world");
+  REQUIRE(v_const2[0u] == "hallo");
+  REQUIRE(v_const2[1u] == "world");
 
   any_map_i_to_string_const_derived_mutable<mutref> v_mutable{vector};
-  REQUIRE(v_mutable[0] == "hallo");
-  REQUIRE(v_mutable[1] == "world");
+  REQUIRE(v_mutable[0u] == "hallo");
+  REQUIRE(v_mutable[1u] == "world");
 
-  v_mutable[0] = "1";
-  v_mutable[1] = "2";
+  v_mutable[0u] = "1";
+  v_mutable[1u] = "2";
 
-  REQUIRE(v_mutable[0] == "1");
-  REQUIRE(v_mutable[1] == "2");
+  REQUIRE(v_mutable[0u] == "1");
+  REQUIRE(v_mutable[1u] == "2");
 }

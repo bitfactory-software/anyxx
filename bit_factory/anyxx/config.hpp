@@ -32,6 +32,8 @@
 #pragma GCC diagnostic ignored "-Wmicrosoft-template-shadow"
 #pragma GCC diagnostic ignored "-Wunused-local-typedef"
 #pragma GCC diagnostic ignored "-Wextra-semi"
+#pragma GCC diagnostic ignored "-Wshadow"
+#pragma GCC diagnostic ignored "-Wcounter-extension"
 #endif
 #if defined(__GNUC__) and !defined(__clang__)
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"

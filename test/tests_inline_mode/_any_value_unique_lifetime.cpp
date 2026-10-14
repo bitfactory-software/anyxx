@@ -49,6 +49,7 @@ struct XX {
     s_ = x.s_;
     std::println("X =(X const& {})", s_);
     ++copy_assigned_;
+    std::println("X::copy_assigned_ {})", copy_assigned_);
     std::println("X::tracker_ {})", tracker_);
     return *this;
   }
@@ -57,6 +58,7 @@ struct XX {
     x.moved_ = true;
     s_ = std::move(x.s_);
     ++move_assigned_;
+    std::println("X::move_assigned_ {})", move_assigned_);
     std::println("X::tracker_ {})", tracker_);
     return *this;
   }

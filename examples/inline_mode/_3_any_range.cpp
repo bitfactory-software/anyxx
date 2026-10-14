@@ -96,14 +96,14 @@ TEST_CASE(
       any_forward_iterator<int, int> e{v.end()};
       CHECK(b != e);
       CHECK(!(b == e));
-      int x = 0;
+      std::size_t x = 0;
       for (auto i = b; i != e; ++i) {
         CHECK(*i == v[x++]);
       }
       CHECK(x == 3);
     }
     any_range<any_forward_iterator<int, int>> r{v};
-    int x = 0;
+    std::size_t x = 0;
     for (auto i : r) {
       CHECK(i == v[x++]);
     }
@@ -134,7 +134,7 @@ TEST_CASE(
   {
     v_t v{1, 2, 3};
     any_forward_range<int, int, using_<v_t const&>> r{v};
-    int x = 0;
+    std::size_t x = 0;
     for (auto i : r) CHECK(i == v[x++]);
     CHECK(x == 3);
   }
@@ -149,7 +149,7 @@ TEST_CASE("example 3 any_forward_iterator (any value_type, erased iterator)") {
   {
     v_t v{1, 2, 3};
     any_forward_range<any_stringable<anyxx::val<>>> r{v};
-    int x = 0;
+    std::size_t x = 0;
     for (auto i : r) CHECK(i.to_string() == std::to_string(v[x++]));
     CHECK(x == 3);
   }
@@ -169,7 +169,7 @@ TEST_CASE(
     any_forward_range<any_stringable<anyxx::val<>>,
                       any_stringable<anyxx::val<>>, using_<v_t const&>>
         r{v};
-    int x = 0;
+    std::size_t x = 0;
     for (auto i : r) {
       CHECK(i.to_string() == std::to_string(v[x++]));
     }
@@ -182,14 +182,14 @@ TEST_CASE("example 3 transform unerase") {
   using namespace std::string_literals;
   using namespace example_3;
 
-  using v_t = std::vector<int>;
+  using v_t = std::vector<std::size_t>;
   {
     v_t v{1, 2, 3};
     any_forward_range<any_stringable<anyxx::val<>>> r{v};
-    int x = 0;
+    std::size_t x = 0;
     for (auto i : std::views::transform(
-             r, [](any_stringable<anyxx::val<>> const& vv) -> int {
-               return *anyxx::unerase_cast<int>(vv);
+             r, [](any_stringable<anyxx::val<>> const& vv) -> std::size_t {
+               return *anyxx::unerase_cast<std::size_t>(vv);
              })) {
       std::println("{}", i);
       CHECK(i == ++x);

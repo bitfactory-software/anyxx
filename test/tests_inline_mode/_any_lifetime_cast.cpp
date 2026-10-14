@@ -50,6 +50,7 @@ TEST_CASE("slick_stringable observeable_v_table") {
     CHECK(eq);
     auto x = unchecked_unerase_cast<X>(a);
     CHECK((*x)() == f());
+    CHECK(X::tracker_ == 1);
   }
   {
     X f("hallo");
