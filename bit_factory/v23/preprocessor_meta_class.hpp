@@ -135,9 +135,11 @@
 
 #define _detail_ANYXX_TYPENAME_PARAM_H(t) _detail_ANYXX_TYPENAME_PARAM t
 #define _detail_ANYXX_TYPENAME_PARAM(t) , typename t
-#define _detail_ANYXX_TYPENAME_PARAM_LIST(head, ...) \
+#define _detail_ANYXX_TYPENAME_PARAM_LIST_IMPL(head, ...) \
   typename _detail_REMOVE_PARENS(head) __VA_OPT__(   \
       _detail_foreach_macro(_detail_ANYXX_TYPENAME_PARAM_H, __VA_ARGS__))
+#define _detail_ANYXX_TYPENAME_PARAM_LIST(...) \
+  __VA_OPT__(_detail_ANYXX_TYPENAME_PARAM_LIST_IMPL(__VA_ARGS__))
 
 #define _detail_ANYXX_DUMMY_INT_PARAM_LIST_H(b, c, param_type, ...)     \
   int __VA_OPT__(, _detail_ANYXX_DUMMY_INT_PARAM_LIST_A _detail_PARENS( \
