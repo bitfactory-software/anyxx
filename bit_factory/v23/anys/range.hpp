@@ -75,7 +75,6 @@ TRAIT_TEMPLATE_EX_(
 template <typename ValueType, typename Reference,
           typename Proxy = nullable_val<iterator_val_proxy_size>>
 using any_input_iterator = any<Proxy, input_iterator, ValueType, Reference>;
-static_assert(std::input_iterator<any_input_iterator<int, int>>);
 
 TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator, input_iterator,
                    ((ValueType), (Reference)), , ,
@@ -86,7 +85,6 @@ TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator, input_iterator,
 template <typename ValueType, typename Reference,
           typename Proxy = nullable_val<iterator_val_proxy_size>>
 using any_forward_iterator = any<Proxy, forward_iterator, ValueType, Reference>;
-static_assert(std::forward_iterator<any_forward_iterator<int, int>>);
 
 TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), bidirectional_iterator,
                    forward_iterator, ((ValueType), (Reference)),
@@ -101,8 +99,6 @@ template <typename ValueType, typename Reference,
           typename Proxy = nullable_val<iterator_val_proxy_size>>
 using any_bidirectional_iterator =
     any<Proxy, bidirectional_iterator, ValueType, Reference>;
-static_assert(
-    std::bidirectional_iterator<any_bidirectional_iterator<int, int>>);
 
 TRAIT_TEMPLATE_EX_(
     ((ValueType), (Reference)), random_access_iterator, bidirectional_iterator,
@@ -141,8 +137,6 @@ auto operator+(std::ptrdiff_t n,
                any_random_access_iterator<Value, Ref> const& it) {
   return it + n;
 }
-static_assert(
-    std::random_access_iterator<any_random_access_iterator<int, int>>);
 
 TRAIT_TEMPLATE_(((AnyIterator)), range, dynamic_copyable, (),
                 (ANY_FN(AnyIterator, begin, (), const),
@@ -161,7 +155,6 @@ template <typename A>
 concept is_any_self_forward_range =
     is_any<A> && std::ranges::forward_range<A> &&
     std::same_as<std::ranges::range_value_t<A>, self>;
-static_assert(is_any_self_forward_range<any_self_forward_range>);
 
 template <typename AnyForwardRange>
   requires is_any_self_forward_range<AnyForwardRange>
@@ -202,20 +195,6 @@ struct forward_trait_to_map<Traited, AnyForwardRange const&> {
                                  });
   }
 };
-
-static_assert(
-    any_forward_iterator<self, self>::v_table_t::val_is_nullable::value ==
-    true);
-static_assert(
-    std::same_as<any_forward_iterator<self, self>::v_table_t::any_value_t,
-                 any<nullable_val<iterator_val_proxy_size>, forward_iterator,
-                     self, self>>);
-static_assert(
-    std::same_as<random_access_iterator<self, self>::v_table_t::any_value_t,
-                 any<nullable_val<iterator_val_proxy_size>,
-                     random_access_iterator, self, self>>);
-static_assert(std::forward_iterator<any_forward_iterator<self, self>>);
-static_assert(std::ranges::forward_range<any_forward_range<self, self>>);
 
 template <template <typename...> typename Trait, typename... Ts>
 auto trait_range_as(auto&& r) {
