@@ -14,11 +14,11 @@ namespace anyxx {
 /// std::visit, and all other types are dispatched via their v-Table. Now you
 /// know where the Any++ logo has its origin.
 /// \ingroup proxies
-template <typename Trait, typename... Types>
+template <template<typename...> typename Trait, typename... Types>
 using vany_variant = std::variant<any_<Trait>, Types...>;
 
 /// A factory type to direct get the any for the vany
-template <typename Trait, typename... Types>
+template <template<typename...> typename Trait, typename... Types>
 using make_vany = any<using_<vany_variant<Trait, Types...>>, Trait>;
 
 template <typename VanyProxy>
@@ -44,11 +44,11 @@ struct vany_type_trait {
       typename vany_variant_trait<vany_proxy_t>::any_in_variant;
 };
 
-template <typename Trait, typename... Types>
+template <template<typename...> typename Trait, typename... Types>
 struct proxy_trait<using_<vany_variant<Trait, Types...>>>
     : basic_proxy_trait<using_<vany_variant<Trait, Types...>>> {
   using vany_variant_t = vany_variant<Trait, Types...>;
-  using vany_proxy_t = typename Trait::default_proxy_t;
+  using vany_proxy_t = typename Trait<>::default_proxy_t;
   using void_t = typename proxy_trait<vany_proxy_t>::void_t;
   using static_dispatch_t = vany_variant_t;
   static constexpr bool is_constructibile_from_const =

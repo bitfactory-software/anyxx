@@ -249,9 +249,9 @@ TEST_CASE("algebra group") {
   using namespace anyxx;
   using namespace algebra_test;
 
-  auto g = trait_class_<int, group>.identity();
-  static_assert(std::same_as<decltype(g), any<using_<int>, group>>);
-
+  auto g = trait_class_<int, group<>>.identity();
+  static_assert(std::same_as<decltype(g), any<using_<int>, group, void>>);
+  
   {
     anyxx::any<using_<int>, monoid> m1{0};
     anyxx::any<using_<int>, monoid> m2{std::move(m1)};
@@ -292,8 +292,8 @@ TEST_CASE("algebra int_mul monoid") {
   using namespace anyxx;
   using namespace algebra_test;
 
-  auto id = trait_class_<int_mul, monoid>.identity();
-  static_assert(std::same_as<decltype(id), any<using_<int_mul>, monoid>>);
+  auto id = trait_class_<int_mul, monoid<>>.identity();
+  static_assert(std::same_as<decltype(id), any<using_<int_mul>, monoid, void>>);
   static_assert(!is_group_model<int_mul>);
   // trait_class_<int_mul, monoid>.op(id); // should not compile, because
   // trait_class_ is not an object.

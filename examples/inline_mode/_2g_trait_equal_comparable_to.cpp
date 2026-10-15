@@ -9,15 +9,15 @@ namespace lib_2g {
 TRAIT_TEMPLATE(
     ((To)), equal_comparable_to,
     (ANY_OP_MAP_NAMED_FRIEND(
-         bool, ==, eq, ((anyxx::use_as_<To, equal_comparable_to, T> const&)),
+         bool, ==, eq, ((anyxx::use_as<To, equal_comparable_to, T> const&)),
          const),
      ANY_OP_DEF(public, bool, !=, ne,
-                ((anyxx::use_as_<To, equal_comparable_to, T> const&)), const,
+                ((anyxx::use_as<To, equal_comparable_to, T> const&)), const,
                 ([&x](auto const& r) { return !Map{}.eq(x, r); }))))
 
 template <typename L, typename R>
 using trait_as_equal_comparable_to =
-    anyxx::any<anyxx::using_<L>, equal_comparable_to<R>>;
+    anyxx::any<anyxx::using_<L>, equal_comparable_to, R>;
 
 // no memory overhead because EBO and there is no vtable: The
 // trait uses static dispatch only.
@@ -39,8 +39,8 @@ template <typename L, typename R>
            is_equal_comparable_to_model<R, L>
 void test_equal_comparable_to(L const& a, R const& b) {
   using namespace anyxx;
-  test_equal_comparable_to<L, R>(trait_as<equal_comparable_to<R>>(a),
-                                 trait_as<equal_comparable_to<L>>(b));
+  test_equal_comparable_to<L, R>(trait_as<equal_comparable_to, R>(a),
+                                 trait_as<equal_comparable_to, L>(b));
 }
 
 template <typename L, typename Range>
@@ -50,8 +50,8 @@ template <typename L, typename Range>
 void test_equal_comparable_to_range(L const& a, Range const& r) {
   using namespace anyxx;
   using R = std::ranges::range_value_t<Range>;
-  auto a_traited = trait_as<equal_comparable_to<R>>(a);
-  auto r_traited = trait_range_as<equal_comparable_to<L>>(r);
+  auto a_traited = trait_as<equal_comparable_to, R>(a);
+  auto r_traited = trait_range_as<equal_comparable_to, L>(r);
   CHECK(*std::ranges::begin(r_traited) == a_traited);
   CHECK(a_traited == *std::ranges::begin(r_traited));
 }
@@ -113,8 +113,8 @@ bool traited_find(lib_2g::trait_as_equal_comparable_to<double, int> x) {
 TEST_CASE("equal_comparable_to static") {
   using namespace anyxx;
   using namespace lib_2g;
-  auto a = trait_as<equal_comparable_to<double>>(1);
-  auto b = trait_as<equal_comparable_to<int>>(2.0);
+  auto a = trait_as<equal_comparable_to, double>(1);
+  auto b = trait_as<equal_comparable_to, int>(2.0);
   auto x = a == b;  // simple case
   CHECK(x == false);
 

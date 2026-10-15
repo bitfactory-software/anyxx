@@ -33,8 +33,8 @@ struct jacket_return<self> {
   static decltype(auto) forward(Sig&& sig, Any const&) {
     using sig_t = std::decay_t<Sig>;
     if constexpr (is_type_class<typename std::decay_t<Any>::proxy_t>) {
-      using target_t =
-          any<using_<typename Any::proxy_t::value_t>, typename Any::trait_t>;
+      using target_t = make_use_as_t<typename Any::proxy_t::value_t,
+                                            typename Any::trait_t>;
       if constexpr (is_any<sig_t>) {
         return target_t{get_proxy_value(std::forward<Sig>(sig))};
       } else {

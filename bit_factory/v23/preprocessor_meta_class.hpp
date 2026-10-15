@@ -280,19 +280,20 @@
 //(anyxx::undefined))
 
 #define _detail_ANYXX_MAP_STATIC_H(l) _detail_ANYXX_MAP_STATIC l
-#define _detail_ANYXX_MAP_STATIC(template_params, return_type, name, body, \
-                                 ...)                                      \
- public:                                                                   \
-  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                              \
-      _detail_REMOVE_PARENS(template_params)) AYXFORCEDINLINE auto         \
-  name([[maybe_unused]] auto trait_class __VA_OPT__(                       \
-      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))             \
-      -> anyxx::map_return<T, ANY_UNPAREN(return_type)> {                  \
-    using namespace anyxx;                                                 \
-    return _detail_REMOVE_PARENS(body).template                            \
-    operator()<anyxx::use_as<T, typename decltype(trait_class)::trait_t>>( \
-        trait_class __VA_OPT__(                                            \
-            , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
+#define _detail_ANYXX_MAP_STATIC(template_params, return_type, name, body,     \
+                                 ...)                                          \
+ public:                                                                       \
+  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
+      _detail_REMOVE_PARENS(template_params)) AYXFORCEDINLINE auto             \
+  name([[maybe_unused]] auto trait_class __VA_OPT__(                           \
+      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))                 \
+      -> anyxx::map_return<T, ANY_UNPAREN(return_type)> {                      \
+    using namespace anyxx;                                                     \
+    return _detail_REMOVE_PARENS(body)                                         \
+        .template operator()<                                                  \
+            anyxx::make_use_as_t<T, typename decltype(trait_class)::trait_t>>( \
+            trait_class __VA_OPT__(                                            \
+                , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
   };
 
 //_detail_ANYXX_MAP_STATIC(((A), (B)), decltype(auto), forward,
@@ -699,8 +700,7 @@
   concept _detail_CONCAT(_detail_CONCAT(is_, n), _model) =                     \
       requires(T model,                                                        \
                anyxx::any_trait_class<                                         \
-                   T, n _detail_ANYXX_OPTIONAL_COMMA(any_template_params)      \
-                          _detail_ANYXX_TEMPLATE_ARGS(any_template_params)>    \
+                   T, n<_detail_ANYXX_TEMPLATE_ARGS(any_template_params)>>     \
                    trait_class,                                                \
                n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(                      \
                    model_map_template_params)>                                 \
@@ -847,13 +847,15 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param
-#define ANY_META_FUNCTION(pure_template_params,                             \
-                          any_template_params_with_defaults, n)             \
-                                                                            \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(                              \
-      any_template_params_with_defaults)>                                   \
-  using any_##n = anyxx::any<Proxy, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \
-                                        pure_template_params)>;
+#define ANY_META_FUNCTION(pure_template_params,                       \
+                          any_template_params_with_defaults, n)       \
+                                                                      \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(                        \
+      any_template_params_with_defaults)>                             \
+  using any_##n =                                                     \
+      anyxx::any<Proxy,                                               \
+                 n _detail_ANYXX_OPTIONAL_COMMA(pure_template_params) \
+                     _detail_ANYXX_TEMPLATE_ARGS(pure_template_params)>;
 
 ////////////////////////////////////////////////////////////////////////////////
 

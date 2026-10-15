@@ -290,6 +290,15 @@ class ANYXX_USE_EBO any_ : public any<typename Trait<Args...>::default_proxy_t, 
 template <typename Type, template <typename...> typename Trait, typename... Ts>
 using use_as = any<using_<Type>, Trait, Ts...>;
 
+template <typename Type, typename Trait>
+struct make_use_as;
+template <typename Type, template <typename...> typename Trait, typename... Ts>
+struct make_use_as<Type, Trait<Ts...>> {
+    using type = any<using_<Type>, Trait, Ts...>;
+};
+template <typename Type, typename Trait>
+using make_use_as_t = typename make_use_as<Type, Trait>::type;
+
 /// A template to get an \ref any trait for a type
 /// See also \ref using_cref::as.
 template <typename Type, template <typename...> typename Trait, typename... Ts>
@@ -308,21 +317,27 @@ auto trait_as(auto&& v) {
 /// See also \ref using_cref::as.
 template <template <typename...> typename Trait, typename... Ts>
 auto trait_as_cref(auto const& v) {
-    return any<using_cref<std::decay_t<decltype(v)>>, Trait<Ts...>>{v};
+    return any<using_cref<std::decay_t<decltype(v)>>, Trait, Ts...>{v};
 }
+
+template <typename Type, typename Trait>
+struct make_trait_class;
+template <typename Type, template <typename...> typename Trait, typename... Ts>
+struct make_trait_class<Type, Trait<Ts...>> {
+    using type = any<trait_class<Type>, Trait, Ts...>;
+};
 
 /// Helper type alias template to get a \ref trait_class for a type
 /// dispatch. Has no data member, so it doesn't capture any value and has no
 /// size
 ///
 /// \tparam Type The captured type
-template <typename Type, template <typename...> typename Trait, typename... Ts>
-using any_trait_class = any<trait_class<Type>, Trait, Ts...>;
+template <typename Type, typename Trait>
+using any_trait_class = typename make_trait_class<Type, Trait>::type;
 
 /// A object template to get a \ref trait_class object for a type as a \ref
 /// trait.
-/// See also \ref using_::as.
-template <typename Type, template <typename...> typename Trait, typename... Ts>
-static inline any_trait_class<Type, Trait, Ts...> trait_class_;
+template <typename Type, typename Trait>
+static inline any_trait_class<Type, Trait> trait_class_;
 
 }  // namespace anyxx
