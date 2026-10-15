@@ -21,7 +21,7 @@ struct deduce_type {};
 template <typename I, typename IteratorCategory>
 struct iterator_category_impl {
   using type = std::conditional_t<std::same_as<IteratorCategory, deduce_type>,
-                                  typename std::iterator_traits<I>::value_type,
+                                  typename std::iterator_traits<I>::iterator_category,
                                   IteratorCategory>;
 };
 template <typename IteratorCategory>
