@@ -169,7 +169,7 @@ TEST_CASE("multi_dispatch 4") {
 namespace {
 ANY(Dummy, , )
 
-static_assert(!is_open_dispatch_v_table<Dummy::v_table_t>);
-static_assert(is_open_dispatch_v_table<thing::v_table_t>);
+static_assert(!is_open_dispatch_v_table<Dummy<>::v_table_t>);
+static_assert(is_open_dispatch_v_table<thing<>::v_table_t>);
 
 }  // namespace

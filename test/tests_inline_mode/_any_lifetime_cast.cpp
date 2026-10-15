@@ -101,7 +101,7 @@ TEST_CASE("any lifetime cast") {
   static_assert(is_any<any_stringable<unique>>);
   static_assert(
       !constructibile_for<any_stringable<unique>,
-                          any_stringable<mutref>::proxy_t, stringable>);
+                          any_stringable<mutref>::proxy_t, stringable<>>);
   static_assert(std::derived_from<any_stringable<mutref>::v_table_t,
                                   any_stringable<unique>::v_table_t>);
   any_stringable<mutref> mo{u};
