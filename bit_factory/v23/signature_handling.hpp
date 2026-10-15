@@ -58,6 +58,26 @@ struct jacket_return<self&> {
   }
 };
 
+//template <typename Param>
+//struct map_return;
+//
+//template <typename Param>
+//    requires(!std::is_reference_v<Param>)
+//struct map_return<Param> {
+//    template <typename Sig>
+//    static Param forward(Sig&& sig) {
+//        return std::forward<Sig>(sig);
+//    }
+//};
+//template <typename Param>
+//    requires (std::same_as<Param, self&> || std::same_as<Param, self>)
+//struct map_return<Param> {
+//    template <typename Sig>
+//    static decltype(auto) forward(Sig&& sig) {
+//        return std::forward<Sig>(sig);
+//    }
+//};
+//
 template <typename T>
 struct translate_sig_map {
   template <typename AnyValue>

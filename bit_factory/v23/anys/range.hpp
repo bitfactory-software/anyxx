@@ -250,7 +250,7 @@ input_iterator1_v_table<ValueType, Reference>::input_iterator1_v_table(
     std::in_place_type_t<Parent> parent)
     : v_table_base_t(concrete, parent) {
   using model_map = input_iterator1_model_map<Concrete, ValueType, Reference>;
-  op_dereferenceconst = [](void const* _vp) -> decltype(auto) {
+  op_dereferenceconst = [](void const* _vp) -> anyxx::v_table_return<any_value_t, Reference> {
     /*if constexpr (std::same_as<anyxx::self&, Reference>) {
       model_map{}.op_dereference(*anyxx::unchecked_unerase_cast<Concrete>(_vp));
       return anyxx::handle_self_ref_return<Reference>{}();
@@ -260,8 +260,12 @@ input_iterator1_v_table<ValueType, Reference>::input_iterator1_v_table(
                              *anyxx::unchecked_unerase_cast<Concrete>(_vp))),
                          anyxx::v_table_instance<Parent, Concrete>()};
     } else*/ {
-      return model_map{}.op_dereference(
+      auto rr = model_map{}.op_dereference(
           *anyxx::unchecked_unerase_cast<Concrete>(_vp));
+      static_assert(std::same_as<decltype(rr), int>);
+      static_assert(std::same_as<decltype(rr), anyxx::v_table_return<any_value_t, Reference>>);
+      anyxx::v_table_return<any_value_t, Reference> r{rr};
+      return r;
     }
   };
   ;

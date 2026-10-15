@@ -242,7 +242,10 @@ TEST_CASE("example 3 static any range of view") {
   static_assert(std::is_trivially_copy_constructible_v<decltype(v2)>);
   static_assert(std::is_trivially_copy_assignable_v<decltype(v2)>);
   static_assert(sizeof(v2) <= anyxx::small_object_size);
+  int ii = 0;
   using stringable_int = any<anyxx::using_<int>, stringable>;
+  auto sii = stringable_int{ii};
+  CHECK(sii.to_string() == "0");
   any_<input_iterator1, stringable_int, stringable_int> ii1{v2.begin()};
   any_forward_range<stringable_int, stringable_int> r{
       v2};
