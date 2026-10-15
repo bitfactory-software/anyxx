@@ -32,7 +32,7 @@ struct function<Trait, Self, ref, R(Args...) const> {
 template <is_trait Trait, typename Self, typename R, typename... Args>
 struct function<Trait, Self, ref, R(Args...)> {
     R operator()(Args... args);
-    using default_proxy_t = anyxx::cref;
+    using default_proxy_t = anyxx::mutref;
 };
 
 }
