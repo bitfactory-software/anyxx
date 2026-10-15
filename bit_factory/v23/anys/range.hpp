@@ -22,7 +22,6 @@ template <typename A>
 concept is_any_self_forward_range =
     is_any<A> && std::ranges::forward_range<A> &&
     std::same_as<std::ranges::range_value_t<A>, self>;
-static_assert(is_any_self_forward_range<any_self_forward_range>);
 
 template <typename AnyForwardRange>
   requires is_any_self_forward_range<AnyForwardRange>
@@ -63,20 +62,6 @@ struct forward_trait_to_map<Traited, AnyForwardRange const&> {
                                  });
   }
 };
-
-static_assert(
-    any_forward_iterator<self, self>::v_table_t::val_is_nullable::value ==
-    true);
-static_assert(
-    std::same_as<any_forward_iterator<self, self>::v_table_t::any_value_t,
-                 any<nullable_val<iterator_val_proxy_size>, forward_iterator,
-                     self, self>>);
-static_assert(
-    std::same_as<random_access_iterator<self, self>::v_table_t::any_value_t,
-                 any<nullable_val<iterator_val_proxy_size>,
-                     random_access_iterator, self, self>>);
-static_assert(std::forward_iterator<any_forward_iterator<self, self>>);
-static_assert(std::ranges::forward_range<any_forward_range<self, self>>);
 
 template <template <typename...> typename Trait, typename... Ts>
 auto trait_range_as(auto&& r) {

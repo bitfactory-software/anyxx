@@ -1088,7 +1088,7 @@
   __detail_ANYXX_MEMBER_FN(public, , ret, name, operator op, false, const_, \
                            params)
 
-/// \def ANY_FRIENDOP_MAP_NAMED
+/// \def ANY_OP_MAP_NAMED_FRIEND
 /// \brief TRAIT operator with default behavior is to call the related friend
 /// operator of the model and a programmer-chosen name in the map.
 ///
@@ -1098,6 +1098,17 @@
 #define ANY_OP_MAP_NAMED_FRIEND(ret, op, name, params, const_)     \
   ANY_FN_(public, , ret, name, operator op, false, const_, (x op), \
           use_mapf_concept, x op, _detail_EXPAND params)
+
+/// \def ANY_OP_MAP_NAMED_UNARY
+/// \brief TRAIT operator with default behavior is to call the related unary
+/// operator of the model and a programmer-chosen name in the map.
+///
+/// Use if in a base TRAIT exists an equally named FN, or you want to provide a
+/// specific name for the operator in the map to have an defined name for
+/// overriding in derived TRAITs.
+#define ANY_OP_MAP_NAMED_UNARY(ret, op, name, const_) \
+  ANY_OP_DEF(public, ret, op, name, (), const_,       \
+             ([&x]() -> ret { return op x; }))
 
 /// \def ANY_OP
 /// \brief TRAIT operator with default behavior is to call the related operator
