@@ -108,11 +108,11 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait<Args...>>, public T
   /// `T`
   /// \param args The arguments to construct the object of type T with, will
   /// be forwarded.
-  template <typename T, typename... Args>
+  template <typename T, typename... TArgs>
     requires(!is_lifetime_bound<Proxy>)
-  any(std::in_place_type_t<T>, Args&&... args)
+  any(std::in_place_type_t<T>, TArgs&&... args)
       : proxy_(proxy_trait_t::template construct_type_in_place<T>(
-            std::forward<Args>(args)...)) {
+            std::forward<TArgs>(args)...)) {
     v_table_holder_t::template init_v_table<proxy_impl_t, T>();
   }
 

@@ -136,7 +136,7 @@ struct translate_sig_map<T> {
   template <typename AnyValue>
   using v_table_param = any<mutref, dynamic_copyable>;
   template <typename AnyValue>
-  using v_table_return = int;  // dummy
+  using v_table_return = T;  // dummy
   template <typename Model>
   using map_return = T;
   template <typename Model>
