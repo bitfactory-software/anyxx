@@ -17,6 +17,8 @@ template <>
 struct is_const_void_<void const*> : std::true_type {};
 template <typename Voidness>
 concept is_const_void = is_const_void_<Voidness>::value;
+template <bool const_>
+using voidness_for = std::conditional_t<const_, const_void, mutable_void>;
 
 template <voidness Voidness>
 using observer = Voidness;

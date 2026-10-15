@@ -33,7 +33,9 @@
 #pragma GCC diagnostic ignored "-Wunused-local-typedef"
 #pragma GCC diagnostic ignored "-Wextra-semi"
 #pragma GCC diagnostic ignored "-Wshadow"
+#if not defined(_MSC_VER) 
 #pragma GCC diagnostic ignored "-Wcounter-extension"
+#endif
 #endif
 #if defined(__GNUC__) and !defined(__clang__)
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
