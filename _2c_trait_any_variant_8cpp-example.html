@@ -164,7 +164,7 @@ $(function(){initNavTree('_2c_trait_any_variant_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>std::string_literals;</div>
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line"> </div>
-<div class="line">  <span class="keyword">static_assert</span>(constructibile_for&lt;any_value, vany_value::proxy_t, value&gt;);</div>
+<div class="line">  <span class="keyword">static_assert</span>(constructibile_for&lt;any_value, vany_value::proxy_t, value&lt;&gt;&gt;);</div>
 <div class="line">  vany_value vv_custom_43 = any_value{std::in_place_type&lt;custom&gt;, <span class="stringliteral">&quot;43&quot;</span>};</div>
 <div class="line">  vany_value vv_custom_42 = {any_value{std::in_place, custom{<span class="stringliteral">&quot;42&quot;</span>}}};</div>
 <div class="line"> </div>
