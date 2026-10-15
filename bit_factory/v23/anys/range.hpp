@@ -91,7 +91,7 @@ TRAIT_TEMPLATE_EX_(
 
 template <typename ValueType, typename Reference,
           typename Proxy = nullable_val<iterator_val_proxy_size>>
-using any_input_iterator = any<Proxy, input_iterator<ValueType, Reference>>;
+using any_input_iterator = any<Proxy, input_iterator, ValueType, Reference>>;
 static_assert(std::input_iterator<any_input_iterator<int, int>>);
 
 TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator, input_iterator,

@@ -4,12 +4,12 @@
 
 namespace example_2d {
 
-TRAIT_TEMPLATE_(((Base)), has_equal, Base, (),
+TRAIT_(has_equal, anyxx::dynamic_copyable, 
                 (ANY_FN_DEF(public, bool, is_equal, (anyxx::self const&), const,
                             [&x](T const& y) { return x == y; })))
 
-template <typename Proxy = anyxx::val<>, typename Base = anyxx::dynamic_copyable>
-using any_has_equal = anyxx::any<Proxy, has_equal<Base>>;
+template <typename Proxy = anyxx::val<>>
+using any_has_equal = anyxx::any<Proxy, has_equal>;
 
 }  // namespace example_2d
 
@@ -25,8 +25,8 @@ TEST_CASE("example 2da any_has_equal") {
     CHECK(!b.is_equal(a));
   }
   {
-    auto a = trait_as<has_equal<dynamic_copyable>>("a"s);
-    auto b = trait_as<has_equal<dynamic_copyable>>("b"s);
+    auto a = trait_as<has_equal>("a"s);
+    auto b = trait_as<has_equal>("b"s);
     CHECK(a.is_equal(a));
     CHECK(!b.is_equal(a));
   }
@@ -34,7 +34,7 @@ TEST_CASE("example 2da any_has_equal") {
 
 namespace example_2d {
 
-TRAIT_(has_plus, has_equal<anyxx::dynamic_copyable>,
+TRAIT_(has_plus, has_equal,
        (ANY_FN_DEF(public, anyxx::self, plus, (anyxx::self const&), const,
                    ([&x](T const& y) {
                      return get_proxy_value(trait_as<has_plus>(x) +

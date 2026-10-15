@@ -1,14 +1,11 @@
 #pragma once
 
 #include <bit_factory/v23/any.hpp>
+#include <bit_factory/v23/v_table_data.hpp>
 
 namespace anyxx {
 
 struct self {};
-struct dynamic_castable;
-struct dynamic_deletable;
-struct dynamic_moveable;
-struct dynamic_copyable;
 
 template <typename Param>
 struct jacket_return;
@@ -109,7 +106,7 @@ template <typename T>
 struct is_use_as__impl : std::false_type {};
 template <typename T, template <typename...> typename Trait,
           typename... TraitArgs>
-struct is_use_as__impl<any<using_<T>, Trait<TraitArgs...>>> : std::true_type {};
+struct is_use_as__impl<any<using_<T>, Trait, TraitArgs...>> : std::true_type {};
 template <typename T>
 inline constexpr bool is_use_as_ = is_use_as__impl<std::decay_t<T>>::value;
 

@@ -4,7 +4,7 @@
 
 namespace anyxx {
 
-template <is_proxy Proxy, typename Trait>
+template <is_proxy Proxy, template <typename...> typename Trait, typename... Args>
 class any;
 
 template <typename Derived, typename Base>

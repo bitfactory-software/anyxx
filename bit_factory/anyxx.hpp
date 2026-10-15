@@ -54,6 +54,7 @@
 #include <bit_factory/v23/any.hpp>
 #include <bit_factory/v23/preprocessor_meta_class.hpp>
 #include <bit_factory/v23/v_table_data.hpp>
+#include <bit_factory/v23/signature_handling.hpp>
 #include <bit_factory/v23/v_table_holder/v_table_holder_dyn.hpp>
 #include <bit_factory/v23/v_table_holder/v_table_holder_static.hpp>
 #endif  // !ANYXX_26
