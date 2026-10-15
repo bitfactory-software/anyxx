@@ -38,14 +38,14 @@ TEST_CASE("anyxx std function equivalents") {
   }
   {
     auto lambda = +[](int x) { return x + 2; };
-    using function = any_<function, const_referenceable, int(int) const>;
+    using function = any_<function, ref, int(int) const>;
     function f{lambda};
     CHECK(f(40) == 42);
   }
   {
     auto const_lambda = +[](int x) { return x + 2; };
     auto mutable_lambda = [&](int x) mutable { return x + 2; };
-    using function = any_<function, mutable_referenceable, int(int)>;
+    using function = any_<function, ref, int(int)>;
     function f_mutable_lambda{mutable_lambda};
     function f_const_lambda{const_lambda};
     static_assert(std::is_invocable_v<decltype(f_mutable_lambda), int>);
@@ -69,7 +69,7 @@ TEST_CASE("anyxx std function equivalents") {
     // function f_mutable_lambda{ mutable_lambda };
     // ---
     auto const_lambda = [](int x) { return x + 2; };
-    using function = any_<function, mutable_referenceable, int(int) const>;
+    using function = any_<function, ref, int(int) const>;
     function f_const_lambda{const_lambda};
     static_assert(std::is_invocable_v<decltype(f_const_lambda), int>);
     f_const_lambda(1);

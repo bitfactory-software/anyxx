@@ -65,43 +65,30 @@ struct function_impl : Lifetime {
 
 template <typename T0, typename... Ts>
 struct function;
+
 template <typename Lifetime, typename R, typename... Args>
 struct function<Lifetime, R(Args...)>
     : function_impl<mutable_, Lifetime, R, Args...> {};
 template <typename Lifetime, typename R, typename... Args>
 struct function<Lifetime, R(Args...) const>
     : function_impl<const_, Lifetime, R, Args...> {};
+
 template <typename R, typename... Args>
-struct function<R(Args...)>
-    : function_impl<mutable_, copyable<>, R, Args...> {};
+struct function<R(Args...)> : function_impl<mutable_, copyable<>, R, Args...> {
+};
 template <typename R, typename... Args>
 struct function<R(Args...) const>
     : function_impl<const_, copyable<>, R, Args...> {};
 
-namespace self_test {
-struct functor {
-  int operator()(double) const;
+struct ref {};
+template <typename R, typename... Args>
+struct function<ref, R(Args...)>
+    : function_impl<mutable_, observeable<>, R, Args...> {
+  using default_proxy_t = mutref;
 };
-using f_cref = any_<function, observeable<>, int(double) const>;
-static_assert(std::invocable<f_cref, double>);
-using f_mutref = any_<function, observeable<>, int(double)>;
-static_assert(std::invocable<f_mutref, double>);
+template <typename R, typename... Args>
+struct function<ref, R(Args...) const>
+    : function_impl<const_, copyable<>, R, Args...> {};
 
-using f_movable_const_val = any_<function, moveable<>, int(double) const>;
-static_assert(std::invocable<f_movable_const_val, double>);
-using f_movable_mutable_val = any_<function, moveable<>, int(double)>;
-static_assert(std::invocable<f_movable_mutable_val, double>);
-
-using f_const_val = any_<function, copyable<>, int(double) const>;
-static_assert(std::invocable<f_const_val, double>);
-using f_mutable_val = any_<function, copyable<>, int(double)>;
-static_assert(std::invocable<f_mutable_val, double>);
-
-using f_const_val_default = any_<function, int(double) const>;
-static_assert(std::invocable<f_const_val, double>);
-using f_mutable_val_default = any_<function, int(double)>;
-static_assert(std::invocable<f_mutable_val, double>);
-
-}  // namespace self_test
 
 }  // namespace anyxx
