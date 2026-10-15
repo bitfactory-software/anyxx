@@ -6,12 +6,20 @@
 TEST_CASE("range static assert") {
   using namespace anyxx;
 
+  static_assert(std::input_iterator<any_<forward_iterator, int, int>>);
+  static_assert(std::input_iterator<any_<forward_iterator, int, int&>>);
   static_assert(std::input_iterator<any_input_iterator<int, int>>);
+  static_assert(std::input_iterator<any_input_iterator<int>>);
   static_assert(std::forward_iterator<any_forward_iterator<int, int>>);
+  static_assert(std::forward_iterator<any_forward_iterator<int>>);
   static_assert(
       std::bidirectional_iterator<any_bidirectional_iterator<int, int>>);
   static_assert(
+      std::bidirectional_iterator<any_bidirectional_iterator<int>>);
+  static_assert(
       std::random_access_iterator<any_random_access_iterator<int, int>>);
+  static_assert(
+      std::random_access_iterator<any_random_access_iterator<int>>);
   static_assert(is_any_self_forward_range<any_self_forward_range>);
 
   static_assert(

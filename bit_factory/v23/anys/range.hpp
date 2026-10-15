@@ -70,11 +70,10 @@ TRAIT_TEMPLATE_EX_(
               (difference_type_impl<T>::type)),
      ANY_TYPE((), value_type, ValueType, (value_type_impl<T, ValueType>::type)),
      ANY_TYPE((), reference, Reference, (reference_impl<T, Reference>::type))),
-    , ())
+    , (using default_proxy_t = nullable_val<iterator_val_proxy_size>;))
 
-template <typename ValueType, typename Reference,
-          typename Proxy = nullable_val<iterator_val_proxy_size>>
-using any_input_iterator = any<Proxy, input_iterator, ValueType, Reference>;
+template <typename ValueType, typename Reference = ValueType&>
+using any_input_iterator = any_<input_iterator, ValueType, Reference>;
 
 TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator, input_iterator,
                    ((ValueType), (Reference)), , ,
@@ -82,9 +81,8 @@ TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator, input_iterator,
                              (std::forward_iterator_tag))),
                    , ())
 
-template <typename ValueType, typename Reference,
-          typename Proxy = nullable_val<iterator_val_proxy_size>>
-using any_forward_iterator = any<Proxy, forward_iterator, ValueType, Reference>;
+template <typename ValueType, typename Reference = ValueType&>
+using any_forward_iterator = any_<forward_iterator, ValueType, Reference>;
 
 TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), bidirectional_iterator,
                    forward_iterator, ((ValueType), (Reference)),
@@ -95,10 +93,9 @@ TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), bidirectional_iterator,
                              (std::bidirectional_iterator_tag))),
                    , ())
 
-template <typename ValueType, typename Reference,
-          typename Proxy = nullable_val<iterator_val_proxy_size>>
+template <typename ValueType, typename Reference = ValueType&>
 using any_bidirectional_iterator =
-    any<Proxy, bidirectional_iterator, ValueType, Reference>;
+    any_<bidirectional_iterator, ValueType, Reference>;
 
 TRAIT_TEMPLATE_EX_(
     ((ValueType), (Reference)), random_access_iterator, bidirectional_iterator,
@@ -122,10 +119,9 @@ TRAIT_TEMPLATE_EX_(
               (std::random_access_iterator_tag))),
     , ())
 
-template <typename ValueType, typename Reference,
-          typename Proxy = nullable_val<iterator_val_proxy_size>>
+template <typename ValueType, typename Reference = ValueType&>
 using any_random_access_iterator =
-    any<Proxy, random_access_iterator, ValueType, Reference>;
+    any_<random_access_iterator, ValueType, Reference>;
 
 template <typename Value, typename Ref>
 auto operator-(any_random_access_iterator<Value, Ref> const& lhs,
