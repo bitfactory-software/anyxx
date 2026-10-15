@@ -11,10 +11,6 @@ struct input_iterator_is_nullable {};
 struct input_iterator_val_size {
   static constexpr std::size_t value = iterator_val_proxy_size;
 };
-struct forward_iterator_is_nullable {};
-struct forward_iterator_val_size {
-  static constexpr std::size_t value = iterator_val_proxy_size;
-};
 
 struct deduce_type {};
 
