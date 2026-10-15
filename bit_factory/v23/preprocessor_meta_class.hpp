@@ -3,7 +3,6 @@
 #include <bit_factory/anyxx/ANY_UNPAREN.hpp>
 #include <bit_factory/anyxx/config.hpp>
 #include <bit_factory/v23/default_proxy.hpp>
-#include <bit_factory/v23/signature_handling.hpp>
 
 // --------------------------------------------------------------------------------
 // any meta class, derived from this gem:
@@ -136,7 +135,7 @@
 #define _detail_ANYXX_TYPENAME_PARAM_H(t) _detail_ANYXX_TYPENAME_PARAM t
 #define _detail_ANYXX_TYPENAME_PARAM(t) , typename t
 #define _detail_ANYXX_TYPENAME_PARAM_LIST_IMPL(head, ...) \
-  typename _detail_REMOVE_PARENS(head) __VA_OPT__(   \
+  typename _detail_REMOVE_PARENS(head) __VA_OPT__(        \
       _detail_foreach_macro(_detail_ANYXX_TYPENAME_PARAM_H, __VA_ARGS__))
 #define _detail_ANYXX_TYPENAME_PARAM_LIST(...) \
   __VA_OPT__(_detail_ANYXX_TYPENAME_PARAM_LIST_IMPL(__VA_ARGS__))
@@ -219,6 +218,8 @@
 
 #define _detail_ANYXX_OPTIONAL_TEMPLATE(...) __VA_OPT__(template)
 
+#define _detail_ANYXX_OPTIONAL_COMMA(...) __VA_OPT__(, )
+
 #define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l
 #define _detail_ANYXX_MAP_IMPL(access, overload, type, name, name_ext,        \
                                exact_const, const_, trait_body, mapf_concept, \
@@ -279,19 +280,20 @@
 //(anyxx::undefined))
 
 #define _detail_ANYXX_MAP_STATIC_H(l) _detail_ANYXX_MAP_STATIC l
-#define _detail_ANYXX_MAP_STATIC(template_params, return_type, name, body, \
-                                 ...)                                      \
- public:                                                                   \
-  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                              \
-      _detail_REMOVE_PARENS(template_params)) AYXFORCEDINLINE auto         \
-  name([[maybe_unused]] auto trait_class __VA_OPT__(                       \
-      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))             \
-      -> anyxx::map_return<T, ANY_UNPAREN(return_type)> {                  \
-    using namespace anyxx;                                                 \
-    return _detail_REMOVE_PARENS(body).template                            \
-    operator()<anyxx::use_as<T, typename decltype(trait_class)::trait_t>>( \
-        trait_class __VA_OPT__(                                            \
-            , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
+#define _detail_ANYXX_MAP_STATIC(template_params, return_type, name, body,     \
+                                 ...)                                          \
+ public:                                                                       \
+  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
+      _detail_REMOVE_PARENS(template_params)) AYXFORCEDINLINE auto             \
+  name([[maybe_unused]] auto trait_class __VA_OPT__(                           \
+      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))                 \
+      -> anyxx::map_return<T, ANY_UNPAREN(return_type)> {                      \
+    using namespace anyxx;                                                     \
+    return _detail_REMOVE_PARENS(body)                                         \
+        .template operator()<                                                  \
+            anyxx::make_use_as_t<T, typename decltype(trait_class)::trait_t>>( \
+            trait_class __VA_OPT__(                                            \
+                , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
   };
 
 //_detail_ANYXX_MAP_STATIC(((A), (B)), decltype(auto), forward,
@@ -563,7 +565,11 @@
     BASE, base_template_params, base_model_map_template_params, l, static_fns, \
     typedefs, v_table_data, decoration)                                        \
                                                                                \
-  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n;    \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)             \
+                _detail_ANYXX_OPTIONAL_COMMA(any_template_params)              \
+                    typename UnusedType = void>                                \
+  struct n;                                                                    \
+                                                                               \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_rep;                                                      \
   struct n##_is_nullable;                                                      \
@@ -575,9 +581,8 @@
     using rep_type = T;                                                        \
                                                                                \
     struct deduced_type                                                        \
-        : BASE                                                                 \
-          _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                                \
-              base_template_params)::template model_map<T>::deduced_type {     \
+        : BASE<_detail_ANYXX_TEMPLATE_ARGS(                                    \
+              base_template_params)>::template model_map<T>::deduced_type {    \
       _detail_ANYXX_MAP_TYPES(typedefs);                                       \
     };                                                                         \
     _detail_ANYXX_MAP_FUNCTIONS(l);                                            \
@@ -605,13 +610,11 @@
                                                                                \
   struct n##_has_open_dispatch;                                                \
                                                                                \
-  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
-      any_template_params) struct n##_v_table                                  \
-      : BASE                                                                   \
-        _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                                  \
-            base_template_params)::v_table_t {                                 \
-    using v_table_base_t = typename BASE _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \
-        base_template_params)::v_table_t;                                      \
+  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n##   \
+      _v_table                                                                 \
+      : BASE<_detail_ANYXX_TEMPLATE_ARGS(base_template_params)>::v_table_t {   \
+    using v_table_base_t = typename BASE<_detail_ANYXX_TEMPLATE_ARGS(          \
+        base_template_params)>::v_table_t;                                     \
                                                                                \
     using v_table_t = n##_v_table;                                             \
                                                                                \
@@ -626,8 +629,8 @@
                                                                                \
     using any_value_t =                                                        \
         anyxx::any<anyxx::val<val_proxy_size, val_is_nullable>,                \
-                   n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
-                       any_template_params)>;                                  \
+                   n _detail_ANYXX_OPTIONAL_COMMA(any_template_params)         \
+                       _detail_ANYXX_TEMPLATE_ARGS(any_template_params)>;      \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       if constexpr (anyxx::is_dynamic_castable_v_table<v_table_base_t>) {      \
@@ -653,12 +656,12 @@
         std::in_place_type_t<Parent> parent = std::in_place_type<Parent>);     \
   };                                                                           \
                                                                                \
-  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params)              \
-      struct ANYXX_USE_EBO n                                                   \
-      : BASE                                                                   \
-        _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params) {           \
-    using base_t =                                                             \
-        BASE _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params);       \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)             \
+                _detail_ANYXX_OPTIONAL_COMMA(any_template_params)              \
+                    typename UnusedType>                                       \
+  struct ANYXX_USE_EBO n                                                       \
+      : BASE<_detail_ANYXX_TEMPLATE_ARGS(base_template_params)> {              \
+    using base_t = BASE<_detail_ANYXX_TEMPLATE_ARGS(base_template_params)>;    \
                                                                                \
     template <typename T>                                                      \
     using model_map =                                                          \
@@ -673,8 +676,8 @@
                                                                                \
     using any_value_t =                                                        \
         anyxx::any<anyxx::val<val_proxy_size, val_is_nullable>,                \
-                   n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
-                       any_template_params)>;                                  \
+                   n _detail_ANYXX_OPTIONAL_COMMA(any_template_params)         \
+                       _detail_ANYXX_TEMPLATE_ARGS(any_template_params)>;      \
                                                                                \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
@@ -695,26 +698,28 @@
             typename deduced_type = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS( \
                 model_map_template_params)>::deduced_type>                     \
   concept _detail_CONCAT(_detail_CONCAT(is_, n), _model) =                     \
-      requires(                                                                \
-          T model,                                                             \
-          anyxx::any_trait_class<T, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(    \
-                                        any_template_params)>                  \
-              trait_class,                                                     \
-          n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(                           \
-              model_map_template_params)>                                      \
-              model_map) {                                                     \
+      requires(T model,                                                        \
+               anyxx::any_trait_class<                                         \
+                   T, n<_detail_ANYXX_TEMPLATE_ARGS(any_template_params)>>     \
+                   trait_class,                                                \
+               n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(                      \
+                   model_map_template_params)>                                 \
+                   model_map) {                                                \
         requires anyxx::is_type_complete<T>;                                   \
         _detail_ANYXX_CONCEPT_FUNCTIONS(l)                                     \
             _detail_ANYXX_CONCEPT_STATIC_FUNCTIONS(static_fns)                 \
                 _detail_ANYXX_CONCEPT_TYPES(typedefs)                          \
       } &&                                                                     \
-      BASE _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                               \
-          base_template_params)::template modeled_by<T>();                     \
+      BASE<_detail_ANYXX_TEMPLATE_ARGS(                                        \
+          base_template_params)>::template modeled_by<T>();                    \
                                                                                \
-  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
-      any_template_params) template <typename T>                               \
-  constexpr bool n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                       \
-      any_template_params)::modeled_by() {                                     \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)             \
+                _detail_ANYXX_OPTIONAL_COMMA(any_template_params)              \
+                    typename UnusedType>                                       \
+  template <typename T>                                                        \
+  constexpr bool n<_detail_ANYXX_TEMPLATE_ARGS(any_template_params)            \
+                       _detail_ANYXX_OPTIONAL_COMMA(any_template_params)       \
+                           UnusedType>::modeled_by() {                         \
     return _detail_CONCAT(                                                     \
         _detail_CONCAT(is_, n),                                                \
         _model)<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)>;       \
@@ -842,13 +847,15 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param
-#define ANY_META_FUNCTION(pure_template_params,                             \
-                          any_template_params_with_defaults, n)             \
-                                                                            \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(                              \
-      any_template_params_with_defaults)>                                   \
-  using any_##n = anyxx::any<Proxy, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \
-                                        pure_template_params)>;
+#define ANY_META_FUNCTION(pure_template_params,                       \
+                          any_template_params_with_defaults, n)       \
+                                                                      \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(                        \
+      any_template_params_with_defaults)>                             \
+  using any_##n =                                                     \
+      anyxx::any<Proxy,                                               \
+                 n _detail_ANYXX_OPTIONAL_COMMA(pure_template_params) \
+                     _detail_ANYXX_TEMPLATE_ARGS(pure_template_params)>;
 
 ////////////////////////////////////////////////////////////////////////////////
 

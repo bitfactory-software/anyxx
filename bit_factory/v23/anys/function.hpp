@@ -30,11 +30,11 @@ struct function_proxy_for_lifetime {
   using type = val<>;
 };
 template <>
-struct function_proxy_for_lifetime<observeable, const_> {
+struct function_proxy_for_lifetime<observeable<>, const_> {
   using type = cref;
 };
 template <>
-struct function_proxy_for_lifetime<observeable, mutable_> {
+struct function_proxy_for_lifetime<observeable<>, mutable_> {
   using type = mutref;
 };
 
@@ -69,19 +69,19 @@ namespace self_test {
 struct functor {
   int operator()(double) const;
 };
-using f_cref = any_<function<int(double), const_, observeable>>;
+using f_cref = any_<function, int(double), const_, observeable<>>;
 static_assert(std::invocable<f_cref, double>);
-using f_mutref = any_<function<int(double), mutable_, observeable>>;
+using f_mutref = any_<function, int(double), mutable_, observeable<>>;
 static_assert(std::invocable<f_mutref, double>);
 
-using f_movable_const_val = any_<function<int(double), const_, moveable>>;
+using f_movable_const_val = any_<function, int(double), const_, moveable<>>;
 static_assert(std::invocable<f_movable_const_val, double>);
-using f_movable_mutable_val = any_<function<int(double), mutable_, moveable>>;
+using f_movable_mutable_val = any_<function, int(double), mutable_, moveable<>>;
 static_assert(std::invocable<f_movable_mutable_val, double>);
 
-using f_const_val = any_<function<int(double), const_, copyable>>;
+using f_const_val = any_<function, int(double), const_, copyable<>>;
 static_assert(std::invocable<f_const_val, double>);
-using f_mutable_val = any_<function<int(double), mutable_, copyable>>;
+using f_mutable_val = any_<function, int(double), mutable_, copyable<>>;
 static_assert(std::invocable<f_mutable_val, double>);
 
 }  // namespace self_test

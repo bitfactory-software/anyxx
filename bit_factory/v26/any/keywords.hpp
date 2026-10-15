@@ -12,7 +12,7 @@ template <typename Trait>
 concept is_trait = std::same_as<Trait, declaration> || std::same_as<Trait, model_map>;
 
 template <template <is_trait, typename, typename...> typename Trait>
-using base_v_table_t = anyxx::observeable::v_table_t;
+using base_v_table_t = anyxx::observeable<>::v_table_t;
 
 template <template <is_trait, typename, typename...> typename Trait, typename... Args>
 struct v_table;

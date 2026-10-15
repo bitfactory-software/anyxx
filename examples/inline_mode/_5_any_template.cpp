@@ -20,12 +20,12 @@ TRAIT_TEMPLATE(((KEY), (VALUE)), map,
                (ANY_FN_EXACT(VALUE const&, at, (KEY const&), const),
                 ANY_FN(std::size_t, size, (), const)))
 template <typename Key, typename Value, typename Proxy = val<>>
-using any_map = any<Proxy, map<Key, Value>>;
+using any_map = any<Proxy, map, Key, Value>;
 
 TRAIT_TEMPLATE_(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),
                (ANY_FN_EXACT(VALUE&, at, (KEY const&), ), ))
 template <typename Key, typename Value, typename Proxy = val<>>
-using any_mutable_map = any<Proxy, mutable_map<Key, Value>>;
+using any_mutable_map = any<Proxy, mutable_map, Key, Value>;
 
 ANY_TEMPLATE(((KEY), (VALUE)), recursive_map,
              (ANY_FN(VALUE, at, (KEY const&), const),

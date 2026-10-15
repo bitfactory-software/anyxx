@@ -1,14 +1,11 @@
 #pragma once
 
 #include <bit_factory/v23/any.hpp>
+#include <bit_factory/v23/v_table_data.hpp>
 
 namespace anyxx {
 
 struct self {};
-struct dynamic_castable;
-struct dynamic_deletable;
-struct dynamic_moveable;
-struct dynamic_copyable;
 
 template <typename Param>
 struct jacket_return;
@@ -36,8 +33,8 @@ struct jacket_return<self> {
   static decltype(auto) forward(Sig&& sig, Any const&) {
     using sig_t = std::decay_t<Sig>;
     if constexpr (is_type_class<typename std::decay_t<Any>::proxy_t>) {
-      using target_t =
-          any<using_<typename Any::proxy_t::value_t>, typename Any::trait_t>;
+      using target_t = make_use_as_t<typename Any::proxy_t::value_t,
+                                            typename Any::trait_t>;
       if constexpr (is_any<sig_t>) {
         return target_t{get_proxy_value(std::forward<Sig>(sig))};
       } else {
@@ -61,6 +58,26 @@ struct jacket_return<self&> {
   }
 };
 
+//template <typename Param>
+//struct map_return;
+//
+//template <typename Param>
+//    requires(!std::is_reference_v<Param>)
+//struct map_return<Param> {
+//    template <typename Sig>
+//    static Param forward(Sig&& sig) {
+//        return std::forward<Sig>(sig);
+//    }
+//};
+//template <typename Param>
+//    requires (std::same_as<Param, self&> || std::same_as<Param, self>)
+//struct map_return<Param> {
+//    template <typename Sig>
+//    static decltype(auto) forward(Sig&& sig) {
+//        return std::forward<Sig>(sig);
+//    }
+//};
+//
 template <typename T>
 struct translate_sig_map {
   template <typename AnyValue>
@@ -109,7 +126,7 @@ template <typename T>
 struct is_use_as__impl : std::false_type {};
 template <typename T, template <typename...> typename Trait,
           typename... TraitArgs>
-struct is_use_as__impl<any<using_<T>, Trait<TraitArgs...>>> : std::true_type {};
+struct is_use_as__impl<any<using_<T>, Trait, TraitArgs...>> : std::true_type {};
 template <typename T>
 inline constexpr bool is_use_as_ = is_use_as__impl<std::decay_t<T>>::value;
 
@@ -119,7 +136,7 @@ struct translate_sig_map<T> {
   template <typename AnyValue>
   using v_table_param = any<mutref, dynamic_copyable>;
   template <typename AnyValue>
-  using v_table_return = int;  // dummy
+  using v_table_return = T;  // dummy
   template <typename Model>
   using map_return = T;
   template <typename Model>

@@ -45,6 +45,7 @@ struct observeable_default_model_map {
 template <typename T = std::nullptr_t>
 struct observeable_map : observeable_default_model_map<T> {};
 
+template <typename = std::nullptr_t>
 struct observeable {
   template <typename>
   static constexpr bool modeled_by() {

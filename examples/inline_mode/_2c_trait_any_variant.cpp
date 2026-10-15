@@ -71,7 +71,7 @@ TEST_CASE("example 2cb static_ any variant") {
   using namespace std::string_literals;
   using namespace anyxx;
 
-  static_assert(constructibile_for<any_value, vany_value::proxy_t, value>);
+  static_assert(constructibile_for<any_value, vany_value::proxy_t, value<>>);
   vany_value vv_custom_43 = any_value{std::in_place_type<custom>, "43"};
   vany_value vv_custom_42 = {any_value{std::in_place, custom{"42"}}};
 

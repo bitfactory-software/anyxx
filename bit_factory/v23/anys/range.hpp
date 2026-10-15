@@ -91,7 +91,7 @@ TRAIT_TEMPLATE_EX_(
 
 template <typename ValueType, typename Reference,
           typename Proxy = nullable_val<iterator_val_proxy_size>>
-using any_input_iterator = any<Proxy, input_iterator<ValueType, Reference>>;
+using any_input_iterator = any<Proxy, input_iterator, ValueType, Reference>;
 static_assert(std::input_iterator<any_input_iterator<int, int>>);
 
 TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator, input_iterator,
@@ -102,7 +102,7 @@ TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator, input_iterator,
 
 template <typename ValueType, typename Reference,
           typename Proxy = nullable_val<iterator_val_proxy_size>>
-using any_forward_iterator = any<Proxy, forward_iterator<ValueType, Reference>>;
+using any_forward_iterator = any<Proxy, forward_iterator, ValueType, Reference>;
 static_assert(std::forward_iterator<any_forward_iterator<int, int>>);
 
 TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), bidirectional_iterator,
@@ -117,7 +117,7 @@ TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), bidirectional_iterator,
 template <typename ValueType, typename Reference,
           typename Proxy = nullable_val<iterator_val_proxy_size>>
 using any_bidirectional_iterator =
-    any<Proxy, bidirectional_iterator<ValueType, Reference>>;
+    any<Proxy, bidirectional_iterator, ValueType, Reference>;
 static_assert(
     std::bidirectional_iterator<any_bidirectional_iterator<int, int>>);
 
@@ -146,7 +146,7 @@ TRAIT_TEMPLATE_EX_(
 template <typename ValueType, typename Reference,
           typename Proxy = nullable_val<iterator_val_proxy_size>>
 using any_random_access_iterator =
-    any<Proxy, random_access_iterator<ValueType, Reference>>;
+    any<Proxy, random_access_iterator, ValueType, Reference>;
 
 template <typename Value, typename Ref>
 auto operator-(any_random_access_iterator<Value, Ref> const& lhs,
@@ -166,7 +166,7 @@ TRAIT_TEMPLATE_(((AnyIterator)), range, dynamic_copyable, (),
                  ANY_FN(AnyIterator, end, (), const)))
 
 template <typename AnyIterator, typename Proxy = anyxx::cref>
-using any_range = any<Proxy, range<AnyIterator>>;
+using any_range = any<Proxy, range, AnyIterator>;
 
 template <typename ValueType, typename Reference = ValueType,
           typename Proxy = anyxx::cref>
@@ -225,19 +225,20 @@ static_assert(
     true);
 static_assert(
     std::same_as<any_forward_iterator<self, self>::v_table_t::any_value_t,
-                 any<nullable_val<iterator_val_proxy_size>,
-                     forward_iterator<self, self>>>);
+                 any<nullable_val<iterator_val_proxy_size>, forward_iterator,
+                     self, self>>);
 static_assert(
     std::same_as<random_access_iterator<self, self>::v_table_t::any_value_t,
                  any<nullable_val<iterator_val_proxy_size>,
-                     random_access_iterator<self, self>>>);
+                     random_access_iterator, self, self>>);
 static_assert(std::forward_iterator<any_forward_iterator<self, self>>);
 static_assert(std::ranges::forward_range<any_forward_range<self, self>>);
 
-template <typename Trait, typename R>
-auto trait_range_as(R&& r) {
-  return r | std::views::transform(
-                 [&](auto const& x) { return trait_as<Trait>(x); });
+template <template <typename...> typename Trait, typename... Ts>
+auto trait_range_as(auto&& r) {
+  return std::forward<decltype(r)>(r) |
+         std::views::transform(
+             [&](auto const& x) { return trait_as<Trait, Ts...>(x); });
 }
 
 }  // namespace anyxx

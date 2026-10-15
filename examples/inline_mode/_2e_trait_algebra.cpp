@@ -117,12 +117,16 @@ void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
 }
 
 template <class C>
-concept can_call_op = requires(anyxx::any_trait_class<C, monoid> class_,
-                               anyxx::using_<C>::template as<monoid> object_) {
+concept can_call_op_on_class = requires(anyxx::any_trait_class<C, monoid<>> class_,
+                               anyxx::any<anyxx::using_<C>, monoid> object_) {
   { class_.op(object_) };
 };
-
-static_assert(!can_call_op<int>);
+template <class C>
+concept can_call_op_on_object = requires(anyxx::any<anyxx::using_<C>, monoid> a, anyxx::any<anyxx::using_<C>, monoid> b) {
+        { a.op(b) };
+};
+static_assert(!can_call_op_on_class<int>);
+static_assert(can_call_op_on_object<int>);
 
 }  // namespace algebra_test
 //
@@ -249,9 +253,9 @@ TEST_CASE("algebra group") {
   using namespace anyxx;
   using namespace algebra_test;
 
-  auto g = trait_class_<int, group>.identity();
-  static_assert(std::same_as<decltype(g), any<using_<int>, group>>);
-
+  auto g = trait_class_<int, group<>>.identity();
+  static_assert(std::same_as<decltype(g), any<using_<int>, group, void>>);
+  
   {
     anyxx::any<using_<int>, monoid> m1{0};
     anyxx::any<using_<int>, monoid> m2{std::move(m1)};
@@ -292,8 +296,8 @@ TEST_CASE("algebra int_mul monoid") {
   using namespace anyxx;
   using namespace algebra_test;
 
-  auto id = trait_class_<int_mul, monoid>.identity();
-  static_assert(std::same_as<decltype(id), any<using_<int_mul>, monoid>>);
+  auto id = trait_class_<int_mul, monoid<>>.identity();
+  static_assert(std::same_as<decltype(id), any<using_<int_mul>, monoid, void>>);
   static_assert(!is_group_model<int_mul>);
   // trait_class_<int_mul, monoid>.op(id); // should not compile, because
   // trait_class_ is not an object.
