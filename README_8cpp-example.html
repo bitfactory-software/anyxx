@@ -622,12 +622,12 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/vany.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>showcase7 {</div>
-<div class="line"><span class="keyword">namespace </span>ayx = anyxx;</div>
+<div class="line"><span class="keyword">using namespace </span>anyxx;</div>
 <div class="line"><span class="keyword">using namespace </span>std::string_literals;</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>circle {</div>
@@ -637,16 +637,14 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">ANY_(figure, ayx::dynamic_copyable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)),</div>
-<div class="line">     ayx::val&lt;&gt;)</div>
+<div class="line">TRAIT_(figure, dynamic_copyable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using </span>known_and_unknown_shapes =</div>
-<div class="line">    ayx::make_vany&lt;any_figure&lt;&gt;, circle, square&gt;;</div>
-<div class="line"><span class="keyword">static_assert</span>(</div>
+<div class="line">using known_and_unknown_shapes = make_vany&lt;figure, circle, square&gt;;</div>
+<div class="line">static_assert(</div>
 <div class="line">    std::same_as&lt;known_and_unknown_shapes,</div>
-<div class="line">                 any_figure&lt;ayx::using_&lt;  <span class="comment">// see the Any++ logo at the top</span></div>
-<div class="line">                     std::variant&lt;any_figure&lt;&gt;, circle, square&gt;&gt;&gt;&gt;);</div>
-<div class="line">ANY_MODEL_MAP((std::string), figure) {</div>
+<div class="line">                 any&lt;using_&lt;std::variant&lt;any_&lt;figure&gt;, circle, square&gt;&gt;, </div>
+<div class="line">                    figure&gt;&gt;);</div>
+<div class="line">ANY_MODEL_MAP((std::<span class="keywordtype">string</span>), figure) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(std::string <span class="keyword">const</span>&amp; s) { <span class="keywordflow">return</span> s; };</div>
 <div class="line">};</div>
 <div class="line"> </div>
@@ -657,7 +655,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;Showcase7&quot;</span>) {</div>
 <div class="line">  std::stringstream ss;</div>
-<div class="line">  draw(ss, {circle{}, square{}, any_figure&lt;&gt;{<span class="stringliteral">&quot;The big unknown...&quot;</span>s}});</div>
+<div class="line">  draw(ss, {circle{}, square{}, any_&lt;figure&gt;{<span class="stringliteral">&quot;The big unknown...&quot;</span>s}});</div>
 <div class="line">  CHECK(ss.str() == <span class="stringliteral">&quot;Hello\nWorld\nThe big unknown...\n&quot;</span>);</div>
 <div class="line">}</div>
 <div class="line">}  <span class="comment">// namespace showcase7</span></div>
