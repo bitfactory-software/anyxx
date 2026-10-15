@@ -1,7 +1,7 @@
 #pragma once
 
-#include <bit_factory/anyxx/proxies/basic_proxy_trait.hpp>
-#include <bit_factory/anyxx/proxies/proxy_concept.hpp>
+#include <bit_factory/anyxx.hpp>
+#include <variant>
 
 namespace anyxx {
 
@@ -14,12 +14,12 @@ namespace anyxx {
 /// std::visit, and all other types are dispatched via their v-Table. Now you
 /// know where the Any++ logo has its origin.
 /// \ingroup proxies
-template <is_any Any, typename... Types>
-using vany_variant = std::variant<Any, Types...>;
+template <typename Trait, typename... Types>
+using vany_variant = std::variant<any_<Trait>, Types...>;
 
 /// A factory type to direct get the any for the vany
-template <is_any Any, typename... Types>
-using make_vany = any<using_<vany_variant<Any, Types...>>, typename Any::trait_t>;
+template <typename Trait, typename... Types>
+using make_vany = any<using_<vany_variant<Trait, Types...>>, Trait>;
 
 template <typename VanyProxy>
 struct vany_variant_trait {
@@ -44,11 +44,11 @@ struct vany_type_trait {
       typename vany_variant_trait<vany_proxy_t>::any_in_variant;
 };
 
-template <is_any Any, typename... Types>
-struct proxy_trait<using_<vany_variant<Any, Types...>>>
-    : basic_proxy_trait<using_<vany_variant<Any, Types...>>> {
-  using vany_variant_t = vany_variant<Any, Types...>;
-  using vany_proxy_t = typename Any::proxy_t;
+template <typename Trait, typename... Types>
+struct proxy_trait<using_<vany_variant<Trait, Types...>>>
+    : basic_proxy_trait<using_<vany_variant<Trait, Types...>>> {
+  using vany_variant_t = vany_variant<Trait, Types...>;
+  using vany_proxy_t = typename Trait::default_proxy_t;
   using void_t = typename proxy_trait<vany_proxy_t>::void_t;
   using static_dispatch_t = vany_variant_t;
   static constexpr bool is_constructibile_from_const =
@@ -61,7 +61,7 @@ struct proxy_trait<using_<vany_variant<Any, Types...>>>
   static constexpr bool is_owner = proxy_trait<vany_proxy_t>::is_owner;
   static constexpr bool is_weak =
       proxy_trait<vany_proxy_t>::is_weak;  // cppcheck-suppress
-                                    // duplInheritedMember
+  // duplInheritedMember
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] auto* v_table) {
     return void_t{};

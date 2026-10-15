@@ -1,7 +1,7 @@
 #include <algorithm>
-#include <bit_factory/anyxx.hpp>
-#include <bit_factory/anyxx/ANY_SINGLETON.hpp>
+#include <bit_factory/anyxx/ext/vany.hpp>
 #include <bit_factory/anyxx/ext/dispatch_vany.hpp>
+#include <bit_factory/anyxx/ANY_SINGLETON.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <compare>
 #include <concepts>
@@ -31,12 +31,12 @@ TRAIT_EX_(value, anyxx::dynamic_copyable,
           , , (ANY_OPEN_DISPATCH), ())
 using any_value = anyxx::any_<value>;
 
-using vany_value = anyxx::make_vany<any_value, bool, int, double, std::string>;
+using vany_value = anyxx::make_vany<value, bool, int, double, std::string>;
 using concrete_value = anyxx::vany_type_trait<vany_value>::concrete_variant;
 using any_in_variant = anyxx::vany_type_trait<vany_value>::any_in_variant;
 
 static_assert(
-    anyxx::is_proxy<anyxx::using_<anyxx::vany_variant<any_value, bool, int>>>);
+    anyxx::is_proxy<anyxx::using_<anyxx::vany_variant<value, bool, int>>>);
 static_assert(
     std::same_as<concrete_value, std::variant<bool, int, double, std::string>>);
 static_assert(std::same_as<any_in_variant, any_value>);
