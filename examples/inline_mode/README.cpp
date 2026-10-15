@@ -528,12 +528,12 @@ Because the set of types is fixed, this approach can offer better performance th
 // <!--
 #endif
 // -->
-#include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ext/vany.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
 namespace showcase7 {
-namespace ayx = anyxx;
+using namespace anyxx;
 using namespace std::string_literals;
 
 struct circle {
@@ -543,15 +543,13 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-ANY_(figure, ayx::dynamic_copyable, (ANY_FN(std::string, draw, (), const)),
-     ayx::val<>)
+TRAIT_(figure, dynamic_copyable, (ANY_FN(std::string, draw, (), const)))
 
-using known_and_unknown_shapes =
-    ayx::make_vany<any_figure<>, circle, square>;
+using known_and_unknown_shapes = make_vany<figure, circle, square>;
 static_assert(
     std::same_as<known_and_unknown_shapes,
-                 any_figure<ayx::using_<  // see the Any++ logo at the top
-                     std::variant<any_figure<>, circle, square>>>>);
+                 any<using_<std::variant<any_<figure>, circle, square>>, 
+                    figure>>);
 ANY_MODEL_MAP((std::string), figure) {
   static std::string draw(std::string const& s) { return s; };
 };
@@ -563,7 +561,7 @@ void draw(std::stringstream& os,
 
 TEST_CASE("Showcase7") {
   std::stringstream ss;
-  draw(ss, {circle{}, square{}, any_figure<>{"The big unknown..."s}});
+  draw(ss, {circle{}, square{}, any_<figure>{"The big unknown..."s}});
   CHECK(ss.str() == "Hello\nWorld\nThe big unknown...\n");
 }
 }  // namespace showcase7

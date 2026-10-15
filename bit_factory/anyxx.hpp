@@ -50,7 +50,6 @@
 #include <bit_factory/v26/any.hpp>
 #include <bit_factory/v26/trait_as.hpp>
 #else
-#include <bit_factory/anyxx/proxies/static/vany.hpp>
 #include <bit_factory/v23/any.hpp>
 #include <bit_factory/v23/preprocessor_meta_class.hpp>
 #include <bit_factory/v23/v_table_data.hpp>
