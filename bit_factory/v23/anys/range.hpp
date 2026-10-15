@@ -57,27 +57,10 @@ struct reference_impl<void*, Reference> {
   using type = Reference;
 };
 
-template <typename T>
-concept has_post_increment = requires(T x) {
-  { x++ } -> std::same_as<T>;
-};
-
-template <typename T>
-auto post_increment_def = [](T& self) -> T {
-  if constexpr (has_post_increment<T>) {
-    return self++;
-  } else {
-    auto r = self;
-    ++self;
-    return r;
-  }
-};
-
 TRAIT_TEMPLATE_EX_(
     ((ValueType), (Reference)), input_iterator, dynamic_copyable, (),
     (ANY_OP_MAP_NAMED(anyxx::self&, ++, op_pre_increment, (), ),
-     ANY_OP_DEF(public, Reference, *, op_dereference, (), const,
-                ([&x]() -> Reference { return *x; })),
+     ANY_OP_MAP_NAMED_UNARY(Reference, *, op_dereference, const),
      ANY_OP_MAP_NAMED_FRIEND(bool, ==, equal, (anyxx::self const&), const),
      ANY_OP_MAP_NAMED_FRIEND(bool, !=, inequal, (anyxx::self const&), const)),
     ,
