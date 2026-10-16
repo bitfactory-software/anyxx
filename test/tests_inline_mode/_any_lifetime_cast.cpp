@@ -23,7 +23,7 @@ struct X {
 };
 
 ANY_(stringable, dynamic_deletable, (ANY_OP(std::string, (), (), const)), )
-TRAIT_(slick_stringable, observeable, (ANY_OP(std::string, (), (), const)))
+TRAIT(slick_stringable, observeable, (ANY_OP(std::string, (), (), const)))
 
 struct Y {
   any<mutref, slick_stringable> xxx;

@@ -4,7 +4,7 @@
 
 namespace _2p_lib {
 
-TRAIT(equal_comparable,
+TRAIT(equal_comparable, anyxx::dynamic_copyable,
       (ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const),
        ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
                   [&x](auto const& r) {
@@ -30,7 +30,7 @@ struct nullable_default_rep : std::variant<std::monostate, T> {
                          nullable_default_rep const& r) = default;
 };
 
-TRAIT(nullable,
+TRAIT(nullable, anyxx::dynamic_copyable,
       (ANY_FN_DEF(public, bool, has_value, (), const,
                   [x]() { return std::holds_alternative<T>(x); }),
        ANY_FN_DEF_EXACT(public, T const&, get_value, (), const,

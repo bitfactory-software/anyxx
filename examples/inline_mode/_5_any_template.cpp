@@ -12,7 +12,8 @@ struct X {
 
 namespace {
 
-TRAIT(stringable, (ANY_FN(std::string, to_string, (), const)))
+TRAIT(stringable, anyxx::dynamic_copyable,
+       (ANY_FN(std::string, to_string, (), const)))
 template <typename Proxy = val<>>
 using any_to_string = any<Proxy, stringable>;
 
@@ -23,7 +24,7 @@ template <typename Key, typename Value, typename Proxy = val<>>
 using any_map = any<Proxy, map, Key, Value>;
 
 TRAIT_TEMPLATE_(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),
-               (ANY_FN_EXACT(VALUE&, at, (KEY const&), ), ))
+                (ANY_FN_EXACT(VALUE&, at, (KEY const&), ), ))
 template <typename Key, typename Value, typename Proxy = val<>>
 using any_mutable_map = any<Proxy, mutable_map, Key, Value>;
 
@@ -35,8 +36,7 @@ ANY_TEMPLATE(((KEY), (VALUE)), mutable_recursive_map,
              (ANY_FN(VALUE, at, (KEY const&), )), )
 
 ANY_TEMPLATE(((KEY)), map_to_string,
-             (ANY_FN((any_to_string<cref>), at, (KEY const&),
-                         const)), )
+             (ANY_FN((any_to_string<cref>), at, (KEY const&), const)), )
 
 ANY_MODEL_MAP((int), stringable) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
@@ -56,12 +56,11 @@ void any_map_template_f(any_map<KEY, VALUE, cref> const& map_i) {
 TEST_CASE("any template usage simple") {
   std::map<std::string, int> map_string_to_int = {{"one", 1}, {"two", 2}};
 
-  auto any_map_lambda =
-      [](any_map<std::string, int, cref> map_i) {
-        REQUIRE(map_i.size() == 2);
-        REQUIRE(map_i.at("one") == 1);
-        REQUIRE(map_i.at("two") == 2);
-      };
+  auto any_map_lambda = [](any_map<std::string, int, cref> map_i) {
+    REQUIRE(map_i.size() == 2);
+    REQUIRE(map_i.at("one") == 1);
+    REQUIRE(map_i.at("two") == 2);
+  };
   any_map_lambda(map_string_to_int);
 
   any_map_template_f<std::string, int>(map_string_to_int);
@@ -81,9 +80,7 @@ TEST_CASE("nested(recursive) any template") {
 
   auto lambda =
       [](any_recursive_map<
-          int,
-          any_recursive_map<std::string, any_map<int, double, cref>,
-                            cref>,
+          int, any_recursive_map<std::string, any_map<int, double, cref>, cref>,
           cref>
              map_i) {
         auto x = map_i.at(1);
@@ -99,8 +96,7 @@ TEST_CASE("nested(recursive) any template") {
       [](any_mutable_recursive_map<
           int,
           any_mutable_recursive_map<
-              std::string, any_mutable_map<int, double, mutref>,
-              mutref>,
+              std::string, any_mutable_map<int, double, mutref>, mutref>,
           mutref>
              map_i) {
         auto x = map_i.at(1);

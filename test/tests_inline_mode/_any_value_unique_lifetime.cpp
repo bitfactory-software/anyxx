@@ -85,7 +85,7 @@ static_assert(!std::is_trivially_copy_constructible_v<Y>);
 static_assert(!std::is_trivially_copy_assignable_v<Y>);
 static_assert(sizeof(int) <= anyxx::small_object_size);
 
-TRAIT_(getset, anyxx::dynamic_copyable,
+TRAIT(getset, anyxx::dynamic_copyable,
        (ANY_FN(std::string const&, get, (), const),
         ANY_FN(void, set, (std::string const&), )))
 

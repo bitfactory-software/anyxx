@@ -11,7 +11,7 @@
 using namespace anyxx;
 
 using namespace anyxx;
-TRAIT_(Shape, anyxx::dynamic_deletable,
+TRAIT(Shape, anyxx::dynamic_deletable,
     (ANY_FN(double, area, (), const)))
 
     struct Circle { double radius; };

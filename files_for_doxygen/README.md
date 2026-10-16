@@ -84,7 +84,8 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-TRAIT_(drawable, anyxx::dynamic_copyable, (ANY_FN(std::string, draw, (), const)))
+TRAIT(drawable, anyxx::dynamic_copyable,
+       (ANY_FN(std::string, draw, (), const)))
 
 void draw(std::stringstream& os,
           std::vector<anyxx::any_<drawable>> const& drawables) {
@@ -180,7 +181,8 @@ struct square {
   [[nodiscard]] std::string edgy_salute() const { return "edgy World"; }
 };
 
-TRAIT_(drawable, anyxx::dynamic_copyable, (ANY_FN(std::string, draw, (), const)))
+TRAIT(drawable, anyxx::dynamic_copyable,
+       (ANY_FN(std::string, draw, (), const)))
 
 ANY_MODEL_MAP((circle), drawable) {
   static std::string draw(circle const&) { return "Silent greetings"; };
@@ -220,8 +222,8 @@ to provide custom behavior for unrelated types using traits.
 #include <bit_factory/anyxx.hpp>
 #include <bit_factory/anyxx/ext/dispatch.hpp>
 #include <compare>
-#include <string>
 #include <sstream>
+#include <string>
 #include <vector>
 
 namespace showcase3 {
@@ -234,8 +236,7 @@ struct square {
 };
 
 TRAIT_EX_(figure, anyxx::dynamic_copyable,
-          (ANY_FN(std::string, name, (), const)), , ,
-          (ANY_OPEN_DISPATCH), ())
+          (ANY_FN(std::string, name, (), const)), , , (ANY_OPEN_DISPATCH), ())
 
 anyxx::dispatch<std::partial_ordering(anyxx::virtual_<anyxx::any_<figure>>,
                                       anyxx::virtual_<anyxx::any_<figure>>)>
@@ -258,7 +259,7 @@ auto __ = compare_edges.define<square, circle>(
 void compare_each(std::stringstream& os,
                   std::vector<anyxx::any_<figure>> const& figures) {
   std::string sep;
-  for (auto const& l: figures)
+  for (auto const& l : figures)
     for (auto const& r : figures) {
       os << std::exchange(sep, ", ") << l.name() << " ";
       if (auto c = l <=> r; c == std::partial_ordering::equivalent)
@@ -308,8 +309,8 @@ That trick initializes a static variable with automatic name at each usage site 
 #include <bit_factory/anyxx.hpp>
 #include <bit_factory/anyxx/ext/dispatch.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <string>
 #include <sstream>
+#include <string>
 #include <vector>
 
 namespace showcase4 {
@@ -324,8 +325,7 @@ struct square {
 };
 
 TRAIT_EX_(figure, anyxx::dynamic_copyable,
-          (ANY_FN(std::string, name, (), const)), , ,
-          (ANY_OPEN_DISPATCH), ())
+          (ANY_FN(std::string, name, (), const)), , , (ANY_OPEN_DISPATCH), ())
 using any_figure = anyxx::any_<figure>;
 
 ayx::dispatch<std::string(ayx::virtual_<any_figure>)> latin, italian;
@@ -370,8 +370,8 @@ This is the so-called "Open Visitor Pattern" implemented via open dispatch O(1) 
 // <!--
 #endif
 // -->
-#include <bit_factory/anyxx/ext/factory.hpp>
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ext/factory.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
@@ -389,12 +389,12 @@ struct square {
 };
 
 struct figure_has_open_dispatch {};
-ANY_(figure, ayx::dynamic_copyable, (ANY_FN(double, area, (), const)), ayx::val<>)
+ANY_(figure, ayx::dynamic_copyable, (ANY_FN(double, area, (), const)),
+     ayx::val<>)
 ANY_(serializable, ayx::dynamic_copyable,
-    (ANY_FN(void, serialize, (std::ostream&), const)), ayx::cref)
+     (ANY_FN(void, serialize, (std::ostream&), const)), ayx::cref)
 
-ayx::factory<ayx::any_<serializable>, std::string, std::istream&>
-    deserialize;
+ayx::factory<ayx::any_<serializable>, std::string, std::istream&> deserialize;
 
 [[nodiscard]] any_figure<> deserialize_any_figure(std::istream& archive) {
   std::string type;
@@ -428,8 +428,7 @@ auto __ = deserialize.register_("square", [](std::istream& archive) {
 ANY_REGISTER_MODEL(square, figure);
 ANY_REGISTER_MODEL(square, serializable);
 
-void areas(std::stringstream& os,
-           std::vector<any_figure<>> const& figures) {
+void areas(std::stringstream& os, std::vector<any_figure<>> const& figures) {
   std::string sep;
   for (auto const& f : figures) os << std::exchange(sep, ", ") << f.area();
 }
@@ -491,7 +490,8 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-TRAIT(drawable, (ANY_FN(std::string, draw, (), const)))
+TRAIT(drawable, anyxx::dynamic_copyable,
+       (ANY_FN(std::string, draw, (), const)))
 
 using known_shapes = std::variant<circle, square>;
 
@@ -543,13 +543,12 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-TRAIT_(figure, dynamic_copyable, (ANY_FN(std::string, draw, (), const)))
+TRAIT(figure, dynamic_copyable, (ANY_FN(std::string, draw, (), const)))
 
 using known_and_unknown_shapes = make_vany<figure, circle, square>;
-static_assert(
-    std::same_as<known_and_unknown_shapes,
-                 any<using_<std::variant<any_<figure>, circle, square>>, 
-                    figure>>);
+static_assert(std::same_as<
+              known_and_unknown_shapes,
+              any<using_<std::variant<any_<figure>, circle, square>>, figure>>);
 ANY_MODEL_MAP((std::string), figure) {
   static std::string draw(std::string const& s) { return s; };
 };

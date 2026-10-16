@@ -779,22 +779,17 @@
   __detail_ANYXX_TRAIT_(, n, BASE, l, static_fns, typedefs, v_table_data,     \
                         decoration)
 
-/// \def TRAIT_
-/// \brief TRAIT derived from base.
-/// \ingroup trait_macros
-#define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, , , , ())
-
 /// \def TRAIT
 /// \brief Macro to define the functional behavior for an \ref any.
 /// \ingroup trait_macros
 ///
 /// Example:
 /// \code
-/// TRAIT(sample_trait,
+/// TRAIT(sample_trait, copyable,
 ///   (ANY_FN(std::string, const_fn, (double, std::string const&), const))
 /// )
 /// \endcode
-#define TRAIT(n, fns) TRAIT_(n, anyxx::dynamic_copyable, fns)
+#define TRAIT(n, BASE, l) TRAIT_EX_(n, BASE, l, , , , ())
 
 /// \def TRAIT_EX
 /// \brief TRAIT with decoration.
@@ -884,7 +879,7 @@
 /// \ingroup trait_macros
 /// See \ref ANY for explanation
 #define ANY_(n, BASE, l, proxy_default) \
-  TRAIT_(n, BASE, l)                    \
+  TRAIT(n, BASE, l)                    \
   __detail_ANYXX_ANY_EX_(n, proxy_default)
 
 /// \def ANY
@@ -910,8 +905,8 @@
 /// template <typename Proxy = anyxx::val<><>>
 /// using any_example = anyxx::any<Proxy, example>;
 /// \endcode
-#define ANY(n, l, ...) \
-  TRAIT(n, l)          \
+#define ANY(n, l, ...)                 \
+  TRAIT(n, anyxx::dynamic_copyable, l) \
   __detail_ANYXX_ANY_EX_(n, __VA_ARGS__)
 
 #define __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)                 \

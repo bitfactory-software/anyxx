@@ -8,7 +8,7 @@
 
 namespace algebra {
 
-TRAIT(equal_comparable,
+TRAIT(equal_comparable, anyxx::dynamic_copyable,
       (ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const),
        ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
                   [&x](auto const& r) {
@@ -16,7 +16,7 @@ TRAIT(equal_comparable,
                              using_as<equal_comparable>(r));
                   })))
 
-TRAIT_(semigroup, equal_comparable,
+TRAIT(semigroup, equal_comparable,
        (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const)))
 
 TRAIT_EX_(
@@ -37,7 +37,7 @@ TRAIT_EX_(
                        })),
     , , ())
 
-TRAIT_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)))
+TRAIT(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)))
 
 template <typename V>
 struct semigroup_plus_model_map : semigroup_default_model_map<V> {

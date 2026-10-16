@@ -4,7 +4,7 @@
 
 namespace example_2d {
 
-TRAIT_(has_equal, anyxx::dynamic_copyable, 
+TRAIT(has_equal, anyxx::dynamic_copyable, 
                 (ANY_FN_DEF(public, bool, is_equal, (anyxx::self const&), const,
                             [&x](T const& y) { return x == y; })))
 
@@ -34,7 +34,7 @@ TEST_CASE("example 2da any_has_equal") {
 
 namespace example_2d {
 
-TRAIT_(has_plus, has_equal,
+TRAIT(has_plus, has_equal,
        (ANY_FN_DEF(public, anyxx::self, plus, (anyxx::self const&), const,
                    ([&x](T const& y) {
                      return get_proxy_value(using_as<has_plus>(x) +
