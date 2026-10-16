@@ -16,12 +16,12 @@ TRAIT_TEMPLATE(
                 ([&x](auto const& r) { return !Map{}.eq(x, r); }))))
 
 template <typename L, typename R>
-using trait_as_equal_comparable_to =
+using using_as_equal_comparable_to =
     anyxx::any<anyxx::using_<L>, equal_comparable_to, R>;
 
 // no memory overhead because EBO and there is no vtable: The
 // trait uses static dispatch only.
-static_assert(sizeof(trait_as_equal_comparable_to<int, double>) == sizeof(int));
+static_assert(sizeof(using_as_equal_comparable_to<int, double>) == sizeof(int));
 static_assert(is_equal_comparable_to_model<int, int>);
 static_assert(is_equal_comparable_to_model<int, double>);
 static_assert(is_equal_comparable_to_model<double, double>);
@@ -29,8 +29,8 @@ static_assert(is_equal_comparable_to_model<double, double>);
 template <typename L, typename R>
   requires is_equal_comparable_to_model<L, R> &&
            is_equal_comparable_to_model<R, L>
-void test_equal_comparable_to(trait_as_equal_comparable_to<L, R> const& a,
-                              trait_as_equal_comparable_to<R, L> const& b) {
+void test_equal_comparable_to(using_as_equal_comparable_to<L, R> const& a,
+                              using_as_equal_comparable_to<R, L> const& b) {
   CHECK((a == b) == (b == a));
   CHECK((a != b) == (b != a));
 }
@@ -39,8 +39,8 @@ template <typename L, typename R>
            is_equal_comparable_to_model<R, L>
 void test_equal_comparable_to(L const& a, R const& b) {
   using namespace anyxx;
-  test_equal_comparable_to<L, R>(trait_as<equal_comparable_to, R>(a),
-                                 trait_as<equal_comparable_to, L>(b));
+  test_equal_comparable_to<L, R>(using_as<equal_comparable_to, R>(a),
+                                 using_as<equal_comparable_to, L>(b));
 }
 
 template <typename L, typename Range>
@@ -50,7 +50,7 @@ template <typename L, typename Range>
 void test_equal_comparable_to_range(L const& a, Range const& r) {
   using namespace anyxx;
   using R = std::ranges::range_value_t<Range>;
-  auto a_traited = trait_as<equal_comparable_to, R>(a);
+  auto a_traited = using_as<equal_comparable_to, R>(a);
   auto r_traited = trait_range_as<equal_comparable_to, L>(r);
   CHECK(*std::ranges::begin(r_traited) == a_traited);
   CHECK(a_traited == *std::ranges::begin(r_traited));
@@ -100,10 +100,10 @@ bool native_find(double x) {
   return std::ranges::find_if(test_data, [&](int i) { return x == i; }) !=
          test_data.end();
 }
-bool traited_find(lib_2g::trait_as_equal_comparable_to<double, int> x) {
+bool traited_find(lib_2g::using_as_equal_comparable_to<double, int> x) {
   return std::ranges::find_if(
              test_data,
-             [&](lib_2g::trait_as_equal_comparable_to<int, double> i) {
+             [&](lib_2g::using_as_equal_comparable_to<int, double> i) {
                return x == i;
              }) != test_data.end();
 }
@@ -113,8 +113,8 @@ bool traited_find(lib_2g::trait_as_equal_comparable_to<double, int> x) {
 TEST_CASE("equal_comparable_to static") {
   using namespace anyxx;
   using namespace lib_2g;
-  auto a = trait_as<equal_comparable_to, double>(1);
-  auto b = trait_as<equal_comparable_to, int>(2.0);
+  auto a = using_as<equal_comparable_to, double>(1);
+  auto b = using_as<equal_comparable_to, int>(2.0);
   auto x = a == b;  // simple case
   CHECK(x == false);
 

@@ -19,18 +19,18 @@ TRAIT_EX_(monoid, anyxx::dynamic_copyable,
            ANY_FN_DEF(public, anyxx::self, op, (anyxx::self const&), const,
                       [&x](auto const& r) {
                         std::println("op-default {}", typeid(T).name());
-                        auto self = anyxx::trait_as<monoid>(x);
+                        auto self = using_as<monoid>(x);
                         return get_proxy(self.concat(std::vector{
-                            anyxx::trait_as<monoid>(r)}));  // NOLINT
+                            using_as<monoid>(r)}));  // NOLINT
                       }),
            ANY_FN_DEF(public, anyxx::self, concat,
                       (anyxx::any_self_forward_range const&), const,
                       [&x](const auto& r) {
                         std::println("concat-default {}", typeid(T).name());
-                        auto self = anyxx::trait_as<monoid>(x);
+                        auto self = using_as<monoid>(x);
                         return get_proxy(std::ranges::fold_left(
                             r | std::views::transform([](auto const& y) {
-                              return anyxx::trait_as<monoid>(y);
+                              return using_as<monoid>(y);
                             }),
                             self, [&](auto const& m1, auto const& m2) {
                               return m1.op(m2);
@@ -132,7 +132,7 @@ TEST_CASE("example 2b monoid a") {
 
   test_monoid((1), std::vector{2, 3});
   test_monoid<any<using_<int>, monoid>>(
-      trait_as<monoid>(1), std::vector<any<using_<int>, monoid>>{{2}, {3}});
+      using_as<monoid>(1), std::vector<any<using_<int>, monoid>>{{2}, {3}});
 
   //  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
 }
@@ -143,7 +143,7 @@ TEST_CASE("example 2b monoid b") {
 
   test_monoid("1"s, std::vector{"2"s, "3"s});
   test_monoid<any<using_<std::string>, monoid>>(
-      trait_as<monoid>("1"s),
+      using_as<monoid>("1"s),
       std::vector<any<using_<std::string>, monoid>>{{"2"s}, {"3"s}});
 }
 TEST_CASE("example 2b monoid c") {

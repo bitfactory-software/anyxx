@@ -308,7 +308,7 @@ using use_as_cref = any<using_cref<Type>, Trait, Ts...>;
 /// trait.
 /// See also \ref using_::as.
 template <template <typename...> typename Trait, typename... Ts>
-auto trait_as(auto&& v) {
+auto using_as(auto&& v) {
     return any<using_<std::decay_t<decltype(v)>>, Trait, Ts...>{std::forward<decltype(v)>(v)};
 }
         
@@ -316,7 +316,7 @@ auto trait_as(auto&& v) {
 /// trait.
 /// See also \ref using_cref::as.
 template <template <typename...> typename Trait, typename... Ts>
-auto trait_as_cref(auto const& v) {
+auto using_as_cref(auto const& v) {
     return any<using_cref<std::decay_t<decltype(v)>>, Trait, Ts...>{v};
 }
 

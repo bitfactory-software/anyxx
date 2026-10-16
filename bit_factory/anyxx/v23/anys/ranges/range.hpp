@@ -20,7 +20,7 @@ template <template <typename...> typename Trait, typename... Ts>
 auto trait_range_as(auto&& r) {
   return std::forward<decltype(r)>(r) |
          std::views::transform(
-             [&](auto const& x) { return trait_as<Trait, Ts...>(x); });
+             [&](auto const& x) { return using_as<Trait, Ts...>(x); });
 }
 
 }  // namespace anyxx
