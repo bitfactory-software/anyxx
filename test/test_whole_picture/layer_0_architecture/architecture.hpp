@@ -59,7 +59,7 @@ ANY(surface, (ANY_FN(void, write, (point, char), )), )
 using mutable_observed_surface = any_surface<anyxx::mutref>;
 using unique_surface = any_surface<anyxx::unique>;
 
-TRAIT_EX(shape,
+TRAIT_EX(shape, anyxx::dynamic_copyable,
          (ANY_FN(void, draw, (mutable_observed_surface), const),
           ANY_FN(architecture::point, top_left, (), const),
           ANY_FN(architecture::size, size, (), const)),

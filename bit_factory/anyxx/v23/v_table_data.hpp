@@ -46,38 +46,38 @@ namespace anyxx {
     std::destroy_at(static_cast<Concrete*>(data));                   \
   })
 
-TRAIT_EX_(const_referenceable, observeable, , , , ,
+TRAIT_EX(const_referenceable, observeable, , , , ,
           (using default_proxy_t = cref;));
-TRAIT_EX_(mutable_referenceable, observeable, , , , ,
+TRAIT_EX(mutable_referenceable, observeable, , , , ,
           (using default_proxy_t = mutref;));
 
-TRAIT_EX_(moveable, observeable, , , ,
+TRAIT_EX(moveable, observeable, , , ,
           (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
           (using default_proxy_t = val<>;));
 
-TRAIT_EX_(copyable, moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
+TRAIT_EX(copyable, moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
 
-TRAIT_EX_(typed_observeable, observeable, , , , (ANY_CLASS_TYPE_INFO), ());
+TRAIT_EX(typed_observeable, observeable, , , , (ANY_CLASS_TYPE_INFO), ());
 
-TRAIT_EX_(typed_moveable, typed_observeable, , , ,
+TRAIT_EX(typed_moveable, typed_observeable, , , ,
           (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
           (using default_proxy_t = val<>;));
 
-TRAIT_EX_(typed_copyable, typed_moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
+TRAIT_EX(typed_copyable, typed_moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
 
-TRAIT_EX_(dynamic_castable, typed_observeable, , , ,
+TRAIT_EX(dynamic_castable, typed_observeable, , , ,
           (ANY_CAN_TYPE_SAVE_DOWNCAST, ANY_CAN_TYPE_SAVE_CROSSCAST), ());
 
-TRAIT_EX_(dynamic_deletable, dynamic_castable, , , , (ANY_HAS_DELETE),
+TRAIT_EX(dynamic_deletable, dynamic_castable, , , , (ANY_HAS_DELETE),
           (using default_proxy_t = shared;));
 
-TRAIT_EX_(dynamic_smart_ptr, dynamic_deletable, , , ,
+TRAIT_EX(dynamic_smart_ptr, dynamic_deletable, , , ,
           (ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR), ());
 
-TRAIT_EX_(dynamic_moveable, dynamic_castable, , , ,
+TRAIT_EX(dynamic_moveable, dynamic_castable, , , ,
           (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
           (using default_proxy_t = val<>;));
 
-TRAIT_EX_(dynamic_copyable, dynamic_moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
+TRAIT_EX(dynamic_copyable, dynamic_moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
 }  // namespace anyxx
 

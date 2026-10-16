@@ -235,7 +235,7 @@ struct square {
   [[nodiscard]] std::string name() const { return "square"; }
 };
 
-TRAIT_EX_(figure, anyxx::dynamic_copyable,
+TRAIT_EX(figure, anyxx::dynamic_copyable,
           (ANY_FN(std::string, name, (), const)), , , (ANY_OPEN_DISPATCH), ())
 
 anyxx::dispatch<std::partial_ordering(anyxx::virtual_<anyxx::any_<figure>>,
@@ -324,7 +324,7 @@ struct square {
   [[nodiscard]] std::string name() const { return "square"; }
 };
 
-TRAIT_EX_(figure, anyxx::dynamic_copyable,
+TRAIT_EX(figure, anyxx::dynamic_copyable,
           (ANY_FN(std::string, name, (), const)), , , (ANY_OPEN_DISPATCH), ())
 using any_figure = anyxx::any_<figure>;
 

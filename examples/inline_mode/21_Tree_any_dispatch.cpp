@@ -11,7 +11,7 @@ using namespace anyxx;
 
 namespace _21_Tree_TE_interface_dispatch {
 
-TRAIT_EX(node, , , , (ANY_OPEN_DISPATCH), ())
+TRAIT_EX(node, anyxx::dynamic_copyable, , , , (ANY_OPEN_DISPATCH), ())
 using any_node = anyxx::any<anyxx::cow, node>;
 
 struct Plus {
@@ -90,7 +90,7 @@ TEST_CASE("21_Tree any++ open method") {
                "/Ob2)' is used!\n";
   BENCHMARK("21_Tree any++ open method evaluate") { return evaluate(expr); };
   BENCHMARK("21_Tree any++ open method as_lisp") { return as_lisp(expr); };
-#endif  //ANYXX_RUN_BENCHMARKS
+#endif  // ANYXX_RUN_BENCHMARKS
 }
 
 }  // namespace _21_Tree_TE_interface_dispatch

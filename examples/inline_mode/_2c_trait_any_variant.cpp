@@ -19,7 +19,7 @@ struct custom {
   std::string answer;
 };
 
-TRAIT_EX_(value, anyxx::dynamic_copyable,
+TRAIT_EX(value, anyxx::dynamic_copyable,
           (ANY_FN_DEF(public, std::string, to_string, (), const,
                       [&x]() { return std::format("{}", x); }),
            ANY_FN_DEF(public, void, from_string, (std::string_view), ,

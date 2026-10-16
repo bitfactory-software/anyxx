@@ -19,7 +19,7 @@ TRAIT(equal_comparable, anyxx::dynamic_copyable,
 TRAIT(semigroup, equal_comparable,
        (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const)))
 
-TRAIT_EX_(
+TRAIT_EX(
     monoid, semigroup, ,
     (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
                        []<typename M>(auto class_) {

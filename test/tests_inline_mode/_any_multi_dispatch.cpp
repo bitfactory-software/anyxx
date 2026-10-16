@@ -4,16 +4,16 @@
 #include <string>
 
 #ifdef _MSC_VER
-#pragma warning( \
-    disable : 4189)  // local variable is initialized but not referenced
+#pragma warning(disable \
+                : 4189)  // local variable is initialized but not referenced
 #endif
 
 using namespace anyxx;
 using namespace std::literals;
 
 namespace {
-TRAIT_EX(thing, (ANY_FN(std::string, name, (), const)), , , (ANY_OPEN_DISPATCH),
-         ())
+TRAIT_EX(thing, anyxx::dynamic_copyable,
+          (ANY_FN(std::string, name, (), const)), , , (ANY_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::shared>
 using any_thing = anyxx::any<Proxy, thing>;
 
