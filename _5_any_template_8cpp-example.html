@@ -107,17 +107,17 @@ $(function(){initNavTree('_5_any_template_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">namespace </span>{</div>
 <div class="line"> </div>
 <div class="line">TRAIT(stringable, anyxx::dynamic_copyable,</div>
-<div class="line">       (ANY_FN(std::string, to_string, (), <span class="keyword">const</span>)))</div>
+<div class="line">      (ANY_FN(std::string, to_string, (), <span class="keyword">const</span>)))</div>
 <div class="line">template &lt;typename Proxy = val&lt;&gt;&gt;</div>
 <div class="line">using any_to_string = any&lt;Proxy, stringable&gt;;</div>
 <div class="line"> </div>
-<div class="line">TRAIT_TEMPLATE(((KEY), (VALUE)), map,</div>
-<div class="line">               (ANY_FN_EXACT(VALUE const&amp;, at, (KEY const&amp;), const),</div>
-<div class="line">                ANY_FN(std::<span class="keywordtype">size_t</span>, size, (), const)))</div>
+<div class="line">TRAIT_TEMPLATE(((KEY), (VALUE)), map, anyxx::dynamic_copyable, (),</div>
+<div class="line">                (ANY_FN_EXACT(VALUE const&amp;, at, (KEY const&amp;), const),</div>
+<div class="line">                 ANY_FN(std::<span class="keywordtype">size_t</span>, size, (), const)))</div>
 <div class="line">template &lt;typename Key, typename Value, typename Proxy = val&lt;&gt;&gt;</div>
 <div class="line">using any_map = any&lt;Proxy, map, Key, Value&gt;;</div>
 <div class="line"> </div>
-<div class="line">TRAIT_TEMPLATE_(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),</div>
+<div class="line">TRAIT_TEMPLATE(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),</div>
 <div class="line">                (ANY_FN_EXACT(VALUE&amp;, at, (KEY const&amp;), ), ))</div>
 <div class="line">template &lt;typename Key, typename Value, typename Proxy = val&lt;&gt;&gt;</div>
 <div class="line">using any_mutable_map = any&lt;Proxy, mutable_map, Key, Value&gt;;</div>
