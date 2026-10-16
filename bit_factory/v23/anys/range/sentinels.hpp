@@ -24,7 +24,7 @@ sentinel_for(Range&& range) -> sentinel_for<std::ranges::sentinel_t<Range>,
 TRAIT_TEMPLATE_EX_(
     ((ValueType), (Reference)), sentinel, dynamic_copyable, (),
     (ANY_FN_DEF(
-        public, bool, equal,
+        public, bool, equal_to_iterator,
         ((any<anyxx::cref, input_iterator, ValueType, Reference> const&)),
         const,
         [&x](auto const it) {
@@ -35,37 +35,38 @@ TRAIT_TEMPLATE_EX_(
 template <template <typename...> typename SentinelTrait,
           template <typename...> typename IteratorTrait, typename... Args>
 concept is_sentinel_trait_for =
+    is_any_derived_from<any_<SentinelTrait, Args...>, any_<sentinel, Args...>> &&
     requires(any_<SentinelTrait, Args...> const& s,
              any_<IteratorTrait, Args...> const& it) {
-      { s.equal(it) } -> std::convertible_to<bool>;
+      { s.equal_to_iterator(it) } -> std::convertible_to<bool>;
     };
 template <template <typename...> typename SentinelTrait,
           template <typename...> typename IteratorTrait, typename... Args>
   requires(is_sentinel_trait_for<SentinelTrait, IteratorTrait, Args...>)
 bool operator==(any_<IteratorTrait, Args...> const& it,
                 any_<SentinelTrait, Args...> const& s) {
-  return s.equal(it);
+  return s.equal_to_iterator(it);
 }
 template <template <typename...> typename SentinelTrait,
           template <typename...> typename IteratorTrait, typename... Args>
   requires(is_sentinel_trait_for<SentinelTrait, IteratorTrait, Args...>)
 bool operator!=(any_<IteratorTrait, Args...> const& it,
                 any_<SentinelTrait, Args...> const& s) {
-  return !s.equal(it);
+  return !s.equal_to_iterator(it);
 }
 template <template <typename...> typename SentinelTrait,
           template <typename...> typename IteratorTrait, typename... Args>
   requires(is_sentinel_trait_for<SentinelTrait, IteratorTrait, Args...>)
 bool operator==(any_<SentinelTrait, Args...> const& s,
                 any_<IteratorTrait, Args...> const& it) {
-  return s.equal(it);
+  return s.equal_to_iterator(it);
 }
 template <template <typename...> typename SentinelTrait,
           template <typename...> typename IteratorTrait, typename... Args>
   requires(is_sentinel_trait_for<SentinelTrait, IteratorTrait, Args...>)
 bool operator!=(any_<SentinelTrait, Args...> const& s,
                 any_<IteratorTrait, Args...> const& it) {
-  return !s.equal(it);
+  return !s.equal_to_iterator(it);
 }
 
 TRAIT_TEMPLATE_EX_(

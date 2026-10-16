@@ -10,6 +10,7 @@ TEST_CASE("range static assert") {
   static_assert(std::input_iterator<any_<forward_iterator, int, int&>>);
   static_assert(std::input_iterator<any_input_iterator<int, int>>);
   static_assert(std::input_iterator<any_input_iterator<int>>);
+  static_assert(is_compareable_iterator<forward_iterator, iterator_val, int, int>);
   static_assert(std::forward_iterator<any_forward_iterator<int, int>>);
   static_assert(std::forward_iterator<any_forward_iterator<int>>);
   static_assert(

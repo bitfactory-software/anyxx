@@ -6,6 +6,7 @@ namespace anyxx {
 
 inline static constexpr std::size_t iterator_val_proxy_size =
     small_object_size * 2u;
+using iterator_val = nullable_val<iterator_val_proxy_size>;
 
 struct input_iterator_is_nullable {};
 struct input_iterator_val_size {
@@ -16,9 +17,10 @@ struct deduce_type {};
 
 template <typename I, typename IteratorCategory>
 struct iterator_category_impl {
-  using type = std::conditional_t<std::same_as<IteratorCategory, deduce_type>,
-                                  typename std::iterator_traits<I>::iterator_category,
-                                  IteratorCategory>;
+  using type =
+      std::conditional_t<std::same_as<IteratorCategory, deduce_type>,
+                         typename std::iterator_traits<I>::iterator_category,
+                         IteratorCategory>;
 };
 template <typename IteratorCategory>
 struct iterator_category_impl<void*, IteratorCategory> {
@@ -57,8 +59,8 @@ TRAIT_TEMPLATE_EX_(
     ((ValueType), (Reference)), input_iterator, dynamic_copyable, (),
     (ANY_OP_MAP_NAMED(anyxx::self&, ++, op_pre_increment, (), ),
      ANY_OP_MAP_NAMED_UNARY(Reference, *, op_dereference, const),
-     ANY_OP_MAP_NAMED_FRIEND(bool, ==, equal, (anyxx::self const&), const),
-     ANY_OP_MAP_NAMED_FRIEND(bool, !=, inequal, (anyxx::self const&), const)),
+     ANY_FN_DEF(public, bool, equal, (anyxx::self const&), const,
+                [&x](auto const& rhs) { return x == rhs; })),
     ,
     (ANY_TYPE((), iterator_category, std::input_iterator_tag,
               (std::input_iterator_tag)),
@@ -66,10 +68,29 @@ TRAIT_TEMPLATE_EX_(
               (difference_type_impl<T>::type)),
      ANY_TYPE((), value_type, ValueType, (value_type_impl<T, ValueType>::type)),
      ANY_TYPE((), reference, Reference, (reference_impl<T, Reference>::type))),
-    , (using default_proxy_t = nullable_val<iterator_val_proxy_size>;))
+    , (using default_proxy_t = iterator_val;))
 
+template <typename It>
+concept has_iterator_category = requires { typename It::iterator_category; };
 template <typename ValueType, typename Reference = ValueType&>
 using any_input_iterator = any_<input_iterator, ValueType, Reference>;
+template <template <typename...> typename It, typename Proxy, typename... Args>
+concept is_compareable_iterator =
+    (has_iterator_category<any<Proxy, It, Args...>> &&
+     is_any_derived_from<any_<It, Args...>,
+                         any_<input_iterator, Args...>>);
+template <template <typename...> typename It, typename Proxy, typename... Args>
+  requires is_compareable_iterator<It, Proxy, Args...>
+bool operator==(any<Proxy, It, Args...> const& lhs,
+                any<Proxy, It, Args...> const& rhs) {
+  return lhs.equal(rhs);
+}
+template <template <typename...> typename It, typename Proxy, typename... Args>
+  requires is_compareable_iterator<It, Proxy, Args...>
+bool operator!=(any<Proxy, It, Args...> const& lhs,
+                any<Proxy, It, Args...> const& rhs) {
+  return !(rhs == lhs);
+}
 
 TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator, input_iterator,
                    ((ValueType), (Reference)), , ,

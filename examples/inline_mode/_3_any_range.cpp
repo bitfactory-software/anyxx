@@ -324,6 +324,8 @@ using node_const_range =
 }  // namespace
 
 TEST_CASE("example 3 iterator adaptor ") {
+  static_assert(std::forward_iterator<node_iterator>);
+  static_assert(std::forward_iterator<node_const_iterator>);
   static_assert(std::ranges::input_range<node_range>);
   std::unique_ptr<node<int>> nodes(new node<int>(42));
   nodes->append(new node<std::string>("is greater than:"));
