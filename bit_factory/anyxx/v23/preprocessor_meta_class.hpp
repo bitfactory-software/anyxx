@@ -832,32 +832,6 @@
       ((Proxy)), ((Proxy = anyxx::default_proxy<proxy_default>::type)), n)
 
 
-/// \def ANY
-/// \brief Simple ANY macro.
-///
-/// \ingroup trait_macros
-/// The ANY macro uses TRAIT macros to define the functional behavior of an \ref
-/// any. Additionally, it defines the proxy to be used (default_proxy). The
-/// default proxy is val<>. Example:
-/// \code
-/// ANY(example_any,
-///   (ANY_FN(void, example_fn_const, (double, std::string const&), const),
-///    ANY_FN(int, example_fn_mutable, (int), ))
-/// )
-/// \endcode
-/// is equivalent to:
-/// \code
-/// TRAIT(example,
-///   (ANY_FN(void, example_fn_const, (double, std::string const&), const),
-///    ANY_FN(int, example_fn_mutable, (int), ))
-/// )
-///
-/// template <typename Proxy = anyxx::val<><>>
-/// using any_example = anyxx::any<Proxy, example>;
-/// \endcode
-#define ANY(n, l, ...)                 \
-  TRAIT(n, anyxx::dynamic_copyable, l) \
-  __detail_ANYXX_ANY_EX_(n, __VA_ARGS__)
 
 #define __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)                 \
   ANY_META_FUNCTION(_detail_REMOVE_PARENS(t),                                \
@@ -866,40 +840,12 @@
                         _detail_REMOVE_PARENS(t)),                           \
                     n)
 
-/// \def ANY_TEMPLATE_
-/// \brief ANY template with a base.
-/// \ingroup trait_macros
-/// See \ref ANY for explanation
-#define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, proxy_default, static_fns,      \
-                         typedefs, v_table_data, decoration)                \
-  TRAIT_TEMPLATE_EX(t, n, BASE, bt, l, static_fns, typedefs, v_table_data, \
-                     decoration)                                            \
-  __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
-
-/// \def ANY_TEMPLATE_
-/// \brief ANY template with a base.
-/// \ingroup trait_macros
-/// See \ref ANY for explanation
-#define ANY_TEMPLATE_(t, n, BASE, bt, l, proxy_default) \
-  TRAIT_TEMPLATE(t, n, BASE, bt, l)                    \
-  __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
-
 /// \def ANY_TEMPLATE
 /// \brief ANY template.
 /// \ingroup trait_macros
 /// See \ref ANY for explanation
 #define ANY_TEMPLATE(t, n, l, proxy_default) \
   TRAIT_TEMPLATE(t, n, anyxx::dynamic_copyable, (), l)                    \
-  __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
-
-/// \def ANY_TEMPLATE_EX_
-/// \brief ANY template with a base and decoration.
-/// \ingroup trait_macros
-/// See \ref ANY for explanation
-#define ANY_TEMPLATE_EX(t, n, l, proxy_default, static_fns, typedefs,  \
-                        decoration)                                    \
-  TRAIT_TEMPLATE_EX(t, n, anyxx::dynamic_copyable, (), l, static_fns, \
-                     typedefs, , decoration)                           \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
 /// @}

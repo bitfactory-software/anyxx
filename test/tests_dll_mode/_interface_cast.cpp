@@ -13,7 +13,7 @@ using namespace test::component_base;
 
 namespace test::component_base {
 
-ANY(unused_i, (ANY_FN(int, fun, (), const)), cref)
+TRAIT(unused_i, anyxx::dynamic_copyable, (ANY_FN(int, fun, (), const)))
 
 }
 

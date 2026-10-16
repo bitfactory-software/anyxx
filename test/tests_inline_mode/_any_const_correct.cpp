@@ -53,13 +53,15 @@ struct functor {
 
 namespace {
 
-ANY(const_function_i, (ANY_OP(std::string, (), (), const)), )
-ANY(mutating_function_i, (ANY_OP(void, (), (std::string const&), )), )
+TRAIT(const_function_i, anyxx::dynamic_copyable,
+      (ANY_OP(std::string, (), (), const)))
+TRAIT(mutating_function_i, anyxx::dynamic_copyable,
+      (ANY_OP(void, (), (std::string const&), )))
 
-using const_function = any_const_function_i<cref>;
-using mutating_function = any_mutating_function_i<mutref>;
-using shared_const_function = any_const_function_i<shared>;
-using shared_mutating_function = any_mutating_function_i<shared>;
+using const_function = any<cref, const_function_i>;
+using mutating_function = any<mutref, mutating_function_i>;
+using shared_const_function = any<shared, const_function_i>;
+using shared_mutating_function = any<shared, mutating_function_i>;
 
 static_assert(std::is_constructible_v<const_function, functor const>);
 static_assert(std::is_assignable_v<const_function, const_function>);
@@ -178,10 +180,11 @@ struct text_object {
   void set_text(std::string const& t) { text = t; }
 };
 
-TRAIT(text_i_const, anyxx::dynamic_copyable, (ANY_FN(std::string, get_text, (), const)))
+TRAIT(text_i_const, anyxx::dynamic_copyable,
+      (ANY_FN(std::string, get_text, (), const)))
 
 TRAIT(text_i_mutable, text_i_const,
-     (ANY_FN(void, set_text, (std::string const&), )))
+      (ANY_FN(void, set_text, (std::string const&), )))
 }  // namespace
 
 using const_text_i = anyxx::any<anyxx::cref, text_i_const>;

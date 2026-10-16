@@ -12,8 +12,8 @@ struct x_t {
 }  // namespace typed_any_test
 
 namespace typed_any_test {
-ANY(test_i, (ANY_FN(std::string, to_string, (), const),
-             ANY_FN(void, from_string, (std::string_view), )), )
+TRAIT(test_i, anyxx::dynamic_copyable, (ANY_FN(std::string, to_string, (), const),
+             ANY_FN(void, from_string, (std::string_view), )))
 }  // namespace typed_any_test
 
 using namespace typed_any_test;
@@ -21,8 +21,8 @@ using namespace typed_any_test;
 TEST_CASE("typed_any/observer") {
   x_t s{"hallo"};
 
-  any_test_i<cref> co{s};
-  static_assert(is_any<any_test_i<cref>>);
+  any<cref, test_i> co{s};
+  static_assert(is_any<any<cref, test_i>>);
   CHECK_NOTHROW([&] { CHECK(unerase_cast<x_t>(co)->s_ == "hallo"); }());
   CHECK_THROWS_AS(unerase_cast<std::string>(co), type_mismatch_error);
 
@@ -31,7 +31,7 @@ TEST_CASE("typed_any/observer") {
   CHECK((*co_typed).s_ == "hallo");
   CHECK_THROWS_AS(as<std::string>(co), type_mismatch_error);
 
-  any_test_i<mutref> mo{s};
+  any<mutref, test_i> mo{s};
   CHECK(unerase_cast<x_t>(mo)->s_ == "hallo");
   CHECK_THROWS_AS(unerase_cast<std::string>(mo), type_mismatch_error);
 
@@ -64,8 +64,8 @@ concept can_call_from_string = requires(X x, std::string_view s) {
 TEST_CASE("typed_any/observer/test_i") {
   x_t s{"hallo"};
 
-  any_test_i<cref> co{s};
-  static_assert(is_any<any_test_i<cref>>);
+  any<cref, test_i> co{s};
+  static_assert(is_any<any<cref, test_i>>);
   CHECK(unerase_cast<x_t>(co)->s_ == "hallo");
   CHECK_THROWS_AS(unerase_cast<std::string>(co), type_mismatch_error);
 
@@ -77,7 +77,7 @@ TEST_CASE("typed_any/observer/test_i") {
   CHECK(co_typed.to_string() == "hallo");
   CHECK_THROWS_AS(as<std::string>(co), type_mismatch_error);
 
-  any_test_i<mutref> mo{s};
+  any<mutref, test_i> mo{s};
   CHECK(unerase_cast<x_t>(mo)->s_ == "hallo");
   CHECK_THROWS_AS(unerase_cast<std::string>(mo), type_mismatch_error);
 

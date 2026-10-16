@@ -13,10 +13,9 @@ ANY_TEMPLATE(((KEY), (VALUE)), map,
               ANY_FN(std::size_t, size, (), const)),
              anyxx::cref)
 
-ANY_TEMPLATE_(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),
+TRAIT_TEMPLATE(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),
               (ANY_FN_OVERLOAD_EXACT(VALUE&, at, (KEY), ),
-               ANY_OP(VALUE&, [], (KEY), )),
-              anyxx::mutref)
+               ANY_OP(VALUE&, [], (KEY), )))
 
 ANY_TEMPLATE(((KEY), (VALUE)), recursive_map,
              (ANY_FN(VALUE, at, (KEY), const),

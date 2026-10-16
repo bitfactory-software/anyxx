@@ -6,13 +6,13 @@ struct x_t {
   std::string s_;
   [[maybe_unused]][[nodiscard]] std::string get() const { return s_; }
 };
-ANY(has_meta_data, , )
+TRAIT(has_meta_data, anyxx::dynamic_copyable, )
 }  // namespace
 
 TEST_CASE("unerase_cast") {
   using namespace anyxx;
 
-  using value_with_meta_data = any_has_meta_data<shared>;
+  using value_with_meta_data = any<shared, has_meta_data>;
 
   {
     auto e = erased<shared>(std::make_shared<x_t>("hallo"));

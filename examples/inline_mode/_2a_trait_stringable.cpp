@@ -6,10 +6,11 @@
 
 namespace example_2a {
 
-ANY(stringable, (ANY_FN_DEF(public, std::string, to_string, (), const,
-                                      [&x]() { return std::format("{}", x); })), )
+TRAIT(stringable, anyxx::dynamic_copyable,
+      (ANY_FN_DEF(public, std::string, to_string, (), const,
+                  [&x]() { return std::format("{}", x); })))
 
-}
+}  // namespace example_2a
 
 ANY_MODEL_MAP((bool), example_2a::stringable) {
   static std::string to_string(bool const& value) {

@@ -167,7 +167,7 @@ TEST_CASE("multi_dispatch 4") {
 // some compile time self tests
 
 namespace {
-ANY(Dummy, , )
+TRAIT(Dummy, anyxx::dynamic_copyable, )
 
 static_assert(!is_open_dispatch_v_table<Dummy<>::v_table_t>);
 static_assert(is_open_dispatch_v_table<thing<>::v_table_t>);

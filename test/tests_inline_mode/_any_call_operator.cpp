@@ -24,31 +24,29 @@ struct functor2_t {
 }  // namespace
 
 namespace {
-ANY(overloaded_function_object,
-    (ANY_OP(std::string, (), (std::string const&), ),
-     ANY_OP(std::string, (), (), const)),
-    )
+TRAIT(overloaded_function_object, anyxx::dynamic_copyable,
+      (ANY_OP(std::string, (), (std::string const&), ),
+       ANY_OP(std::string, (), (), const)))
 }
 
 namespace {
 template <typename Any>
-concept call_mutable = requires(functor_t functor, std::string s, Any a) {
-  a(" world") == s;
-};
+concept call_mutable =
+    requires(functor_t functor, std::string s, Any a) { a(" world") == s; };
 template <template <typename> typename F, typename OBSERVER>
 concept call_const = requires(functor_t const functor, std::string s) {
-  F<OBSERVER>{functor}() == s;
+  any<OBSERVER, F>{functor}() == s;
 };
 }  // namespace
 
-static_assert(!call_mutable<any_overloaded_function_object<cref>>);
-static_assert(call_const<any_overloaded_function_object, cref>);
-static_assert(call_mutable<any_overloaded_function_object<mutref>>);
-static_assert(!call_const<any_overloaded_function_object, mutref>);
+static_assert(!call_mutable<any<cref, overloaded_function_object>>);
+static_assert(call_const<overloaded_function_object, cref>);
+static_assert(call_mutable<any<mutref, overloaded_function_object>>);
+static_assert(!call_const<overloaded_function_object, mutref>);
 
 TEST_CASE("call_operator overload with mutref") {
   functor_t functor{"hallo"};
-  any_overloaded_function_object<mutref> f{functor};
+  any<mutref, overloaded_function_object> f{functor};
   REQUIRE(f() == "hallo");
   REQUIRE(f(" world") == "hallo");
   REQUIRE(f() == "hallo world");
@@ -65,6 +63,6 @@ TEST_CASE("call_operator overload with mutref") {
 TEST_CASE("make_overloaded_call_operator") {
   functor2_t functor{"hallo"};
 
-  auto f = any_overloaded_function_object<cref>{functor};
+  auto f = any<cref, overloaded_function_object>{functor};
   REQUIRE(f() == "hallo");
 }

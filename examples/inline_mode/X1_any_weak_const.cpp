@@ -12,9 +12,9 @@ struct widget_a {
   [[nodiscard]] std::string get() const { return "widget_a"; }
 };
 
-ANY(widget, (ANY_FN(std::string, get, (), const)), )
+TRAIT(widget, dynamic_copyable, (ANY_FN(std::string, get, (), const)))
 
-any_widget<weak> any_widget_weak;
+any<weak, widget> any_widget_weak;
 
 void observe(int expected_use_count) {
   auto s = std::make_shared<int>(1);
@@ -22,7 +22,7 @@ void observe(int expected_use_count) {
 
   CHECK(get_proxy(any_widget_weak).use_count() == expected_use_count);
   // we have to make a copy of shared pointer before usage:
-  auto any_widget_shared_const = lock<any_widget<shared>>(any_widget_weak);
+  auto any_widget_shared_const = lock<any<shared, widget>>(any_widget_weak);
   if (expected_use_count > 0)
     CHECK(any_widget_shared_const);
   else
@@ -35,9 +35,9 @@ TEST_CASE("example X1/ weak cppreference") {
   // https://en.cppreference.com/w/cpp/memory/weak_ptr.html
   {
     auto any_widget_shared_const =
-        any_widget<shared>{std::make_shared<widget_a>()};
+        any<shared, widget>{std::make_shared<widget_a>()};
     static_assert(
-        borrowable_from<weak, shared, any_widget<shared>::v_table_t>);
+        borrowable_from<weak, shared, any<shared, widget>::v_table_t>);
     any_widget_weak = any_widget_shared_const;
     observe(1);
   }
@@ -45,15 +45,15 @@ TEST_CASE("example X1/ weak cppreference") {
 }
 
 namespace {
-any_widget<shared> load_widget([[maybe_unused]] int id) {
+any<shared, widget> load_widget([[maybe_unused]] int id) {
   return std::make_shared<widget_a>();
 }
 
-static std::map<int, any_widget<weak>> cache;  // out of function for CHECK
+static std::map<int, any<weak, widget>> cache;  // out of function for CHECK
 static std::mutex cache_mutex;
-any_widget<shared> make_widget(int id) {
+any<shared, widget> make_widget(int id) {
   std::lock_guard hold{cache_mutex};
-  return *lock<any_widget<shared>>(cache[id]).or_else([&] -> std::optional<any_widget<shared>> {
+  return *lock<any<shared, widget>>(cache[id]).or_else([&] -> std::optional<any<shared, widget>> {
     auto s = load_widget(id);
     cache[id] = s;
     return s;

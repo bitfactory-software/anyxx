@@ -33,7 +33,7 @@ namespace anyxx {
 /// and
 /// \ref value. All Proxy classes must conform to the \ref is_proxy concept.
 /// \tparam Trait Specifies the functionality of this any. A class of this
-/// type is normally provided via a \ref TRAIT or \ref ANY macro. See there
+/// type is normally provided via a \ref TRAIT macro. See there
 /// for examples. If the proxy is dynamic (i.e., type erased), the Trait must
 /// conform to the \ref has_v_table concept (that means: must provide a
 /// v-Table).

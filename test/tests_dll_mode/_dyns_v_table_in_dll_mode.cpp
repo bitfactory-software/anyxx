@@ -16,7 +16,7 @@ static_assert(anyxx::is_in_dll_mode);
 
 namespace {
 
-ANY(test, (ANY_FN(int, fun, (), const)), cref)
+TRAIT(test, anyxx::dynamic_copyable, (ANY_FN(int, fun, (), const)))
 
 struct test_class {
   [[nodiscard]] int fun() const { return 42; }
