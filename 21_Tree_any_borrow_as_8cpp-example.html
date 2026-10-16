@@ -94,9 +94,9 @@ $(function(){initNavTree('21_Tree_any_borrow_as_8cpp-example.html','',''); });
 <p>factory, serialization and crosscast example</p>
 <div class="fragment"><div class="line"><span class="comment">// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp</span></div>
 <div class="line"> </div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ANY_SINGLETON.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/factory.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;print&gt;</span></div>
@@ -108,17 +108,19 @@ $(function(){initNavTree('21_Tree_any_borrow_as_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>_21_Tree_any_borrow_as {</div>
 <div class="line"> </div>
-<div class="line">ANY_(node, dynamic_deletable, (ANY_FN(<span class="keywordtype">int</span>, value, (), <span class="keyword">const</span>)), )</div>
-<div class="line">ANY_(serializeable, dynamic_deletable, (ANY_FN(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), <span class="keyword">const</span>)), )</div>
+<div class="line">TRAIT(node, dynamic_deletable, (ANY_FN(<span class="keywordtype">int</span>, value, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(serializeable, dynamic_deletable,</div>
+<div class="line">      (ANY_FN(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">template</span> &lt;is_proxy Proxy&gt;</div>
 <div class="line">std::ostream&amp; operator&lt;&lt;(std::ostream&amp; s,</div>
-<div class="line">                         any_serializeable&lt;Proxy&gt; <span class="keyword">const</span>&amp; any) {</div>
+<div class="line">                         any&lt;Proxy, serializeable&gt; <span class="keyword">const</span>&amp; any) {</div>
 <div class="line">  any.serialize(s);</div>
 <div class="line">  <span class="keywordflow">return</span> s;</div>
 <div class="line">}</div>
-<div class="line">ANY_SINGLETON_DECLARE(, deserialize_factory,</div>
-<div class="line">                      factory&lt;any&lt;unique, serializeable&gt;, std::string, std::istream&amp;&gt;);</div>
+<div class="line">ANY_SINGLETON_DECLARE(</div>
+<div class="line">    , deserialize_factory,</div>
+<div class="line">    factory&lt;any&lt;unique, serializeable&gt;, std::string, std::istream&amp;&gt;);</div>
 <div class="line"> </div>
 <div class="line">any&lt;unique, serializeable&gt; deserialize(std::istream&amp; archive) {</div>
 <div class="line">  std::string type;</div>
@@ -137,9 +139,8 @@ $(function(){initNavTree('21_Tree_any_borrow_as_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> serialize_binary(<span class="keyword">auto</span> <span class="keyword">const</span>&amp; self, std::string_view key,</div>
 <div class="line">                      std::ostream&amp; archive) {</div>
-<div class="line">  archive &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot; &quot;</span></div>
-<div class="line">          &lt;&lt; *borrow_as&lt;any_serializeable&lt;cref&gt;&gt;(self.left)</div>
-<div class="line">          &lt;&lt; *borrow_as&lt;any_serializeable&lt;cref&gt;&gt;(self.right);</div>
+<div class="line">  archive &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; *borrow_as&lt;any&lt;cref, serializeable&gt;&gt;(self.left)</div>
+<div class="line">          &lt;&lt; *borrow_as&lt;any&lt;cref, serializeable&gt;&gt;(self.right);</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>Plus {</div>
@@ -147,7 +148,7 @@ $(function(){initNavTree('21_Tree_any_borrow_as_8cpp-example.html','',''); });
 <div class="line">  <span class="keywordtype">void</span> serialize(std::ostream&amp; archive)<span class="keyword"> const </span>{</div>
 <div class="line">    serialize_binary(*<span class="keyword">this</span>, <span class="stringliteral">&quot;Plus &quot;</span>, archive);</div>
 <div class="line">  }</div>
-<div class="line">  any_node&lt;unique&gt; left, right;</div>
+<div class="line">  any&lt;unique, node&gt; left, right;</div>
 <div class="line">};</div>
 <div class="line"><span class="keyword">auto</span> __ = register_deserialize_binary&lt;Plus&gt;(<span class="stringliteral">&quot;Plus&quot;</span>);</div>
 <div class="line"> </div>
@@ -156,7 +157,7 @@ $(function(){initNavTree('21_Tree_any_borrow_as_8cpp-example.html','',''); });
 <div class="line">  <span class="keywordtype">void</span> serialize(std::ostream&amp; archive)<span class="keyword"> const </span>{</div>
 <div class="line">    serialize_binary(*<span class="keyword">this</span>, <span class="stringliteral">&quot;Times &quot;</span>, archive);</div>
 <div class="line">  }</div>
-<div class="line">  any_node&lt;unique&gt; left, right;</div>
+<div class="line">  any&lt;unique, node&gt; left, right;</div>
 <div class="line">};</div>
 <div class="line"><span class="keyword">auto</span> __ = register_deserialize_binary&lt;Times&gt;(<span class="stringliteral">&quot;Times&quot;</span>);</div>
 <div class="line"> </div>
@@ -192,12 +193,12 @@ $(function(){initNavTree('21_Tree_any_borrow_as_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">  std::stringstream archive{</div>
 <div class="line">      <span class="stringliteral">&quot;Plus Integer 1 Plus Times Integer 2 Integer 3 Integer 4 &quot;</span>};</div>
-<div class="line">  <span class="keyword">auto</span> expr = move_to&lt;any_node&lt;unique&gt;&gt;(deserialize(archive));</div>
+<div class="line">  <span class="keyword">auto</span> expr = move_to&lt;any&lt;unique, node&gt;&gt;(deserialize(archive));</div>
 <div class="line">  CHECK(expr.value() == 11);</div>
 <div class="line">  std::stringstream serialized;</div>
-<div class="line">  borrow_as&lt;any_serializeable&lt;cref&gt;&gt;(expr)-&gt;serialize(serialized);</div>
+<div class="line">  borrow_as&lt;any&lt;cref, serializeable&gt;&gt;(expr)-&gt;serialize(serialized);</div>
 <div class="line">  std::println(<span class="stringliteral">&quot;{}&quot;</span>, serialized.str());</div>
-<div class="line">  <span class="keyword">auto</span> expr2 = move_to&lt;any_node&lt;unique&gt;&gt;(deserialize(serialized));</div>
+<div class="line">  <span class="keyword">auto</span> expr2 = move_to&lt;any&lt;unique, node&gt;&gt;(deserialize(serialized));</div>
 <div class="line">  CHECK(expr2.value() == 11);</div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>

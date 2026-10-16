@@ -105,13 +105,14 @@ $(function(){initNavTree('21_Tree_any_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>{</div>
 <div class="line"> </div>
-<div class="line">ANY_(node, dynamic_copyable,</div>
-<div class="line">     (ANY_FN(<span class="keywordtype">int</span>, value, (), <span class="keyword">const</span>), ANY_FN(std::string, as_forth, (), <span class="keyword">const</span>),</div>
-<div class="line">      ANY_FN(std::string, as_lisp, (), <span class="keyword">const</span>)),</div>
-<div class="line">     cow)</div>
+<div class="line">TRAIT(node, dynamic_copyable,</div>
+<div class="line">      (ANY_FN(<span class="keywordtype">int</span>, value, (), <span class="keyword">const</span>), ANY_FN(std::string, as_forth, (), <span class="keyword">const</span>),</div>
+<div class="line">       ANY_FN(std::string, as_lisp, (), <span class="keyword">const</span>)))</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">using </span>any_node = any_&lt;node, cow&gt;;</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>Plus {</div>
-<div class="line">  Plus(any_node&lt;&gt; left, any_node&lt;&gt; right)</div>
+<div class="line">  Plus(any_node left, any_node right)</div>
 <div class="line">      : left_(std::move(left)), right_(std::move(right)) {}</div>
 <div class="line">  [[nodiscard]] <span class="keywordtype">int</span> value()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> left_.value() + right_.value(); }</div>
 <div class="line">  [[nodiscard]] std::string as_forth()<span class="keyword"> const </span>{</div>
@@ -121,11 +122,11 @@ $(function(){initNavTree('21_Tree_any_8cpp-example.html','',''); });
 <div class="line">    <span class="keywordflow">return</span> <span class="stringliteral">&quot;(plus &quot;</span> + left_.as_lisp() + <span class="stringliteral">&quot; &quot;</span> + right_.as_lisp() + <span class="stringliteral">&quot;)&quot;</span>;</div>
 <div class="line">  }</div>
 <div class="line"> </div>
-<div class="line">  any_node&lt;&gt; left_, right_;</div>
+<div class="line">  any_node left_, right_;</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>Times {</div>
-<div class="line">  Times(any_node&lt;&gt; left, any_node&lt;&gt; right)</div>
+<div class="line">  Times(any_node left, any_node right)</div>
 <div class="line">      : left_(std::move(left)), right_(std::move(right)) {}</div>
 <div class="line">  [[nodiscard]] <span class="keywordtype">int</span> value()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> left_.value() * right_.value(); }</div>
 <div class="line">  [[nodiscard]] std::string as_forth()<span class="keyword"> const </span>{</div>
@@ -135,7 +136,7 @@ $(function(){initNavTree('21_Tree_any_8cpp-example.html','',''); });
 <div class="line">    <span class="keywordflow">return</span> <span class="stringliteral">&quot;(times &quot;</span> + left_.as_lisp() + <span class="stringliteral">&quot; &quot;</span> + right_.as_lisp() + <span class="stringliteral">&quot;)&quot;</span>;</div>
 <div class="line">  }</div>
 <div class="line"> </div>
-<div class="line">  any_node&lt;&gt; left_, right_;</div>
+<div class="line">  any_node left_, right_;</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>Integer {</div>
@@ -152,7 +153,7 @@ $(function(){initNavTree('21_Tree_any_8cpp-example.html','',''); });
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;21_Tree_any&quot;</span>) {</div>
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line"> </div>
-<div class="line">  <span class="keyword">auto</span> expr = any_node&lt;&gt;{Times{Integer(2), Plus{Integer(3), Integer(4)}}};</div>
+<div class="line">  <span class="keyword">auto</span> expr = any_node{Times{Integer(2), Plus{Integer(3), Integer(4)}}};</div>
 <div class="line"> </div>
 <div class="line">  <span class="keyword">auto</span> v = expr.value();</div>
 <div class="line">  REQUIRE(v == 14);</div>

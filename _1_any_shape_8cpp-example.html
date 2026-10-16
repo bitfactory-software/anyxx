@@ -155,11 +155,12 @@ $(function(){initNavTree('_1_any_shape_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] <span class="keywordtype">double</span> area()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (perimeter() * apothem()) / 2; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">ANY(drawable, (ANY_FN(<span class="keywordtype">void</span>, draw, (std::ostream&amp;, position), <span class="keyword">const</span>)), )</div>
+<div class="line">TRAIT(drawable, anyxx::dynamic_copyable,</div>
+<div class="line">      (ANY_FN(<span class="keywordtype">void</span>, draw, (std::ostream&amp;, position), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
-<div class="line">ANY_(shape, drawable,</div>
-<div class="line">     (ANY_FN(<span class="keywordtype">int</span>, count_sides, (), <span class="keyword">const</span>), ANY_FN(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>),</div>
-<div class="line">      ANY_FN(<span class="keywordtype">double</span>, perimeter, (), <span class="keyword">const</span>)), )</div>
+<div class="line">TRAIT(shape, drawable,</div>
+<div class="line">      (ANY_FN(<span class="keywordtype">int</span>, count_sides, (), <span class="keyword">const</span>), ANY_FN(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>),</div>
+<div class="line">       ANY_FN(<span class="keywordtype">double</span>, perimeter, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">ANY_MODEL_MAP((std::string), drawable) {</div>
 <div class="line">  <span class="keyword">auto</span> draw(std::string <span class="keyword">const</span>&amp; x, std::ostream&amp; os, position p)<span class="keyword"> const </span>{</div>
@@ -168,16 +169,16 @@ $(function(){initNavTree('_1_any_shape_8cpp-example.html','',''); });
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> draw(std::ostream&amp; os,</div>
-<div class="line">          std::vector&lt;any_drawable&lt;shared&gt;&gt; <span class="keyword">const</span>&amp; any_drawables) {</div>
+<div class="line">          std::vector&lt;any&lt;shared, drawable&gt;&gt; <span class="keyword">const</span>&amp; any_drawables) {</div>
 <div class="line">  <span class="keywordtype">float</span> x = 0.0, y = 0.0;</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; any_drawable : any_drawables)</div>
 <div class="line">    any_drawable.draw(os, position{x++, y++});</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> process(std::ostream&amp; os,</div>
-<div class="line">             std::vector&lt;any_drawable&lt;shared&gt;&gt; <span class="keyword">const</span>&amp; any_drawables,</div>
+<div class="line">             std::vector&lt;any&lt;shared, drawable&gt;&gt; <span class="keyword">const</span>&amp; any_drawables,</div>
 <div class="line">             std::function&lt;<span class="keywordtype">void</span>(std::ostream&amp;,</div>
-<div class="line">                                any_drawable&lt;shared&gt; <span class="keyword">const</span>&amp;)&gt; <span class="keyword">const</span>&amp; command) {</div>
+<div class="line">                                any&lt;shared, drawable&gt; <span class="keyword">const</span>&amp;)&gt; <span class="keyword">const</span>&amp; command) {</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; any_drawable : any_drawables) command(os, any_drawable);</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -200,13 +201,13 @@ $(function(){initNavTree('_1_any_shape_8cpp-example.html','',''); });
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;example 1/2 upcast, downcast&quot;</span>) {</div>
-<div class="line">  std::vector&lt;any_shape&lt;shared&gt;&gt; any_shapes{</div>
+<div class="line">  std::vector&lt;any&lt;shared, shape&gt;&gt; any_shapes{</div>
 <div class="line">      std::make_shared&lt;circle&gt;(12.3),</div>
 <div class="line">      std::make_shared&lt;square&gt;(32),</div>
 <div class="line">      std::make_shared&lt;rectangle&gt;(12, 9),</div>
 <div class="line">      std::make_shared&lt;regular_polygon&gt;(4, 32),</div>
 <div class="line">  };</div>
-<div class="line">  std::vector&lt;any_drawable&lt;shared&gt;&gt; any_drawables;</div>
+<div class="line">  std::vector&lt;any&lt;shared, drawable&gt;&gt; any_drawables;</div>
 <div class="line">  any_drawables.insert(any_drawables.begin(), any_shapes.begin(),</div>
 <div class="line">                       any_shapes.end());</div>
 <div class="line">  any_drawables.emplace_back(std::make_shared&lt;std::string&gt;(<span class="stringliteral">&quot;hello world&quot;</span>));</div>
@@ -222,9 +223,9 @@ $(function(){initNavTree('_1_any_shape_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">  std::stringstream os2;</div>
 <div class="line">  process(os2, any_drawables,</div>
-<div class="line">          [](std::ostream&amp; os, any_drawable&lt;shared&gt; <span class="keyword">const</span>&amp; drawable) {</div>
-<div class="line">            downcast_to&lt;any_shape&lt;shared&gt;&gt;(drawable).and_then(</div>
-<div class="line">                [&amp;](any_shape&lt;shared&gt; <span class="keyword">const</span>&amp; shape) {</div>
+<div class="line">          [](std::ostream&amp; os, any&lt;shared, drawable&gt; <span class="keyword">const</span>&amp; drawable) {</div>
+<div class="line">            downcast_to&lt;any&lt;shared, shape&gt;&gt;(drawable).and_then(</div>
+<div class="line">                [&amp;](any&lt;shared, shape&gt; <span class="keyword">const</span>&amp; shape) {</div>
 <div class="line">                  shape.draw(os, position{});</div>
 <div class="line">                  os &lt;&lt; <span class="stringliteral">&quot;...area: &quot;</span> &lt;&lt; shape.area() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">                  <span class="keywordflow">return</span> std::optional{shape};</div>
