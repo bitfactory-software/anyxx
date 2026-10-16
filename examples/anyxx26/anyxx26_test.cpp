@@ -207,35 +207,35 @@ TEST_CASE("anyxx derived trait") {
 TEST_CASE("anyxx v_table_data") {
 
   base_and_derived a1{ "a1" };
-  any_<anyxx::save_observable> d1{a1};
-  //meta::print_members<any<anyxx::save_observable>>();
-  //meta::print_members<any<anyxx::save_observable>::v_table_t::fptrs_t>();
+  any_<anyxx::typed_observeable> d1{a1};
+  //meta::print_members<any<anyxx::typed_observeable>>();
+  //meta::print_members<any<anyxx::typed_observeable>::v_table_t::fptrs_t>();
   std::println("{}", d1.v_table_->type_info_->name());
   if(auto p = unerase_cast<base_and_derived>(d1)){
       CHECK(p->name == "a1");
   } else{
       CHECK(false);
   }
-  [[maybe_unused]] constexpr auto member_type = ^^anyxx::save_observable<declaration, declaration>::type_info_::type;
+  [[maybe_unused]] constexpr auto member_type = ^^anyxx::typed_observeable<declaration, declaration>::type_info_::type;
   static_assert(std::meta::is_type(member_type));
   static_assert(std::meta::is_type_alias(member_type));
   static_assert(std::meta::is_pointer_type(member_type));
   constexpr auto ctx = std::meta::access_context::current();
-  constexpr static auto members1 = define_static_array(members_of(^^anyxx::save_observable<declaration, declaration>, ctx));
+  constexpr static auto members1 = define_static_array(members_of(^^anyxx::typed_observeable<declaration, declaration>, ctx));
   constexpr auto type_info_struct_meta = members1[0];
   using type = [:type_info_struct_meta:]::type;
   static_assert(std::meta::is_type(^^type));
   static_assert(std::meta::is_type_alias(^^type));
   static_assert(std::meta::is_pointer_type(^^type));
   static_assert(dealias(^^type) == ^^std::type_info const*);
-  static_assert(std::same_as<type, anyxx::save_observable<declaration, declaration>::type_info_::type>);
+  static_assert(std::same_as<type, anyxx::typed_observeable<declaration, declaration>::type_info_::type>);
   //constexpr auto member_type1 = ^^[:type_info_struct_meta:]::type;
 }
 
 namespace {
 
 template <is_trait Trait, typename Self>
-struct operators : save_copyable<Trait, Self> {
+struct operators : typed_copyable<Trait, Self> {
     int const& operator*() const;
     Self operator+(int) const;
     Self& operator++();

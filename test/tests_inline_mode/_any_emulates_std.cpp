@@ -195,7 +195,7 @@ TEST_CASE("std emulated function") {
 }
 
 TEST_CASE("std emulated any") {
-  using any = anyxx::any_<anyxx::save_copyable>;
+  using any = anyxx::any_<anyxx::typed_copyable>;
   {
     auto a1 = any(std::string{"hallo"});
     CHECK(*unerase_cast<std::string>(a1) == "hallo");

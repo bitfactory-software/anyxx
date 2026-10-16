@@ -71,11 +71,6 @@ struct destructor {
 };
 
 // clang-format off
-//template <template <is_trait, typename, typename...> typename Base>
-//struct base {
-//    template <is_trait Trait, typename Self, typename... Args >
-//    using self_apply = Base<Trait, Self, Args...>;
-//};
 struct mutable_referenceable {
     template <is_trait Trait, typename Self, typename...>
     struct self_apply {
@@ -105,28 +100,28 @@ struct moveable {
         using self_apply = copyable<ApplyTrait, ApplSelf>;
     };
 template <is_trait Trait = declaration, typename Self = declaration>
-struct save_observable {
+struct typed_observeable {
     using type_info_ [[= v_table_data]] = anyxx::type_info_;
     template <is_trait ApplyTrait, typename ApplSelf>
-    using self_apply = save_observable<ApplyTrait, ApplSelf>;
+    using self_apply = typed_observeable<ApplyTrait, ApplSelf>;
 };
     template <is_trait Trait = declaration, typename Self = declaration>
-    struct save_moveable : save_observable<Trait, Self> {
+    struct typed_moveable : typed_observeable<Trait, Self> {
         using model_size [[= v_table_data]] = anyxx::model_size;
         using move_constructor [[= v_table_data]] = anyxx::move_constructor;
         using destructor [[= v_table_data]] = anyxx::destructor;
         using default_proxy_t = anyxx::val<>;
         template <is_trait ApplyTrait, typename ApplSelf>
-        using self_apply = save_moveable<ApplyTrait, ApplSelf>;
+        using self_apply = typed_moveable<ApplyTrait, ApplSelf>;
     };
         template <is_trait Trait = declaration, typename Self = declaration>
-        struct save_copyable : save_moveable<Trait, Self> {
+        struct typed_copyable : typed_moveable<Trait, Self> {
             using copy_constructor [[= v_table_data]] = anyxx::copy_constructor;
             template <is_trait ApplyTrait, typename ApplSelf>
-            using self_apply = save_copyable<ApplyTrait, ApplSelf>;
+            using self_apply = typed_copyable<ApplyTrait, ApplSelf>;
         };
     template <is_trait Trait = declaration, typename Self = declaration >
-    struct dynamic_castable : save_observable<Trait, Self> {
+    struct dynamic_castable : typed_observeable<Trait, Self> {
         using is_derived_from_ [[= v_table_data]] = anyxx::is_derived_from_;
         using meta_data_ [[= v_table_data]] = anyxx::meta_data_;
         template <is_trait ApplyTrait, typename ApplSelf>

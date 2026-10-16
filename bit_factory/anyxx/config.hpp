@@ -31,7 +31,7 @@
 #ifndef _DEBUG
 #define ANYXX_RUN_BENCHMARKS
 #endif
-#elseif defined(NDEBUG)
+#elif defined(NDEBUG)
 #define ANYXX_RUN_BENCHMARKS
 #endif
 

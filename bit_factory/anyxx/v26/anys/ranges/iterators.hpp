@@ -6,7 +6,7 @@
 namespace anyxx {
 
 template <is_trait Trait, typename Self, typename Value, typename Ref = Value&>
-struct input_iterator : save_copyable<Trait, Self> {
+struct input_iterator : typed_copyable<Trait, Self> {
     using default_proxy_t = anyxx::nullable_val<>;
 
     bool operator==(Self const&) const;
