@@ -1,5 +1,5 @@
 #include <algorithm>
-#include <bit_factory/v26/trait_as.hpp>
+#include <bit_factory/anyxx/v26/trait_as.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <format>
 #include <string>

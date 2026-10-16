@@ -47,15 +47,15 @@
 #include <bit_factory/anyxx/proxies/static/using_cref.hpp>
 #include <bit_factory/anyxx/proxies/static/using_.hpp>
 #ifdef ANYXX_26
-#include <bit_factory/v26/any.hpp>
-#include <bit_factory/v26/trait_as.hpp>
+#include <bit_factory/anyxx/v26/any.hpp>
+#include <bit_factory/anyxx/v26/trait_as.hpp>
 #else
-#include <bit_factory/v23/any.hpp>
-#include <bit_factory/v23/preprocessor_meta_class.hpp>
-#include <bit_factory/v23/v_table_data.hpp>
-#include <bit_factory/v23/signature_handling.hpp>
-#include <bit_factory/v23/v_table_holder/v_table_holder_dyn.hpp>
-#include <bit_factory/v23/v_table_holder/v_table_holder_static.hpp>
+#include <bit_factory/anyxx/v23/any.hpp>
+#include <bit_factory/anyxx/v23/preprocessor_meta_class.hpp>
+#include <bit_factory/anyxx/v23/v_table_data.hpp>
+#include <bit_factory/anyxx/v23/signature_handling.hpp>
+#include <bit_factory/anyxx/v23/v_table_holder/v_table_holder_dyn.hpp>
+#include <bit_factory/anyxx/v23/v_table_holder/v_table_holder_static.hpp>
 #endif  // !ANYXX_26
 
 

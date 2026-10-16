@@ -1,0 +1,16 @@
+#pragma once
+
+#include <bit_factory/anyxx/v26/anys/ranges/view_base.hpp>
+#include <bit_factory/anyxx/v26/anys/ranges/sentinels.hpp>
+
+namespace anyxx {
+
+template <is_trait Trait, typename Self, typename Category, typename Value, typename Ref = Value&>
+struct view : view_base<Trait, Self, Category, Value, Ref> {
+
+    static any_<sentinel, Value, Ref> end(Self const& self) {
+        return sentinel_for(self);
+    }
+};
+
+}
