@@ -1,23 +1,15 @@
 #pragma once
 
-#include <bit_factory/v26/anys/range/view_base.hpp>
-#include <bit_factory/v26/anys/range/sentinels.hpp>
+#include <bit_factory/v23/anys/range/sentinels.hpp>
+#include <bit_factory/v23/anys/range/view_base.hpp>
 
 namespace anyxx {
 
-template <is_trait Trait, typename Self, typename Category, typename Value, typename Ref = Value&>
-struct sized_view : view_base<Trait, Self, Category, Value, Ref> {
+TRAIT_TEMPLATE_(((AnyIterator)), sized_view, view_base, ((AnyIterator)),
+    (ANY_FN_DEF(public,
+        (any_<sized_sentinel, typename AnyIterator::value_type,
+            typename AnyIterator::reference>),
+        end, (), const,
+        [&x]() { return sentinel_for(x); })))
 
-    static any_<sized_sentinel, Value, Ref> end(Self const& self) {
-        return sentinel_for(self);
-    }
-    static std::ptrdiff_t reserve_hint(Self const& self) {
-#ifdef __cpp_lib_ranges_reserve_hint
-        return std::ranges::reserve_hint(self);
-#else
-        return std::ranges::size(self);
-#endif
-    }
-};
-
-}
+}  // namespace anyxx

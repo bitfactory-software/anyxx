@@ -77,8 +77,7 @@ using any_input_iterator = any_<input_iterator, ValueType, Reference>;
 template <template <typename...> typename It, typename Proxy, typename... Args>
 concept is_compareable_iterator =
     (has_iterator_category<any<Proxy, It, Args...>> &&
-     is_any_derived_from<any_<It, Args...>,
-                         any_<input_iterator, Args...>>);
+     is_any_derived_from<any_<It, Args...>, any_<input_iterator, Args...>>);
 template <template <typename...> typename It, typename Proxy, typename... Args>
   requires is_compareable_iterator<It, Proxy, Args...>
 bool operator==(any<Proxy, It, Args...> const& lhs,
@@ -115,6 +114,14 @@ using any_bidirectional_iterator =
     any_<bidirectional_iterator, ValueType, Reference>;
 
 TRAIT_TEMPLATE_EX_(
+    ((ValueType), (Reference)), random_access_iterator1, bidirectional_iterator,
+    ((ValueType), (Reference)),
+    (ANY_OP_MAP_NAMED_FRIEND(bool, <, less, (anyxx::self const&), const)), ,
+    (ANY_TYPE((), iterator_category, std::random_access_iterator_tag,
+              (std::random_access_iterator_tag))),
+    , ())
+
+TRAIT_TEMPLATE_EX_(
     ((ValueType), (Reference)), random_access_iterator, bidirectional_iterator,
     ((ValueType), (Reference)),
     (ANY_OP_MAP_NAMED_FRIEND(bool, <, less, (anyxx::self const&), const),
@@ -122,12 +129,10 @@ TRAIT_TEMPLATE_EX_(
      ANY_OP_MAP_NAMED_FRIEND(bool, <=, less_equal, (anyxx::self const&), const),
      ANY_OP_MAP_NAMED_FRIEND(bool, >=, greater_equal, (anyxx::self const&),
                              const),
-     ANY_OP_MAP_NAMED_FRIEND(anyxx::self&, +=, plus_assign, (std::ptrdiff_t),
-                             const),
-     ANY_OP_MAP_NAMED_FRIEND(anyxx::self&, -=, minus_assign, (std::ptrdiff_t),
-                             const),
-     ANY_OP_MAP_NAMED_FRIEND(anyxx::self, +, plus, (std::ptrdiff_t), const),
-     ANY_OP_MAP_NAMED_FRIEND(anyxx::self, -, minus, (std::ptrdiff_t), const),
+     ANY_OP_MAP_NAMED(anyxx::self&, +=, plus_assign, (std::ptrdiff_t), ),
+     ANY_OP_MAP_NAMED(anyxx::self&, -=, minus_assign, (std::ptrdiff_t), ),
+     ANY_OP_MAP_NAMED(anyxx::self, +, plus, (std::ptrdiff_t), const),
+     ANY_OP_MAP_NAMED(anyxx::self, -, minus, (std::ptrdiff_t), const),
      ANY_FN_DEF(public, std::ptrdiff_t, difference_to, (anyxx::self const&),
                 const, [&x](auto const& rhs) { return x - rhs; }),
      ANY_OP_MAP_NAMED(Reference, [], at, (std::ptrdiff_t), const)),
