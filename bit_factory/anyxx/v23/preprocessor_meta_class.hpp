@@ -776,7 +776,7 @@
 /// behavior of base is inherited. The decoration are additional functions and
 /// typedefs (in brackets).
 #define TRAIT_EX(n, BASE, l, static_fns, typedefs, v_table_data, decoration) \
-  __detail_ANYXX_TRAIT_(, n, BASE, l, static_fns, typedefs, v_table_data,     \
+  __detail_ANYXX_TRAIT_(, n, BASE, l, static_fns, typedefs, v_table_data,    \
                         decoration)
 
 /// \def TRAIT
@@ -791,13 +791,13 @@
 /// \endcode
 #define TRAIT(n, BASE, l) TRAIT_EX(n, BASE, l, , , , ())
 
-/// \def TRAIT_TEMPLATE_EX_
+/// \def TRAIT_TEMPLATE_EX
 /// \brief TRAIT template with base and decoration.
 /// \ingroup trait_macros
 ///
 /// Macro to define the functional behavior for a \ref any, with decorations.
 /// Decorations are additional functions and typedefs (in brackets).
-#define TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, static_fns,     \
+#define TRAIT_TEMPLATE_EX(t, n, base, base_template_types, l, static_fns,     \
                            typedefs, v_table_data, decoration)                 \
   TRAIT_META_FUNCTION(                                                         \
       _detail_REMOVE_PARENS(t),                                                \
@@ -810,25 +810,11 @@
                               _detail_REMOVE_PARENS(base_template_types)),     \
       l, static_fns, typedefs, v_table_data, decoration)
 
-/// \def TRAIT_TEMPLATE_EX
-/// \brief TRAIT template with decoration.
-/// \ingroup trait_macros
-#define TRAIT_TEMPLATE_EX(t, n, l, static_fns, typedefs, v_table_data, \
-                          decoration)                                  \
-  TRAIT_TEMPLATE_EX_(t, n, anyxx::dynamic_copyable, (), l, static_fns, \
-                     typedefs, v_table_data, decoration)
-
-/// \def TRAIT_TEMPLATE_
+/// \def TRAIT_TEMPLATE
 /// \brief TRAIT template with a base TRAIT.(
 /// \ingroup trait_macros
-#define TRAIT_TEMPLATE_(t, n, base, base_template_types, l) \
-  TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, , , , ())
-
-/// \def TRAIT_TEMPLATE
-/// \brief TRAIT template.
-/// \ingroup trait_macros
-#define TRAIT_TEMPLATE(t, n, l) \
-  TRAIT_TEMPLATE_(t, n, anyxx::dynamic_copyable, (), l)
+#define TRAIT_TEMPLATE(t, n, base, base_template_types, l) \
+  TRAIT_TEMPLATE_EX(t, n, base, base_template_types, l, , , , ())
 
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param
@@ -855,21 +841,21 @@
 /// \ingroup trait_macros
 /// See \ref ANY for explanation
 #define ANY_EX_(n, BASE, l, proxy_default, decoration) \
-  TRAIT_EX(n, BASE, l, decoration)                    \
+  TRAIT_EX(n, BASE, l, decoration)                     \
   __detail_ANYXX_ANY_EX_(n, proxy_default)
 
 /// \brief ANY with decoration
 /// \ingroup trait_macros
 /// See \ref ANY for explanation
-#define ANY_EX(n, l, proxy_default, decoration) \
-  TRAIT_EX(n, anyxx::dynamic_copyable, l, decoration)                    \
+#define ANY_EX(n, l, proxy_default, decoration)       \
+  TRAIT_EX(n, anyxx::dynamic_copyable, l, decoration) \
   __detail_ANYXX_ANY_EX_(n, proxy_default)
 
 /// \brief ANY with a base
 /// \ingroup trait_macros
 /// See \ref ANY for explanation
 #define ANY_(n, BASE, l, proxy_default) \
-  TRAIT(n, BASE, l)                    \
+  TRAIT(n, BASE, l)                     \
   __detail_ANYXX_ANY_EX_(n, proxy_default)
 
 /// \def ANY
@@ -912,7 +898,7 @@
 /// See \ref ANY for explanation
 #define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, proxy_default, static_fns,      \
                          typedefs, v_table_data, decoration)                \
-  TRAIT_TEMPLATE_EX_(t, n, BASE, bt, l, static_fns, typedefs, v_table_data, \
+  TRAIT_TEMPLATE_EX(t, n, BASE, bt, l, static_fns, typedefs, v_table_data, \
                      decoration)                                            \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
@@ -921,7 +907,7 @@
 /// \ingroup trait_macros
 /// See \ref ANY for explanation
 #define ANY_TEMPLATE_(t, n, BASE, bt, l, proxy_default) \
-  TRAIT_TEMPLATE_(t, n, BASE, bt, l)                    \
+  TRAIT_TEMPLATE(t, n, BASE, bt, l)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
 /// \def ANY_TEMPLATE
@@ -929,16 +915,17 @@
 /// \ingroup trait_macros
 /// See \ref ANY for explanation
 #define ANY_TEMPLATE(t, n, l, proxy_default) \
-  TRAIT_TEMPLATE(t, n, l)                    \
+  TRAIT_TEMPLATE(t, n, anyxx::dynamic_copyable, (), l)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
 /// \def ANY_TEMPLATE_EX_
 /// \brief ANY template with a base and decoration.
 /// \ingroup trait_macros
 /// See \ref ANY for explanation
-#define ANY_TEMPLATE_EX(t, n, l, proxy_default, static_fns, typedefs, \
-                        decoration)                                   \
-  TRAIT_TEMPLATE_EX(t, n, l, static_fns, typedefs, , decoration)      \
+#define ANY_TEMPLATE_EX(t, n, l, proxy_default, static_fns, typedefs,  \
+                        decoration)                                    \
+  TRAIT_TEMPLATE_EX(t, n, anyxx::dynamic_copyable, (), l, static_fns, \
+                     typedefs, , decoration)                           \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
 /// @}

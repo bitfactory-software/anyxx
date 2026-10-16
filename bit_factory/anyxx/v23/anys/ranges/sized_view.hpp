@@ -5,7 +5,7 @@
 
 namespace anyxx {
 
-TRAIT_TEMPLATE_(((AnyIterator)), sized_view, view_base, ((AnyIterator)),
+TRAIT_TEMPLATE(((AnyIterator)), sized_view, view_base, ((AnyIterator)),
     (ANY_FN_DEF(public,
         (any_<sized_sentinel, typename AnyIterator::value_type,
             typename AnyIterator::reference>),

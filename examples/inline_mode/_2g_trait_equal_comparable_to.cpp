@@ -7,7 +7,7 @@
 namespace lib_2g {
 
 TRAIT_TEMPLATE(
-    ((To)), equal_comparable_to,
+    ((To)), equal_comparable_to, anyxx::dynamic_copyable, (),
     (ANY_OP_MAP_NAMED_FRIEND(
          bool, ==, eq, ((anyxx::trait_as<To, equal_comparable_to, T> const&)),
          const),
@@ -129,7 +129,7 @@ TEST_CASE("equal_comparable_to static") {
 TEST_CASE("equal_comparable_to benchmark") {
   using namespace anyxx;
   using namespace lib_2g;
-    
+
 #ifdef ANYXX_RUN_BENCHMARKS
   BENCHMARK("native") { return native_find(1000000 - 1); };
   BENCHMARK("traited") { return traited_find(999999); };

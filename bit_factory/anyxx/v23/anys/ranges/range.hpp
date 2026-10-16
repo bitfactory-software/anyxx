@@ -4,7 +4,7 @@
 
 namespace anyxx {
 
-TRAIT_TEMPLATE_(((AnyIterator)), range, dynamic_copyable, (),
+TRAIT_TEMPLATE(((AnyIterator)), range, dynamic_copyable, (),
                 (ANY_FN(AnyIterator, begin, (), const),
                  ANY_FN(AnyIterator, end, (), const)))
 

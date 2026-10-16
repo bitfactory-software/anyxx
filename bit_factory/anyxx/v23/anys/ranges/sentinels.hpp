@@ -21,7 +21,7 @@ template <std::ranges::range Range>
 sentinel_for(Range&& range) -> sentinel_for<std::ranges::sentinel_t<Range>,
                                             std::ranges::iterator_t<Range>>;
 
-TRAIT_TEMPLATE_EX_(
+TRAIT_TEMPLATE_EX(
     ((ValueType), (Reference)), sentinel, dynamic_copyable, (),
     (ANY_FN_DEF(
         public, bool, equal_to_iterator,
@@ -69,7 +69,7 @@ bool operator!=(any_<SentinelTrait, Args...> const& s,
   return !s.equal_to_iterator(it);
 }
 
-TRAIT_TEMPLATE_EX_(
+TRAIT_TEMPLATE_EX(
     ((ValueType), (Reference)), sized_sentinel, sentinel,
     ((ValueType), (Reference)),
     (ANY_FN_DEF(public, std::ptrdiff_t, subtract,

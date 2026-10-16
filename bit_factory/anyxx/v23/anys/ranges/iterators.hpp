@@ -55,7 +55,7 @@ struct reference_impl<void*, Reference> {
   using type = Reference;
 };
 
-TRAIT_TEMPLATE_EX_(
+TRAIT_TEMPLATE_EX(
     ((ValueType), (Reference)), input_iterator, dynamic_copyable, (),
     (ANY_OP_MAP_NAMED(anyxx::self&, ++, op_pre_increment, (), ),
      ANY_OP_MAP_NAMED_UNARY(Reference, *, op_dereference, const),
@@ -91,7 +91,7 @@ bool operator!=(any<Proxy, It, Args...> const& lhs,
   return !(rhs == lhs);
 }
 
-TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator, input_iterator,
+TRAIT_TEMPLATE_EX(((ValueType), (Reference)), forward_iterator, input_iterator,
                    ((ValueType), (Reference)), , ,
                    (ANY_TYPE((), iterator_category, std::forward_iterator_tag,
                              (std::forward_iterator_tag))),
@@ -100,7 +100,7 @@ TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator, input_iterator,
 template <typename ValueType, typename Reference = ValueType&>
 using any_forward_iterator = any_<forward_iterator, ValueType, Reference>;
 
-TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), bidirectional_iterator,
+TRAIT_TEMPLATE_EX(((ValueType), (Reference)), bidirectional_iterator,
                    forward_iterator, ((ValueType), (Reference)),
                    (ANY_OP_MAP_NAMED(anyxx::self&, --, op_pre_decrement, (), )),
                    ,
@@ -113,7 +113,7 @@ template <typename ValueType, typename Reference = ValueType&>
 using any_bidirectional_iterator =
     any_<bidirectional_iterator, ValueType, Reference>;
 
-TRAIT_TEMPLATE_EX_(
+TRAIT_TEMPLATE_EX(
     ((ValueType), (Reference)), random_access_iterator1, bidirectional_iterator,
     ((ValueType), (Reference)),
     (ANY_OP_MAP_NAMED_FRIEND(bool, <, less, (anyxx::self const&), const)), ,
@@ -121,7 +121,7 @@ TRAIT_TEMPLATE_EX_(
               (std::random_access_iterator_tag))),
     , ())
 
-TRAIT_TEMPLATE_EX_(
+TRAIT_TEMPLATE_EX(
     ((ValueType), (Reference)), random_access_iterator, bidirectional_iterator,
     ((ValueType), (Reference)),
     (ANY_OP_MAP_NAMED_FRIEND(bool, <, less, (anyxx::self const&), const),
