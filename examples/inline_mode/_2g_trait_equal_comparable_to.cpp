@@ -130,8 +130,8 @@ TEST_CASE("equal_comparable_to benchmark") {
   using namespace anyxx;
   using namespace lib_2g;
     
-#ifndef _DEBUG
+#ifdef ANYXX_RUN_BENCHMARKS
   BENCHMARK("native") { return native_find(1000000 - 1); };
   BENCHMARK("traited") { return traited_find(999999); };
-#endif  // !_DEBUG
+#endif  // ANYXX_RUN_BENCHMARKS
 }

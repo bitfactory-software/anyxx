@@ -66,10 +66,10 @@ TEST_CASE("21_Tree_any") {
   out << expr.as_forth() << " = " << expr.as_lisp() << " = " << expr.value();
   REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
   std::cout << out.str() << "\n";
-#ifndef _DEBUG
+#ifdef ANYXX_RUN_BENCHMARKS
   std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE "
                "/Ob2)' is used!\n";
   BENCHMARK("21_Tree any++ value") { return expr.value(); };
   BENCHMARK("21_Tree any++ as_lisp") { return expr.as_lisp(); };
-#endif  // !_DEBUG
+#endif  // ANYXX_RUN_BENCHMARKS
 }

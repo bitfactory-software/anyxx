@@ -90,12 +90,12 @@ TEST_CASE("21_Tree any++ open method") {
   std::cout << out.str() << "\n";
   REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
 
-#if (defined(_MSC_VER) && !defined(_DEBUG)) || defined(NDEBUG)
+#ifdef ANYXX_RUN_BENCHMARKS
   std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE "
                "/Ob2)' is used!\n";
   BENCHMARK("21_Tree any++ open method evaluate") { return evaluate(expr); };
   BENCHMARK("21_Tree any++ open method as_lisp") { return as_lisp(expr); };
-#endif  // !_DEBUG
+#endif  // !ANYXX_RUN_BENCHMARKS
 }
 
 }  // namespace _21_Tree_TE_interface_dispatch

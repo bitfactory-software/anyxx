@@ -27,6 +27,14 @@
 #include <variant>
 #include <vector>
 
+#if defined(_MSC_VER) 
+#ifndef _DEBUG
+#define ANYXX_RUN_BENCHMARKS
+#endif
+#elseif defined(NDEBUG)
+#define ANYXX_RUN_BENCHMARKS
+#endif
+
 #if defined(__clang__)
 #pragma GCC diagnostic ignored "-Wcast-function-type-mismatch"
 #pragma GCC diagnostic ignored "-Wmicrosoft-template-shadow"

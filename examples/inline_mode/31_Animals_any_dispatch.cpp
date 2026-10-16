@@ -103,9 +103,9 @@ TEST_CASE("31_Animals any dispatch") {
         encounter_result{&typeid(man), encounter_action::shakes_hands_with,
                          &typeid(man)});
 
-#ifndef _DEBUG
+#ifdef ANYXX_RUN_BENCHMARKS
   std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE "
                "/Ob2)' is used!\n";
-  BENCHMARK("30a_Animals any dispatch") { return apply_encounters(creatures); };
-#endif  // !_DEBUG
+  BENCHMARK("31_Animals any dispatch") { return apply_encounters(creatures); };
+#endif  // ANYXX_RUN_BENCHMARKS
 }

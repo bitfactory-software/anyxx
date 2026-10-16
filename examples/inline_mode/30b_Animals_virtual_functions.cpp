@@ -175,9 +175,9 @@ TEST_CASE("30b_Animals virtual functions") {
         encounter_result{&typeid(man), encounter_action::shakes_hands_with,
                          &typeid(man)});
 
-#ifndef _DEBUG
-  BENCHMARK("30a_Animals virtual functions") {
+#ifdef ANYXX_RUN_BENCHMARKS
+  BENCHMARK("30b_Animals virtual functions") {
     return apply_encounters(creatures);
   };
-#endif  // !_DEBUG
+#endif  // ANYXX_RUN_BENCHMARKS
 }
