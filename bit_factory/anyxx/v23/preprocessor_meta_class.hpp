@@ -750,8 +750,6 @@
 ///
 /// Name conventions:
 /// - TRAIT: macro to define the functional behavior of an \ref any
-/// - ANY: macro to define a \ref trait and a using for an \ref any based on
-/// this with a template parameter for the proxy.
 /// - EX: macro with decorations (additional functions and typedefs in
 /// brackets). A decoration can be any valid C++ code fragment in the context of
 /// the trait jacket
@@ -761,10 +759,6 @@
 /// Syntax:
 ///
 /// TRAIT[_TEMPLATE][_EX][_]
-///     ([template_types], name, [base, base_template_types,]
-///         function_list[,(decoration)])
-///
-/// ANY[_TEMPLATE][_EX][_]
 ///     ([template_types], name, [base, base_template_types,]
 ///         function_list[,(decoration)])
 ///
@@ -837,26 +831,6 @@
   __detail_ANYXX_ANY_CMF(                        \
       ((Proxy)), ((Proxy = anyxx::default_proxy<proxy_default>::type)), n)
 
-/// \brief ANY with a base and decoration
-/// \ingroup trait_macros
-/// See \ref ANY for explanation
-#define ANY_EX_(n, BASE, l, proxy_default, decoration) \
-  TRAIT_EX(n, BASE, l, decoration)                     \
-  __detail_ANYXX_ANY_EX_(n, proxy_default)
-
-/// \brief ANY with decoration
-/// \ingroup trait_macros
-/// See \ref ANY for explanation
-#define ANY_EX(n, l, proxy_default, decoration)       \
-  TRAIT_EX(n, anyxx::dynamic_copyable, l, decoration) \
-  __detail_ANYXX_ANY_EX_(n, proxy_default)
-
-/// \brief ANY with a base
-/// \ingroup trait_macros
-/// See \ref ANY for explanation
-#define ANY_(n, BASE, l, proxy_default) \
-  TRAIT(n, BASE, l)                     \
-  __detail_ANYXX_ANY_EX_(n, proxy_default)
 
 /// \def ANY
 /// \brief Simple ANY macro.

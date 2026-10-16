@@ -178,14 +178,14 @@ struct text_object {
   void set_text(std::string const& t) { text = t; }
 };
 
-ANY(text_i_const, (ANY_FN(std::string, get_text, (), const)), )
+TRAIT(text_i_const, anyxx::dynamic_copyable, (ANY_FN(std::string, get_text, (), const)))
 
-ANY_(text_i_mutable, text_i_const,
-     (ANY_FN(void, set_text, (std::string const&), )), )
+TRAIT(text_i_mutable, text_i_const,
+     (ANY_FN(void, set_text, (std::string const&), )))
 }  // namespace
 
-using const_text_i = any_text_i_const<cref>;
-using const_text_i_mutable = any_text_i_const<mutref>;
+using const_text_i = anyxx::any<anyxx::cref, text_i_const>;
+using const_text_i_mutable = anyxx::any<anyxx::mutref, text_i_const>;
 
 template <class C>
 concept can_call_get_text = requires(C c) {
@@ -203,9 +203,9 @@ static_assert(can_call_get_text<const_text_i const>);
 static_assert(!can_call_set_text<const_text_i>);
 static_assert(!can_call_set_text<const_text_i const>);
 
-using mutable_text_i_const = any_text_i_mutable<cref>;
-using mutable_text_i_mutable = any_text_i_mutable<mutref>;
-static_assert(std::same_as<mutable_text_i_mutable::proxy_t, mutref>);
+using mutable_text_i_const = anyxx::any<anyxx::cref, text_i_mutable>;
+using mutable_text_i_mutable = anyxx::any<anyxx::mutref, text_i_mutable>;
+static_assert(std::same_as<mutable_text_i_mutable::proxy_t, anyxx::mutref>);
 
 static_assert(!std::is_const_v<std::remove_reference_t<text_object&&>>);
 static_assert(std::is_const_v<std::remove_reference_t<text_object const&&>>);

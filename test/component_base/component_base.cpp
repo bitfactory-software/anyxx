@@ -19,6 +19,7 @@ static X a_x{3.14};
 
 }  // namespace test::component_base
 
+using namespace anyxx;
 using namespace test::component_base;
 
 //
@@ -27,21 +28,21 @@ ANY_REGISTER_MODEL(X, test::component_base::get_value_i)
 ANY_REGISTER_MODEL(X, test::component_base::set_value_i)
 ANY_REGISTER_MODEL(X, test::component_base::to_string_i)
 
-any_to_string_i<anyxx::cref> test::component_base::get_to_string_i_co() {
-  any_to_string_i<anyxx::cref> i{a_x};
+any<anyxx::cref, to_string_i> test::component_base::get_to_string_i_co() {
+  any<cref, to_string_i> i{a_x};
   auto meta = get_v_table(i)->meta_data_;
   [[maybe_unused]] const std::type_info* type_info = &meta->get_type_info(); // NOLINT
-  static_assert(is_any<any_to_string_i<anyxx::cref>>);
+  static_assert(is_any<any<cref, to_string_i>>);
   [[maybe_unused]] const std::type_info* type_info_1 = &typeid(X);
   assert(type_info == type_info_1);
   [[maybe_unused]] auto s = i.to_string();
   return i;
 }
-any_to_string_i<anyxx::shared> test::component_base::get_to_string_i_sc(
+any<anyxx::shared, to_string_i> test::component_base::get_to_string_i_sc(
     double v) {
   return std::make_shared<X>(v);
 }
-any_to_string_i<anyxx::unique> test::component_base::get_to_string_i_u(double v) {
+any<anyxx::unique, to_string_i> test::component_base::get_to_string_i_u(double v) {
   return std::make_unique<X>(v);
 }
 

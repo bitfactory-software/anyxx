@@ -22,7 +22,7 @@ struct X {
   [[nodiscard]] std::string operator()() const { return s_; }
 };
 
-ANY_(stringable, dynamic_deletable, (ANY_OP(std::string, (), (), const)), )
+TRAIT(stringable, dynamic_deletable, (ANY_OP(std::string, (), (), const)))
 TRAIT(slick_stringable, observeable, (ANY_OP(std::string, (), (), const)))
 
 struct Y {
@@ -66,7 +66,7 @@ TEST_CASE("slick_stringable observeable_v_table") {
 }
 
 TEST_CASE("any lifetime cast") {
-  const any_stringable<shared> sc{std::make_shared<X>("hallo")};
+  const any<shared, stringable> sc{std::make_shared<X>("hallo")};
   REQUIRE(sc() == "hallo");
   REQUIRE(is_derived_from<any_<dynamic_deletable>>(sc));
 
@@ -85,30 +85,30 @@ TEST_CASE("any lifetime cast") {
     CHECK(false);
   }
 
-  static_assert(std::same_as<any_stringable<cref>::v_table_t,
-                             any_stringable<shared>::v_table_t>);
-  static_assert(std::derived_from<any_stringable<shared>::v_table_t,
-                                  any_stringable<cref>::v_table_t>);
-  any_stringable<cref> co{sc};  // NOLINT
+  static_assert(std::same_as<any<cref, stringable>::v_table_t,
+                             any<shared, stringable>::v_table_t>);
+  static_assert(std::derived_from<any<shared, stringable>::v_table_t,
+                                  any<cref, stringable>::v_table_t>);
+  any<cref, stringable> co{sc};  // NOLINT
   REQUIRE(co() == "hallo");
-  static_assert(std::same_as<any_stringable<cref>::v_table_t,
-                             any_stringable<shared>::v_table_t>);
+  static_assert(std::same_as<any<cref, stringable>::v_table_t,
+                             any<shared, stringable>::v_table_t>);
   REQUIRE(is_derived_from<any<cref, dynamic_deletable>>(co));
 
-  any_stringable<unique> u{std::make_unique<X>("hallo")};  // NOLINT
+  any<unique, stringable> u{std::make_unique<X>("hallo")};  // NOLINT
   REQUIRE(u() == "hallo");
-  static_assert(!is_typed_any<any_stringable<unique>>);
-  static_assert(is_any<any_stringable<unique>>);
+  static_assert(!is_typed_any<any<unique, stringable>>);
+  static_assert(is_any<any<unique, stringable>>);
   static_assert(
-      !constructibile_for<any_stringable<unique>,
-                          any_stringable<mutref>::proxy_t, stringable<>>);
-  static_assert(std::derived_from<any_stringable<mutref>::v_table_t,
-                                  any_stringable<unique>::v_table_t>);
-  any_stringable<mutref> mo{u};
+      !constructibile_for<any<unique, stringable>,
+                          any<mutref, stringable>::proxy_t, stringable<>>);
+  static_assert(std::derived_from<any<mutref, stringable>::v_table_t,
+                                  any<unique, stringable>::v_table_t>);
+  any<mutref, stringable> mo{u};
   REQUIRE(mo() == "hallo");
 
-  any_stringable<unique> u1{std::make_unique<X>("hallo")};
+  any<unique, stringable> u1{std::make_unique<X>("hallo")};
   REQUIRE(u1() == "hallo");
-  any_stringable<cref> co_from_u{u1};
+  any<cref, stringable> co_from_u{u1};
   REQUIRE(co_from_u() == "hallo");
 }

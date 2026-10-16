@@ -11,13 +11,14 @@ using namespace anyxx;
 
 namespace {
 
-ANY_(node, dynamic_copyable,
-     (ANY_FN(int, value, (), const), ANY_FN(std::string, as_forth, (), const),
-      ANY_FN(std::string, as_lisp, (), const)),
-     cow)
+TRAIT(node, dynamic_copyable,
+      (ANY_FN(int, value, (), const), ANY_FN(std::string, as_forth, (), const),
+       ANY_FN(std::string, as_lisp, (), const)))
+
+using any_node = any_<node, cow>;
 
 struct Plus {
-  Plus(any_node<> left, any_node<> right)
+  Plus(any_node left, any_node right)
       : left_(std::move(left)), right_(std::move(right)) {}
   [[nodiscard]] int value() const { return left_.value() + right_.value(); }
   [[nodiscard]] std::string as_forth() const {
@@ -27,11 +28,11 @@ struct Plus {
     return "(plus " + left_.as_lisp() + " " + right_.as_lisp() + ")";
   }
 
-  any_node<> left_, right_;
+  any_node left_, right_;
 };
 
 struct Times {
-  Times(any_node<> left, any_node<> right)
+  Times(any_node left, any_node right)
       : left_(std::move(left)), right_(std::move(right)) {}
   [[nodiscard]] int value() const { return left_.value() * right_.value(); }
   [[nodiscard]] std::string as_forth() const {
@@ -41,7 +42,7 @@ struct Times {
     return "(times " + left_.as_lisp() + " " + right_.as_lisp() + ")";
   }
 
-  any_node<> left_, right_;
+  any_node left_, right_;
 };
 
 struct Integer {
@@ -58,7 +59,7 @@ struct Integer {
 TEST_CASE("21_Tree_any") {
   using namespace anyxx;
 
-  auto expr = any_node<>{Times{Integer(2), Plus{Integer(3), Integer(4)}}};
+  auto expr = any_node{Times{Integer(2), Plus{Integer(3), Integer(4)}}};
 
   auto v = expr.value();
   REQUIRE(v == 14);

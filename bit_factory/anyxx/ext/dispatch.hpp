@@ -276,11 +276,15 @@ class dispatch;
 /// Each trait of the \ref any tagged as virtual must have open
 /// dispatch enabled. To enable open dispatch, declare a struct named
 /// 'trait_name'_has_open_dispatch.
+/// 
+/// 
+/// open dispatch evaluate, returns int, dispatched via an
+/// any_<node>:
 /// \code
 /// struct node_has_open_dispatch {};
-/// ANY(node<>, , )
+/// TRAIT(node, dynamic_copyable, )
 /// // open dispatch evaluate, returns int, dispatched via an
-/// any_node; dispatch<int(virtual_<any_node<>>)> evaluate;
+/// dispatch<int(virtual_<any_<node>>>)> evaluate;
 /// \endcode
 /// Examples are listed here: \ref dispatch
 template <typename R, typename... Args>

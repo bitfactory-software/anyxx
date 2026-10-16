@@ -11,7 +11,7 @@
 
 namespace anyxx {
 
-class unkonwn_factory_key_error : public error {
+class unknown_factory_key_error : public error {
   using error::error;
 };
 /// \brief A key type for factory registration.
@@ -45,11 +45,11 @@ class factory {
     if (auto found = factory_map_.find(key); found != factory_map_.end())
       return found->second(std::forward<Args>(args)...);
     if constexpr (std::same_as<Key, std::string>) {
-      throw unkonwn_factory_key_error{key};
+      throw unknown_factory_key_error{key};
     } else if constexpr (is_key<Key>) {
-      throw unkonwn_factory_key_error{key.label};
+      throw unknown_factory_key_error{key.label};
     } else {
-      throw unkonwn_factory_key_error{std::to_string(key)};
+      throw unknown_factory_key_error{std::to_string(key)};
     }
   };
 

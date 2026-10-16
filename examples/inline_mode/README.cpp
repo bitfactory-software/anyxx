@@ -389,17 +389,16 @@ struct square {
 };
 
 struct figure_has_open_dispatch {};
-ANY_(figure, ayx::dynamic_copyable, (ANY_FN(double, area, (), const)),
-     ayx::val<>)
-ANY_(serializable, ayx::dynamic_copyable,
-     (ANY_FN(void, serialize, (std::ostream&), const)), ayx::cref)
+TRAIT(figure, ayx::dynamic_copyable, (ANY_FN(double, area, (), const)))
+TRAIT(serializable, ayx::dynamic_copyable,
+     (ANY_FN(void, serialize, (std::ostream&), const)))
 
 ayx::factory<ayx::any_<serializable>, std::string, std::istream&> deserialize;
 
-[[nodiscard]] any_figure<> deserialize_any_figure(std::istream& archive) {
+[[nodiscard]] ayx::any_<figure> deserialize_any_figure(std::istream& archive) {
   std::string type;
   archive >> type;
-  return ayx::move_to<any_figure<>>(deserialize.construct(type, archive));
+  return ayx::move_to<ayx::any_<figure>>(deserialize.construct(type, archive));
 }
 
 ANY_MODEL_MAP((circle), serializable) {
@@ -428,14 +427,14 @@ auto __ = deserialize.register_("square", [](std::istream& archive) {
 ANY_REGISTER_MODEL(square, figure);
 ANY_REGISTER_MODEL(square, serializable);
 
-void areas(std::stringstream& os, std::vector<any_figure<>> const& figures) {
+void areas(std::stringstream& os, std::vector<ayx::any_<figure>> const& figures) {
   std::string sep;
   for (auto const& f : figures) os << std::exchange(sep, ", ") << f.area();
 }
 
 TEST_CASE("Showcase5") {
   std::stringstream archive{": circle 1 : square 2 : circle 3 : circle 4 end"};
-  std::vector<any_figure<>> figures;
+  std::vector<ayx::any_<figure>> figures;
   std::string more;
   for (archive >> more; more != "end"; archive >> more)
     figures.push_back(deserialize_any_figure(archive));
@@ -447,7 +446,7 @@ TEST_CASE("Showcase5") {
   std::stringstream serialized;
   for (auto const& f : figures) {
     serialized << ": ";
-    ayx::borrow_as<any_serializable<ayx::cref>>(f)->serialize(serialized);
+    ayx::borrow_as<ayx::any<ayx::cref, serializable>>(f)->serialize(serialized);
   }
   serialized << "end";
 

@@ -1,6 +1,6 @@
+#include <bit_factory/anyxx.hpp>
 #include <bit_factory/anyxx/ANY_SINGLETON.hpp>
 #include <bit_factory/anyxx/ext/factory.hpp>
-#include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <format>
 #include <print>
@@ -12,13 +12,14 @@ using namespace std::literals;
 namespace {
 namespace example {
 
-ANY_(thing, dynamic_deletable, , )
+TRAIT(thing, dynamic_deletable, )
 
 class asteroid {};
 
 class spaceship {};
 
-ANY_SINGLETON_DECLARE(, thing_factory, factory<any<unique, thing>, std::string>);
+ANY_SINGLETON_DECLARE(, thing_factory,
+                      factory<any<unique, thing>, std::string>);
 
 auto __ = thing_factory.register_("asteroid", []() { return asteroid{}; });
 auto __ = thing_factory.register_("spaceship", []() { return spaceship{}; });
@@ -38,7 +39,7 @@ TEST_CASE("factory1") {
 }
 
 TEST_CASE("factory2") {
-  std::vector<any_thing<unique>> things;
+  std::vector<any<unique, thing>> things;
   std::stringstream archive{"asteroid spaceship"};
   while (archive) {
     std::string key;
@@ -49,17 +50,17 @@ TEST_CASE("factory2") {
   CHECK(get_type_info(things[1]) == typeid(spaceship));
 }
 
-ANY_(stringable, dynamic_deletable,
-     (ANY_FN_DEF(public, std::string, to_string, (), const,
-                 [&x]() { return std::format("{}", x); })), )
+TRAIT(stringable, dynamic_deletable,
+      (ANY_FN_DEF(public, std::string, to_string, (), const,
+                  [&x]() { return std::format("{}", x); })))
 
 ANY_SINGLETON_DECLARE(, any_stringable_factory,
                       factory<any<unique, stringable>, std::string>);
 
 auto __ = any_stringable_factory.register_("int", []() { return 42; });
 
-static_assert(
-    std::is_constructible_v<any<shared, stringable>, any<unique, stringable>&&>);
+static_assert(std::is_constructible_v<any<shared, stringable>,
+                                      any<unique, stringable>&&>);
 }  // namespace example
 }  // namespace
 
@@ -81,7 +82,7 @@ TEST_CASE("factory3") {
   auto a1 = f.construct(factory_test_key);
   CHECK(a1.to_string() == "42");
   CHECK_THROWS_AS(f.construct(factory_test_negative_key),
-                  unkonwn_factory_key_error);
+                  unknown_factory_key_error);
 }
 
 }  // namespace example

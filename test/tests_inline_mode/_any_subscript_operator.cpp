@@ -21,10 +21,10 @@ ANY(map_i_to_string_const_and_mutable,
 
 ANY(map_i_to_string_mutable,
     (ANY_OP_EXACT(std::string&, [], (std::size_t), )), )
-ANY_(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
+TRAIT(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
      (ANY_OP_EXACT_OVERLOAD_DEF(
          public, std::string const&, [], subscript, (std::size_t), const,
-         [&x](std::size_t i) -> std::string const& { return x.at(i); })), )
+         [&x](std::size_t i) -> std::string const& { return x.at(i); })))
 
 }  // namespace subscript_operator_test
 }  // namespace
@@ -79,11 +79,11 @@ TEST_CASE("mutable subscript_operator (vector) with mutref") {
   REQUIRE(v_const[0u] == "hallo");
   REQUIRE(v_const[1u] == "world");
 
-  any_map_i_to_string_const_derived_mutable<cref> v_const2{vector};
+  any<cref, map_i_to_string_const_derived_mutable> v_const2{vector};
   REQUIRE(v_const2[0u] == "hallo");
   REQUIRE(v_const2[1u] == "world");
 
-  any_map_i_to_string_const_derived_mutable<mutref> v_mutable{vector};
+  any<mutref, map_i_to_string_const_derived_mutable> v_mutable{vector};
   REQUIRE(v_mutable[0u] == "hallo");
   REQUIRE(v_mutable[1u] == "world");
 
