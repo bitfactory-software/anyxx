@@ -179,12 +179,12 @@ $(function(){initNavTree('21_Tree_any_dispatch_8cpp-example.html','',''); });
 <div class="line">  std::cout &lt;&lt; out.str() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">  REQUIRE(out.str() == <span class="stringliteral">&quot;2 3 4 + * = (times 2 (plus 3 4)) = 14&quot;</span>);</div>
 <div class="line"> </div>
-<div class="line"><span class="preprocessor">#ifndef _DEBUG</span></div>
+<div class="line"><span class="preprocessor">#ifdef ANYXX_RUN_BENCHMARKS</span></div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Ensure &#39;target_compile_options(examples_inline_mode PRIVATE &quot;</span></div>
 <div class="line">               <span class="stringliteral">&quot;/Ob2)&#39; is used!\n&quot;</span>;</div>
 <div class="line">  BENCHMARK(<span class="stringliteral">&quot;21_Tree any++ open method evaluate&quot;</span>) { <span class="keywordflow">return</span> evaluate(expr); };</div>
 <div class="line">  BENCHMARK(<span class="stringliteral">&quot;21_Tree any++ open method as_lisp&quot;</span>) { <span class="keywordflow">return</span> as_lisp(expr); };</div>
-<div class="line"><span class="preprocessor">#endif  </span><span class="comment">// !_DEBUG</span></div>
+<div class="line"><span class="preprocessor">#endif  </span><span class="comment">//ANYXX_RUN_BENCHMARKS</span></div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line">}  <span class="comment">// namespace _21_Tree_TE_interface_dispatch</span></div>

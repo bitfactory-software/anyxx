@@ -160,12 +160,12 @@ $(function(){initNavTree('21_Tree_any_8cpp-example.html','',''); });
 <div class="line">  out &lt;&lt; expr.as_forth() &lt;&lt; <span class="stringliteral">&quot; = &quot;</span> &lt;&lt; expr.as_lisp() &lt;&lt; <span class="stringliteral">&quot; = &quot;</span> &lt;&lt; expr.value();</div>
 <div class="line">  REQUIRE(out.str() == <span class="stringliteral">&quot;2 3 4 + * = (times 2 (plus 3 4)) = 14&quot;</span>);</div>
 <div class="line">  std::cout &lt;&lt; out.str() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line"><span class="preprocessor">#ifndef _DEBUG</span></div>
+<div class="line"><span class="preprocessor">#ifdef ANYXX_RUN_BENCHMARKS</span></div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Ensure &#39;target_compile_options(examples_inline_mode PRIVATE &quot;</span></div>
 <div class="line">               <span class="stringliteral">&quot;/Ob2)&#39; is used!\n&quot;</span>;</div>
 <div class="line">  BENCHMARK(<span class="stringliteral">&quot;21_Tree any++ value&quot;</span>) { <span class="keywordflow">return</span> expr.value(); };</div>
 <div class="line">  BENCHMARK(<span class="stringliteral">&quot;21_Tree any++ as_lisp&quot;</span>) { <span class="keywordflow">return</span> expr.as_lisp(); };</div>
-<div class="line"><span class="preprocessor">#endif  </span><span class="comment">// !_DEBUG</span></div>
+<div class="line"><span class="preprocessor">#endif  </span><span class="comment">// ANYXX_RUN_BENCHMARKS</span></div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
 </div><!-- fragment --> </div><!-- contents -->

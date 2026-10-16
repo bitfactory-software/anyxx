@@ -197,11 +197,11 @@ $(function(){initNavTree('31_Animals_any_dispatch_8cpp-example.html','',''); });
 <div class="line">        encounter_result{&amp;<span class="keyword">typeid</span>(man), encounter_action::shakes_hands_with,</div>
 <div class="line">                         &amp;<span class="keyword">typeid</span>(man)});</div>
 <div class="line"> </div>
-<div class="line"><span class="preprocessor">#ifndef _DEBUG</span></div>
+<div class="line"><span class="preprocessor">#ifdef ANYXX_RUN_BENCHMARKS</span></div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Ensure &#39;target_compile_options(examples_inline_mode PRIVATE &quot;</span></div>
 <div class="line">               <span class="stringliteral">&quot;/Ob2)&#39; is used!\n&quot;</span>;</div>
-<div class="line">  BENCHMARK(<span class="stringliteral">&quot;30a_Animals any dispatch&quot;</span>) { <span class="keywordflow">return</span> apply_encounters(creatures); };</div>
-<div class="line"><span class="preprocessor">#endif  </span><span class="comment">// !_DEBUG</span></div>
+<div class="line">  BENCHMARK(<span class="stringliteral">&quot;31_Animals any dispatch&quot;</span>) { <span class="keywordflow">return</span> apply_encounters(creatures); };</div>
+<div class="line"><span class="preprocessor">#endif  </span><span class="comment">// ANYXX_RUN_BENCHMARKS</span></div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
 </div><!-- fragment --> </div><!-- contents -->
