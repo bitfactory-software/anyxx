@@ -94,7 +94,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <p>Type erased range example</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;bit_factory/v23/anys/range.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/v23/anys/ranges.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;list&gt;</span></div>
@@ -418,6 +418,8 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">}  <span class="comment">// namespace</span></div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;example 3 iterator adaptor &quot;</span>) {</div>
+<div class="line">  <span class="keyword">static_assert</span>(std::forward_iterator&lt;node_iterator&gt;);</div>
+<div class="line">  <span class="keyword">static_assert</span>(std::forward_iterator&lt;node_const_iterator&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(std::ranges::input_range&lt;node_range&gt;);</div>
 <div class="line">  std::unique_ptr&lt;node&lt;int&gt;&gt; nodes(<span class="keyword">new</span> node&lt;int&gt;(42));</div>
 <div class="line">  nodes-&gt;append(<span class="keyword">new</span> node&lt;std::string&gt;(<span class="stringliteral">&quot;is greater than:&quot;</span>));</div>
