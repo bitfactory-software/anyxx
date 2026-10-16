@@ -113,18 +113,18 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">           ANY_FN_DEF(<span class="keyword">public</span>, anyxx::self, op, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
 <div class="line">                      [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">                        std::println(<span class="stringliteral">&quot;op-default {}&quot;</span>, <span class="keyword">typeid</span>(T).name());</div>
-<div class="line">                        <span class="keyword">auto</span> self = anyxx::trait_as&lt;monoid&gt;(x);</div>
+<div class="line">                        <span class="keyword">auto</span> self = using_as&lt;monoid&gt;(x);</div>
 <div class="line">                        <span class="keywordflow">return</span> get_proxy(self.concat(std::vector{</div>
-<div class="line">                            anyxx::trait_as&lt;monoid&gt;(r)}));  <span class="comment">// NOLINT</span></div>
+<div class="line">                            using_as&lt;monoid&gt;(r)}));  <span class="comment">// NOLINT</span></div>
 <div class="line">                      }),</div>
 <div class="line">           ANY_FN_DEF(<span class="keyword">public</span>, anyxx::self, concat,</div>
 <div class="line">                      (anyxx::any_self_forward_range <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
 <div class="line">                      [&amp;x](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; r) {</div>
 <div class="line">                        std::println(<span class="stringliteral">&quot;concat-default {}&quot;</span>, <span class="keyword">typeid</span>(T).name());</div>
-<div class="line">                        <span class="keyword">auto</span> self = anyxx::trait_as&lt;monoid&gt;(x);</div>
+<div class="line">                        <span class="keyword">auto</span> self = using_as&lt;monoid&gt;(x);</div>
 <div class="line">                        <span class="keywordflow">return</span> get_proxy(std::ranges::fold_left(</div>
 <div class="line">                            r | std::views::transform([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; y) {</div>
-<div class="line">                              <span class="keywordflow">return</span> anyxx::trait_as&lt;monoid&gt;(y);</div>
+<div class="line">                              <span class="keywordflow">return</span> using_as&lt;monoid&gt;(y);</div>
 <div class="line">                            }),</div>
 <div class="line">                            self, [&amp;](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; m1, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; m2) {</div>
 <div class="line">                              <span class="keywordflow">return</span> m1.op(m2);</div>
@@ -226,7 +226,7 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">  test_monoid((1), std::vector{2, 3});</div>
 <div class="line">  test_monoid&lt;any&lt;using_&lt;int&gt;, monoid&gt;&gt;(</div>
-<div class="line">      trait_as&lt;monoid&gt;(1), std::vector&lt;any&lt;using_&lt;int&gt;, monoid&gt;&gt;{{2}, {3}});</div>
+<div class="line">      using_as&lt;monoid&gt;(1), std::vector&lt;any&lt;using_&lt;int&gt;, monoid&gt;&gt;{{2}, {3}});</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">//  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});</span></div>
 <div class="line">}</div>
@@ -237,7 +237,7 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">  test_monoid(<span class="stringliteral">&quot;1&quot;</span>s, std::vector{<span class="stringliteral">&quot;2&quot;</span>s, <span class="stringliteral">&quot;3&quot;</span>s});</div>
 <div class="line">  test_monoid&lt;any&lt;using_&lt;std::string&gt;, monoid&gt;&gt;(</div>
-<div class="line">      trait_as&lt;monoid&gt;(<span class="stringliteral">&quot;1&quot;</span>s),</div>
+<div class="line">      using_as&lt;monoid&gt;(<span class="stringliteral">&quot;1&quot;</span>s),</div>
 <div class="line">      std::vector&lt;any&lt;using_&lt;std::string&gt;, monoid&gt;&gt;{{<span class="stringliteral">&quot;2&quot;</span>s}, {<span class="stringliteral">&quot;3&quot;</span>s}});</div>
 <div class="line">}</div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;example 2b monoid c&quot;</span>) {</div>

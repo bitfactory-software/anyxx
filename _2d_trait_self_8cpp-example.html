@@ -119,8 +119,8 @@ $(function(){initNavTree('_2d_trait_self_8cpp-example.html','',''); });
 <div class="line">    CHECK(!b.is_equal(a));</div>
 <div class="line">  }</div>
 <div class="line">  {</div>
-<div class="line">    <span class="keyword">auto</span> a = trait_as&lt;has_equal&gt;(<span class="stringliteral">&quot;a&quot;</span>s);</div>
-<div class="line">    <span class="keyword">auto</span> b = trait_as&lt;has_equal&gt;(<span class="stringliteral">&quot;b&quot;</span>s);</div>
+<div class="line">    <span class="keyword">auto</span> a = using_as&lt;has_equal&gt;(<span class="stringliteral">&quot;a&quot;</span>s);</div>
+<div class="line">    <span class="keyword">auto</span> b = using_as&lt;has_equal&gt;(<span class="stringliteral">&quot;b&quot;</span>s);</div>
 <div class="line">    CHECK(a.is_equal(a));</div>
 <div class="line">    CHECK(!b.is_equal(a));</div>
 <div class="line">  }</div>
@@ -131,8 +131,8 @@ $(function(){initNavTree('_2d_trait_self_8cpp-example.html','',''); });
 <div class="line">TRAIT_(has_plus, has_equal,</div>
 <div class="line">       (ANY_FN_DEF(<span class="keyword">public</span>, anyxx::self, plus, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
 <div class="line">                   ([&amp;x](T <span class="keyword">const</span>&amp; y) {</div>
-<div class="line">                     <span class="keywordflow">return</span> get_proxy_value(trait_as&lt;has_plus&gt;(x) +</div>
-<div class="line">                                            trait_as&lt;has_plus&gt;(y));</div>
+<div class="line">                     <span class="keywordflow">return</span> get_proxy_value(using_as&lt;has_plus&gt;(x) +</div>
+<div class="line">                                            using_as&lt;has_plus&gt;(y));</div>
 <div class="line">                   })),</div>
 <div class="line">        ANY_OP_DEF(<span class="keyword">public</span>, anyxx::self, +, plus_op, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
 <div class="line">                   ([&amp;x](T <span class="keyword">const</span>&amp; y) { <span class="keywordflow">return</span> x + y; }))))</div>
@@ -160,10 +160,10 @@ $(function(){initNavTree('_2d_trait_self_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line">  <span class="keyword">using namespace </span>std::string_literals;</div>
 <div class="line">  {</div>
-<div class="line">    <span class="keyword">auto</span> a = trait_as&lt;has_plus&gt;(<span class="stringliteral">&quot;a&quot;</span>s);</div>
-<div class="line">    <span class="keyword">auto</span> b = trait_as&lt;has_plus&gt;(<span class="stringliteral">&quot;b&quot;</span>s);</div>
-<div class="line">    <span class="keyword">auto</span> aa = trait_as&lt;has_plus&gt;(<span class="stringliteral">&quot;aa&quot;</span>s);</div>
-<div class="line">    <span class="keyword">auto</span> bb = trait_as&lt;has_plus&gt;(<span class="stringliteral">&quot;ab&quot;</span>s);</div>
+<div class="line">    <span class="keyword">auto</span> a = using_as&lt;has_plus&gt;(<span class="stringliteral">&quot;a&quot;</span>s);</div>
+<div class="line">    <span class="keyword">auto</span> b = using_as&lt;has_plus&gt;(<span class="stringliteral">&quot;b&quot;</span>s);</div>
+<div class="line">    <span class="keyword">auto</span> aa = using_as&lt;has_plus&gt;(<span class="stringliteral">&quot;aa&quot;</span>s);</div>
+<div class="line">    <span class="keyword">auto</span> bb = using_as&lt;has_plus&gt;(<span class="stringliteral">&quot;ab&quot;</span>s);</div>
 <div class="line">    CHECK((a + a).is_equal(aa));</div>
 <div class="line">    CHECK((a + b).is_equal(bb));</div>
 <div class="line">    CHECK((a.plus(a)).is_equal(aa));</div>

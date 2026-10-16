@@ -261,16 +261,16 @@ $(function(){initNavTree('_2c_trait_any_variant_8cpp-example.html','',''); });
 <div class="line">    });</div>
 <div class="line"><span class="keyword">auto</span> __ = vany_compare.define&lt;concrete_value, custom&gt;(</div>
 <div class="line">    [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; lhs, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; rhs) -&gt; std::partial_ordering {</div>
-<div class="line">      <span class="keywordflow">return</span> anyxx::trait_as&lt;value&gt;(lhs).to_string() &lt;=&gt; rhs.answer;</div>
+<div class="line">      <span class="keywordflow">return</span> anyxx::using_as&lt;value&gt;(lhs).to_string() &lt;=&gt; rhs.answer;</div>
 <div class="line">    });</div>
 <div class="line"><span class="keyword">auto</span> __ = vany_compare.define&lt;custom, concrete_value&gt;(</div>
 <div class="line">    [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; lhs, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; rhs) -&gt; std::partial_ordering {</div>
-<div class="line">      <span class="keywordflow">return</span> lhs.answer &lt;=&gt; anyxx::trait_as&lt;value&gt;(rhs).to_string();</div>
+<div class="line">      <span class="keywordflow">return</span> lhs.answer &lt;=&gt; anyxx::using_as&lt;value&gt;(rhs).to_string();</div>
 <div class="line">    });</div>
 <div class="line"><span class="keyword">auto</span> __ = vany_compare.define&lt;concrete_value, concrete_value&gt;(</div>
 <div class="line">    [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; lhs, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; rhs) -&gt; std::partial_ordering {</div>
-<div class="line">      <span class="keywordflow">return</span> anyxx::trait_as&lt;value&gt;(lhs).to_string() &lt;=&gt;</div>
-<div class="line">             anyxx::trait_as&lt;value&gt;(rhs).to_string();</div>
+<div class="line">      <span class="keywordflow">return</span> anyxx::using_as&lt;value&gt;(lhs).to_string() &lt;=&gt;</div>
+<div class="line">             anyxx::using_as&lt;value&gt;(rhs).to_string();</div>
 <div class="line">    });</div>
 <div class="line"> </div>
 <div class="line">}  <span class="comment">// namespace example_2c</span></div>
