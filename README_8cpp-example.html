@@ -178,10 +178,10 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] std::string draw() const { return <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(drawable, anyxx::dynamic_copyable, (<a id="a1" name="a1"></a><a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT_(drawable, anyxx::dynamic_copyable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">void draw(std::stringstream&amp; os,</div>
-<div class="line">          std::vector&lt;anyxx::any&lt;drawable, anyxx::val&lt;&gt;&gt;&gt; const&amp; drawables) {</div>
+<div class="line">          std::vector&lt;anyxx::any_&lt;drawable&gt;&gt; const&amp; drawables) {</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -263,28 +263,29 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line"><span class="keyword">namespace </span>showcase2 {</div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">namespace </span>showcase2 {</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>circle {};</div>
 <div class="line"><span class="keyword">struct </span>square {</div>
 <div class="line">  [[nodiscard]] std::string edgy_salute()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;edgy World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(drawable, anyxx::dynamic_copyable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT_(drawable, anyxx::dynamic_copyable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
-<div class="line"><a id="a2" name="a2"></a><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((circle), drawable) {</div>
+<div class="line">ANY_MODEL_MAP((circle), drawable) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(circle <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;Silent greetings&quot;</span>; };</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((square), drawable) {</div>
+<div class="line">ANY_MODEL_MAP((square), drawable) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(square <span class="keyword">const</span>&amp; self) { <span class="keywordflow">return</span> self.edgy_salute(); };</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> draw(std::stringstream&amp; os,</div>
-<div class="line">          std::vector&lt;anyxx::any&lt;drawable, anyxx::val&lt;&gt;&gt;&gt; <span class="keyword">const</span>&amp; drawables) {</div>
+<div class="line">          std::vector&lt;anyxx::any_&lt;drawable&gt;&gt; <span class="keyword">const</span>&amp; drawables) {</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -309,13 +310,15 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line"><span class="keyword">namespace </span>showcase3 {</div>
+<div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/dispatch.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;compare&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;sstream&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">namespace </span>ayx = anyxx;</div>
+<div class="line"><span class="keyword">namespace </span>showcase3 {</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>circle {</div>
 <div class="line">  [[nodiscard]] std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;circle&quot;</span>; }</div>
@@ -324,18 +327,16 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;square&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a id="a3" name="a3"></a><a class="code hl_define" href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(figure, anyxx::dynamic_copyable,</div>
-<div class="line">          (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, name, (), <span class="keyword">const</span>)), , ,</div>
+<div class="line">TRAIT_EX_(figure, anyxx::dynamic_copyable,</div>
+<div class="line">          (ANY_FN(std::string, name, (), <span class="keyword">const</span>)), , ,</div>
 <div class="line">          (ANY_OPEN_DISPATCH), ())</div>
-<div class="line">template &lt;typename Proxy = anyxx::val&lt;&gt;&gt;</div>
-<div class="line">using any_figure = anyxx::any&lt;figure, Proxy&gt;;</div>
 <div class="line"> </div>
-<div class="line">ayx::dispatch&lt;std::partial_ordering(ayx::virtual_&lt;any_figure&lt;&gt;&gt;,</div>
-<div class="line">                                    ayx::virtual_&lt;any_figure&lt;&gt;&gt;)&gt;</div>
+<div class="line">anyxx::dispatch&lt;std::partial_ordering(anyxx::virtual_&lt;anyxx::any_&lt;figure&gt;&gt;,</div>
+<div class="line">                                      anyxx::virtual_&lt;anyxx::any_&lt;figure&gt;&gt;)&gt;</div>
 <div class="line">    compare_edges;</div>
 <div class="line"> </div>
-<div class="line">[[nodiscard]] std::partial_ordering operator&lt;=&gt;(any_figure&lt;&gt; const&amp; l,</div>
-<div class="line">                                                any_figure&lt;&gt; const&amp; r) {</div>
+<div class="line">[[nodiscard]] std::partial_ordering operator&lt;=&gt;(anyxx::any_&lt;figure&gt; const&amp; l,</div>
+<div class="line">                                                anyxx::any_&lt;figure&gt; const&amp; r) {</div>
 <div class="line">  <span class="keywordflow">return</span> compare_edges(l, r);</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -349,9 +350,9 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">    [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;, <span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> std::partial_ordering::greater; });</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> compare_each(std::stringstream&amp; os,</div>
-<div class="line">                  std::vector&lt;ayx::any&lt;figure, ayx::val&lt;&gt;&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
+<div class="line">                  std::vector&lt;anyxx::any_&lt;figure&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
 <div class="line">  std::string sep;</div>
-<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; l : figures)</div>
+<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; l: figures)</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r : figures) {</div>
 <div class="line">      os &lt;&lt; std::exchange(sep, <span class="stringliteral">&quot;, &quot;</span>) &lt;&lt; l.name() &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
 <div class="line">      <span class="keywordflow">if</span> (<span class="keyword">auto</span> c = l &lt;=&gt; r; c == std::partial_ordering::equivalent)</div>
@@ -380,9 +381,9 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">Showcase 3 demonstrates how to use the Any++ library to implement open multi-dispatch (type-erased binary operators) in C++. In <span class="keyword">this</span> example:</div>
 <div class="line">- Two types, `circle` and `square`, are defined, each with a `name()` method.</div>
 <div class="line">- A `figure` trait is declared <span class="keyword">using </span>the `Any++` macro system, specifying a `name()` function.</div>
-<div class="line">- The `<a id="_a4" name="_a4"></a><a class="code hl_define" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a>` macro is an extension of the `<a id="_a5" name="_a5"></a><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>` macro. It defines the requested behavior (trait interface) and additionally creates a <span class="keyword">typedef</span> <span class="keywordflow">for</span> an `any` </div>
+<div class="line">- The `ANY` macro is an extension of the `TRAIT` macro. It defines the requested behavior (trait interface) and additionally creates a <span class="keyword">typedef</span> <span class="keywordflow">for</span> an `any_` </div>
 <div class="line">  type, named `any_&lt;first parameter of macro&gt;`, that uses <span class="keyword">this</span> trait. The generated trait itself has a <span class="keyword">template</span> parameter <span class="keywordflow">for</span> the Proxy type, </div>
-<div class="line">  which is defaulted to the last parameter of the `<a class="code hl_define" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a>` macro.</div>
+<div class="line">  which is defaulted to the last parameter of the `ANY` macro.</div>
 <div class="line">- The `dispatch&lt;R(Args...)&gt;` mechanism is used to define a type-erased, runtime-resolved binary operator (`operator&lt;=&gt;`) <span class="keywordflow">for</span> comparing two `any_figure&lt;&gt;` objects.</div>
 <div class="line">- The dispatch table is populated with custom comparison logic <span class="keywordflow">for each</span> pair of types (`circle` vs `circle`, `circle` vs `square`, etc.) at static initialization time.</div>
 <div class="line">To do this with as little ceremony as possible, ``anyxx.hpp`` provides a ``__`` macro that simulates the[C++26 placeholder with no name](https:<span class="comment">//www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2169r4.pdf).</span></div>
@@ -398,10 +399,14 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line"><span class="keyword">namespace </span>showcase4 {</div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/dispatch.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;sstream&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">namespace </span>showcase4 {</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>ayx = anyxx;</div>
 <div class="line"> </div>
@@ -412,21 +417,19 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;square&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(figure, anyxx::dynamic_copyable,</div>
-<div class="line">          (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, name, (), <span class="keyword">const</span>)), , ,</div>
+<div class="line">TRAIT_EX_(figure, anyxx::dynamic_copyable,</div>
+<div class="line">          (ANY_FN(std::string, name, (), <span class="keyword">const</span>)), , ,</div>
 <div class="line">          (ANY_OPEN_DISPATCH), ())</div>
-<div class="line">template &lt;typename Proxy = anyxx::val&lt;&gt;&gt;</div>
-<div class="line">using any_figure = anyxx::any&lt;figure, Proxy&gt;;</div>
+<div class="line">using any_figure = anyxx::any_&lt;figure&gt;;</div>
 <div class="line"> </div>
-<div class="line">ayx::dispatch&lt;std::<span class="keywordtype">string</span>(ayx::virtual_&lt;any_figure&lt;&gt;&gt;)&gt; latin, italian;</div>
+<div class="line">ayx::dispatch&lt;std::<span class="keywordtype">string</span>(ayx::virtual_&lt;any_figure&gt;)&gt; latin, italian;</div>
 <div class="line"> </div>
 <div class="line">auto __ = latin.define&lt;circle&gt;([](auto const&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;orbis&quot;</span>; });</div>
 <div class="line"><span class="keyword">auto</span> __ = latin.define&lt;square&gt;([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;quadratum&quot;</span>; });</div>
 <div class="line"><span class="keyword">auto</span> __ = italian.define&lt;circle&gt;([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;cerchio&quot;</span>; });</div>
 <div class="line"><span class="keyword">auto</span> __ = italian.define&lt;square&gt;([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;quadrato&quot;</span>; });</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> translate(std::stringstream&amp; os,</div>
-<div class="line">               std::vector&lt;ayx::any&lt;figure, ayx::val&lt;&gt;&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
+<div class="line"><span class="keywordtype">void</span> translate(std::stringstream&amp; os, std::vector&lt;any_figure&gt; <span class="keyword">const</span>&amp; figures) {</div>
 <div class="line">  std::string sep;</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures)</div>
 <div class="line">    os &lt;&lt; std::exchange(sep, <span class="stringliteral">&quot;; &quot;</span>) &lt;&lt; f.name() &lt;&lt; <span class="stringliteral">&quot;: latin = &quot;</span> &lt;&lt; latin(f)</div>
@@ -461,10 +464,12 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line"><span class="keyword">namespace </span>showcase5 {</div>
+<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/factory.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">namespace </span>showcase5 {</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>ayx = anyxx;</div>
 <div class="line"> </div>
@@ -478,11 +483,11 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>figure_has_open_dispatch {};</div>
-<div class="line"><a id="a6" name="a6"></a><a class="code hl_define" href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a>(figure, ayx::dynamic_copyable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>)), ayx::val&lt;&gt;)</div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a>(serializable, ayx::dynamic_copyable,</div>
-<div class="line">    (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), <span class="keyword">const</span>)), ayx::cref)</div>
+<div class="line">ANY_(figure, ayx::dynamic_copyable, (ANY_FN(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>)), ayx::val&lt;&gt;)</div>
+<div class="line">ANY_(serializable, ayx::dynamic_copyable,</div>
+<div class="line">    (ANY_FN(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), <span class="keyword">const</span>)), ayx::cref)</div>
 <div class="line"> </div>
-<div class="line">ayx::factory&lt;any_serializable, ayx::val&lt;&gt;, std::string, std::istream&amp;&gt;</div>
+<div class="line">ayx::factory&lt;ayx::any_&lt;serializable&gt;, std::string, std::istream&amp;&gt;</div>
 <div class="line">    deserialize;</div>
 <div class="line"> </div>
 <div class="line">[[nodiscard]] any_figure&lt;&gt; deserialize_any_figure(std::istream&amp; archive) {</div>
@@ -491,7 +496,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  <span class="keywordflow">return</span> ayx::move_to&lt;any_figure&lt;&gt;&gt;(deserialize.construct(type, archive));</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((circle), serializable) {</div>
+<div class="line">ANY_MODEL_MAP((circle), serializable) {</div>
 <div class="line">  <span class="keyword">static</span> <span class="keywordtype">void</span> serialize(circle <span class="keyword">const</span>&amp; self, std::ostream&amp; os) {</div>
 <div class="line">    os &lt;&lt; <span class="stringliteral">&quot;circle &quot;</span> &lt;&lt; self.radius &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
 <div class="line">  };</div>
@@ -501,10 +506,10 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  archive &gt;&gt; c.radius;</div>
 <div class="line">  <span class="keywordflow">return</span> c;</div>
 <div class="line">});</div>
-<div class="line"><a id="a7" name="a7"></a><a class="code hl_define" href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a>(circle, figure);</div>
-<div class="line"><a class="code hl_define" href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a>(circle, serializable);</div>
+<div class="line">ANY_REGISTER_MODEL(circle, figure);</div>
+<div class="line">ANY_REGISTER_MODEL(circle, serializable);</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((square), serializable) {</div>
+<div class="line">ANY_MODEL_MAP((square), serializable) {</div>
 <div class="line">  <span class="keyword">static</span> <span class="keywordtype">void</span> serialize(square <span class="keyword">const</span>&amp; self, std::ostream&amp; os) {</div>
 <div class="line">    os &lt;&lt; <span class="stringliteral">&quot;square &quot;</span> &lt;&lt; self.edge_length &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
 <div class="line">  };</div>
@@ -514,11 +519,11 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  archive &gt;&gt; s.edge_length;</div>
 <div class="line">  <span class="keywordflow">return</span> s;</div>
 <div class="line">});</div>
-<div class="line"><a class="code hl_define" href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a>(square, figure);</div>
-<div class="line"><a class="code hl_define" href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a>(square, serializable);</div>
+<div class="line">ANY_REGISTER_MODEL(square, figure);</div>
+<div class="line">ANY_REGISTER_MODEL(square, serializable);</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> areas(std::stringstream&amp; os,</div>
-<div class="line">           std::vector&lt;ayx::any&lt;figure, ayx::val&lt;&gt;&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
+<div class="line">           std::vector&lt;any_figure&lt;&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
 <div class="line">  std::string sep;</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures) os &lt;&lt; std::exchange(sep, <span class="stringliteral">&quot;, &quot;</span>) &lt;&lt; f.area();</div>
 <div class="line">}</div>
@@ -580,12 +585,12 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(drawable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(drawable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">using known_shapes = std::variant&lt;circle, square&gt;;</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> draw(std::stringstream&amp; os,</div>
-<div class="line">          std::vector&lt;anyxx::any&lt;drawable, anyxx::using_&lt;known_shapes&gt;&gt;&gt; const&amp;</div>
+<div class="line">          std::vector&lt;anyxx::any&lt;anyxx::using_&lt;known_shapes&gt;, drawable&gt;&gt; const&amp;</div>
 <div class="line">              drawables) {</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
@@ -604,7 +609,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">- Two types, `circle` and `square`, are defined, each with a `draw()` method returning a <span class="keywordtype">string</span>.</div>
 <div class="line">- A `drawable` trait is declared, specifying the required interface (`draw() <span class="keyword">const</span> -&gt; std::string`).</div>
 <div class="line">- A `known_shapes` type alias is defined as `std::variant&lt;circle, square&gt;`, representing a closed set of possible shapes.</div>
-<div class="line">- The function `draw` takes a vector of type-erased objects (`<a id="_a8" name="_a8"></a><a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any</a>&lt;<a id="_a9" name="_a9"></a><a class="code hl_struct" href="structanyxx_1_1using__.html">anyxx::using_&lt;known_shapes&gt;</a>, drawable&gt;`) and calls `draw()` on each, writing the results to a stringstream.</div>
+<div class="line">- The function `draw` takes a vector of type-erased objects (`anyxx::any&lt;anyxx::using_&lt;known_shapes&gt;, drawable&gt;`) and calls `draw()` on each, writing the results to a stringstream.</div>
 <div class="line">- The Catch2 test verifies that drawing a `circle` and a `square` produces the expected output.</div>
 <div class="line">This example shows how `Any++` can be combined with `std::variant` to provide type-erased, trait-based polymorphism for a known set of types, allowing heterogeneous collections and uniform interface access without inheritance or virtual functions.</div>
 <div class="line">Because the set of types is fixed, this approach can offer better performance than fully dynamic type erasure while still providing flexibility and extensibility through traits.</div>
@@ -617,12 +622,12 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/vany.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>showcase7 {</div>
-<div class="line"><span class="keyword">namespace </span>ayx = anyxx;</div>
+<div class="line"><span class="keyword">using namespace </span>anyxx;</div>
 <div class="line"><span class="keyword">using namespace </span>std::string_literals;</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>circle {</div>
@@ -632,16 +637,14 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a>(figure, ayx::dynamic_copyable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)),</div>
-<div class="line">     ayx::val&lt;&gt;)</div>
+<div class="line">TRAIT_(figure, dynamic_copyable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using </span>known_and_unknown_shapes =</div>
-<div class="line">    ayx::make_vany&lt;any_figure, ayx::val&lt;&gt;, circle, square&gt;;</div>
-<div class="line"><span class="keyword">static_assert</span>(</div>
+<div class="line">using known_and_unknown_shapes = make_vany&lt;figure, circle, square&gt;;</div>
+<div class="line">static_assert(</div>
 <div class="line">    std::same_as&lt;known_and_unknown_shapes,</div>
-<div class="line">                 any_figure&lt;ayx::using_&lt;  <span class="comment">// see the Any++ logo at the top</span></div>
-<div class="line">                     std::variant&lt;any_figure&lt;ayx::val&lt;&gt;&gt;, circle, square&gt;&gt;&gt;&gt;);</div>
-<div class="line"><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((std::string), figure) {</div>
+<div class="line">                 any&lt;using_&lt;std::variant&lt;any_&lt;figure&gt;, circle, square&gt;&gt;, </div>
+<div class="line">                    figure&gt;&gt;);</div>
+<div class="line">ANY_MODEL_MAP((std::<span class="keywordtype">string</span>), figure) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(std::string <span class="keyword">const</span>&amp; s) { <span class="keywordflow">return</span> s; };</div>
 <div class="line">};</div>
 <div class="line"> </div>
@@ -652,7 +655,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;Showcase7&quot;</span>) {</div>
 <div class="line">  std::stringstream ss;</div>
-<div class="line">  draw(ss, {circle{}, square{}, any_figure&lt;&gt;{<span class="stringliteral">&quot;The big unknown...&quot;</span>s}});</div>
+<div class="line">  draw(ss, {circle{}, square{}, any_&lt;figure&gt;{<span class="stringliteral">&quot;The big unknown...&quot;</span>s}});</div>
 <div class="line">  CHECK(ss.str() == <span class="stringliteral">&quot;Hello\nWorld\nThe big unknown...\n&quot;</span>);</div>
 <div class="line">}</div>
 <div class="line">}  <span class="comment">// namespace showcase7</span></div>
@@ -664,7 +667,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">heterogeneous collections. Let us call them <span class="stringliteral">&quot;vany&quot;</span> (variant-any).</div>
 <div class="line">- Two types, `circle` and `square`, are defined, each with a `draw()` method returning a <span class="keywordtype">string</span>.</div>
 <div class="line">- A `figure` trait is declared, specifying the required interface (`draw() <span class="keyword">const</span> -&gt; std::string`).</div>
-<div class="line">- The type alias `known_and_unknown_shapes` is created <span class="keyword">using </span>`<a id="_a10" name="_a10"></a><a class="code hl_typedef" href="anyxx_8hpp.html#a5b8337d31962b6107d1748ec5dc2ee3b">anyxx::make_vany</a>`, which produces a type-erased wrapper over a `std::variant` containing:</div>
+<div class="line">- The type alias `known_and_unknown_shapes` is created <span class="keyword">using </span>`anyxx::make_vany`, which produces a type-erased wrapper over a `std::variant` containing:</div>
 <div class="line">  - All known types (`circle`, `square`)</div>
 <div class="line">  - An open-ended type-erased fallback (`any_figure&lt;ayx::val&lt;&gt;&gt;`)</div>
 <div class="line">- A model map is provided <span class="keywordflow">for</span> `std::string`, allowing strings to be handled as figures.</div>
@@ -684,17 +687,6 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="aanyxx_8hpp_html_a5b8337d31962b6107d1748ec5dc2ee3b"><div class="ttname"><a href="anyxx_8hpp.html#a5b8337d31962b6107d1748ec5dc2ee3b">anyxx::make_vany</a></div><div class="ttdeci">Any&lt; using_&lt; vany_variant&lt; Any, Proxy, Types... &gt; &gt; &gt; make_vany</div><div class="ttdoc">A factory type to direct get the any for the vany.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1951</div></div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3045</div></div>
-<div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1099</div></div>
-<div class="ttc" id="agroup__meta__class__macros_html_ga3449a1cb25287d73a1e8db0fe95f2dac"><div class="ttname"><a href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a></div><div class="ttdeci">#define ANY_REGISTER_MODEL(class_, interface_,...)</div><div class="ttdoc">Register a model class for a specific any interface. Must be in global namespace.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:4841</div></div>
-<div class="ttc" id="agroup__model__map__macros_html_gaa11989a5b380318c70cc1a59a8642384"><div class="ttname"><a href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a></div><div class="ttdeci">#define ANY_MODEL_MAP(model_, trait_)</div><div class="ttdoc">ANY_MODEL_MAP macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1286</div></div>
-<div class="ttc" id="agroup__trait__macros_html_ga47a5ba38b03d55fa5f63979281028d22"><div class="ttname"><a href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a></div><div class="ttdeci">#define ANY(n, l,...)</div><div class="ttdoc">Simple ANY macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:960</div></div>
-<div class="ttc" id="agroup__trait__macros_html_ga5cd6bea6951e6c56a7e253ae6ca0dd1b"><div class="ttname"><a href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a></div><div class="ttdeci">#define ANY_(n, BASE, l, proxy_default)</div><div class="ttdoc">ANY with a baseSee ANY for explanation.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:933</div></div>
-<div class="ttc" id="agroup__trait__macros_html_gade6711771425f1b9a231fe819691ce04"><div class="ttname"><a href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a></div><div class="ttdeci">#define TRAIT_EX_(n, BASE, l, static_fns, typedefs, v_table_data, decoration)</div><div class="ttdoc">TRAIT derived from base with decoration. Macro to define the functional behavior for a any,...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:826</div></div>
-<div class="ttc" id="agroup__trait__macros_html_gadf5ede586c04f0c23d0b46a60e1d241b"><div class="ttname"><a href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a></div><div class="ttdeci">#define TRAIT_(n, BASE, l)</div><div class="ttdoc">TRAIT derived from base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:833</div></div>
-<div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functional behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:845</div></div>
-<div class="ttc" id="astructanyxx_1_1using___html"><div class="ttname"><a href="structanyxx_1_1using__.html">anyxx::using_</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3398</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
