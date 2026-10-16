@@ -56,7 +56,7 @@ struct monoid_model_map<int> : monoid_default_model_map<int> {
     std::println("concat {}", typeid(int).name());
     return get_proxy_value(std::ranges::fold_left(
         r, using_as<monoid>(0),
-        [&](use_as<int, monoid> const& m1, use_as<int, monoid> const& m2) {
+        [&](trait_as<int, monoid> const& m1, trait_as<int, monoid> const& m2) {
           return m1.op(m2);
         }));
   };

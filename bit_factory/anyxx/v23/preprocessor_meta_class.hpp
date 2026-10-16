@@ -291,7 +291,7 @@
     using namespace anyxx;                                                     \
     return _detail_REMOVE_PARENS(body)                                         \
         .template operator()<                                                  \
-            anyxx::make_use_as_t<T, typename decltype(trait_class)::trait_t>>( \
+            anyxx::make_trait_as<T, typename decltype(trait_class)::trait_t>>( \
             trait_class __VA_OPT__(                                            \
                 , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
   };

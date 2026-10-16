@@ -9,10 +9,10 @@ namespace lib_2g {
 TRAIT_TEMPLATE(
     ((To)), equal_comparable_to,
     (ANY_OP_MAP_NAMED_FRIEND(
-         bool, ==, eq, ((anyxx::use_as<To, equal_comparable_to, T> const&)),
+         bool, ==, eq, ((anyxx::trait_as<To, equal_comparable_to, T> const&)),
          const),
      ANY_OP_DEF(public, bool, !=, ne,
-                ((anyxx::use_as<To, equal_comparable_to, T> const&)), const,
+                ((anyxx::trait_as<To, equal_comparable_to, T> const&)), const,
                 ([&x](auto const& r) { return !Map{}.eq(x, r); }))))
 
 template <typename L, typename R>

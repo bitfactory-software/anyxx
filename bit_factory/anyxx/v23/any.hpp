@@ -288,21 +288,21 @@ class ANYXX_USE_EBO any_ : public any<typename Trait<Args...>::default_proxy_t, 
 /// A template to get an \ref any trait for a type
 /// See also \ref using_::as.
 template <typename Type, template <typename...> typename Trait, typename... Ts>
-using use_as = any<using_<Type>, Trait, Ts...>;
+using trait_as = any<using_<Type>, Trait, Ts...>;
 
 template <typename Type, typename Trait>
-struct make_use_as;
+struct make_trait_as_impl;
 template <typename Type, template <typename...> typename Trait, typename... Ts>
-struct make_use_as<Type, Trait<Ts...>> {
-    using type = any<using_<Type>, Trait, Ts...>;
+struct make_trait_as_impl<Type, Trait<Ts...>> {
+    using type = trait_as<Type, Trait, Ts...>;
 };
 template <typename Type, typename Trait>
-using make_use_as_t = typename make_use_as<Type, Trait>::type;
+using make_trait_as = typename make_trait_as_impl<Type, Trait>::type;
 
 /// A template to get an \ref any trait for a type
 /// See also \ref using_cref::as.
 template <typename Type, template <typename...> typename Trait, typename... Ts>
-using use_as_cref = any<using_cref<Type>, Trait, Ts...>;
+using trait_as_cref = any<using_cref<Type>, Trait, Ts...>;
 
 /// A factory function to bind an object as a model to an \ref any with a \ref
 /// trait.

@@ -33,7 +33,7 @@ struct jacket_return<self> {
   static decltype(auto) forward(Sig&& sig, Any const&) {
     using sig_t = std::decay_t<Sig>;
     if constexpr (is_type_class<typename std::decay_t<Any>::proxy_t>) {
-      using target_t = make_use_as_t<typename Any::proxy_t::value_t,
+      using target_t = anyxx::make_trait_as<typename Any::proxy_t::value_t,
                                             typename Any::trait_t>;
       if constexpr (is_any<sig_t>) {
         return target_t{get_proxy_value(std::forward<Sig>(sig))};
@@ -58,25 +58,25 @@ struct jacket_return<self&> {
   }
 };
 
-//template <typename Param>
-//struct map_return;
+// template <typename Param>
+// struct map_return;
 //
-//template <typename Param>
-//    requires(!std::is_reference_v<Param>)
-//struct map_return<Param> {
-//    template <typename Sig>
-//    static Param forward(Sig&& sig) {
-//        return std::forward<Sig>(sig);
-//    }
-//};
-//template <typename Param>
-//    requires (std::same_as<Param, self&> || std::same_as<Param, self>)
-//struct map_return<Param> {
-//    template <typename Sig>
-//    static decltype(auto) forward(Sig&& sig) {
-//        return std::forward<Sig>(sig);
-//    }
-//};
+// template <typename Param>
+//     requires(!std::is_reference_v<Param>)
+// struct map_return<Param> {
+//     template <typename Sig>
+//     static Param forward(Sig&& sig) {
+//         return std::forward<Sig>(sig);
+//     }
+// };
+// template <typename Param>
+//     requires (std::same_as<Param, self&> || std::same_as<Param, self>)
+// struct map_return<Param> {
+//     template <typename Sig>
+//     static decltype(auto) forward(Sig&& sig) {
+//         return std::forward<Sig>(sig);
+//     }
+// };
 //
 template <typename T>
 struct translate_sig_map {
