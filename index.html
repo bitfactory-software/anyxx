@@ -139,7 +139,8 @@ Showcase 1: Basic <em>Any++</em> usage</h3>
 <div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">TRAIT_(drawable, anyxx::dynamic_copyable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(drawable, anyxx::dynamic_copyable,</div>
+<div class="line">       (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">void draw(std::stringstream&amp; os,</div>
 <div class="line">          std::vector&lt;anyxx::any_&lt;drawable&gt;&gt; const&amp; drawables) {</div>
@@ -234,7 +235,8 @@ Showcase 2: <em>Any++</em> with Model Map</h3>
 <div class="line">  [[nodiscard]] std::string edgy_salute()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;edgy World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">TRAIT_(drawable, anyxx::dynamic_copyable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(drawable, anyxx::dynamic_copyable,</div>
+<div class="line">       (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">ANY_MODEL_MAP((circle), drawable) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(circle <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;Silent greetings&quot;</span>; };</div>
@@ -270,8 +272,8 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/dispatch.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;compare&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;sstream&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>showcase3 {</div>
@@ -284,8 +286,7 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line">TRAIT_EX_(figure, anyxx::dynamic_copyable,</div>
-<div class="line">          (ANY_FN(std::string, name, (), <span class="keyword">const</span>)), , ,</div>
-<div class="line">          (ANY_OPEN_DISPATCH), ())</div>
+<div class="line">          (ANY_FN(std::string, name, (), <span class="keyword">const</span>)), , , (ANY_OPEN_DISPATCH), ())</div>
 <div class="line"> </div>
 <div class="line">anyxx::dispatch&lt;std::partial_ordering(anyxx::virtual_&lt;anyxx::any_&lt;figure&gt;&gt;,</div>
 <div class="line">                                      anyxx::virtual_&lt;anyxx::any_&lt;figure&gt;&gt;)&gt;</div>
@@ -308,7 +309,7 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 <div class="line"><span class="keywordtype">void</span> compare_each(std::stringstream&amp; os,</div>
 <div class="line">                  std::vector&lt;anyxx::any_&lt;figure&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
 <div class="line">  std::string sep;</div>
-<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; l: figures)</div>
+<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; l : figures)</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r : figures) {</div>
 <div class="line">      os &lt;&lt; std::exchange(sep, <span class="stringliteral">&quot;, &quot;</span>) &lt;&lt; l.name() &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
 <div class="line">      <span class="keywordflow">if</span> (<span class="keyword">auto</span> c = l &lt;=&gt; r; c == std::partial_ordering::equivalent)</div>
@@ -351,8 +352,8 @@ Showcase 4: <em>Any++</em> Open Dispatch As Visitor</h3>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/dispatch.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;sstream&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>showcase4 {</div>
@@ -367,8 +368,7 @@ Showcase 4: <em>Any++</em> Open Dispatch As Visitor</h3>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line">TRAIT_EX_(figure, anyxx::dynamic_copyable,</div>
-<div class="line">          (ANY_FN(std::string, name, (), <span class="keyword">const</span>)), , ,</div>
-<div class="line">          (ANY_OPEN_DISPATCH), ())</div>
+<div class="line">          (ANY_FN(std::string, name, (), <span class="keyword">const</span>)), , , (ANY_OPEN_DISPATCH), ())</div>
 <div class="line">using any_figure = anyxx::any_&lt;figure&gt;;</div>
 <div class="line"> </div>
 <div class="line">ayx::dispatch&lt;std::<span class="keywordtype">string</span>(ayx::virtual_&lt;any_figure&gt;)&gt; latin, italian;</div>
@@ -410,8 +410,8 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/factory.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/factory.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"> </div>
@@ -429,12 +429,12 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>figure_has_open_dispatch {};</div>
-<div class="line">ANY_(figure, ayx::dynamic_copyable, (ANY_FN(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>)), ayx::val&lt;&gt;)</div>
+<div class="line">ANY_(figure, ayx::dynamic_copyable, (ANY_FN(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>)),</div>
+<div class="line">     ayx::val&lt;&gt;)</div>
 <div class="line">ANY_(serializable, ayx::dynamic_copyable,</div>
-<div class="line">    (ANY_FN(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), <span class="keyword">const</span>)), ayx::cref)</div>
+<div class="line">     (ANY_FN(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), <span class="keyword">const</span>)), ayx::cref)</div>
 <div class="line"> </div>
-<div class="line">ayx::factory&lt;ayx::any_&lt;serializable&gt;, std::string, std::istream&amp;&gt;</div>
-<div class="line">    deserialize;</div>
+<div class="line">ayx::factory&lt;ayx::any_&lt;serializable&gt;, std::string, std::istream&amp;&gt; deserialize;</div>
 <div class="line"> </div>
 <div class="line">[[nodiscard]] any_figure&lt;&gt; deserialize_any_figure(std::istream&amp; archive) {</div>
 <div class="line">  std::string type;</div>
@@ -468,8 +468,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line">ANY_REGISTER_MODEL(square, figure);</div>
 <div class="line">ANY_REGISTER_MODEL(square, serializable);</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> areas(std::stringstream&amp; os,</div>
-<div class="line">           std::vector&lt;any_figure&lt;&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
+<div class="line"><span class="keywordtype">void</span> areas(std::stringstream&amp; os, std::vector&lt;any_figure&lt;&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
 <div class="line">  std::string sep;</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures) os &lt;&lt; std::exchange(sep, <span class="stringliteral">&quot;, &quot;</span>) &lt;&lt; f.area();</div>
 <div class="line">}</div>
@@ -527,7 +526,8 @@ Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 <div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">TRAIT(drawable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(drawable, anyxx::dynamic_copyable,</div>
+<div class="line">       (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">using known_shapes = std::variant&lt;circle, square&gt;;</div>
 <div class="line"> </div>
@@ -575,13 +575,12 @@ Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 <div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">TRAIT_(figure, dynamic_copyable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(figure, dynamic_copyable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">using known_and_unknown_shapes = make_vany&lt;figure, circle, square&gt;;</div>
-<div class="line">static_assert(</div>
-<div class="line">    std::same_as&lt;known_and_unknown_shapes,</div>
-<div class="line">                 any&lt;using_&lt;std::variant&lt;any_&lt;figure&gt;, circle, square&gt;&gt;, </div>
-<div class="line">                    figure&gt;&gt;);</div>
+<div class="line">static_assert(std::same_as&lt;</div>
+<div class="line">              known_and_unknown_shapes,</div>
+<div class="line">              any&lt;using_&lt;std::variant&lt;any_&lt;figure&gt;, circle, square&gt;&gt;, figure&gt;&gt;);</div>
 <div class="line">ANY_MODEL_MAP((std::<span class="keywordtype">string</span>), figure) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(std::string <span class="keyword">const</span>&amp; s) { <span class="keywordflow">return</span> s; };</div>
 <div class="line">};</div>

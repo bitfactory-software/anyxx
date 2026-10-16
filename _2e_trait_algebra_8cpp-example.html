@@ -102,7 +102,7 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>algebra {</div>
 <div class="line"> </div>
-<div class="line">TRAIT(equal_comparable,</div>
+<div class="line">TRAIT(equal_comparable, anyxx::dynamic_copyable,</div>
 <div class="line">      (ANY_OP_MAP_NAMED_FRIEND(<span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
 <div class="line">       ANY_OP_DEF(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, !=, ne, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
 <div class="line">                  [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
@@ -110,7 +110,7 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">                             using_as&lt;equal_comparable&gt;(r));</div>
 <div class="line">                  })))</div>
 <div class="line"> </div>
-<div class="line">TRAIT_(semigroup, equal_comparable,</div>
+<div class="line">TRAIT(semigroup, equal_comparable,</div>
 <div class="line">       (ANY_FN_PURE(anyxx::self, op, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">TRAIT_EX_(</div>
@@ -131,7 +131,7 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">                       })),</div>
 <div class="line">    , , ())</div>
 <div class="line"> </div>
-<div class="line">TRAIT_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> V&gt;</div>
 <div class="line"><span class="keyword">struct </span>semigroup_plus_model_map : semigroup_default_model_map&lt;V&gt; {</div>

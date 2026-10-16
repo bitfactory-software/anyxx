@@ -106,7 +106,8 @@ $(function(){initNavTree('_5_any_template_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>{</div>
 <div class="line"> </div>
-<div class="line">TRAIT(stringable, (ANY_FN(std::string, to_string, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(stringable, anyxx::dynamic_copyable,</div>
+<div class="line">       (ANY_FN(std::string, to_string, (), <span class="keyword">const</span>)))</div>
 <div class="line">template &lt;typename Proxy = val&lt;&gt;&gt;</div>
 <div class="line">using any_to_string = any&lt;Proxy, stringable&gt;;</div>
 <div class="line"> </div>
@@ -117,7 +118,7 @@ $(function(){initNavTree('_5_any_template_8cpp-example.html','',''); });
 <div class="line">using any_map = any&lt;Proxy, map, Key, Value&gt;;</div>
 <div class="line"> </div>
 <div class="line">TRAIT_TEMPLATE_(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),</div>
-<div class="line">               (ANY_FN_EXACT(VALUE&amp;, at, (KEY const&amp;), ), ))</div>
+<div class="line">                (ANY_FN_EXACT(VALUE&amp;, at, (KEY const&amp;), ), ))</div>
 <div class="line">template &lt;typename Key, typename Value, typename Proxy = val&lt;&gt;&gt;</div>
 <div class="line">using any_mutable_map = any&lt;Proxy, mutable_map, Key, Value&gt;;</div>
 <div class="line"> </div>
@@ -129,8 +130,7 @@ $(function(){initNavTree('_5_any_template_8cpp-example.html','',''); });
 <div class="line">             (ANY_FN(VALUE, at, (KEY const&amp;), )), )</div>
 <div class="line"> </div>
 <div class="line">ANY_TEMPLATE(((KEY)), map_to_string,</div>
-<div class="line">             (ANY_FN((any_to_string&lt;cref&gt;), at, (KEY const&amp;),</div>
-<div class="line">                         const)), )</div>
+<div class="line">             (ANY_FN((any_to_string&lt;cref&gt;), at, (KEY const&amp;), const)), )</div>
 <div class="line"> </div>
 <div class="line">ANY_MODEL_MAP((<span class="keywordtype">int</span>), stringable) {</div>
 <div class="line">  <span class="keyword">auto</span> to_string(<span class="keywordtype">int</span> <span class="keyword">const</span>&amp; x) -&gt; std::string { <span class="keywordflow">return</span> std::to_string(x); };</div>
@@ -150,12 +150,11 @@ $(function(){initNavTree('_5_any_template_8cpp-example.html','',''); });
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;any template usage simple&quot;</span>) {</div>
 <div class="line">  std::map&lt;std::string, int&gt; map_string_to_int = {{<span class="stringliteral">&quot;one&quot;</span>, 1}, {<span class="stringliteral">&quot;two&quot;</span>, 2}};</div>
 <div class="line"> </div>
-<div class="line">  <span class="keyword">auto</span> any_map_lambda =</div>
-<div class="line">      [](any_map&lt;std::string, int, cref&gt; map_i) {</div>
-<div class="line">        REQUIRE(map_i.size() == 2);</div>
-<div class="line">        REQUIRE(map_i.at(<span class="stringliteral">&quot;one&quot;</span>) == 1);</div>
-<div class="line">        REQUIRE(map_i.at(<span class="stringliteral">&quot;two&quot;</span>) == 2);</div>
-<div class="line">      };</div>
+<div class="line">  <span class="keyword">auto</span> any_map_lambda = [](any_map&lt;std::string, int, cref&gt; map_i) {</div>
+<div class="line">    REQUIRE(map_i.size() == 2);</div>
+<div class="line">    REQUIRE(map_i.at(<span class="stringliteral">&quot;one&quot;</span>) == 1);</div>
+<div class="line">    REQUIRE(map_i.at(<span class="stringliteral">&quot;two&quot;</span>) == 2);</div>
+<div class="line">  };</div>
 <div class="line">  any_map_lambda(map_string_to_int);</div>
 <div class="line"> </div>
 <div class="line">  any_map_template_f&lt;std::string, int&gt;(map_string_to_int);</div>
@@ -175,9 +174,7 @@ $(function(){initNavTree('_5_any_template_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">  <span class="keyword">auto</span> lambda =</div>
 <div class="line">      [](any_recursive_map&lt;</div>
-<div class="line">          int,</div>
-<div class="line">          any_recursive_map&lt;std::string, any_map&lt;int, double, cref&gt;,</div>
-<div class="line">                            cref&gt;,</div>
+<div class="line">          int, any_recursive_map&lt;std::string, any_map&lt;int, double, cref&gt;, cref&gt;,</div>
 <div class="line">          cref&gt;</div>
 <div class="line">             map_i) {</div>
 <div class="line">        <span class="keyword">auto</span> x = map_i.at(1);</div>
@@ -193,8 +190,7 @@ $(function(){initNavTree('_5_any_template_8cpp-example.html','',''); });
 <div class="line">      [](any_mutable_recursive_map&lt;</div>
 <div class="line">          int,</div>
 <div class="line">          any_mutable_recursive_map&lt;</div>
-<div class="line">              std::string, any_mutable_map&lt;int, double, mutref&gt;,</div>
-<div class="line">              mutref&gt;,</div>
+<div class="line">              std::string, any_mutable_map&lt;int, double, mutref&gt;, mutref&gt;,</div>
 <div class="line">          mutref&gt;</div>
 <div class="line">             map_i) {</div>
 <div class="line">        <span class="keyword">auto</span> x = map_i.at(1);</div>
