@@ -1,7 +1,7 @@
 #pragma once
 
-#include <bit_factory/v26/anys/range/view_base.hpp>
-#include <bit_factory/v26/anys/range/sentinels.hpp>
+#include <bit_factory/v26/anys/ranges/view_base.hpp>
+#include <bit_factory/v26/anys/ranges/sentinels.hpp>
 
 namespace anyxx {
 

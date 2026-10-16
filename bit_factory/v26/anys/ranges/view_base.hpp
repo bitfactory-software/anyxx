@@ -1,8 +1,8 @@
 #pragma once
 
 #include <bit_factory/v26/any.hpp>
-#include <bit_factory/v26/anys/range/iterators.hpp>
-#include <bit_factory/v26/anys/range/iterator_categories.hpp>
+#include <bit_factory/v26/anys/ranges/iterators.hpp>
+#include <bit_factory/v26/anys/ranges/iterator_categories.hpp>
 
 namespace anyxx {
 
