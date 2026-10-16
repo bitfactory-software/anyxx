@@ -1,12 +1,12 @@
 #pragma once
 
+#include <atomic>
 #include <bit_factory/anyxx/proxies/basic_proxy_trait.hpp>
 #include <bit_factory/anyxx/proxies/proxy_concept.hpp>
-#include <bit_factory/anyxx/voidness.hpp>
 #include <bit_factory/anyxx/v_table_data.hpp>
-#include <atomic>
-#include <cstddef>
+#include <bit_factory/anyxx/voidness.hpp>
 #include <cassert>
+#include <cstddef>
 #include <utility>
 
 namespace anyxx {
@@ -123,6 +123,7 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
   static void destroy(cow& v, auto v_table) {
     if (v.holder_ && v_table != nullptr &&
         (v.holder_->count_.fetch_sub(1, std::memory_order_release) == 1)) {
+      std::atomic_thread_fence(std::memory_order_acquire);
       destruct(v_table, v.data_ptr());
       deallocate(v_table, v.holder_);
     }
@@ -136,8 +137,8 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
   static void* get_proxy_ptr_in(cow& v, VTable* v_table) {
     if (!v.unique()) {
       if constexpr (is_copy_constructor_v_table<VTable>) {
-        auto holder_size =
-            sizeof(cow::holder<>) - sizeof(void*) + get_model_size(v_table).size;
+        auto holder_size = sizeof(cow::holder<>) - sizeof(void*) +
+                           get_model_size(v_table).size;
         auto holder =
             new (static_cast<cow::holder_base*>(::operator new(holder_size)))
                 cow::holder_base;
