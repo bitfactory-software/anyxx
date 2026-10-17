@@ -11,7 +11,7 @@ using namespace anyxx;
 
 namespace _21_Tree_TE_interface_dispatch {
 
-TRAIT_EX(node, anyxx::dynamic_copyable, , , , (ANY_OPEN_DISPATCH), ())
+TRAIT_EX(node, anyxx::dynamic_copyable, , , , (HAS_OPEN_DISPATCH), ())
 using any_node = anyxx::any<anyxx::cow, node>;
 
 struct Plus {

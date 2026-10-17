@@ -63,7 +63,7 @@ TRAIT_EX(shape, anyxx::dynamic_copyable,
          (FN(void, draw, (mutable_observed_surface), const),
           FN(architecture::point, top_left, (), const),
           FN(architecture::size, size, (), const)),
-         , , (ANY_OPEN_DISPATCH), ())
+         , , (HAS_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::shared>
 using any_shape = anyxx::any<Proxy, shape>;
 

@@ -27,7 +27,7 @@ TRAIT_EX(value, anyxx::dynamic_copyable,
                     std::stringstream ss{std::string{sv}, std::ios_base::in};
                     ss >> std::boolalpha >> x;
                   })),
-         , , (ANY_OPEN_DISPATCH), ())
+         , , (HAS_OPEN_DISPATCH), ())
 using any_value = anyxx::any_<value>;
 
 using vany_value = anyxx::make_vany<value, bool, int, double, std::string>;
@@ -42,7 +42,7 @@ static_assert(std::same_as<any_in_variant, any_value>);
 
 }  // namespace example_2c
 
-ANY_MODEL_MAP((example_2c::custom), example_2c::value) {
+MODEL_MAP((example_2c::custom), example_2c::value) {
   static std::string to_string(custom const& x) {
     return "{" + x.answer + "}";
   };

@@ -50,10 +50,10 @@ TRAIT_TEMPLATE(((KEY)), map_to_string, anyxx::dynamic_copyable, (),
                (FN((anyxx::any<anyxx::cref, stringable>), at, (KEY const&),
                    const)))
 
-ANY_MODEL_MAP((int), stringable) {
+MODEL_MAP((int), stringable) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
 };
-ANY_MODEL_MAP((double), stringable) {
+MODEL_MAP((double), stringable) {
   auto to_string(double const& x) -> std::string { return std::to_string(x); };
 };
 
@@ -61,7 +61,7 @@ ANY_MODEL_MAP((double), stringable) {
 
 using namespace anyxx;
 
-ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), map,
+TEMPLATE_MODEL_MAP((std::map<std::string, int>), map,
                        ((std::string), (int))) {
   int const& at(std::map<std::string, int> const& x, std::string const& i) {
     return x.at(i);

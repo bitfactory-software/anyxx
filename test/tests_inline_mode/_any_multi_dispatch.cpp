@@ -13,7 +13,7 @@ using namespace std::literals;
 
 namespace {
 TRAIT_EX(thing, anyxx::dynamic_copyable, (FN(std::string, name, (), const)), , ,
-         (ANY_OPEN_DISPATCH), ())
+         (HAS_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::shared>
 using any_thing = anyxx::any<Proxy, thing>;
 

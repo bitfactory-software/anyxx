@@ -25,7 +25,7 @@ struct model2 {
 
 }  // namespace simple
 
-ANY_MODEL_MAP((simple::model2), simple::trait1) {
+MODEL_MAP((simple::model2), simple::trait1) {
   static std::string fn1(simple::model2 const& m) {
     return std::to_string(m.x);
   };

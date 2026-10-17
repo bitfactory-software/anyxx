@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <bit_factory/anyxx/any_access.hpp>
 #include <bit_factory/anyxx/any_concept.hpp>
 #include <bit_factory/anyxx/proxies/dyn/shared.hpp>
@@ -47,37 +46,37 @@ namespace anyxx {
   })
 
 TRAIT_EX(const_referenceable, observeable, , , , ,
-          (using default_proxy_t = cref;));
+         (using default_proxy_t = cref;));
 TRAIT_EX(mutable_referenceable, observeable, , , , ,
-          (using default_proxy_t = mutref;));
+         (using default_proxy_t = mutref;));
+TRAIT_EX(deleteable, observeable, , , , , (using default_proxy_t = unique;));
 
 TRAIT_EX(moveable, observeable, , , ,
-          (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
-          (using default_proxy_t = val<>;));
+         (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
+         (using default_proxy_t = val<>;));
 
 TRAIT_EX(copyable, moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
 
 TRAIT_EX(typed_observeable, observeable, , , , (ANY_CLASS_TYPE_INFO), ());
 
 TRAIT_EX(typed_moveable, typed_observeable, , , ,
-          (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
-          (using default_proxy_t = val<>;));
+         (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
+         (using default_proxy_t = val<>;));
 
 TRAIT_EX(typed_copyable, typed_moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
 
 TRAIT_EX(dynamic_castable, typed_observeable, , , ,
-          (ANY_CAN_TYPE_SAVE_DOWNCAST, ANY_CAN_TYPE_SAVE_CROSSCAST), ());
+         (ANY_CAN_TYPE_SAVE_DOWNCAST, ANY_CAN_TYPE_SAVE_CROSSCAST), ());
 
 TRAIT_EX(dynamic_deletable, dynamic_castable, , , , (ANY_HAS_DELETE),
-          (using default_proxy_t = shared;));
+         (using default_proxy_t = shared;));
 
 TRAIT_EX(dynamic_smart_ptr, dynamic_deletable, , , ,
-          (ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR), ());
+         (ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR), ());
 
 TRAIT_EX(dynamic_moveable, dynamic_castable, , , ,
-          (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
-          (using default_proxy_t = val<>;));
+         (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
+         (using default_proxy_t = val<>;));
 
 TRAIT_EX(dynamic_copyable, dynamic_moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
 }  // namespace anyxx
-

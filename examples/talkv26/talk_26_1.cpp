@@ -7,23 +7,28 @@
 #include <string>
 #include <vector>
 
-using namespace anyxx;
-
-using namespace anyxx;
-TRAIT(Shape, anyxx::dynamic_deletable, (FN(double, area, (), const)))
+namespace {
 
 struct Circle {
   double radius;
 };
+
+using namespace anyxx;
+
+template <is_trait Trait, typename Self>
+struct Shape : dynamic_deletable<Trait, Self> {
+  double area() const;
+};
 template <>
-struct Shape_model_map<Circle> {
-  double area(const Circle& self) { return M_PI * self.radius * self.radius; }
+struct Shape<model_map, Circle> {
+  static double area(const Circle& self) { return M_PI * self.radius * self.radius; }
 };
 
-TEST_CASE("ShapesAny++23") {
+TEST_CASE("ShapesAny++26") {
   std::initializer_list<any<unique, Shape>> shapes = {Circle{5.0}};
   for (const auto& shape : shapes) {
     std::println("Area: {}", shape.area());
-    ;
   }
 }
+
+}  // namespace
