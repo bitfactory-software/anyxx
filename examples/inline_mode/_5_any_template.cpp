@@ -18,25 +18,25 @@ template <typename Proxy = val<>>
 using any_to_string = any<Proxy, stringable>;
 
 TRAIT_TEMPLATE(((KEY), (VALUE)), map, anyxx::dynamic_copyable, (),
-                (ANY_FN_EXACT(VALUE const&, at, (KEY const&), const),
-                 ANY_FN(std::size_t, size, (), const)))
+               (ANY_FN_EXACT(VALUE const&, at, (KEY const&), const),
+                ANY_FN(std::size_t, size, (), const)))
 template <typename Key, typename Value, typename Proxy = val<>>
 using any_map = any<Proxy, map, Key, Value>;
 
 TRAIT_TEMPLATE(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),
-                (ANY_FN_EXACT(VALUE&, at, (KEY const&), ), ))
+               (ANY_FN_EXACT(VALUE&, at, (KEY const&), ), ))
 template <typename Key, typename Value, typename Proxy = val<>>
 using any_mutable_map = any<Proxy, mutable_map, Key, Value>;
 
-ANY_TEMPLATE(((KEY), (VALUE)), recursive_map,
-             (ANY_FN(VALUE, at, (KEY const&), const),
-              ANY_FN(std::size_t, size, (), const)), )
+TRAIT_TEMPLATE(((KEY), (VALUE)), recursive_map, anyxx::dynamic_copyable, (),
+               (ANY_FN(VALUE, at, (KEY const&), const),
+                ANY_FN(std::size_t, size, (), const)))
 
-ANY_TEMPLATE(((KEY), (VALUE)), mutable_recursive_map,
-             (ANY_FN(VALUE, at, (KEY const&), )), )
+TRAIT_TEMPLATE(((KEY), (VALUE)), mutable_recursive_map, anyxx::dynamic_copyable,
+               (), (ANY_FN(VALUE, at, (KEY const&), )))
 
-ANY_TEMPLATE(((KEY)), map_to_string,
-             (ANY_FN((any_to_string<cref>), at, (KEY const&), const)), )
+TRAIT_TEMPLATE(((KEY)), map_to_string, anyxx::dynamic_copyable, (),
+               (ANY_FN((any_to_string<cref>), at, (KEY const&), const)))
 
 ANY_MODEL_MAP((int), stringable) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
@@ -54,9 +54,10 @@ void any_map_template_f(any_map<KEY, VALUE, cref> const& map_i) {
 }
 
 TEST_CASE("any template usage simple") {
+  using namespace anyxx;
   std::map<std::string, int> map_string_to_int = {{"one", 1}, {"two", 2}};
 
-  auto any_map_lambda = [](any_map<std::string, int, cref> map_i) {
+  auto any_map_lambda = [](any<cref, map, std::string, int> map_i) {
     REQUIRE(map_i.size() == 2);
     REQUIRE(map_i.at("one") == 1);
     REQUIRE(map_i.at("two") == 2);
@@ -66,7 +67,7 @@ TEST_CASE("any template usage simple") {
   any_map_template_f<std::string, int>(map_string_to_int);
 
   auto any_map_to_string_lambda =
-      [](any_map_to_string<std::string, cref> map_i) {
+      [](any<cref, map_to_string, std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1");
         REQUIRE(map_i.at("two").to_string() == "2");
       };
@@ -74,14 +75,13 @@ TEST_CASE("any template usage simple") {
 }
 
 TEST_CASE("nested(recursive) any template") {
-  std::map<int, std::map<std::string, std::map<int, double>>> map = {
+  std::map<int, std::map<std::string, std::map<int, double>>> m = {
       {1, {{"one", {{1, 3.14}, {2, 6.28}}}, {"two", {{3, 3.333}}}}},
       {2, {{"one", {{4, 4.14}, {5, 4.28}}}, {"two", {{6, 4.333}}}}}};
 
   auto lambda =
-      [](any_recursive_map<
-          int, any_recursive_map<std::string, any_map<int, double, cref>, cref>,
-          cref>
+      [](any<cref, recursive_map, int,
+             any<cref, recursive_map, std::string, any<cref, map, int, double>>>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");
@@ -90,28 +90,25 @@ TEST_CASE("nested(recursive) any template") {
         REQUIRE(map_i.at(1).at("one").at(1) == 3.14);
         REQUIRE(map_i.at(2).at("one").at(4) == 4.14);
       };
-  lambda(map);
+  lambda(m);
 
-  auto lambda_mutate =
-      [](any_mutable_recursive_map<
-          int,
-          any_mutable_recursive_map<
-              std::string, any_mutable_map<int, double, mutref>, mutref>,
-          mutref>
-             map_i) {
-        auto x = map_i.at(1);
-        auto y = x.at("one");
-        auto z = y.at(1);
-        REQUIRE(z == 3.14);
-        {
-          auto xx = map_i.at(1).at("one");
-        };
-        REQUIRE(map_i.at(1).at("one").at(1) == 3.14);
-        REQUIRE(map_i.at(2).at("one").at(4) == 4.14);
-        map_i.at(2).at("one").at(4) = 8.28;
-      };
-  lambda_mutate(map);
-  REQUIRE(map[2]["one"][4] == 8.28);
+  auto lambda_mutate = [](any<mutref, mutable_recursive_map, int,
+                              any<mutref, mutable_recursive_map, std::string,
+                                  any<mutref, mutable_map, int, double>>>
+                              map_i) {
+    auto x = map_i.at(1);
+    auto y = x.at("one");
+    auto z = y.at(1);
+    REQUIRE(z == 3.14);
+    {
+      auto xx = map_i.at(1).at("one");
+    };
+    REQUIRE(map_i.at(1).at("one").at(1) == 3.14);
+    REQUIRE(map_i.at(2).at("one").at(4) == 4.14);
+    map_i.at(2).at("one").at(4) = 8.28;
+  };
+  lambda_mutate(m);
+  REQUIRE(m[2]["one"][4] == 8.28);
 }
 
 namespace {

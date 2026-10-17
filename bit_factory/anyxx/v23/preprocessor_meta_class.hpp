@@ -745,7 +745,7 @@
   TRAIT_META_FUNCTION(, (T), (Concrete), (StaticDispatchType), (V), n, BASE, , \
                       (T), l, static_fns, typedefs, v_table_data, decoration)
 
-/// \addtogroup trait_macros TRAIT... and ANY_ macros
+/// \addtogroup trait_macros TRAIT... macros
 /// \brief Macros to define \ref trait 's and \ref any 's
 ///
 /// Name conventions:
@@ -754,13 +754,12 @@
 /// brackets). A decoration can be any valid C++ code fragment in the context of
 /// the trait jacket
 /// - TEMPLATE: macro to define a template \ref trait or \ref any
-/// - trailing underscore: macro with base TRAIT
 ///
 /// Syntax:
 ///
-/// TRAIT[_TEMPLATE][_EX][_]
+/// TRAIT[_TEMPLATE][_EX]
 ///     ([template_types], name, [base, base_template_types,]
-///         function_list[,(decoration)])
+///         function_list[, [static_function_list], [typenames], (decoration)])
 ///
 ///  @{
 
@@ -791,8 +790,8 @@
 ///
 /// Macro to define the functional behavior for a \ref any, with decorations.
 /// Decorations are additional functions and typedefs (in brackets).
-#define TRAIT_TEMPLATE_EX(t, n, base, base_template_types, l, static_fns,     \
-                           typedefs, v_table_data, decoration)                 \
+#define TRAIT_TEMPLATE_EX(t, n, base, base_template_types, l, static_fns,      \
+                          typedefs, v_table_data, decoration)                  \
   TRAIT_META_FUNCTION(                                                         \
       _detail_REMOVE_PARENS(t),                                                \
       __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                  \
@@ -809,44 +808,6 @@
 /// \ingroup trait_macros
 #define TRAIT_TEMPLATE(t, n, base, base_template_types, l) \
   TRAIT_TEMPLATE_EX(t, n, base, base_template_types, l, , , , ())
-
-////////////////////////////////////////////////////////////////////////////////
-// cppcheck-suppress-macro performance-unnecessary-value-param
-#define ANY_META_FUNCTION(pure_template_params,                       \
-                          any_template_params_with_defaults, n)       \
-                                                                      \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(                        \
-      any_template_params_with_defaults)>                             \
-  using any_##n =                                                     \
-      anyxx::any<Proxy,                                               \
-                 n _detail_ANYXX_OPTIONAL_COMMA(pure_template_params) \
-                     _detail_ANYXX_TEMPLATE_ARGS(pure_template_params)>;
-
-////////////////////////////////////////////////////////////////////////////////
-
-#define __detail_ANYXX_ANY_CMF(t, t_with_defaults, n) \
-  ANY_META_FUNCTION(, _detail_REMOVE_PARENS(t_with_defaults), n)
-
-#define __detail_ANYXX_ANY_EX_(n, proxy_default) \
-  __detail_ANYXX_ANY_CMF(                        \
-      ((Proxy)), ((Proxy = anyxx::default_proxy<proxy_default>::type)), n)
-
-
-
-#define __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)                 \
-  ANY_META_FUNCTION(_detail_REMOVE_PARENS(t),                                \
-                    __detail_ANYXX_ADD_TAIL(                                 \
-                        (Proxy = anyxx::default_proxy<proxy_default>::type), \
-                        _detail_REMOVE_PARENS(t)),                           \
-                    n)
-
-/// \def ANY_TEMPLATE
-/// \brief ANY template.
-/// \ingroup trait_macros
-/// See \ref ANY for explanation
-#define ANY_TEMPLATE(t, n, l, proxy_default) \
-  TRAIT_TEMPLATE(t, n, anyxx::dynamic_copyable, (), l)                    \
-  __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
 /// @}
 
@@ -867,7 +828,7 @@
 /// - PURE: function must be provided by the model
 /// - DEF: function has a default behavior defined by the last parameter. Must
 /// be a lambda. The target model can be accessed via a capture in the lambda of
-/// the varaible x. This lambda is the last parameter of the macro.
+/// the variable x. This lambda is the last parameter of the macro.
 /// - OVERLOAD: use if in a base TRAIT exists an equally named FN or OP
 /// - MAP_NAMED: use to provide a programmer-chosen name for an operator in the
 /// map to have an defined name for overriding in derived TRAITs
@@ -889,7 +850,7 @@
 ///
 /// syntax:
 ///
-/// ANY_FN[_OVERLOAD]([_PURE]|[_DEF])[_EXCACT][]
+/// ANY_FN[_OVERLOAD]([_PURE]|[_DEF])[_EXACT][]
 ///     ([access], return_type, name, (param_list),[_const]
 ///     [, default_behavior])
 ///
@@ -974,7 +935,7 @@
 /// of the model and a programmer-chosen name in the map.
 ///
 /// Use if in a base TRAIT exists an equally named FN, or you want to provide a
-/// specific name for the operator in the map to have an defined name for
+/// specific name for the operator in the map to have a defined name for
 /// overriding in derived TRAITs.
 #define ANY_OP_MAP_NAMED(ret, op, name, params, const_)                     \
   __detail_ANYXX_MEMBER_FN(public, , ret, name, operator op, false, const_, \
@@ -985,7 +946,7 @@
 /// operator of the model and a programmer-chosen name in the map.
 ///
 /// Use if in a base TRAIT exists an equally named FN, or you want to provide a
-/// specific name for the operator in the map to have an defined name for
+/// specific name for the operator in the map to have a defined name for
 /// overriding in derived TRAITs.
 #define ANY_OP_MAP_NAMED_FRIEND(ret, op, name, params, const_)     \
   ANY_FN_(public, , ret, name, operator op, false, const_, (x op), \
@@ -996,7 +957,7 @@
 /// operator of the model and a programmer-chosen name in the map.
 ///
 /// Use if in a base TRAIT exists an equally named FN, or you want to provide a
-/// specific name for the operator in the map to have an defined name for
+/// specific name for the operator in the map to have a defined name for
 /// overriding in derived TRAITs.
 #define ANY_OP_MAP_NAMED_UNARY(ret, op, name, const_) \
   ANY_OP_DEF(public, ret, op, name, (), const_,       \
