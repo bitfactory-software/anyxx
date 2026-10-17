@@ -132,10 +132,10 @@ $(function(){initNavTree('_5_any_template_8cpp-example.html','',''); });
 <div class="line">TRAIT_TEMPLATE(((KEY)), map_to_string, anyxx::dynamic_copyable, (),</div>
 <div class="line">               (FN((any_to_string&lt;cref&gt;), at, (KEY const&amp;), const)))</div>
 <div class="line"> </div>
-<div class="line">ANY_MODEL_MAP((<span class="keywordtype">int</span>), stringable) {</div>
+<div class="line">MODEL_MAP((<span class="keywordtype">int</span>), stringable) {</div>
 <div class="line">  <span class="keyword">auto</span> to_string(<span class="keywordtype">int</span> <span class="keyword">const</span>&amp; x) -&gt; std::string { <span class="keywordflow">return</span> std::to_string(x); };</div>
 <div class="line">};</div>
-<div class="line">ANY_MODEL_MAP((<span class="keywordtype">double</span>), stringable) {</div>
+<div class="line">MODEL_MAP((<span class="keywordtype">double</span>), stringable) {</div>
 <div class="line">  <span class="keyword">auto</span> to_string(<span class="keywordtype">double</span> <span class="keyword">const</span>&amp; x) -&gt; std::string { <span class="keywordflow">return</span> std::to_string(x); };</div>
 <div class="line">};</div>
 <div class="line">}  <span class="comment">// namespace</span></div>
@@ -206,7 +206,7 @@ $(function(){initNavTree('_5_any_template_8cpp-example.html','',''); });
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>{</div>
-<div class="line">ANY_TEMPLATE_MODEL_MAP((std::map&lt;int, double&gt;), map, ((<span class="keywordtype">int</span>), (<span class="keywordtype">double</span>))) {</div>
+<div class="line">TEMPLATE_MODEL_MAP((std::map&lt;int, double&gt;), map, ((<span class="keywordtype">int</span>), (<span class="keywordtype">double</span>))) {</div>
 <div class="line">  <span class="keywordtype">double</span> <span class="keyword">const</span>&amp; at(std::map&lt;int, double&gt; <span class="keyword">const</span>&amp; x, <span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> x.at(i); };</div>
 <div class="line">};</div>
 <div class="line">}  <span class="comment">// namespace</span></div>

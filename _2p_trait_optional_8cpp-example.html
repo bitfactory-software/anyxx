@@ -203,7 +203,7 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"><span class="comment">// directly use it as the representation of the nullable trait. This is done be</span></div>
 <div class="line"><span class="comment">// seting &#39;rep_type&#39; to &#39;foo&#39; and providing the &#39;has_value&#39; and &#39;get_value&#39;</span></div>
 <div class="line"><span class="comment">// functions accordingly.</span></div>
-<div class="line">ANY_MODEL_MAP((_2p_app::foo), _2p_lib::nullable) {</div>
+<div class="line">MODEL_MAP((_2p_app::foo), _2p_lib::nullable) {</div>
 <div class="line">  <span class="keyword">using </span>rep_type = _2p_app::foo;</div>
 <div class="line">  <span class="keywordtype">bool</span> has_value(_2p_app::foo <span class="keyword">const</span>&amp; x) { <span class="keywordflow">return</span> x.v_ != <span class="keyword">nullptr</span>; };</div>
 <div class="line">  <span class="keyword">auto</span>&amp; get_value(<span class="keyword">auto</span>&amp;&amp; x) { <span class="keywordflow">return</span> std::forward&lt;decltype(x)&gt;(x); };</div>
