@@ -109,30 +109,30 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">namespace </span>example_2b {</div>
 <div class="line"> </div>
 <div class="line">TRAIT_EX(monoid, anyxx::dynamic_copyable,</div>
-<div class="line">          (ANY_FN_DEF(<span class="keyword">public</span>, anyxx::self, <span class="keywordtype">id</span>, (), <span class="keyword">const</span>, []() { <span class="keywordflow">return</span> T{}; }),</div>
-<div class="line">           ANY_FN_DEF(<span class="keyword">public</span>, anyxx::self, op, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
-<div class="line">                      [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
-<div class="line">                        std::println(<span class="stringliteral">&quot;op-default {}&quot;</span>, <span class="keyword">typeid</span>(T).name());</div>
-<div class="line">                        <span class="keyword">auto</span> self = using_as&lt;monoid&gt;(x);</div>
-<div class="line">                        <span class="keywordflow">return</span> get_proxy(self.concat(std::vector{</div>
-<div class="line">                            using_as&lt;monoid&gt;(r)}));  <span class="comment">// NOLINT</span></div>
-<div class="line">                      }),</div>
-<div class="line">           ANY_FN_DEF(<span class="keyword">public</span>, anyxx::self, concat,</div>
-<div class="line">                      (anyxx::any_self_forward_range <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
-<div class="line">                      [&amp;x](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; r) {</div>
-<div class="line">                        std::println(<span class="stringliteral">&quot;concat-default {}&quot;</span>, <span class="keyword">typeid</span>(T).name());</div>
-<div class="line">                        <span class="keyword">auto</span> self = using_as&lt;monoid&gt;(x);</div>
-<div class="line">                        <span class="keywordflow">return</span> get_proxy(std::ranges::fold_left(</div>
-<div class="line">                            r | std::views::transform([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; y) {</div>
-<div class="line">                              <span class="keywordflow">return</span> using_as&lt;monoid&gt;(y);</div>
-<div class="line">                            }),</div>
-<div class="line">                            self, [&amp;](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; m1, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; m2) {</div>
-<div class="line">                              <span class="keywordflow">return</span> m1.op(m2);</div>
-<div class="line">                            }));</div>
-<div class="line">                      }),</div>
-<div class="line">           ANY_OP_DEF(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
-<div class="line">                      ([&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) { <span class="keywordflow">return</span> x == r; }))),</div>
-<div class="line">          , , , ())</div>
+<div class="line">         (FN_IMPL(<span class="keyword">public</span>, anyxx::self, <span class="keywordtype">id</span>, (), <span class="keyword">const</span>, []() { <span class="keywordflow">return</span> T{}; }),</div>
+<div class="line">          FN_IMPL(<span class="keyword">public</span>, anyxx::self, op, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
+<div class="line">                  [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
+<div class="line">                    std::println(<span class="stringliteral">&quot;op-default {}&quot;</span>, <span class="keyword">typeid</span>(T).name());</div>
+<div class="line">                    <span class="keyword">auto</span> self = using_as&lt;monoid&gt;(x);</div>
+<div class="line">                    <span class="keywordflow">return</span> get_proxy(self.concat(</div>
+<div class="line">                        std::vector{using_as&lt;monoid&gt;(r)}));  <span class="comment">// NOLINT</span></div>
+<div class="line">                  }),</div>
+<div class="line">          FN_IMPL(<span class="keyword">public</span>, anyxx::self, concat,</div>
+<div class="line">                  (anyxx::any_self_forward_range <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
+<div class="line">                  [&amp;x](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; r) {</div>
+<div class="line">                    std::println(<span class="stringliteral">&quot;concat-default {}&quot;</span>, <span class="keyword">typeid</span>(T).name());</div>
+<div class="line">                    <span class="keyword">auto</span> self = using_as&lt;monoid&gt;(x);</div>
+<div class="line">                    <span class="keywordflow">return</span> get_proxy(std::ranges::fold_left(</div>
+<div class="line">                        r | std::views::transform([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; y) {</div>
+<div class="line">                          <span class="keywordflow">return</span> using_as&lt;monoid&gt;(y);</div>
+<div class="line">                        }),</div>
+<div class="line">                        self, [&amp;](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; m1, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; m2) {</div>
+<div class="line">                          <span class="keywordflow">return</span> m1.op(m2);</div>
+<div class="line">                        }));</div>
+<div class="line">                  }),</div>
+<div class="line">          OP_IMPL(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
+<div class="line">                  ([&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) { <span class="keywordflow">return</span> x == r; }))),</div>
+<div class="line">         , , , ())</div>
 <div class="line"> </div>
 <div class="line">template &lt;typename Proxy = anyxx::val&lt;&gt;&gt;</div>
 <div class="line">using any_monoid = anyxx::any&lt;Proxy, monoid&gt;;</div>
@@ -216,7 +216,7 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">      anyxx::moveable_from&lt;<span class="keyword">decltype</span>(x)::proxy_t, <span class="keyword">decltype</span>(y)::proxy_t&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(</div>
 <div class="line">      !anyxx::borrowable_from&lt;<span class="keyword">decltype</span>(x)::proxy_t, <span class="keyword">decltype</span>(y)::proxy_t,</div>
-<div class="line">                                    <span class="keyword">decltype</span>(y)::v_table_t&gt;);</div>
+<div class="line">                              <span class="keyword">decltype</span>(y)::v_table_t&gt;);</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;example 2b monoid a&quot;</span>) {</div>

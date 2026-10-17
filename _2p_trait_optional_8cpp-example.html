@@ -99,12 +99,12 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">namespace </span>_2p_lib {</div>
 <div class="line"> </div>
 <div class="line">TRAIT(equal_comparable, anyxx::dynamic_copyable,</div>
-<div class="line">      (ANY_OP_MAP_NAMED_FRIEND(<span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
-<div class="line">       ANY_OP_DEF(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, !=, ne, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
-<div class="line">                  [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
-<div class="line">                    <span class="keywordflow">return</span> !(using_as&lt;equal_comparable&gt;(x) ==</div>
-<div class="line">                             using_as&lt;equal_comparable&gt;(r));</div>
-<div class="line">                  })))</div>
+<div class="line">      (OP_FREE(<span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
+<div class="line">       OP_IMPL(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, !=, ne, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
+<div class="line">               [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
+<div class="line">                 <span class="keywordflow">return</span> !(using_as&lt;equal_comparable&gt;(x) ==</div>
+<div class="line">                          using_as&lt;equal_comparable&gt;(r));</div>
+<div class="line">               })))</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// An optional as a customizable trait.</span></div>
 <div class="line"><span class="comment">// It is default represented as a variant of the value type and a</span></div>
@@ -125,12 +125,12 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line">TRAIT(nullable, anyxx::dynamic_copyable,</div>
-<div class="line">      (ANY_FN_DEF(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, has_value, (), <span class="keyword">const</span>,</div>
-<div class="line">                  [x]() { <span class="keywordflow">return</span> std::holds_alternative&lt;T&gt;(x); }),</div>
-<div class="line">       ANY_FN_DEF_EXACT(<span class="keyword">public</span>, T <span class="keyword">const</span>&amp;, get_value, (), <span class="keyword">const</span>,</div>
-<div class="line">                        [&amp;x]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> std::get&lt;T&gt;(x); }),</div>
-<div class="line">       ANY_FN_DEF_EXACT(<span class="keyword">public</span>, T&amp;, get_value, (), ,</div>
-<div class="line">                        [&amp;x]() -&gt; T&amp; { <span class="keywordflow">return</span> std::get&lt;T&gt;(x); }),</div>
+<div class="line">      (FN_IMPL(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, has_value, (), <span class="keyword">const</span>,</div>
+<div class="line">               [x]() { <span class="keywordflow">return</span> std::holds_alternative&lt;T&gt;(x); }),</div>
+<div class="line">       FN_IMPL_EXACT(<span class="keyword">public</span>, T <span class="keyword">const</span>&amp;, get_value, (), <span class="keyword">const</span>,</div>
+<div class="line">                     [&amp;x]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> std::get&lt;T&gt;(x); }),</div>
+<div class="line">       FN_IMPL_EXACT(<span class="keyword">public</span>, T&amp;, get_value, (), ,</div>
+<div class="line">                     [&amp;x]() -&gt; T&amp; { <span class="keywordflow">return</span> std::get&lt;T&gt;(x); }),</div>
 <div class="line">       ANY_OP_DEF_EXACT(<span class="keyword">public</span>, T <span class="keyword">const</span>&amp;, -&gt;, arrow_const, (), <span class="keyword">const</span>,</div>
 <div class="line">                        [&amp;x]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
 <div class="line">       ANY_OP_DEF_EXACT(<span class="keyword">public</span>, T&amp;, -&gt;, arrow, (), ,</div>
@@ -139,7 +139,7 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">                        [&amp;x]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
 <div class="line">       ANY_OP_DEF_EXACT(<span class="keyword">public</span>, T&amp;, *, deref, (), ,</div>
 <div class="line">                        [&amp;x]() -&gt; T&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
-<div class="line">       ANY_OP_MAP_NAMED_FRIEND(<span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>)))</div>
+<div class="line">       OP_FREE(<span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">template &lt;typename T&gt;</div>
 <div class="line"><span class="keyword">using</span> optional = anyxx::any&lt;anyxx::using_&lt;T&gt;, nullable&gt;;</div>

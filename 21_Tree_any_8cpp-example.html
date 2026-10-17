@@ -106,8 +106,8 @@ $(function(){initNavTree('21_Tree_any_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">namespace </span>{</div>
 <div class="line"> </div>
 <div class="line">TRAIT(node, dynamic_copyable,</div>
-<div class="line">      (ANY_FN(<span class="keywordtype">int</span>, value, (), <span class="keyword">const</span>), ANY_FN(std::string, as_forth, (), <span class="keyword">const</span>),</div>
-<div class="line">       ANY_FN(std::string, as_lisp, (), <span class="keyword">const</span>)))</div>
+<div class="line">      (FN(<span class="keywordtype">int</span>, value, (), <span class="keyword">const</span>), FN(std::string, as_forth, (), <span class="keyword">const</span>),</div>
+<div class="line">       FN(std::string, as_lisp, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using </span>any_node = any_&lt;node, cow&gt;;</div>
 <div class="line"> </div>

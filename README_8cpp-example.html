@@ -178,8 +178,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] std::string draw() const { return <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">TRAIT(drawable, anyxx::dynamic_copyable,</div>
-<div class="line">       (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">void draw(std::stringstream&amp; os,</div>
 <div class="line">          std::vector&lt;anyxx::any_&lt;drawable&gt;&gt; const&amp; drawables) {</div>
@@ -275,8 +274,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] std::string edgy_salute()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;edgy World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">TRAIT(drawable, anyxx::dynamic_copyable,</div>
-<div class="line">       (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">ANY_MODEL_MAP((circle), drawable) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(circle <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;Silent greetings&quot;</span>; };</div>
@@ -329,8 +327,8 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;square&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">TRAIT_EX(figure, anyxx::dynamic_copyable,</div>
-<div class="line">          (ANY_FN(std::string, name, (), <span class="keyword">const</span>)), , , (ANY_OPEN_DISPATCH), ())</div>
+<div class="line">TRAIT_EX(figure, anyxx::dynamic_copyable, (FN(std::string, name, (), <span class="keyword">const</span>)), ,</div>
+<div class="line">         , (ANY_OPEN_DISPATCH), ())</div>
 <div class="line"> </div>
 <div class="line">anyxx::dispatch&lt;std::partial_ordering(anyxx::virtual_&lt;anyxx::any_&lt;figure&gt;&gt;,</div>
 <div class="line">                                      anyxx::virtual_&lt;anyxx::any_&lt;figure&gt;&gt;)&gt;</div>
@@ -418,8 +416,8 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;square&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">TRAIT_EX(figure, anyxx::dynamic_copyable,</div>
-<div class="line">          (ANY_FN(std::string, name, (), <span class="keyword">const</span>)), , , (ANY_OPEN_DISPATCH), ())</div>
+<div class="line">TRAIT_EX(figure, anyxx::dynamic_copyable, (FN(std::string, name, (), <span class="keyword">const</span>)), ,</div>
+<div class="line">         , (ANY_OPEN_DISPATCH), ())</div>
 <div class="line">using any_figure = anyxx::any_&lt;figure&gt;;</div>
 <div class="line"> </div>
 <div class="line">ayx::dispatch&lt;std::<span class="keywordtype">string</span>(ayx::virtual_&lt;any_figure&gt;)&gt; latin, italian;</div>
@@ -483,9 +481,9 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>figure_has_open_dispatch {};</div>
-<div class="line">TRAIT(figure, ayx::dynamic_copyable, (ANY_FN(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(figure, ayx::dynamic_copyable, (FN(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>)))</div>
 <div class="line">TRAIT(serializable, ayx::dynamic_copyable,</div>
-<div class="line">     (ANY_FN(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), const)))</div>
+<div class="line">      (FN(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), const)))</div>
 <div class="line"> </div>
 <div class="line">ayx::factory&lt;ayx::any_&lt;serializable&gt;, std::<span class="keywordtype">string</span>, std::istream&amp;&gt; deserialize;</div>
 <div class="line"> </div>
@@ -521,7 +519,8 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">ANY_REGISTER_MODEL(square, figure);</div>
 <div class="line">ANY_REGISTER_MODEL(square, serializable);</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> areas(std::stringstream&amp; os, std::vector&lt;ayx::any_&lt;figure&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
+<div class="line"><span class="keywordtype">void</span> areas(std::stringstream&amp; os,</div>
+<div class="line">           std::vector&lt;ayx::any_&lt;figure&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
 <div class="line">  std::string sep;</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures) os &lt;&lt; std::exchange(sep, <span class="stringliteral">&quot;, &quot;</span>) &lt;&lt; f.area();</div>
 <div class="line">}</div>
@@ -583,8 +582,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">TRAIT(drawable, anyxx::dynamic_copyable,</div>
-<div class="line">       (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">using known_shapes = std::variant&lt;circle, square&gt;;</div>
 <div class="line"> </div>
@@ -636,7 +634,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">TRAIT(figure, dynamic_copyable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(figure, dynamic_copyable, (FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">using known_and_unknown_shapes = make_vany&lt;figure, circle, square&gt;;</div>
 <div class="line">static_assert(std::same_as&lt;</div>

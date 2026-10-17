@@ -127,17 +127,17 @@ $(function(){initNavTree('_2f_trait_equal_comparable_8cpp-example.html','',''); 
 <div class="line"><span class="comment">// These functions are then used to implement the operators == and !=</span></div>
 <div class="line"><span class="comment">// in the external interface.</span></div>
 <div class="line">TRAIT(equal_comparable, anyxx::dynamic_copyable,</div>
-<div class="line">       <span class="comment">// anyxx::self is a magic type that represents the type of the object for</span></div>
-<div class="line">       <span class="comment">// whitch the trait is called. It is used to smooth the differences</span></div>
-<div class="line">       <span class="comment">// between static and dynamic dispatch, so the implemention can be</span></div>
-<div class="line">       <span class="comment">// written against the actual type of the object ref/const qualified as</span></div>
-<div class="line">       <span class="comment">// specified. If the mapped type provies already an operator,</span></div>
-<div class="line">       <span class="comment">// ANY_OP_MAP_NAMED_FRIEND use it as the default implementation.</span></div>
-<div class="line">       (ANY_OP_MAP_NAMED_FRIEND(<span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
-<div class="line">        <span class="comment">// We can use the == operator of the external interface to</span></div>
-<div class="line">        <span class="comment">// provide a default implementation for the != operator.</span></div>
-<div class="line">        ANY_OP_DEF(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, !=, ne, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
-<div class="line">                   [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) { <span class="keywordflow">return</span> !Map{}.eq(x, r); })))</div>
+<div class="line">      <span class="comment">// anyxx::self is a magic type that represents the type of the object for</span></div>
+<div class="line">      <span class="comment">// whitch the trait is called. It is used to smooth the differences</span></div>
+<div class="line">      <span class="comment">// between static and dynamic dispatch, so the implemention can be</span></div>
+<div class="line">      <span class="comment">// written against the actual type of the object ref/const qualified as</span></div>
+<div class="line">      <span class="comment">// specified. If the mapped type provies already an operator,</span></div>
+<div class="line">      <span class="comment">// OP_FREE use it as the default implementation.</span></div>
+<div class="line">      (OP_FREE(<span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
+<div class="line">       <span class="comment">// We can use the == operator of the external interface to</span></div>
+<div class="line">       <span class="comment">// provide a default implementation for the != operator.</span></div>
+<div class="line">       OP_IMPL(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, !=, ne, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
+<div class="line">               [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) { <span class="keywordflow">return</span> !Map{}.eq(x, r); })))</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// TRAIT automatically defines the is_equal_comparable_model concept.</span></div>
 <div class="line"><span class="comment">// Here we use this concept to check that some basic types model the trait:</span></div>
@@ -211,16 +211,18 @@ $(function(){initNavTree('_2f_trait_equal_comparable_8cpp-example.html','',''); 
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;equal_comparable dynamic&quot;</span>) {</div>
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line">  <span class="keyword">using namespace </span>lib_2f;</div>
-<div class="line">  std::vector&lt;std::pair&lt;any&lt;val&lt;&gt;, equal_comparable&gt;, any&lt;val&lt;&gt;, equal_comparable&gt;&gt;&gt; v{</div>
-<div class="line">      {app_2f::b_type{<span class="stringliteral">&quot;A&quot;</span>}, app_2f::b_type{<span class="stringliteral">&quot;A&quot;</span>}},</div>
-<div class="line">      {app_2f::b_type{<span class="stringliteral">&quot;A&quot;</span>}, app_2f::b_type{<span class="stringliteral">&quot;B&quot;</span>}},</div>
-<div class="line">      {3, 3},</div>
-<div class="line">      {3, 4},</div>
-<div class="line">      {3.14, 3.14},</div>
-<div class="line">      {3.14, 2.71},</div>
-<div class="line">      {<span class="stringliteral">&quot;hello&quot;</span>, <span class="stringliteral">&quot;hello&quot;</span>},</div>
-<div class="line">      {<span class="stringliteral">&quot;hello&quot;</span>, <span class="stringliteral">&quot;world&quot;</span>},</div>
-<div class="line">  };</div>
+<div class="line">  std::vector&lt;</div>
+<div class="line">      std::pair&lt;any&lt;val&lt;&gt;, equal_comparable&gt;, any&lt;val&lt;&gt;, equal_comparable&gt;&gt;&gt;</div>
+<div class="line">      v{</div>
+<div class="line">          {app_2f::b_type{<span class="stringliteral">&quot;A&quot;</span>}, app_2f::b_type{<span class="stringliteral">&quot;A&quot;</span>}},</div>
+<div class="line">          {app_2f::b_type{<span class="stringliteral">&quot;A&quot;</span>}, app_2f::b_type{<span class="stringliteral">&quot;B&quot;</span>}},</div>
+<div class="line">          {3, 3},</div>
+<div class="line">          {3, 4},</div>
+<div class="line">          {3.14, 3.14},</div>
+<div class="line">          {3.14, 2.71},</div>
+<div class="line">          {<span class="stringliteral">&quot;hello&quot;</span>, <span class="stringliteral">&quot;hello&quot;</span>},</div>
+<div class="line">          {<span class="stringliteral">&quot;hello&quot;</span>, <span class="stringliteral">&quot;world&quot;</span>},</div>
+<div class="line">      };</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; [a, b] : v) {</div>
 <div class="line">    lib_2f::test_equal_comparable_(a, b);</div>
 <div class="line">  }</div>

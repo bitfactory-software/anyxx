@@ -108,9 +108,9 @@ $(function(){initNavTree('21_Tree_any_borrow_as_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>_21_Tree_any_borrow_as {</div>
 <div class="line"> </div>
-<div class="line">TRAIT(node, dynamic_deletable, (ANY_FN(<span class="keywordtype">int</span>, value, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(node, dynamic_deletable, (FN(<span class="keywordtype">int</span>, value, (), <span class="keyword">const</span>)))</div>
 <div class="line">TRAIT(serializeable, dynamic_deletable,</div>
-<div class="line">      (ANY_FN(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), <span class="keyword">const</span>)))</div>
+<div class="line">      (FN(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">template</span> &lt;is_proxy Proxy&gt;</div>
 <div class="line">std::ostream&amp; operator&lt;&lt;(std::ostream&amp; s,</div>

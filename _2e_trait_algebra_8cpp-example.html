@@ -103,35 +103,34 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">namespace </span>algebra {</div>
 <div class="line"> </div>
 <div class="line">TRAIT(equal_comparable, anyxx::dynamic_copyable,</div>
-<div class="line">      (ANY_OP_MAP_NAMED_FRIEND(<span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
-<div class="line">       ANY_OP_DEF(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, !=, ne, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
-<div class="line">                  [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
-<div class="line">                    <span class="keywordflow">return</span> !(using_as&lt;equal_comparable&gt;(x) ==</div>
-<div class="line">                             using_as&lt;equal_comparable&gt;(r));</div>
-<div class="line">                  })))</div>
+<div class="line">      (OP_FREE(<span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
+<div class="line">       OP_IMPL(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, !=, ne, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
+<div class="line">               [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
+<div class="line">                 <span class="keywordflow">return</span> !(using_as&lt;equal_comparable&gt;(x) ==</div>
+<div class="line">                          using_as&lt;equal_comparable&gt;(r));</div>
+<div class="line">               })))</div>
 <div class="line"> </div>
 <div class="line">TRAIT(semigroup, equal_comparable,</div>
-<div class="line">       (ANY_FN_PURE(anyxx::self, op, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>)))</div>
+<div class="line">      (FN_PURE(anyxx::self, op, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
-<div class="line">TRAIT_EX(</div>
-<div class="line">    monoid, semigroup, ,</div>
-<div class="line">    (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),</div>
-<div class="line">                       []&lt;<span class="keyword">typename</span> M&gt;(<span class="keyword">auto</span> class_) {</div>
-<div class="line">                         <span class="keywordflow">return</span> get_proxy_value(</div>
-<div class="line">                             class_.concat(std::ranges::empty_view&lt;M&gt;{}));</div>
-<div class="line">                       }),</div>
-<div class="line">     ANY_FN_STATIC_DEF((), anyxx::self, concat,</div>
-<div class="line">                       ((anyxx::any_self_forward_range <span class="keyword">const</span>&amp;)),</div>
-<div class="line">                       []&lt;<span class="keyword">typename</span> M&gt;(<span class="keyword">auto</span> class_, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; r) {</div>
-<div class="line">                         <span class="keyword">auto</span> <span class="keywordtype">id</span> = class_.identity();</div>
-<div class="line">                         <span class="keywordflow">return</span> get_proxy_value(std::ranges::fold_left(</div>
-<div class="line">                             r, <span class="keywordtype">id</span>, [&amp;](M <span class="keyword">const</span>&amp; m1, M <span class="keyword">const</span>&amp; m2) {</div>
-<div class="line">                               <span class="keywordflow">return</span> m1.op(m2);</div>
-<div class="line">                             }));</div>
-<div class="line">                       })),</div>
-<div class="line">    , , ())</div>
+<div class="line">TRAIT_EX(monoid, semigroup, ,</div>
+<div class="line">         (FN_STATIC_DEF((), anyxx::self, identity, (),</div>
+<div class="line">                        []&lt;<span class="keyword">typename</span> M&gt;(<span class="keyword">auto</span> class_) {</div>
+<div class="line">                          <span class="keywordflow">return</span> get_proxy_value(</div>
+<div class="line">                              class_.concat(std::ranges::empty_view&lt;M&gt;{}));</div>
+<div class="line">                        }),</div>
+<div class="line">          FN_STATIC_DEF((), anyxx::self, concat,</div>
+<div class="line">                        ((anyxx::any_self_forward_range <span class="keyword">const</span>&amp;)),</div>
+<div class="line">                        []&lt;<span class="keyword">typename</span> M&gt;(<span class="keyword">auto</span> class_, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; r) {</div>
+<div class="line">                          <span class="keyword">auto</span> <span class="keywordtype">id</span> = class_.identity();</div>
+<div class="line">                          <span class="keywordflow">return</span> get_proxy_value(std::ranges::fold_left(</div>
+<div class="line">                              r, <span class="keywordtype">id</span>, [&amp;](M <span class="keyword">const</span>&amp; m1, M <span class="keyword">const</span>&amp; m2) {</div>
+<div class="line">                                <span class="keywordflow">return</span> m1.op(m2);</div>
+<div class="line">                              }));</div>
+<div class="line">                        })),</div>
+<div class="line">         , , ())</div>
 <div class="line"> </div>
-<div class="line">TRAIT(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(group, monoid, (FN_PURE(anyxx::self, inverse, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> V&gt;</div>
 <div class="line"><span class="keyword">struct </span>semigroup_plus_model_map : semigroup_default_model_map&lt;V&gt; {</div>
@@ -211,14 +210,17 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> C&gt;</div>
-<div class="line"><span class="keyword">concept </span>can_call_op_on_class = <span class="keyword">requires</span>(anyxx::any_trait_class&lt;C, monoid&lt;&gt;&gt; class_,</div>
-<div class="line">                               anyxx::any&lt;anyxx::using_&lt;C&gt;, monoid&gt; object_) {</div>
-<div class="line">  { class_.op(object_) };</div>
-<div class="line">};</div>
+<div class="line"><span class="keyword">concept </span>can_call_op_on_class =</div>
+<div class="line">    <span class="keyword">requires</span>(anyxx::any_trait_class&lt;C, monoid&lt;&gt;&gt; class_,</div>
+<div class="line">             anyxx::any&lt;anyxx::using_&lt;C&gt;, monoid&gt; object_) {</div>
+<div class="line">      { class_.op(object_) };</div>
+<div class="line">    };</div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> C&gt;</div>
-<div class="line"><span class="keyword">concept </span>can_call_op_on_object = <span class="keyword">requires</span>(anyxx::any&lt;anyxx::using_&lt;C&gt;, monoid&gt; a, anyxx::any&lt;anyxx::using_&lt;C&gt;, monoid&gt; b) {</div>
-<div class="line">        { a.op(b) };</div>
-<div class="line">};</div>
+<div class="line"><span class="keyword">concept </span>can_call_op_on_object =</div>
+<div class="line">    <span class="keyword">requires</span>(anyxx::any&lt;anyxx::using_&lt;C&gt;, monoid&gt; a,</div>
+<div class="line">             anyxx::any&lt;anyxx::using_&lt;C&gt;, monoid&gt; b) {</div>
+<div class="line">      { a.op(b) };</div>
+<div class="line">    };</div>
 <div class="line"><span class="keyword">static_assert</span>(!can_call_op_on_class&lt;int&gt;);</div>
 <div class="line"><span class="keyword">static_assert</span>(can_call_op_on_object&lt;int&gt;);</div>
 <div class="line"> </div>
@@ -243,7 +245,7 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">      anyxx::moveable_from&lt;<span class="keyword">decltype</span>(x)::proxy_t, <span class="keyword">decltype</span>(y)::proxy_t&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(</div>
 <div class="line">      !anyxx::borrowable_from&lt;<span class="keyword">decltype</span>(x)::proxy_t, <span class="keyword">decltype</span>(y)::proxy_t,</div>
-<div class="line">                                    observeable_v_table&gt;);</div>
+<div class="line">                              observeable_v_table&gt;);</div>
 <div class="line"> </div>
 <div class="line">  {</div>
 <div class="line">    any&lt;using_&lt;int&gt;, monoid&gt; im{999};</div>
@@ -349,7 +351,7 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">  <span class="keyword">auto</span> g = trait_class_&lt;int, group&lt;&gt;&gt;.identity();</div>
 <div class="line">  <span class="keyword">static_assert</span>(std::same_as&lt;<span class="keyword">decltype</span>(g), any&lt;using_&lt;int&gt;, group, <span class="keywordtype">void</span>&gt;&gt;);</div>
-<div class="line">  </div>
+<div class="line"> </div>
 <div class="line">  {</div>
 <div class="line">    anyxx::any&lt;using_&lt;int&gt;, monoid&gt; m1{0};</div>
 <div class="line">    anyxx::any&lt;using_&lt;int&gt;, monoid&gt; m2{std::move(m1)};</div>

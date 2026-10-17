@@ -106,7 +106,7 @@ $(function(){initNavTree('X1_any_weak_const_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] std::string get()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;widget_a&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">TRAIT(widget, dynamic_copyable, (ANY_FN(std::string, get, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(widget, dynamic_copyable, (FN(std::string, get, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">any&lt;weak, widget&gt; any_widget_weak;</div>
 <div class="line"> </div>
@@ -147,11 +147,12 @@ $(function(){initNavTree('X1_any_weak_const_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">static</span> std::mutex cache_mutex;</div>
 <div class="line">any&lt;shared, widget&gt; make_widget(<span class="keywordtype">int</span> <span class="keywordtype">id</span>) {</div>
 <div class="line">  std::lock_guard hold{cache_mutex};</div>
-<div class="line">  <span class="keywordflow">return</span> *lock&lt;any&lt;shared, widget&gt;&gt;(cache[id]).or_else([&amp;] -&gt; std::optional&lt;any&lt;shared, widget&gt;&gt; {</div>
-<div class="line">    <span class="keyword">auto</span> s = load_widget(<span class="keywordtype">id</span>);</div>
-<div class="line">    cache[id] = s;</div>
-<div class="line">    <span class="keywordflow">return</span> s;</div>
-<div class="line">  });</div>
+<div class="line">  <span class="keywordflow">return</span> *lock&lt;any&lt;shared, widget&gt;&gt;(cache[id]).or_else(</div>
+<div class="line">      [&amp;] -&gt; std::optional&lt;any&lt;shared, widget&gt;&gt; {</div>
+<div class="line">        <span class="keyword">auto</span> s = load_widget(<span class="keywordtype">id</span>);</div>
+<div class="line">        cache[id] = s;</div>
+<div class="line">        <span class="keywordflow">return</span> s;</div>
+<div class="line">      });</div>
 <div class="line">}</div>
 <div class="line">}  <span class="comment">// namespace</span></div>
 <div class="line"> </div>
