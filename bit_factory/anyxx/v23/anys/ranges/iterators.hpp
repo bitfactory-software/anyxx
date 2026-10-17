@@ -57,17 +57,17 @@ struct reference_impl<void*, Reference> {
 
 TRAIT_TEMPLATE_EX(
     ((ValueType), (Reference)), input_iterator, dynamic_copyable, (),
-    (ANY_OP_MAP_NAMED(anyxx::self&, ++, op_pre_increment, (), ),
-     ANY_OP_MAP_NAMED_UNARY(Reference, *, op_dereference, const),
-     ANY_FN_DEF(public, bool, equal, (anyxx::self const&), const,
-                [&x](auto const& rhs) { return x == rhs; })),
+    (OP(anyxx::self&, ++, op_pre_increment, (), ),
+     UNARY_OP(Reference, *, op_dereference, const),
+     FN_IMPL(public, bool, equal, (anyxx::self const&), const,
+             [&x](auto const& rhs) { return x == rhs; })),
     ,
-    (ANY_TYPE((), iterator_category, std::input_iterator_tag,
-              (std::input_iterator_tag)),
-     ANY_TYPE((), difference_type, std::ptrdiff_t,
-              (difference_type_impl<T>::type)),
-     ANY_TYPE((), value_type, ValueType, (value_type_impl<T, ValueType>::type)),
-     ANY_TYPE((), reference, Reference, (reference_impl<T, Reference>::type))),
+    (USING((), iterator_category, std::input_iterator_tag,
+           (std::input_iterator_tag)),
+     USING((), difference_type, std::ptrdiff_t,
+           (difference_type_impl<T>::type)),
+     USING((), value_type, ValueType, (value_type_impl<T, ValueType>::type)),
+     USING((), reference, Reference, (reference_impl<T, Reference>::type))),
     , (using default_proxy_t = iterator_val;))
 
 template <typename It>
@@ -92,53 +92,42 @@ bool operator!=(any<Proxy, It, Args...> const& lhs,
 }
 
 TRAIT_TEMPLATE_EX(((ValueType), (Reference)), forward_iterator, input_iterator,
-                   ((ValueType), (Reference)), , ,
-                   (ANY_TYPE((), iterator_category, std::forward_iterator_tag,
-                             (std::forward_iterator_tag))),
-                   , ())
+                  ((ValueType), (Reference)), , ,
+                  (USING((), iterator_category, std::forward_iterator_tag,
+                         (std::forward_iterator_tag))),
+                  , ())
 
 template <typename ValueType, typename Reference = ValueType&>
 using any_forward_iterator = any_<forward_iterator, ValueType, Reference>;
 
 TRAIT_TEMPLATE_EX(((ValueType), (Reference)), bidirectional_iterator,
-                   forward_iterator, ((ValueType), (Reference)),
-                   (ANY_OP_MAP_NAMED(anyxx::self&, --, op_pre_decrement, (), )),
-                   ,
-                   (ANY_TYPE((), iterator_category,
-                             std::bidirectional_iterator_tag,
-                             (std::bidirectional_iterator_tag))),
-                   , ())
+                  forward_iterator, ((ValueType), (Reference)),
+                  (OP(anyxx::self&, --, op_pre_decrement, (), )), ,
+                  (USING((), iterator_category, std::bidirectional_iterator_tag,
+                         (std::bidirectional_iterator_tag))),
+                  , ())
 
 template <typename ValueType, typename Reference = ValueType&>
 using any_bidirectional_iterator =
     any_<bidirectional_iterator, ValueType, Reference>;
 
 TRAIT_TEMPLATE_EX(
-    ((ValueType), (Reference)), random_access_iterator1, bidirectional_iterator,
-    ((ValueType), (Reference)),
-    (ANY_OP_MAP_NAMED_FRIEND(bool, <, less, (anyxx::self const&), const)), ,
-    (ANY_TYPE((), iterator_category, std::random_access_iterator_tag,
-              (std::random_access_iterator_tag))),
-    , ())
-
-TRAIT_TEMPLATE_EX(
     ((ValueType), (Reference)), random_access_iterator, bidirectional_iterator,
     ((ValueType), (Reference)),
-    (ANY_OP_MAP_NAMED_FRIEND(bool, <, less, (anyxx::self const&), const),
-     ANY_OP_MAP_NAMED_FRIEND(bool, >, greater, (anyxx::self const&), const),
-     ANY_OP_MAP_NAMED_FRIEND(bool, <=, less_equal, (anyxx::self const&), const),
-     ANY_OP_MAP_NAMED_FRIEND(bool, >=, greater_equal, (anyxx::self const&),
-                             const),
-     ANY_OP_MAP_NAMED(anyxx::self&, +=, plus_assign, (std::ptrdiff_t), ),
-     ANY_OP_MAP_NAMED(anyxx::self&, -=, minus_assign, (std::ptrdiff_t), ),
-     ANY_OP_MAP_NAMED(anyxx::self, +, plus, (std::ptrdiff_t), const),
-     ANY_OP_MAP_NAMED(anyxx::self, -, minus, (std::ptrdiff_t), const),
-     ANY_FN_DEF(public, std::ptrdiff_t, difference_to, (anyxx::self const&),
-                const, [&x](auto const& rhs) { return x - rhs; }),
-     ANY_OP_MAP_NAMED(Reference, [], at, (std::ptrdiff_t), const)),
+    (OP_FREE(bool, <, less, (anyxx::self const&), const),
+     OP_FREE(bool, >, greater, (anyxx::self const&), const),
+     OP_FREE(bool, <=, less_equal, (anyxx::self const&), const),
+     OP_FREE(bool, >=, greater_equal, (anyxx::self const&), const),
+     OP(anyxx::self&, +=, plus_assign, (std::ptrdiff_t), ),
+     OP(anyxx::self&, -=, minus_assign, (std::ptrdiff_t), ),
+     OP(anyxx::self, +, plus, (std::ptrdiff_t), const),
+     OP(anyxx::self, -, minus, (std::ptrdiff_t), const),
+     FN_IMPL(public, std::ptrdiff_t, difference_to, (anyxx::self const&), const,
+             [&x](auto const& rhs) { return x - rhs; }),
+     OP(Reference, [], at, (std::ptrdiff_t), const)),
     ,
-    (ANY_TYPE((), iterator_category, std::random_access_iterator_tag,
-              (std::random_access_iterator_tag))),
+    (USING((), iterator_category, std::random_access_iterator_tag,
+           (std::random_access_iterator_tag))),
     , ())
 
 template <typename ValueType, typename Reference = ValueType&>

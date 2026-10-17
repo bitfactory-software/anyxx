@@ -23,19 +23,19 @@ sentinel_for(Range&& range) -> sentinel_for<std::ranges::sentinel_t<Range>,
 
 TRAIT_TEMPLATE_EX(
     ((ValueType), (Reference)), sentinel, dynamic_copyable, (),
-    (ANY_FN_DEF(
-        public, bool, equal_to_iterator,
-        ((any<anyxx::cref, input_iterator, ValueType, Reference> const&)),
-        const,
-        [&x](auto const it) {
-          return x.value == *unerase_cast<typename T::iterator_type>(it);
-        })),
+    (FN_IMPL(public, bool, equal_to_iterator,
+             ((any<anyxx::cref, input_iterator, ValueType, Reference> const&)),
+             const,
+             [&x](auto const it) {
+               return x.value == *unerase_cast<typename T::iterator_type>(it);
+             })),
     , , , (using default_proxy_t = nullable_val<iterator_val_proxy_size>;))
 
 template <template <typename...> typename SentinelTrait,
           template <typename...> typename IteratorTrait, typename... Args>
 concept is_sentinel_trait_for =
-    is_any_derived_from<any_<SentinelTrait, Args...>, any_<sentinel, Args...>> &&
+    is_any_derived_from<any_<SentinelTrait, Args...>,
+                        any_<sentinel, Args...>> &&
     requires(any_<SentinelTrait, Args...> const& s,
              any_<IteratorTrait, Args...> const& it) {
       { s.equal_to_iterator(it) } -> std::convertible_to<bool>;
@@ -72,20 +72,20 @@ bool operator!=(any_<SentinelTrait, Args...> const& s,
 TRAIT_TEMPLATE_EX(
     ((ValueType), (Reference)), sized_sentinel, sentinel,
     ((ValueType), (Reference)),
-    (ANY_FN_DEF(public, std::ptrdiff_t, subtract,
-                ((any<anyxx::cref, bidirectional_iterator, ValueType,
-                      Reference> const&)),
-                const,
-                [&x](auto const it) {
-                  return x.value - *unerase_cast<typename T::iterator_type>(it);
-                }),
-     ANY_FN_DEF(public, std::ptrdiff_t, subtract_from,
-                ((any<anyxx::cref, bidirectional_iterator, ValueType,
-                      Reference> const&)),
-                const,
-                [&x](auto const it) {
-                  return *unerase_cast<typename T::iterator_type>(it) - x.value;
-                })),
+    (FN_IMPL(public, std::ptrdiff_t, subtract,
+             ((any<anyxx::cref, bidirectional_iterator, ValueType,
+                   Reference> const&)),
+             const,
+             [&x](auto const it) {
+               return x.value - *unerase_cast<typename T::iterator_type>(it);
+             }),
+     FN_IMPL(public, std::ptrdiff_t, subtract_from,
+             ((any<anyxx::cref, bidirectional_iterator, ValueType,
+                   Reference> const&)),
+             const,
+             [&x](auto const it) {
+               return *unerase_cast<typename T::iterator_type>(it) - x.value;
+             })),
     , , , (using default_proxy_t = nullable_val<iterator_val_proxy_size>;))
 
 template <typename Value, typename Ref,

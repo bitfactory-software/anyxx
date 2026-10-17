@@ -41,7 +41,7 @@ inline constexpr bool use_mapf_concept(bool b) { return b; }
 
 inline void dummy() {}
 
-/// \brief Use this type to indicate, that the ANY_TYPE must be specified in
+/// \brief Use this type to indicate, that the USING must be specified in
 /// the model map.
 struct undefined {};
 

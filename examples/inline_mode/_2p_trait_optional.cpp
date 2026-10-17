@@ -5,12 +5,12 @@
 namespace _2p_lib {
 
 TRAIT(equal_comparable, anyxx::dynamic_copyable,
-      (ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const),
-       ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
-                  [&x](auto const& r) {
-                    return !(using_as<equal_comparable>(x) ==
-                             using_as<equal_comparable>(r));
-                  })))
+      (OP_FREE(bool, ==, eq, (anyxx::self const&), const),
+       OP_IMPL(public, bool, !=, ne, (anyxx::self const&), const,
+               [&x](auto const& r) {
+                 return !(using_as<equal_comparable>(x) ==
+                          using_as<equal_comparable>(r));
+               })))
 
 // An optional as a customizable trait.
 // It is default represented as a variant of the value type and a
@@ -31,12 +31,12 @@ struct nullable_default_rep : std::variant<std::monostate, T> {
 };
 
 TRAIT(nullable, anyxx::dynamic_copyable,
-      (ANY_FN_DEF(public, bool, has_value, (), const,
-                  [x]() { return std::holds_alternative<T>(x); }),
-       ANY_FN_DEF_EXACT(public, T const&, get_value, (), const,
-                        [&x]() -> T const& { return std::get<T>(x); }),
-       ANY_FN_DEF_EXACT(public, T&, get_value, (), ,
-                        [&x]() -> T& { return std::get<T>(x); }),
+      (FN_IMPL(public, bool, has_value, (), const,
+               [x]() { return std::holds_alternative<T>(x); }),
+       FN_IMPL_EXACT(public, T const&, get_value, (), const,
+                     [&x]() -> T const& { return std::get<T>(x); }),
+       FN_IMPL_EXACT(public, T&, get_value, (), ,
+                     [&x]() -> T& { return std::get<T>(x); }),
        ANY_OP_DEF_EXACT(public, T const&, ->, arrow_const, (), const,
                         [&x]() -> T const& { return Map{}.get_value(x); }),
        ANY_OP_DEF_EXACT(public, T&, ->, arrow, (), ,
@@ -45,7 +45,7 @@ TRAIT(nullable, anyxx::dynamic_copyable,
                         [&x]() -> T const& { return Map{}.get_value(x); }),
        ANY_OP_DEF_EXACT(public, T&, *, deref, (), ,
                         [&x]() -> T& { return Map{}.get_value(x); }),
-       ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const)))
+       OP_FREE(bool, ==, eq, (anyxx::self const&), const)))
 
 template <typename T>
 using optional = anyxx::any<anyxx::using_<T>, nullable>;

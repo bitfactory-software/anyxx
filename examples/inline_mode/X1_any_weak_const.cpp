@@ -12,7 +12,7 @@ struct widget_a {
   [[nodiscard]] std::string get() const { return "widget_a"; }
 };
 
-TRAIT(widget, dynamic_copyable, (ANY_FN(std::string, get, (), const)))
+TRAIT(widget, dynamic_copyable, (FN(std::string, get, (), const)))
 
 any<weak, widget> any_widget_weak;
 
@@ -53,11 +53,12 @@ static std::map<int, any<weak, widget>> cache;  // out of function for CHECK
 static std::mutex cache_mutex;
 any<shared, widget> make_widget(int id) {
   std::lock_guard hold{cache_mutex};
-  return *lock<any<shared, widget>>(cache[id]).or_else([&] -> std::optional<any<shared, widget>> {
-    auto s = load_widget(id);
-    cache[id] = s;
-    return s;
-  });
+  return *lock<any<shared, widget>>(cache[id]).or_else(
+      [&] -> std::optional<any<shared, widget>> {
+        auto s = load_widget(id);
+        cache[id] = s;
+        return s;
+      });
 }
 }  // namespace
 

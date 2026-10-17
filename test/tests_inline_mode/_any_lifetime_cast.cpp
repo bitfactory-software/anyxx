@@ -22,8 +22,8 @@ struct X {
   [[nodiscard]] std::string operator()() const { return s_; }
 };
 
-TRAIT(stringable, dynamic_deletable, (ANY_OP(std::string, (), (), const)))
-TRAIT(slick_stringable, observeable, (ANY_OP(std::string, (), (), const)))
+TRAIT(stringable, dynamic_deletable, (OP_(std::string, (), (), const)))
+TRAIT(slick_stringable, observeable, (OP_(std::string, (), (), const)))
 
 struct Y {
   any<mutref, slick_stringable> xxx;

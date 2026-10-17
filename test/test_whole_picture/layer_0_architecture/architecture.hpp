@@ -55,14 +55,14 @@ inline point max(point lhs, point rhs) {
   return {.x = std::max(lhs.x, rhs.x), .y = std::max(lhs.y, rhs.y)};
 }
 
-TRAIT(surface, anyxx::dynamic_copyable, (ANY_FN(void, write, (point, char), )))
+TRAIT(surface, anyxx::dynamic_copyable, (FN(void, write, (point, char), )))
 using mutable_observed_surface = anyxx::any<anyxx::mutref, surface>;
 using unique_surface = anyxx::any<anyxx::unique, surface>;
 
 TRAIT_EX(shape, anyxx::dynamic_copyable,
-         (ANY_FN(void, draw, (mutable_observed_surface), const),
-          ANY_FN(architecture::point, top_left, (), const),
-          ANY_FN(architecture::size, size, (), const)),
+         (FN(void, draw, (mutable_observed_surface), const),
+          FN(architecture::point, top_left, (), const),
+          FN(architecture::size, size, (), const)),
          , , (ANY_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::shared>
 using any_shape = anyxx::any<Proxy, shape>;

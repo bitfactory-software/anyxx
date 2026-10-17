@@ -14,9 +14,9 @@ using namespace anyxx;
 
 namespace _21_Tree_any_borrow_as {
 
-TRAIT(node, dynamic_deletable, (ANY_FN(int, value, (), const)))
+TRAIT(node, dynamic_deletable, (FN(int, value, (), const)))
 TRAIT(serializeable, dynamic_deletable,
-      (ANY_FN(void, serialize, (std::ostream&), const)))
+      (FN(void, serialize, (std::ostream&), const)))
 
 template <is_proxy Proxy>
 std::ostream& operator<<(std::ostream& s,

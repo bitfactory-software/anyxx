@@ -13,7 +13,7 @@ using namespace test::component_base;
 
 namespace test::component_base {
 
-TRAIT(unused_i, anyxx::dynamic_copyable, (ANY_FN(int, fun, (), const)))
+TRAIT(unused_i, anyxx::dynamic_copyable, (FN(int, fun, (), const)))
 
 }
 
@@ -25,8 +25,8 @@ TEST_CASE("_interface_cast") {
     REQUIRE(s == "3.140000");
 
     static_assert(borrowable_from<any<cref, get_value_i>::proxy_t,
-                                        any<cref, get_value_i>::proxy_t,
-                                        any<cref, get_value_i>::v_table_t>);
+                                  any<cref, get_value_i>::proxy_t,
+                                  any<cref, get_value_i>::v_table_t>);
 
     any<cref, get_value_i> i1 =
         *borrow_as<any<cref, get_value_i>>(to_string_i_co);
@@ -64,7 +64,8 @@ TEST_CASE("_interface_cast") {
     {
       any<cref, get_value_i> get_value_i_const_observer{sv0};
       REQUIRE(get_value_i_const_observer.get_value() == 6.28);
-      auto svc = downcast_to<any<cref, set_value_i>>(get_value_i_const_observer);
+      auto svc =
+          downcast_to<any<cref, set_value_i>>(get_value_i_const_observer);
       CHECK(svc);
       // svc->set_value(666); // does not compile!
     }

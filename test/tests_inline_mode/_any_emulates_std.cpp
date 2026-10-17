@@ -13,13 +13,13 @@ using namespace anyxx;
 
 namespace {
 TRAIT(string_to_string, anyxx::dynamic_copyable,
-     (ANY_OP(std::string, (), (std::string const&), const)))
+      (OP_(std::string, (), (std::string const&), const)))
 TRAIT(string_to_string_mutable, anyxx::dynamic_copyable,
-     (ANY_OP(std::string, (), (), const),
-      ANY_OP(std::string, (), (std::string const&), )))
+      (OP_(std::string, (), (), const),
+       OP_(std::string, (), (std::string const&), )))
 TRAIT(string_to_string_deletable, anyxx::dynamic_deletable,
-     (ANY_OP(std::string, (), (), const),
-      ANY_OP(std::string, (), (std::string const&), )))
+      (OP_(std::string, (), (), const),
+       OP_(std::string, (), (std::string const&), )))
 
 }  // namespace
 
@@ -118,7 +118,8 @@ TEST_CASE("std emulated function") {
     functor_t::tracker_ = 0;
     {
       {
-        any<unique, string_to_string_deletable> f{std::make_unique<functor_t>()};
+        any<unique, string_to_string_deletable> f{
+            std::make_unique<functor_t>()};
         REQUIRE(functor_t::tracker_ == 1);
         REQUIRE(f("hello") == "");
         REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hello");

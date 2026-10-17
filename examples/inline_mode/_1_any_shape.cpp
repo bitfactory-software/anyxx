@@ -63,11 +63,11 @@ struct regular_polygon {
 };
 
 TRAIT(drawable, anyxx::dynamic_copyable,
-      (ANY_FN(void, draw, (std::ostream&, position), const)))
+      (FN(void, draw, (std::ostream&, position), const)))
 
 TRAIT(shape, drawable,
-      (ANY_FN(int, count_sides, (), const), ANY_FN(double, area, (), const),
-       ANY_FN(double, perimeter, (), const)))
+      (FN(int, count_sides, (), const), FN(double, area, (), const),
+       FN(double, perimeter, (), const)))
 
 ANY_MODEL_MAP((std::string), drawable) {
   auto draw(std::string const& x, std::ostream& os, position p) const {

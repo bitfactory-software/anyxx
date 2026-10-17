@@ -1,5 +1,5 @@
-﻿#include <bit_factory/anyxx/ext/factory.hpp>
-#include <bit_factory/anyxx.hpp>
+﻿#include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ext/factory.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
 
@@ -16,7 +16,7 @@ static_assert(anyxx::is_in_dll_mode);
 
 namespace {
 
-TRAIT(test, anyxx::dynamic_copyable, (ANY_FN(int, fun, (), const)))
+TRAIT(test, anyxx::dynamic_copyable, (FN(int, fun, (), const)))
 
 struct test_class {
   [[nodiscard]] int fun() const { return 42; }

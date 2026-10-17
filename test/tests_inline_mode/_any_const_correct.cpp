@@ -54,9 +54,9 @@ struct functor {
 namespace {
 
 TRAIT(const_function_i, anyxx::dynamic_copyable,
-      (ANY_OP(std::string, (), (), const)))
+      (OP_(std::string, (), (), const)))
 TRAIT(mutating_function_i, anyxx::dynamic_copyable,
-      (ANY_OP(void, (), (std::string const&), )))
+      (OP_(void, (), (std::string const&), )))
 
 using const_function = any<cref, const_function_i>;
 using mutating_function = any<mutref, mutating_function_i>;
@@ -181,10 +181,10 @@ struct text_object {
 };
 
 TRAIT(text_i_const, anyxx::dynamic_copyable,
-      (ANY_FN(std::string, get_text, (), const)))
+      (FN(std::string, get_text, (), const)))
 
 TRAIT(text_i_mutable, text_i_const,
-      (ANY_FN(void, set_text, (std::string const&), )))
+      (FN(void, set_text, (std::string const&), )))
 }  // namespace
 
 using const_text_i = anyxx::any<anyxx::cref, text_i_const>;

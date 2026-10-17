@@ -1,5 +1,5 @@
-#include <bit_factory/anyxx/ext/typed_any.hpp>
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ext/typed_any.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <cmath>
@@ -20,12 +20,12 @@ struct position {
   float x, y;
 };
 
-TRAIT(drawable, anyxx::dynamic_copyable, (ANY_FN(void, draw, (position), const)))
+TRAIT(drawable, anyxx::dynamic_copyable, (FN(void, draw, (position), const)))
 TRAIT(shape, drawable,
-     (ANY_FN(int, count_sides, (), const), ANY_FN(double, area, (), const),
-      ANY_FN(double, perimeter, (), const)))
+      (FN(int, count_sides, (), const), FN(double, area, (), const),
+       FN(double, perimeter, (), const)))
 TRAIT(callable_shape, shape,
-     (ANY_OP(std::string, (), (std::string const&), const)))
+      (OP_(std::string, (), (std::string const&), const)))
 
 struct circle {
   double radius = 10;
@@ -97,7 +97,8 @@ void print_any_shape_const_observer(any<cref, shape> const& s) {
   std::cout << "Shape Perimeter: " << s.perimeter() << "\n";
   std::cout << "Shape Area: " << s.area() << "\n";
 }
-void print_any_callable_shape_const_observer(const any<cref, callable_shape> s) {
+void print_any_callable_shape_const_observer(
+    const any<cref, callable_shape> s) {
   print_any_shape_const_observer(s);
   std::cout << s("Shape type = ") << "\n";
 }
@@ -204,7 +205,8 @@ TEST_CASE("dynamic any shared") {
     auto perimeter = circle_shape_vv.perimeter();
     REQUIRE_THAT(perimeter, Catch::Matchers::WithinAbs(77.2, 77.3));
   }
-  print_any_shape_const_observer(static_cast<typed_circle_shape_shared_const::any_t&>(sc_typed));
+  print_any_shape_const_observer(
+      static_cast<typed_circle_shape_shared_const::any_t&>(sc_typed));
   print_any_shape_const_observer(circle_shape_vv);
   print_any_callable_shape_const_observer(*c);
   print_any_callable_shape_const_observer(*s);

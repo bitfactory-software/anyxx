@@ -12,8 +12,8 @@ using namespace anyxx;
 namespace {
 
 TRAIT(node, dynamic_copyable,
-      (ANY_FN(int, value, (), const), ANY_FN(std::string, as_forth, (), const),
-       ANY_FN(std::string, as_lisp, (), const)))
+      (FN(int, value, (), const), FN(std::string, as_forth, (), const),
+       FN(std::string, as_lisp, (), const)))
 
 using any_node = any_<node, cow>;
 

@@ -1,7 +1,7 @@
 #include <algorithm>
-#include <bit_factory/anyxx/ext/vany.hpp>
-#include <bit_factory/anyxx/ext/dispatch_vany.hpp>
 #include <bit_factory/anyxx/ANY_SINGLETON.hpp>
+#include <bit_factory/anyxx/ext/dispatch_vany.hpp>
+#include <bit_factory/anyxx/ext/vany.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <compare>
 #include <concepts>
@@ -20,15 +20,14 @@ struct custom {
 };
 
 TRAIT_EX(value, anyxx::dynamic_copyable,
-          (ANY_FN_DEF(public, std::string, to_string, (), const,
-                      [&x]() { return std::format("{}", x); }),
-           ANY_FN_DEF(public, void, from_string, (std::string_view), ,
-                      [&x](std::string_view sv) -> void {
-                        std::stringstream ss{std::string{sv},
-                                             std::ios_base::in};
-                        ss >> std::boolalpha >> x;
-                      })),
-          , , (ANY_OPEN_DISPATCH), ())
+         (FN_IMPL(public, std::string, to_string, (), const,
+                  [&x]() { return std::format("{}", x); }),
+          FN_IMPL(public, void, from_string, (std::string_view), ,
+                  [&x](std::string_view sv) -> void {
+                    std::stringstream ss{std::string{sv}, std::ios_base::in};
+                    ss >> std::boolalpha >> x;
+                  })),
+         , , (ANY_OPEN_DISPATCH), ())
 using any_value = anyxx::any_<value>;
 
 using vany_value = anyxx::make_vany<value, bool, int, double, std::string>;
@@ -85,8 +84,7 @@ TEST_CASE("example 2cb static_ any variant") {
   static_assert(!anyxx::is_const_data<vany_value::proxy_t>);
   b.from_string("false");
   CHECK(b.to_string() == "false");
-  vany_value vv_custom_FS{
-      any_value{std::in_place_type<custom>}};
+  vany_value vv_custom_FS{any_value{std::in_place_type<custom>}};
   vv_custom_FS.from_string("{43}");
   CHECK(vv_custom_FS.to_string() == "{43}");
 }

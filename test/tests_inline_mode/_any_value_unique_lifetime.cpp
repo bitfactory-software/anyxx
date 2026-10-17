@@ -86,8 +86,8 @@ static_assert(!std::is_trivially_copy_assignable_v<Y>);
 static_assert(sizeof(int) <= anyxx::small_object_size);
 
 TRAIT(getset, anyxx::dynamic_copyable,
-       (ANY_FN(std::string const&, get, (), const),
-        ANY_FN(void, set, (std::string const&), )))
+      (FN(std::string const&, get, (), const),
+       FN(void, set, (std::string const&), )))
 
 }  // namespace
 

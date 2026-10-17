@@ -26,22 +26,22 @@ anyxx::any_forward_range<int, int const&, anyxx::val<>> a_range_value(
 }
 
 TRAIT(stringable, anyxx::dynamic_copyable,
-       (ANY_FN_DEF(public, std::string, to_string, (), const,
-                   [&x]() { return std::format("{}", x); })))
+      (FN_IMPL(public, std::string, to_string, (), const,
+               [&x]() { return std::format("{}", x); })))
 
 template <typename Proxy>
 using any_stringable = anyxx::any<Proxy, stringable>;
 
 TRAIT(node, anyxx::dynamic_copyable,
-       (ANY_FN_DEF(public, anyxx::self, sum,
-                   ((anyxx::any_self_forward_range const&)), const,
-                   [&x](auto const& r) {
-                     auto s = x;
-                     for (auto i : r) {
-                       s += i;
-                     }
-                     return s;
-                   })));
+      (FN_IMPL(public, anyxx::self, sum,
+               ((anyxx::any_self_forward_range const&)), const,
+               [&x](auto const& r) {
+                 auto s = x;
+                 for (auto i : r) {
+                   s += i;
+                 }
+                 return s;
+               })));
 template <typename Proxy = anyxx::val<>>
 using any_node = anyxx::any<Proxy, node>;
 

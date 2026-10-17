@@ -779,7 +779,7 @@
 /// Example:
 /// \code
 /// TRAIT(sample_trait, copyable,
-///   (ANY_FN(std::string, const_fn, (double, std::string const&), const))
+///   (FN(std::string, const_fn, (double, std::string const&), const))
 /// )
 /// \endcode
 #define TRAIT(n, BASE, l) TRAIT_EX(n, BASE, l, , , , ())
@@ -811,15 +811,15 @@
 
 /// @}
 
-#define ANY_FN_(...) (__VA_ARGS__)
+#define FN_(...) (__VA_ARGS__)
 #define ANY_OVERLOAD(name) using base_t::name;
 
 #define __detail_ANYXX_MEMBER_FN(access, overload, ret, name, name_ext, \
                                  exact_const, const_, params)           \
-  ANY_FN_(access, overload, ret, name, name_ext, exact_const, const_,   \
-          (x.name_ext), use_mapf_concept, (x.name_ext), _detail_EXPAND params)
+  FN_(access, overload, ret, name, name_ext, exact_const, const_,       \
+      (x.name_ext), use_mapf_concept, (x.name_ext), _detail_EXPAND params)
 
-/// \addtogroup fn_macros ANY_FN... and ANY_OP macros
+/// \addtogroup fn_macros FN... and OP_ macros
 /// \brief Macros to define \ref trait's and \ref any's functions and operators
 ///
 /// Name conventions:
@@ -850,139 +850,136 @@
 ///
 /// syntax:
 ///
-/// ANY_FN[_OVERLOAD]([_PURE]|[_DEF])[_EXACT][]
+/// FN[_OVERLOAD]([_PURE]|[_DEF])[_EXACT][]
 ///     ([access], return_type, name, (param_list),[_const]
 ///     [, default_behavior])
 ///
-/// ANY_OP[_OVERLOAD][_MAP_NAMED]([_DEF]|[_EXACT_DEF]
+/// OP_[_OVERLOAD][_MAP_NAMED]([_DEF]|[_EXACT_DEF]
 ///     ([access], return_type, operator [,map_name], (param_list), [_const]
 ///     [, default_behavior])
 ///
 ///  @{
 
-/// \def ANY_FN_PURE
+/// \def FN_PURE
 /// \brief TRAIT function, which must be provided by the model.
 /// \ingroup trait_macros
-#define ANY_FN_PURE(ret, name, params, const_)           \
-  ANY_FN_(private, , ret, name, name, false, const_,     \
-          (_detail_ANYXX_FN_EMPTY(name, ret)),           \
-          ignore_mapf_concept_with_always_false, x.name, \
-          _detail_EXPAND params)
+#define FN_PURE(ret, name, params, const_)       \
+  FN_(private, , ret, name, name, false, const_, \
+      (_detail_ANYXX_FN_EMPTY(name, ret)),       \
+      ignore_mapf_concept_with_always_false, x.name, _detail_EXPAND params)
 
-/// \def ANY_FN_PURE_EXACT
+/// \def FN_PURE_EXACT
 /// \brief TRAIT function, which must be provided by the model.
 /// \ingroup trait_macros
-#define ANY_FN_PURE_EXACT(ret, name, params, const_)     \
-  ANY_FN_(private, , ret, name, name, true, const_,      \
-          (_detail_ANYXX_FN_EMPTY(name, ret)),           \
-          ignore_mapf_concept_with_always_false, x.name, \
-          _detail_EXPAND params)
+#define FN_PURE_EXACT(ret, name, params, const_) \
+  FN_(private, , ret, name, name, true, const_,  \
+      (_detail_ANYXX_FN_EMPTY(name, ret)),       \
+      ignore_mapf_concept_with_always_false, x.name, _detail_EXPAND params)
 
-/// \def ANY_FN_DEF
+/// \def FN_IMPL
 /// \brief TRAIT function with default behavior.
 /// \ingroup trait_macros
-#define ANY_FN_DEF(access, ret, name, params, const_, ...)         \
-  ANY_FN_(access, , ret, name, name, false, const_, (__VA_ARGS__), \
-          ignore_mapf_concept_with_always_true, x.name, _detail_EXPAND params)
+#define FN_IMPL(access, ret, name, params, const_, ...)        \
+  FN_(access, , ret, name, name, false, const_, (__VA_ARGS__), \
+      ignore_mapf_concept_with_always_true, x.name, _detail_EXPAND params)
 
-/// \def ANY_FN_DEF_EXACT
+/// \def FN_IMPL_EXACT
 /// \brief TRAIT function with default behavior
-#define ANY_FN_DEF_EXACT(access, ret, name, params, const_, ...)  \
-  ANY_FN_(access, , ret, name, name, true, const_, (__VA_ARGS__), \
-          ignore_mapf_concept_with_always_true, x.name, _detail_EXPAND params)
+#define FN_IMPL_EXACT(access, ret, name, params, const_, ...) \
+  FN_(access, , ret, name, name, true, const_, (__VA_ARGS__), \
+      ignore_mapf_concept_with_always_true, x.name, _detail_EXPAND params)
 
-/// \def ANY_FN
+/// \def FN
 /// \brief TRAIT function whose default behavior is to call an equally named
 /// member function of the model.
 ///
 /// Example:
 /// \code
 /// TRAIT(example_trait,
-///   (ANY_FN(int, example_fn_const, (double, std::string const&), const),
-///    ANY_FN(void, example_fn_mutable, (int), ))
+///   (FN(int, example_fn_const, (double, std::string const&), const),
+///    FN(void, example_fn_mutable, (int), ))
 /// )
 /// \endcode
-#define ANY_FN(ret, name, params, const_) \
+#define FN(ret, name, params, const_) \
   __detail_ANYXX_MEMBER_FN(public, , ret, name, name, false, const_, params)
 
-/// \def ANY_FN_EXACT
+/// \def FN_EXACT
 /// \brief TRAIT function whose default behavior is to call an equally named
 /// member function of the model
 /// \ingroup trait_macros
-#define ANY_FN_EXACT(ret, name, params, const_) \
+#define FN_EXACT(ret, name, params, const_) \
   __detail_ANYXX_MEMBER_FN(public, , ret, name, name, true, const_, params)
 
-/// \def ANY_FN_OVERLOAD
+/// \def FN_OVERLOAD
 /// \brief TRAIT function whose default behavior is to call an equally named
 /// member function of the model.
 ///
 /// Use if in a base TRAIT exists an equally named FN.
-#define ANY_FN_OVERLOAD(ret, name, params, const_)                             \
+#define FN_OVERLOAD(ret, name, params, const_)                                 \
   __detail_ANYXX_MEMBER_FN(public, ANY_OVERLOAD(name), ret, name, name, false, \
                            const_, params)
 
-/// \def ANY_FN_OVERLOAD_EXACT
+/// \def FN_OVERLOAD_EXACT
 /// \brief TRAIT function whose default behavior is to call an equally named
 /// member function of the model.
 ///
 /// Use if in a base TRAIT exists an equally named FN.
-#define ANY_FN_OVERLOAD_EXACT(ret, name, params, const_)                      \
+#define FN_OVERLOAD_EXACT(ret, name, params, const_)                          \
   __detail_ANYXX_MEMBER_FN(public, ANY_OVERLOAD(name), ret, name, name, true, \
                            const_, params)
 
-/// \def ANY_OP_MAP_NAMED
+/// \def OP
 /// \brief TRAIT operator with default behavior is to call the related operator
 /// of the model and a programmer-chosen name in the map.
 ///
 /// Use if in a base TRAIT exists an equally named FN, or you want to provide a
 /// specific name for the operator in the map to have a defined name for
 /// overriding in derived TRAITs.
-#define ANY_OP_MAP_NAMED(ret, op, name, params, const_)                     \
+#define OP(ret, op, name, params, const_)                                   \
   __detail_ANYXX_MEMBER_FN(public, , ret, name, operator op, false, const_, \
                            params)
 
-/// \def ANY_OP_MAP_NAMED_FRIEND
+/// \def OP_FREE
 /// \brief TRAIT operator with default behavior is to call the related friend
 /// operator of the model and a programmer-chosen name in the map.
 ///
 /// Use if in a base TRAIT exists an equally named FN, or you want to provide a
 /// specific name for the operator in the map to have a defined name for
 /// overriding in derived TRAITs.
-#define ANY_OP_MAP_NAMED_FRIEND(ret, op, name, params, const_)     \
-  ANY_FN_(public, , ret, name, operator op, false, const_, (x op), \
-          use_mapf_concept, x op, _detail_EXPAND params)
+#define OP_FREE(ret, op, name, params, const_)                 \
+  FN_(public, , ret, name, operator op, false, const_, (x op), \
+      use_mapf_concept, x op, _detail_EXPAND params)
 
-/// \def ANY_OP_MAP_NAMED_UNARY
+/// \def UNARY_OP
 /// \brief TRAIT operator with default behavior is to call the related unary
 /// operator of the model and a programmer-chosen name in the map.
 ///
 /// Use if in a base TRAIT exists an equally named FN, or you want to provide a
 /// specific name for the operator in the map to have a defined name for
 /// overriding in derived TRAITs.
-#define ANY_OP_MAP_NAMED_UNARY(ret, op, name, const_) \
-  ANY_OP_DEF(public, ret, op, name, (), const_,       \
-             ([&x]() -> ret { return op x; }))
+#define UNARY_OP(ret, op, name, const_) \
+  OP_IMPL(public, ret, op, name, (), const_, ([&x]() -> ret { return op x; }))
 
-/// \def ANY_OP
+/// \def OP_
 /// \brief TRAIT operator with default behavior is to call the related operator
 /// of the model.
-#define ANY_OP(ret, op, params, const_) \
-  ANY_OP_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
+#define OP_(ret, op, params, const_) \
+  OP(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
 
-/// \def ANY_OP_DEF
+/// \def OP_IMPL
 /// \brief TRAIT operator with default behavior.
 ///
 /// Use if in a base TRAIT exists an equally named FN.
-#define ANY_OP_DEF(access, ret, op, name, params, const_, ...)            \
-  ANY_FN_(access, , ret, name, operator op, false, const_, (__VA_ARGS__), \
-          ignore_mapf_concept_with_always_true, x.operator op,            \
-          _detail_EXPAND params)
+#define OP_IMPL(access, ret, op, name, params, const_, ...)           \
+  FN_(access, , ret, name, operator op, false, const_, (__VA_ARGS__), \
+      ignore_mapf_concept_with_always_true, x.operator op,            \
+      _detail_EXPAND params)
 
 #define ANY_OP_EXACT_MAP_NAMED(ret, op, name, params, const_)              \
   __detail_ANYXX_MEMBER_FN(public, , ret, name, operator op, true, const_, \
                            params)
 
-/// \def ANY_OP_DEF
+/// \def OP_IMPL
 /// \brief TRAIT operator with default behavior.
 ///
 /// Use if in a base TRAIT exists an equally named FN.
@@ -995,10 +992,10 @@
 /// of the model.
 ///
 /// Use if in a base TRAIT exists an equally named FN.
-#define ANY_OP_DEF_EXACT(access, ret, op, name, params, const_, ...)     \
-  ANY_FN_(access, , ret, name, operator op, true, const_, (__VA_ARGS__), \
-          ignore_mapf_concept_with_always_true, (anyxx::dummy),          \
-          _detail_EXPAND params)
+#define ANY_OP_DEF_EXACT(access, ret, op, name, params, const_, ...) \
+  FN_(access, , ret, name, operator op, true, const_, (__VA_ARGS__), \
+      ignore_mapf_concept_with_always_true, (anyxx::dummy),          \
+      _detail_EXPAND params)
 
 /// \def ANY_OP_EXACT_OVERLOAD_MAP_NAMED
 /// \brief TRAIT operator with default behavior and a programmer-chosen name
@@ -1022,30 +1019,29 @@
 /// \brief TRAIT operator with default behavior.
 ///
 /// Use if in a base TRAIT exists an equally named FN.
-#define ANY_OP_EXACT_OVERLOAD_DEF(access, ret, op, name, params, const_, ...) \
-  ANY_FN_(access, ANY_OVERLOAD(operator op), ret, name, operator op, true,    \
-          const_, (__VA_ARGS__), ignore_mapf_concept_with_always_true,        \
-          x.operator op, _detail_EXPAND params)
+#define ANY_OP_EXACT_OVERLOAD_DEF(access, ret, op, name, params, const_, ...)  \
+  FN_(access, ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, \
+      (__VA_ARGS__), ignore_mapf_concept_with_always_true, x.operator op,      \
+      _detail_EXPAND params)
 
-/// \def ANY_FN_STATIC_PURE
+/// \def FN_STATIC_PURE
 /// \brief Static TRAIT function, which must be provided by the model. This
 /// function will NOT go into the v-Table ad is only avalable for the \ref
 /// using_ \ref Proxy.
 /// \ingroup trait_macros
-#define ANY_FN_STATIC_PURE(template_params, return_type, name, params, ...) \
-  ANY_FN_(template_params, return_type, name,                               \
-          (_detail_ANYXX_FN_EMPTY(name, return_type)), _detail_EXPAND params)
+#define FN_STATIC_PURE(template_params, return_type, name, params, ...) \
+  FN_(template_params, return_type, name,                               \
+      (_detail_ANYXX_FN_EMPTY(name, return_type)), _detail_EXPAND params)
 
-/// \def ANY_FN_STATIC_DEF
+/// \def FN_STATIC_DEF
 /// \brief Static TRAIT function, which has a default implementation. This
 /// function will NOT go into the v-Table and is only avalable for the \ref
 /// using_ und \ref trait_class \ref Proxy.
 /// \ingroup trait_macros
-#define ANY_FN_STATIC_DEF(template_params, return_type, name, params, ...) \
-  ANY_FN_(template_params, return_type, name, (__VA_ARGS__),               \
-          _detail_EXPAND params)
+#define FN_STATIC_DEF(template_params, return_type, name, params, ...) \
+  FN_(template_params, return_type, name, (__VA_ARGS__), _detail_EXPAND params)
 
-/// \def ANY_TYPE
+/// \def USING
 /// \brief Dependent type definition in a TRAIT. This is useful for defining
 /// associated types, e.g. Return typs for the \ref using_ \ref Proxy.
 /// \param template_params template parameters for the type definition
@@ -1054,7 +1050,7 @@
 /// \param default_ default type definition. Used \ref undefined to request
 /// specification in the model_map
 /// \ingroup trait_macros
-#define ANY_TYPE(...) (__VA_ARGS__)
+#define USING(...) (__VA_ARGS__)
 
 /// \def ANY_V_TABLE_DATA
 /// \brief Add a data member to the v-table of a TRAIT. This is useful for

@@ -33,17 +33,17 @@ namespace lib_2f {
 // These functions are then used to implement the operators == and !=
 // in the external interface.
 TRAIT(equal_comparable, anyxx::dynamic_copyable,
-       // anyxx::self is a magic type that represents the type of the object for
-       // whitch the trait is called. It is used to smooth the differences
-       // between static and dynamic dispatch, so the implemention can be
-       // written against the actual type of the object ref/const qualified as
-       // specified. If the mapped type provies already an operator,
-       // ANY_OP_MAP_NAMED_FRIEND use it as the default implementation.
-       (ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const),
-        // We can use the == operator of the external interface to
-        // provide a default implementation for the != operator.
-        ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
-                   [&x](auto const& r) { return !Map{}.eq(x, r); })))
+      // anyxx::self is a magic type that represents the type of the object for
+      // whitch the trait is called. It is used to smooth the differences
+      // between static and dynamic dispatch, so the implemention can be
+      // written against the actual type of the object ref/const qualified as
+      // specified. If the mapped type provies already an operator,
+      // OP_FREE use it as the default implementation.
+      (OP_FREE(bool, ==, eq, (anyxx::self const&), const),
+       // We can use the == operator of the external interface to
+       // provide a default implementation for the != operator.
+       OP_IMPL(public, bool, !=, ne, (anyxx::self const&), const,
+               [&x](auto const& r) { return !Map{}.eq(x, r); })))
 
 // TRAIT automatically defines the is_equal_comparable_model concept.
 // Here we use this concept to check that some basic types model the trait:
@@ -117,16 +117,18 @@ TEST_CASE("equal_comparable static") {
 TEST_CASE("equal_comparable dynamic") {
   using namespace anyxx;
   using namespace lib_2f;
-  std::vector<std::pair<any<val<>, equal_comparable>, any<val<>, equal_comparable>>> v{
-      {app_2f::b_type{"A"}, app_2f::b_type{"A"}},
-      {app_2f::b_type{"A"}, app_2f::b_type{"B"}},
-      {3, 3},
-      {3, 4},
-      {3.14, 3.14},
-      {3.14, 2.71},
-      {"hello", "hello"},
-      {"hello", "world"},
-  };
+  std::vector<
+      std::pair<any<val<>, equal_comparable>, any<val<>, equal_comparable>>>
+      v{
+          {app_2f::b_type{"A"}, app_2f::b_type{"A"}},
+          {app_2f::b_type{"A"}, app_2f::b_type{"B"}},
+          {3, 3},
+          {3, 4},
+          {3.14, 3.14},
+          {3.14, 2.71},
+          {"hello", "hello"},
+          {"hello", "world"},
+      };
   for (auto const& [a, b] : v) {
     lib_2f::test_equal_comparable_(a, b);
   }

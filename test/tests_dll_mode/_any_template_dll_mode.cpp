@@ -30,14 +30,14 @@ struct test::component_base::X {
 namespace template_test {
 
 TRAIT(stringable, anyxx::dynamic_copyable,
-      (ANY_FN(std::string, to_string, (), const)))
+      (FN(std::string, to_string, (), const)))
 
 // using any_to_string_const_observer_dyns =
 //     any_to_string<anyxx::cref>;
 
 TRAIT_TEMPLATE(((KEY)), map_to_string, anyxx::dynamic_copyable, (),
-               (ANY_FN((anyxx::any<anyxx::cref, stringable>), at, (KEY const&),
-                       const)))
+               (FN((anyxx::any<anyxx::cref, stringable>), at, (KEY const&),
+                   const)))
 
 ANY_MODEL_MAP((int), stringable) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
@@ -151,8 +151,9 @@ TEST_CASE("any template test3") {
       {2, {{"one", {{4, 4.14}, {5, 4.28}}}, {"two", {{6, 4.333}}}}}};
 
   auto test_map_lambda =
-      [](anyxx::any<anyxx::cref, recursive_map,
-          int, anyxx::any<anyxx::cref, recursive_map, std::string,
+      [](anyxx::any<
+          anyxx::cref, recursive_map, int,
+          anyxx::any<anyxx::cref, recursive_map, std::string,
                      anyxx::any<anyxx::cref, map, int, double>, anyxx::cref>,
           anyxx::cref>
              map_i) {

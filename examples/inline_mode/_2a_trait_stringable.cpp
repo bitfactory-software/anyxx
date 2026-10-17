@@ -7,8 +7,8 @@
 namespace example_2a {
 
 TRAIT(stringable, anyxx::dynamic_copyable,
-      (ANY_FN_DEF(public, std::string, to_string, (), const,
-                  [&x]() { return std::format("{}", x); })))
+      (FN_IMPL(public, std::string, to_string, (), const,
+               [&x]() { return std::format("{}", x); })))
 
 }  // namespace example_2a
 

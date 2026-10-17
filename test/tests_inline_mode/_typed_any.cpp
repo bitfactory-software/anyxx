@@ -1,5 +1,5 @@
-#include <bit_factory/anyxx/ext/typed_any.hpp>
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ext/typed_any.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
@@ -12,8 +12,9 @@ struct x_t {
 }  // namespace typed_any_test
 
 namespace typed_any_test {
-TRAIT(test_i, anyxx::dynamic_copyable, (ANY_FN(std::string, to_string, (), const),
-             ANY_FN(void, from_string, (std::string_view), )))
+TRAIT(test_i, anyxx::dynamic_copyable,
+      (FN(std::string, to_string, (), const),
+       FN(void, from_string, (std::string_view), )))
 }  // namespace typed_any_test
 
 using namespace typed_any_test;

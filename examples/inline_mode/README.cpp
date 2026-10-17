@@ -84,8 +84,7 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-TRAIT(drawable, anyxx::dynamic_copyable,
-       (ANY_FN(std::string, draw, (), const)))
+TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), const)))
 
 void draw(std::stringstream& os,
           std::vector<anyxx::any_<drawable>> const& drawables) {
@@ -181,8 +180,7 @@ struct square {
   [[nodiscard]] std::string edgy_salute() const { return "edgy World"; }
 };
 
-TRAIT(drawable, anyxx::dynamic_copyable,
-       (ANY_FN(std::string, draw, (), const)))
+TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), const)))
 
 ANY_MODEL_MAP((circle), drawable) {
   static std::string draw(circle const&) { return "Silent greetings"; };
@@ -235,8 +233,8 @@ struct square {
   [[nodiscard]] std::string name() const { return "square"; }
 };
 
-TRAIT_EX(figure, anyxx::dynamic_copyable,
-          (ANY_FN(std::string, name, (), const)), , , (ANY_OPEN_DISPATCH), ())
+TRAIT_EX(figure, anyxx::dynamic_copyable, (FN(std::string, name, (), const)), ,
+         , (ANY_OPEN_DISPATCH), ())
 
 anyxx::dispatch<std::partial_ordering(anyxx::virtual_<anyxx::any_<figure>>,
                                       anyxx::virtual_<anyxx::any_<figure>>)>
@@ -324,8 +322,8 @@ struct square {
   [[nodiscard]] std::string name() const { return "square"; }
 };
 
-TRAIT_EX(figure, anyxx::dynamic_copyable,
-          (ANY_FN(std::string, name, (), const)), , , (ANY_OPEN_DISPATCH), ())
+TRAIT_EX(figure, anyxx::dynamic_copyable, (FN(std::string, name, (), const)), ,
+         , (ANY_OPEN_DISPATCH), ())
 using any_figure = anyxx::any_<figure>;
 
 ayx::dispatch<std::string(ayx::virtual_<any_figure>)> latin, italian;
@@ -389,9 +387,9 @@ struct square {
 };
 
 struct figure_has_open_dispatch {};
-TRAIT(figure, ayx::dynamic_copyable, (ANY_FN(double, area, (), const)))
+TRAIT(figure, ayx::dynamic_copyable, (FN(double, area, (), const)))
 TRAIT(serializable, ayx::dynamic_copyable,
-     (ANY_FN(void, serialize, (std::ostream&), const)))
+      (FN(void, serialize, (std::ostream&), const)))
 
 ayx::factory<ayx::any_<serializable>, std::string, std::istream&> deserialize;
 
@@ -427,7 +425,8 @@ auto __ = deserialize.register_("square", [](std::istream& archive) {
 ANY_REGISTER_MODEL(square, figure);
 ANY_REGISTER_MODEL(square, serializable);
 
-void areas(std::stringstream& os, std::vector<ayx::any_<figure>> const& figures) {
+void areas(std::stringstream& os,
+           std::vector<ayx::any_<figure>> const& figures) {
   std::string sep;
   for (auto const& f : figures) os << std::exchange(sep, ", ") << f.area();
 }
@@ -489,8 +488,7 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-TRAIT(drawable, anyxx::dynamic_copyable,
-       (ANY_FN(std::string, draw, (), const)))
+TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), const)))
 
 using known_shapes = std::variant<circle, square>;
 
@@ -542,7 +540,7 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-TRAIT(figure, dynamic_copyable, (ANY_FN(std::string, draw, (), const)))
+TRAIT(figure, dynamic_copyable, (FN(std::string, draw, (), const)))
 
 using known_and_unknown_shapes = make_vany<figure, circle, square>;
 static_assert(std::same_as<

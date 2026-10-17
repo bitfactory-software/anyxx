@@ -8,12 +8,11 @@ namespace lib_2g {
 
 TRAIT_TEMPLATE(
     ((To)), equal_comparable_to, anyxx::dynamic_copyable, (),
-    (ANY_OP_MAP_NAMED_FRIEND(
-         bool, ==, eq, ((anyxx::trait_as<To, equal_comparable_to, T> const&)),
-         const),
-     ANY_OP_DEF(public, bool, !=, ne,
-                ((anyxx::trait_as<To, equal_comparable_to, T> const&)), const,
-                ([&x](auto const& r) { return !Map{}.eq(x, r); }))))
+    (OP_FREE(bool, ==, eq,
+             ((anyxx::trait_as<To, equal_comparable_to, T> const&)), const),
+     OP_IMPL(public, bool, !=, ne,
+             ((anyxx::trait_as<To, equal_comparable_to, T> const&)), const,
+             ([&x](auto const& r) { return !Map{}.eq(x, r); }))))
 
 template <typename L, typename R>
 using using_as_equal_comparable_to =

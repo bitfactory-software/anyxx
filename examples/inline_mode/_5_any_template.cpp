@@ -13,30 +13,30 @@ struct X {
 namespace {
 
 TRAIT(stringable, anyxx::dynamic_copyable,
-      (ANY_FN(std::string, to_string, (), const)))
+      (FN(std::string, to_string, (), const)))
 template <typename Proxy = val<>>
 using any_to_string = any<Proxy, stringable>;
 
 TRAIT_TEMPLATE(((KEY), (VALUE)), map, anyxx::dynamic_copyable, (),
-               (ANY_FN_EXACT(VALUE const&, at, (KEY const&), const),
-                ANY_FN(std::size_t, size, (), const)))
+               (FN_EXACT(VALUE const&, at, (KEY const&), const),
+                FN(std::size_t, size, (), const)))
 template <typename Key, typename Value, typename Proxy = val<>>
 using any_map = any<Proxy, map, Key, Value>;
 
 TRAIT_TEMPLATE(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),
-               (ANY_FN_EXACT(VALUE&, at, (KEY const&), ), ))
+               (FN_EXACT(VALUE&, at, (KEY const&), ), ))
 template <typename Key, typename Value, typename Proxy = val<>>
 using any_mutable_map = any<Proxy, mutable_map, Key, Value>;
 
 TRAIT_TEMPLATE(((KEY), (VALUE)), recursive_map, anyxx::dynamic_copyable, (),
-               (ANY_FN(VALUE, at, (KEY const&), const),
-                ANY_FN(std::size_t, size, (), const)))
+               (FN(VALUE, at, (KEY const&), const),
+                FN(std::size_t, size, (), const)))
 
 TRAIT_TEMPLATE(((KEY), (VALUE)), mutable_recursive_map, anyxx::dynamic_copyable,
-               (), (ANY_FN(VALUE, at, (KEY const&), )))
+               (), (FN(VALUE, at, (KEY const&), )))
 
 TRAIT_TEMPLATE(((KEY)), map_to_string, anyxx::dynamic_copyable, (),
-               (ANY_FN((any_to_string<cref>), at, (KEY const&), const)))
+               (FN((any_to_string<cref>), at, (KEY const&), const)))
 
 ANY_MODEL_MAP((int), stringable) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };

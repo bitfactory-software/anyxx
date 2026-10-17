@@ -25,8 +25,8 @@ struct functor2_t {
 
 namespace {
 TRAIT(overloaded_function_object, anyxx::dynamic_copyable,
-      (ANY_OP(std::string, (), (std::string const&), ),
-       ANY_OP(std::string, (), (), const)))
+      (OP_(std::string, (), (std::string const&), ),
+       OP_(std::string, (), (), const)))
 }
 
 namespace {
