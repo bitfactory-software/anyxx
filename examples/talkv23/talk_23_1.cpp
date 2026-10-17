@@ -7,44 +7,33 @@
 #include <string>
 #include <vector>
 
-using namespace anyxx;
-TRAIT(Shape, anyxx::dynamic_deletable, (FN(double, area, (), const)))
+namespace {
 
 struct Circle {
-    double radius;
+  double radius;
 };
-template <>
-struct Shape_model_map<Circle> {
-    double area(const Circle& self) { return M_PI * self.radius * self.radius; }
+
+using namespace anyxx;
+TRAIT(Shape, deleteable, (FN(double, area, (), const)))
+
+MODEL_MAP((Circle), Shape) {
+  double area(const Circle& self) { return M_PI * self.radius * self.radius; };
 };
 
 TEST_CASE("ShapesAny++23") {
-    std::initializer_list<any_<unique, Shape>> shapes = { Circle{5.0} };
+  std::initializer_list<any_<unique, Shape>> shapes = {Circle{5.0}};
+  for (const auto& shape : shapes) {
+    std::println("Area: {}", shape.area());
+    ;
+  }
+}
+
+TEST_CASE("ShapesAny++23 simplified") {
+    std::initializer_list<any<Shape>> shapes = { Circle{5.0} };
     for(const auto& shape : shapes) {
         std::println("Area: {}", shape.area());
         ;
     }
 }
 
-//namespace {
-//
-//struct Circle {
-//  double radius;
-//};
-//
-//using namespace anyxx;
-//TRAIT(Shape, dynamic_copyable, (FN(double, area, (), const)))
-//
-//MODEL_MAP((Circle), Shape) {
-//  double area(const Circle& self) { return M_PI * self.radius * self.radius; };
-//};
-//
-//TEST_CASE("ShapesAny++23") {
-//  std::initializer_list<any_<unique, Shape>> shapes = {Circle{5.0}};
-//  for (const auto& shape : shapes) {
-//    std::println("Area: {}", shape.area());
-//    ;
-//  }
-//}
-
-//}  // namespace
+}  // namespace

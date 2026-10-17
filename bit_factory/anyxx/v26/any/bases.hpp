@@ -85,6 +85,15 @@ struct const_referenceable {
 };
 
 template <is_trait Trait = declaration, typename Self = declaration>
+struct deleteable {
+    using delete_ [[= v_table_data]] = anyxx::delete_;
+    template <is_trait ApplyTrait, typename ApplSelf>
+    struct self_apply {
+        using default_proxy_t = anyxx::unique;
+    };
+};
+
+template <is_trait Trait = declaration, typename Self = declaration>
 struct moveable {
     using model_size [[= v_table_data]] = anyxx::model_size;
     using move_constructor [[= v_table_data]] = anyxx::move_constructor;

@@ -16,7 +16,7 @@ struct Circle {
 using namespace anyxx;
 
 template <is_trait Trait, typename Self>
-struct Shape : dynamic_deletable<Trait, Self> {
+struct Shape : deleteable<Trait, Self> {
   double area() const;
 };
 template <>
@@ -25,7 +25,7 @@ struct Shape<model_map, Circle> {
 };
 
 TEST_CASE("ShapesAny++26") {
-  std::initializer_list<any_<unique, Shape>> shapes = {Circle{5.0}};
+  std::initializer_list<any<Shape>> shapes = {Circle{5.0}};
   for (const auto& shape : shapes) {
     std::println("Area: {}", shape.area());
   }
