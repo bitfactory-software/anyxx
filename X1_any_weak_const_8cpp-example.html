@@ -138,45 +138,6 @@ $(function(){initNavTree('X1_any_weak_const_8cpp-example.html','',''); });
 <div class="line">  observe(0);</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">namespace </span>{</div>
-<div class="line">any_&lt;shared, widget&gt; load_widget([[maybe_unused]] <span class="keywordtype">int</span> <span class="keywordtype">id</span>) {</div>
-<div class="line">  <span class="keywordflow">return</span> std::make_shared&lt;widget_a&gt;();</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">static</span> std::map&lt;int, any_&lt;weak, widget&gt;&gt; cache;  <span class="comment">// out of function for CHECK</span></div>
-<div class="line"><span class="keyword">static</span> std::mutex cache_mutex;</div>
-<div class="line">any_&lt;shared, widget&gt; make_widget(<span class="keywordtype">int</span> <span class="keywordtype">id</span>) {</div>
-<div class="line">  std::lock_guard hold{cache_mutex};</div>
-<div class="line">  <span class="keywordflow">return</span> *lock&lt;any_&lt;shared, widget&gt;&gt;(cache[id]).or_else(</div>
-<div class="line">      [&amp;] -&gt; std::optional&lt;any_&lt;shared, widget&gt;&gt; {</div>
-<div class="line">        <span class="keyword">auto</span> s = load_widget(<span class="keywordtype">id</span>);</div>
-<div class="line">        cache[id] = s;</div>
-<div class="line">        <span class="keywordflow">return</span> s;</div>
-<div class="line">      });</div>
-<div class="line">}</div>
-<div class="line">}  <span class="comment">// namespace</span></div>
-<div class="line"> </div>
-<div class="line">TEST_CASE(<span class="stringliteral">&quot;example X1/ sutters favorite 10 cpp lines&quot;</span>) {</div>
-<div class="line">  <span class="comment">// https://youtu.be/JfmTagWcqoE?si=sKPgf2sU-3q6p0TU&amp;t=2027</span></div>
-<div class="line">  {</div>
-<div class="line">    <span class="keyword">auto</span> w1 = make_widget(0);</div>
-<div class="line">    CHECK(w1.get() == <span class="stringliteral">&quot;widget_a&quot;</span>);</div>
-<div class="line">    CHECK(get_proxy(w1).use_count() == 1);</div>
-<div class="line">    CHECK(cache.size() == 1);</div>
-<div class="line">    CHECK(get_proxy(cache[0]).use_count() == 1);</div>
-<div class="line">    {</div>
-<div class="line">      <span class="keyword">auto</span> w2 = make_widget(0);</div>
-<div class="line">      CHECK(w2.get() == <span class="stringliteral">&quot;widget_a&quot;</span>);</div>
-<div class="line">      CHECK(get_proxy(w2).use_count() == 2);</div>
-<div class="line">      CHECK(cache.size() == 1);</div>
-<div class="line">      CHECK(get_proxy(cache[0]).use_count() == 2);</div>
-<div class="line">    }</div>
-<div class="line">    CHECK(get_proxy(w1).use_count() == 1);</div>
-<div class="line">    CHECK(cache.size() == 1);</div>
-<div class="line">    CHECK(get_proxy(cache[0]).use_count() == 1);</div>
-<div class="line">  }</div>
-<div class="line">  CHECK(get_proxy(cache[0]).use_count() == 0);</div>
-<div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
