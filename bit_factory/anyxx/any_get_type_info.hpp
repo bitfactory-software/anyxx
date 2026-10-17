@@ -7,7 +7,7 @@ namespace anyxx {
 
 template <is_any Any>
   requires is_type_info_v_table<typename Any::v_table_t>
-inline std::type_info const& get_type_info(Any const& any_) {
+inline std::type_info const& type_of(Any const& any_) {
   return *get_v_table(any_)->type_info_;
 }
 

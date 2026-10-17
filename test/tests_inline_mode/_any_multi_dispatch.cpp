@@ -144,7 +144,7 @@ TEST_CASE("multi_dispatch 4") {
       []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "a->a"; });
   collide.define<any_thing<cref>, Spaceship>(
       [](auto const& any_, [[maybe_unused]] auto const& s) {
-        return get_type_info(any_).name() + "->s"s;
+        return type_of(any_).name() + "->s"s;
       });
   collide.define<any_thing<cref>, Asteroid>(
       []([[maybe_unused]] auto const& any_, [[maybe_unused]] auto const& a) {

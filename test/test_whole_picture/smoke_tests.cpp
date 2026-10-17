@@ -24,10 +24,10 @@ const architecture::size full_screen{80, 25};
 }  // namespace
 
 TEST_CASE("example 1 core") {
-  //  std::cout << get_meta_data<core::surface>().get_type_info().name() <<
+  //  std::cout << get_meta_data<core::surface>().type().name() <<
   //  "\n";
   std::cout << get_meta_data<whole_picture::core::shapes::picture>()
-                   .get_type_info()
+                   .type()
                    .name()
             << "\n";
   std::cout << members_count<whole_picture::core::shapes::picture>() << "\n";

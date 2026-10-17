@@ -202,6 +202,6 @@ TEST_CASE("std emulated any_") {
     a1 = 3;
     CHECK(*unerase_cast<int>(a1) == 3);
     CHECK(unerase_cast_if<std::string>(a1) == nullptr);
-    CHECK(get_type_info(a1) == typeid(int));
+    CHECK(type_of(a1) == typeid(int));
   }
 }

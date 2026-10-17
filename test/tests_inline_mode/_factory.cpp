@@ -32,10 +32,10 @@ namespace example {
 TEST_CASE("factory1") {
   auto asteroid_thing = thing_factory.construct("asteroid");
   CHECK(unerase_cast<asteroid>(asteroid_thing) != nullptr);
-  CHECK(get_type_info(asteroid_thing) == typeid(asteroid));
+  CHECK(type_of(asteroid_thing) == typeid(asteroid));
   auto spaceship_thing = thing_factory.construct("spaceship");
   CHECK(unerase_cast<spaceship>(spaceship_thing) != nullptr);
-  CHECK(get_type_info(spaceship_thing) == typeid(spaceship));
+  CHECK(type_of(spaceship_thing) == typeid(spaceship));
 }
 
 TEST_CASE("factory2") {
@@ -46,8 +46,8 @@ TEST_CASE("factory2") {
     archive >> key;
     if (!key.empty()) things.emplace_back(thing_factory.construct(key));
   }
-  CHECK(get_type_info(things[0]) == typeid(asteroid));
-  CHECK(get_type_info(things[1]) == typeid(spaceship));
+  CHECK(type_of(things[0]) == typeid(asteroid));
+  CHECK(type_of(things[1]) == typeid(spaceship));
 }
 
 TRAIT(stringable, dynamic_deletable,

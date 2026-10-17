@@ -68,7 +68,7 @@ class meta_data {
   explicit constexpr meta_data(std::in_place_type_t<CLASS>)
       : type_info_(typeid(CLASS)) {}
 
-  constexpr const std::type_info& get_type_info() const { return type_info_; }
+  constexpr const std::type_info& type() const { return type_info_; }
 
   auto& get_i_table() { return i_table_; }
   auto& get_i_table() const { return i_table_; }
@@ -87,7 +87,7 @@ class meta_data {
   std::expected<VTable*, cast_error> get_v_table() const {
     if (auto v_table = find_v_table<VTable>(); v_table) return v_table;
     return std::unexpected(
-        cast_error{.to = typeid(VTable), .from = get_type_info()});
+        cast_error{.to = typeid(VTable), .from = type()});
   }
   template <typename VTable>
   auto register_v_table(VTable* v_table) {
