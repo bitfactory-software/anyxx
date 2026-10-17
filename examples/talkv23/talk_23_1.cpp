@@ -29,11 +29,10 @@ TEST_CASE("ShapesAny++23") {
 }
 
 TEST_CASE("ShapesAny++23 simplified") {
-    std::initializer_list<any<Shape>> shapes = { Circle{5.0} };
-    for(const auto& shape : shapes) {
-        std::println("Area: {}", shape.area());
-        ;
-    }
+  std::initializer_list<any<Shape>> shapes = {Circle{5.0}};
+  for (const auto& shape : shapes) {
+    std::println("Area: {}", shape.area());
+  }
 }
 
 }  // namespace
