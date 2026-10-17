@@ -15,7 +15,7 @@ struct widget_2 {
 };
 
 using namespace anyxx;
-TRAIT_EX(widget, dynamic_copyable, (FN(std::string, get, (), const)), , , ,
+TRAIT_EX(widget, deleteable, (FN(std::string, get, (), const)), , , ,
          (using default_proxy_t = shared;))
 
 any<widget> load_widget(int id) {
@@ -30,12 +30,9 @@ static std::map<int, any_<weak, widget>> cache;  // out of function for CHECK
 static std::mutex cache_mutex;
 any<widget> make_widget(int id) {
   std::lock_guard __{cache_mutex};
-  return *lock<any<widget>>(cache[id]).or_else(
-      [&] -> std::optional<any<widget>> {
-        auto s = load_widget(id);
-        cache[id] = s;
-        return s;
-      });
+  auto found = lock<any<widget>>(cache[id]);
+  if (!found) cache[id] = *(found = load_widget(id));
+  return *found;
 }
 
 TEST_CASE("example talk_23_2_shared_weak X1/ sutters favorite 10 cpp lines") {

@@ -33,12 +33,9 @@ static std::map<int, any_<weak, widget>> cache;  // out of function for CHECK
 static std::mutex cache_mutex;
 any<widget> make_widget(int id) {
   std::lock_guard __{cache_mutex};
-  return *lock<any<widget>>(cache[id]).or_else(
-      [&] -> std::optional<any<widget>> {
-      auto s = load_widget(id);
-    cache[id] = s;
-    return s;
-  });
+  auto found = lock<any<widget>>(cache[id]);
+  if(!found) cache[id] = *(found = load_widget(id));
+  return *found;
 }
 
 TEST_CASE("talk_26_2_shared_weak sutters favorite 10 cpp lines") {
