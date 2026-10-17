@@ -135,7 +135,7 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">         , , , ())</div>
 <div class="line"> </div>
 <div class="line">template &lt;typename Proxy = anyxx::val&lt;&gt;&gt;</div>
-<div class="line">using any_monoid = anyxx::any&lt;Proxy, monoid&gt;;</div>
+<div class="line">using any_monoid = anyxx::any_&lt;Proxy, monoid&gt;;</div>
 <div class="line"> </div>
 <div class="line">}  <span class="comment">// namespace example_2b</span></div>
 <div class="line"> </div>
@@ -162,7 +162,7 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> P1&gt;</div>
 <div class="line">  <span class="keyword">requires</span>(!anyxx::is_any&lt;P1&gt;)</div>
 <div class="line"><span class="keywordtype">void</span> test_monoid(P1 <span class="keyword">const</span>&amp; p1, std::ranges::forward_range <span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
-<div class="line">  <span class="keyword">using </span>any_monoid = anyxx::any&lt;anyxx::using_&lt;P1&gt;, monoid&gt;;</div>
+<div class="line">  <span class="keyword">using </span>any_monoid = anyxx::any_&lt;anyxx::using_&lt;P1&gt;, monoid&gt;;</div>
 <div class="line">  test_monoid_traited&lt;any_monoid&gt;(any_monoid{p1}, r);</div>
 <div class="line">}</div>
 <div class="line"><span class="keyword">template</span> &lt;anyxx::is_any Mono<span class="keywordtype">id</span>&gt;</div>
@@ -225,8 +225,8 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line"> </div>
 <div class="line">  test_monoid((1), std::vector{2, 3});</div>
-<div class="line">  test_monoid&lt;any&lt;using_&lt;int&gt;, monoid&gt;&gt;(</div>
-<div class="line">      using_as&lt;monoid&gt;(1), std::vector&lt;any&lt;using_&lt;int&gt;, monoid&gt;&gt;{{2}, {3}});</div>
+<div class="line">  test_monoid&lt;any_&lt;using_&lt;int&gt;, monoid&gt;&gt;(</div>
+<div class="line">      using_as&lt;monoid&gt;(1), std::vector&lt;any_&lt;using_&lt;int&gt;, monoid&gt;&gt;{{2}, {3}});</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">//  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});</span></div>
 <div class="line">}</div>
@@ -236,9 +236,9 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line"> </div>
 <div class="line">  test_monoid(<span class="stringliteral">&quot;1&quot;</span>s, std::vector{<span class="stringliteral">&quot;2&quot;</span>s, <span class="stringliteral">&quot;3&quot;</span>s});</div>
-<div class="line">  test_monoid&lt;any&lt;using_&lt;std::string&gt;, monoid&gt;&gt;(</div>
+<div class="line">  test_monoid&lt;any_&lt;using_&lt;std::string&gt;, monoid&gt;&gt;(</div>
 <div class="line">      using_as&lt;monoid&gt;(<span class="stringliteral">&quot;1&quot;</span>s),</div>
-<div class="line">      std::vector&lt;any&lt;using_&lt;std::string&gt;, monoid&gt;&gt;{{<span class="stringliteral">&quot;2&quot;</span>s}, {<span class="stringliteral">&quot;3&quot;</span>s}});</div>
+<div class="line">      std::vector&lt;any_&lt;using_&lt;std::string&gt;, monoid&gt;&gt;{{<span class="stringliteral">&quot;2&quot;</span>s}, {<span class="stringliteral">&quot;3&quot;</span>s}});</div>
 <div class="line">}</div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;example 2b monoid c&quot;</span>) {</div>
 <div class="line">  <span class="keyword">using namespace </span>example_2b;</div>

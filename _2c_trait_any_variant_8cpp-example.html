@@ -121,7 +121,7 @@ $(function(){initNavTree('_2c_trait_any_variant_8cpp-example.html','',''); });
 <div class="line">                    ss &gt;&gt; std::boolalpha &gt;&gt; x;</div>
 <div class="line">                  })),</div>
 <div class="line">         , , (HAS_OPEN_DISPATCH), ())</div>
-<div class="line"><span class="keyword">using </span>any_value = anyxx::any_&lt;value&gt;;</div>
+<div class="line"><span class="keyword">using </span>any_value = anyxx::any&lt;value&gt;;</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using </span>vany_value = anyxx::make_vany&lt;value, bool, int, double, std::string&gt;;</div>
 <div class="line"><span class="keyword">using </span>concrete_value = anyxx::vany_type_trait&lt;vany_value&gt;::concrete_variant;</div>
@@ -150,7 +150,7 @@ $(function(){initNavTree('_2c_trait_any_variant_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line"> </div>
 <div class="line">  <span class="keyword">using </span>any_variant =</div>
-<div class="line">      any&lt;using_&lt;std::variant&lt;bool, int, double, std::string&gt;&gt;, value&gt;;</div>
+<div class="line">      any_&lt;using_&lt;std::variant&lt;bool, int, double, std::string&gt;&gt;, value&gt;;</div>
 <div class="line"> </div>
 <div class="line">  CHECK(any_variant{<span class="keyword">true</span>}.to_string() == <span class="stringliteral">&quot;true&quot;</span>);</div>
 <div class="line">  CHECK(any_variant{42}.to_string() == <span class="stringliteral">&quot;42&quot;</span>);</div>
@@ -158,7 +158,7 @@ $(function(){initNavTree('_2c_trait_any_variant_8cpp-example.html','',''); });
 <div class="line">  CHECK(any_variant{<span class="stringliteral">&quot;hello world&quot;</span>s}.to_string() == <span class="stringliteral">&quot;hello world&quot;</span>s);</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line">TEST_CASE(<span class="stringliteral">&quot;example 2cb static_ any variant&quot;</span>) {</div>
+<div class="line">TEST_CASE(<span class="stringliteral">&quot;example 2cb static_ any_ variant&quot;</span>) {</div>
 <div class="line">  <span class="keyword">using namespace </span>example_2c;</div>
 <div class="line">  <span class="keyword">using namespace </span>std::string_literals;</div>
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
@@ -206,7 +206,7 @@ $(function(){initNavTree('_2c_trait_any_variant_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">VANY_DISPACH(example_2c, vany_stream)</div>
 <div class="line"> </div>
-<div class="line">TEST_CASE(<span class="stringliteral">&quot;example 2cc static_ any variant single open dispatch&quot;</span>) {</div>
+<div class="line">TEST_CASE(<span class="stringliteral">&quot;example 2cc static_ any_ variant single open dispatch&quot;</span>) {</div>
 <div class="line">  <span class="keyword">using namespace </span>example_2c;</div>
 <div class="line">  <span class="keyword">using namespace </span>std::string_literals;</div>
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
@@ -275,7 +275,7 @@ $(function(){initNavTree('_2c_trait_any_variant_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">VANY_DISPACH(example_2c, vany_compare)</div>
 <div class="line"> </div>
-<div class="line">TEST_CASE(<span class="stringliteral">&quot;example 2cd static_ any variant double dispatch&quot;</span>) {</div>
+<div class="line">TEST_CASE(<span class="stringliteral">&quot;example 2cd static_ any_ variant double dispatch&quot;</span>) {</div>
 <div class="line">  <span class="keyword">using namespace </span>example_2c;</div>
 <div class="line">  <span class="keyword">using namespace </span>std::string_literals;</div>
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>

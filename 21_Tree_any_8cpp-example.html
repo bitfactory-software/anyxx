@@ -109,7 +109,7 @@ $(function(){initNavTree('21_Tree_any_8cpp-example.html','',''); });
 <div class="line">      (FN(<span class="keywordtype">int</span>, value, (), <span class="keyword">const</span>), FN(std::string, as_forth, (), <span class="keyword">const</span>),</div>
 <div class="line">       FN(std::string, as_lisp, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using </span>any_node = any_&lt;node, cow&gt;;</div>
+<div class="line"><span class="keyword">using </span>any_node = any&lt;node, cow&gt;;</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>Plus {</div>
 <div class="line">  Plus(any_node left, any_node right)</div>
@@ -164,8 +164,8 @@ $(function(){initNavTree('21_Tree_any_8cpp-example.html','',''); });
 <div class="line"><span class="preprocessor">#ifdef ANYXX_RUN_BENCHMARKS</span></div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Ensure &#39;target_compile_options(examples_inline_mode PRIVATE &quot;</span></div>
 <div class="line">               <span class="stringliteral">&quot;/Ob2)&#39; is used!\n&quot;</span>;</div>
-<div class="line">  BENCHMARK(<span class="stringliteral">&quot;21_Tree any++ value&quot;</span>) { <span class="keywordflow">return</span> expr.value(); };</div>
-<div class="line">  BENCHMARK(<span class="stringliteral">&quot;21_Tree any++ as_lisp&quot;</span>) { <span class="keywordflow">return</span> expr.as_lisp(); };</div>
+<div class="line">  BENCHMARK(<span class="stringliteral">&quot;21_Tree any_++ value&quot;</span>) { <span class="keywordflow">return</span> expr.value(); };</div>
+<div class="line">  BENCHMARK(<span class="stringliteral">&quot;21_Tree any_++ as_lisp&quot;</span>) { <span class="keywordflow">return</span> expr.as_lisp(); };</div>
 <div class="line"><span class="preprocessor">#endif  </span><span class="comment">// ANYXX_RUN_BENCHMARKS</span></div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>

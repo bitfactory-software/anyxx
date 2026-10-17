@@ -102,13 +102,13 @@ $(function(){initNavTree('_2f_trait_equal_comparable_8cpp-example.html','',''); 
 <div class="line"><span class="comment">//</span></div>
 <div class="line"><span class="comment">// As an illustrative example, we choose to provide a `equal_comparable` trait.</span></div>
 <div class="line"><span class="comment">// This means, we want a way to provide an &quot;equal&quot;(==) and a &quot;not equal&quot;(!=)</span></div>
-<div class="line"><span class="comment">// operator for any type, regardless of whether the type itself provides these</span></div>
+<div class="line"><span class="comment">// operator for any_ type, regardless of whether the type itself provides these</span></div>
 <div class="line"><span class="comment">// operators.</span></div>
 <div class="line"><span class="comment">// Whereby it should be enough for the application to provide only one of the</span></div>
 <div class="line"><span class="comment">// two operators. The other should be automatically provided.</span></div>
 <div class="line"><span class="comment">//</span></div>
 <div class="line"><span class="comment">// Why would you use this?</span></div>
-<div class="line"><span class="comment">// It allows you to write generic code that can work with any type that models</span></div>
+<div class="line"><span class="comment">// It allows you to write generic code that can work with any_ type that models</span></div>
 <div class="line"><span class="comment">// `equal_comparable`, without requiring those types to inherit from a common</span></div>
 <div class="line"><span class="comment">// base class or implement specific interfaces. This can be particularly useful</span></div>
 <div class="line"><span class="comment">// when working with third-party types or when you want to add functionality to</span></div>
@@ -146,13 +146,13 @@ $(function(){initNavTree('_2f_trait_equal_comparable_8cpp-example.html','',''); 
 <div class="line"><span class="keyword">static_assert</span>(is_equal_comparable_model&lt;bool&gt;);</div>
 <div class="line"><span class="keyword">static_assert</span>(is_equal_comparable_model&lt;std::string&gt;);</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// This is an algorithm that use the == and != operators on objects of any</span></div>
+<div class="line"><span class="comment">// This is an algorithm that use the == and != operators on objects of any_</span></div>
 <div class="line"><span class="comment">// type that models the equal_comparable trait.</span></div>
 <div class="line"><span class="comment">// Because the Proxy type of the trait is a template parameter, this algorithm</span></div>
 <div class="line"><span class="comment">// can be used both for static AND dynamic dispatch!</span></div>
 <div class="line"><span class="keyword">template</span> &lt;anyxx::is_proxy Proxy&gt;</div>
-<div class="line"><span class="keywordtype">void</span> test_equal_comparable_(anyxx::any&lt;Proxy, equal_comparable&gt; <span class="keyword">const</span>&amp; a,</div>
-<div class="line">                            anyxx::any&lt;Proxy, equal_comparable&gt; <span class="keyword">const</span>&amp; b) {</div>
+<div class="line"><span class="keywordtype">void</span> test_equal_comparable_(anyxx::any_&lt;Proxy, equal_comparable&gt; <span class="keyword">const</span>&amp; a,</div>
+<div class="line">                            anyxx::any_&lt;Proxy, equal_comparable&gt; <span class="keyword">const</span>&amp; b) {</div>
 <div class="line">  CHECK((a == b) == (b == a));</div>
 <div class="line">  CHECK((a != b) == (b != a));</div>
 <div class="line">  CHECK((a == b) != (b != a));</div>
@@ -161,7 +161,7 @@ $(function(){initNavTree('_2f_trait_equal_comparable_8cpp-example.html','',''); 
 <div class="line"> </div>
 <div class="line"><span class="comment">// This is a convenience wrapper for the test algorithm above in the static</span></div>
 <div class="line"><span class="comment">// dispatch case. Because it is guarded by the concept</span></div>
-<div class="line"><span class="comment">// is_equal_comparable_model provided by the library, any missuse should get a</span></div>
+<div class="line"><span class="comment">// is_equal_comparable_model provided by the library, any_ missuse should get a</span></div>
 <div class="line"><span class="comment">// nice compiler error.</span></div>
 <div class="line"><span class="keyword">template</span> &lt;is_equal_comparable_model T&gt;</div>
 <div class="line"><span class="keywordtype">void</span> test_equal_comparable(T <span class="keyword">const</span>&amp; a, T <span class="keyword">const</span>&amp; b) {</div>
@@ -212,7 +212,7 @@ $(function(){initNavTree('_2f_trait_equal_comparable_8cpp-example.html','',''); 
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line">  <span class="keyword">using namespace </span>lib_2f;</div>
 <div class="line">  std::vector&lt;</div>
-<div class="line">      std::pair&lt;any&lt;val&lt;&gt;, equal_comparable&gt;, any&lt;val&lt;&gt;, equal_comparable&gt;&gt;&gt;</div>
+<div class="line">      std::pair&lt;any_&lt;val&lt;&gt;, equal_comparable&gt;, any_&lt;val&lt;&gt;, equal_comparable&gt;&gt;&gt;</div>
 <div class="line">      v{</div>
 <div class="line">          {app_2f::b_type{<span class="stringliteral">&quot;A&quot;</span>}, app_2f::b_type{<span class="stringliteral">&quot;A&quot;</span>}},</div>
 <div class="line">          {app_2f::b_type{<span class="stringliteral">&quot;A&quot;</span>}, app_2f::b_type{<span class="stringliteral">&quot;B&quot;</span>}},</div>
@@ -232,8 +232,8 @@ $(function(){initNavTree('_2f_trait_equal_comparable_8cpp-example.html','',''); 
 <div class="line">    <span class="comment">// This behaviour is enforced by the \ref anyxx::self keyword type.</span></div>
 <div class="line">    <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line">    <span class="keyword">using namespace </span>lib_2f;</div>
-<div class="line">    any_&lt;equal_comparable&gt; a{42};</div>
-<div class="line">    any_&lt;equal_comparable&gt; b{3.14};</div>
+<div class="line">    any&lt;equal_comparable&gt; a{42};</div>
+<div class="line">    any&lt;equal_comparable&gt; b{3.14};</div>
 <div class="line">    CHECK_THROWS_AS(a == b, type_mismatch_error);</div>
 <div class="line">  }</div>
 <div class="line">}</div>
