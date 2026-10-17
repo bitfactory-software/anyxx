@@ -58,10 +58,10 @@ TRAIT(const_function_i, anyxx::dynamic_copyable,
 TRAIT(mutating_function_i, anyxx::dynamic_copyable,
       (OP_(void, (), (std::string const&), )))
 
-using const_function = any<cref, const_function_i>;
-using mutating_function = any<mutref, mutating_function_i>;
-using shared_const_function = any<shared, const_function_i>;
-using shared_mutating_function = any<shared, mutating_function_i>;
+using const_function = any_<cref, const_function_i>;
+using mutating_function = any_<mutref, mutating_function_i>;
+using shared_const_function = any_<shared, const_function_i>;
+using shared_mutating_function = any_<shared, mutating_function_i>;
 
 static_assert(std::is_constructible_v<const_function, functor const>);
 static_assert(std::is_assignable_v<const_function, const_function>);
@@ -187,8 +187,8 @@ TRAIT(text_i_mutable, text_i_const,
       (FN(void, set_text, (std::string const&), )))
 }  // namespace
 
-using const_text_i = anyxx::any<anyxx::cref, text_i_const>;
-using const_text_i_mutable = anyxx::any<anyxx::mutref, text_i_const>;
+using const_text_i = anyxx::any_<anyxx::cref, text_i_const>;
+using const_text_i_mutable = anyxx::any_<anyxx::mutref, text_i_const>;
 
 template <class C>
 concept can_call_get_text = requires(C c) {
@@ -206,8 +206,8 @@ static_assert(can_call_get_text<const_text_i const>);
 static_assert(!can_call_set_text<const_text_i>);
 static_assert(!can_call_set_text<const_text_i const>);
 
-using mutable_text_i_const = anyxx::any<anyxx::cref, text_i_mutable>;
-using mutable_text_i_mutable = anyxx::any<anyxx::mutref, text_i_mutable>;
+using mutable_text_i_const = anyxx::any_<anyxx::cref, text_i_mutable>;
+using mutable_text_i_mutable = anyxx::any_<anyxx::mutref, text_i_mutable>;
 static_assert(std::same_as<mutable_text_i_mutable::proxy_t, anyxx::mutref>);
 
 static_assert(!std::is_const_v<std::remove_reference_t<text_object&&>>);

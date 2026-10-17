@@ -30,7 +30,7 @@ namespace {
 
 template <typename KEY, typename VALUE>
 void test_any_map_template(
-    anyxx::any<anyxx::cref, map, KEY, VALUE> const& map_i) {
+    anyxx::any_<anyxx::cref, map, KEY, VALUE> const& map_i) {
   REQUIRE(map_i.size() == 2);
   REQUIRE(map_i.at("one") == 1);
   REQUIRE(map_i.at("two") == 2);
@@ -47,7 +47,7 @@ TRAIT(stringable, anyxx::dynamic_copyable,
       (FN(std::string, to_string, (), const)))
 
 TRAIT_TEMPLATE(((KEY)), map_to_string, anyxx::dynamic_copyable, (),
-               (FN((anyxx::any<anyxx::cref, stringable>), at, (KEY const&),
+               (FN((anyxx::any_<anyxx::cref, stringable>), at, (KEY const&),
                    const)))
 
 MODEL_MAP((int), stringable) {
@@ -70,13 +70,13 @@ TEMPLATE_MODEL_MAP((std::map<std::string, int>), map,
 
 }  // namespace
 
-TEST_CASE("any inline template test") {
+TEST_CASE("any_ inline template test") {
   using namespace template_test;
   using namespace anyxx;
 
   std::map<std::string, int> map_string_to_int = {{"one", 1}, {"two", 2}};
 
-  auto test_any_map_lambda = [](any<cref, map, std::string, int> const& map_i) {
+  auto test_any_map_lambda = [](any_<cref, map, std::string, int> const& map_i) {
     REQUIRE(map_i.size() == 2);
     REQUIRE(map_i.at("one") == 1);
     REQUIRE(map_i.at("two") == 2);
@@ -86,28 +86,28 @@ TEST_CASE("any inline template test") {
   test_any_map_template<std::string, int>(map_string_to_int);
 
   auto test_any_map_to_string_lambda =
-      [](any<cref, map_to_string, std::string> map_i) {
+      [](any_<cref, map_to_string, std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1");
         REQUIRE(map_i.at("two").to_string() == "2");
       };
   test_any_map_to_string_lambda(map_string_to_int);
 }
 
-TEST_CASE("any inline template test2") {
+TEST_CASE("any_ inline template test2") {
   using namespace template_test;
   using namespace anyxx;
 
   std::map<std::string, double> map_string_to_int = {{"one", 1}, {"two", 2}};
 
   auto test_any_map_to_string_lambda =
-      [](any<cref, map_to_string, std::string> map_i) {
+      [](any_<cref, map_to_string, std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1.000000");
         REQUIRE(map_i.at("two").to_string() == "2.000000");
       };
   test_any_map_to_string_lambda(map_string_to_int);
 }
 
-TEST_CASE("any inline template test3") {
+TEST_CASE("any_ inline template test3") {
   using namespace template_test;
   using namespace anyxx;
 
@@ -116,9 +116,9 @@ TEST_CASE("any inline template test3") {
       {2, {{"one", {{4, 4.14}, {5, 4.28}}}, {"two", {{6, 4.333}}}}}};
 
   auto test_map_lambda =
-      [](any<cref, recursive_map, int,
-             any<cref, recursive_map, std::string,
-                 any<cref, map, int, double>>> const& map_i) {
+      [](any_<cref, recursive_map, int,
+             any_<cref, recursive_map, std::string,
+                 any_<cref, map, int, double>>> const& map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");
         auto z = y.at(1);
@@ -130,9 +130,9 @@ TEST_CASE("any inline template test3") {
 
   using namespace anyxx;
   auto test_map_lambda_mutate =
-      [](any<mutref, mutable_recursive_map, int,
-             any<mutref, mutable_recursive_map, std::string,
-                 any<mutref, mutable_map, int, double>>>
+      [](any_<mutref, mutable_recursive_map, int,
+             any_<mutref, mutable_recursive_map, std::string,
+                 any_<mutref, mutable_map, int, double>>>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");
@@ -146,12 +146,12 @@ TEST_CASE("any inline template test3") {
   REQUIRE(m[2]["one"][4] == 8.28);
 }
 
-TEST_CASE("any inline template test4") {
+TEST_CASE("any_ inline template test4") {
   using namespace template_test;
   using namespace anyxx;
 
   std::map<int, double> m = {{3, 3.333}, {6, 4.333}};
 
-  any<cref, map, int, double> any_mutable_map{m};
+  any_<cref, map, int, double> any_mutable_map{m};
   REQUIRE(any_mutable_map.at(3) == 3.333);
 }

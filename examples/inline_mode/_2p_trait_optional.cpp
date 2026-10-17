@@ -17,7 +17,7 @@ TRAIT(equal_comparable, anyxx::dynamic_copyable,
 // monostate. When there is a class template called 'trait-name'_default_rep,
 // this type is used as the representation;
 // This type must be constructible from the type 'T' being modeled.
-// If 'trait-name'_default_rep is default constructible, then the any using this
+// If 'trait-name'_default_rep is default constructible, then the any_ using this
 // trait  is default constructible.
 // In our case is this effect used to model the 'no value' state.
 // 'has_value' and 'get_value' are implemented in terms of the variant.
@@ -48,7 +48,7 @@ TRAIT(nullable, anyxx::dynamic_copyable,
        OP_FREE(bool, ==, eq, (anyxx::self const&), const)))
 
 template <typename T>
-using optional = anyxx::any<anyxx::using_<T>, nullable>;
+using optional = anyxx::any_<anyxx::using_<T>, nullable>;
 
 template <typename T>
 struct reference_wrapper {
@@ -117,13 +117,13 @@ MODEL_MAP((_2p_app::foo), _2p_lib::nullable) {
 
 namespace {
 template <typename T>
-bool fun(anyxx::any<anyxx::using_<T>, _2p_lib::equal_comparable> const& l,
-         anyxx::any<anyxx::using_<T>, _2p_lib::equal_comparable> const& r) {
+bool fun(anyxx::any_<anyxx::using_<T>, _2p_lib::equal_comparable> const& l,
+         anyxx::any_<anyxx::using_<T>, _2p_lib::equal_comparable> const& r) {
   return r == l;
 }
 static_assert(
     _2p_lib::is_equal_comparable_model<
-        anyxx::any<anyxx::using_<_2p_app::foo>, _2p_lib::equal_comparable>>);
+        anyxx::any_<anyxx::using_<_2p_app::foo>, _2p_lib::equal_comparable>>);
 }  // namespace
 
 TEST_CASE("_2p test optional 2") {

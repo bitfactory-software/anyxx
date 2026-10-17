@@ -15,7 +15,7 @@
 namespace anyxx {
 
 /// Proxy to manage the captured object via \c std::shared_ptr.
-/// * If you pass a \c std::shared_ptr to the \ref any constructor, this
+/// * If you pass a \c std::shared_ptr to the \ref any_ constructor, this
 /// pointer will be casted to \c <const void*> and used as proxy.
 /// * If you pass an object as second parameter, with the std::in_place tag as
 /// first, this object will be forwarded to std::make_shared with the decayed

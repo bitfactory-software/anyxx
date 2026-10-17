@@ -9,7 +9,7 @@ TRAIT(has_equal, anyxx::dynamic_copyable,
                [&x](T const& y) { return x == y; })))
 
 template <typename Proxy = anyxx::val<>>
-using any_has_equal = anyxx::any<Proxy, has_equal>;
+using any_has_equal = anyxx::any_<Proxy, has_equal>;
 
 }  // namespace example_2d
 
@@ -44,7 +44,7 @@ TRAIT(has_plus, has_equal,
                ([&x](T const& y) { return x + y; }))))
 
 template <typename Proxy = anyxx::val<>>
-using any_has_plus = anyxx::any<Proxy, has_plus>;
+using any_has_plus = anyxx::any_<Proxy, has_plus>;
 
 }  // namespace example_2d
 

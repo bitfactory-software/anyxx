@@ -73,21 +73,21 @@ TRAIT_TEMPLATE_EX(
 template <typename It>
 concept has_iterator_category = requires { typename It::iterator_category; };
 template <typename ValueType, typename Reference = ValueType&>
-using any_input_iterator = any_<input_iterator, ValueType, Reference>;
+using any_input_iterator = any<input_iterator, ValueType, Reference>;
 template <template <typename...> typename It, typename Proxy, typename... Args>
 concept is_compareable_iterator =
-    (has_iterator_category<any<Proxy, It, Args...>> &&
-     is_any_derived_from<any_<It, Args...>, any_<input_iterator, Args...>>);
+    (has_iterator_category<any_<Proxy, It, Args...>> &&
+     is_any_derived_from<any<It, Args...>, any<input_iterator, Args...>>);
 template <template <typename...> typename It, typename Proxy, typename... Args>
   requires is_compareable_iterator<It, Proxy, Args...>
-bool operator==(any<Proxy, It, Args...> const& lhs,
-                any<Proxy, It, Args...> const& rhs) {
+bool operator==(any_<Proxy, It, Args...> const& lhs,
+                any_<Proxy, It, Args...> const& rhs) {
   return lhs.equal(rhs);
 }
 template <template <typename...> typename It, typename Proxy, typename... Args>
   requires is_compareable_iterator<It, Proxy, Args...>
-bool operator!=(any<Proxy, It, Args...> const& lhs,
-                any<Proxy, It, Args...> const& rhs) {
+bool operator!=(any_<Proxy, It, Args...> const& lhs,
+                any_<Proxy, It, Args...> const& rhs) {
   return !(rhs == lhs);
 }
 
@@ -98,7 +98,7 @@ TRAIT_TEMPLATE_EX(((ValueType), (Reference)), forward_iterator, input_iterator,
                   , ())
 
 template <typename ValueType, typename Reference = ValueType&>
-using any_forward_iterator = any_<forward_iterator, ValueType, Reference>;
+using any_forward_iterator = any<forward_iterator, ValueType, Reference>;
 
 TRAIT_TEMPLATE_EX(((ValueType), (Reference)), bidirectional_iterator,
                   forward_iterator, ((ValueType), (Reference)),
@@ -109,7 +109,7 @@ TRAIT_TEMPLATE_EX(((ValueType), (Reference)), bidirectional_iterator,
 
 template <typename ValueType, typename Reference = ValueType&>
 using any_bidirectional_iterator =
-    any_<bidirectional_iterator, ValueType, Reference>;
+    any<bidirectional_iterator, ValueType, Reference>;
 
 TRAIT_TEMPLATE_EX(
     ((ValueType), (Reference)), random_access_iterator, bidirectional_iterator,
@@ -132,7 +132,7 @@ TRAIT_TEMPLATE_EX(
 
 template <typename ValueType, typename Reference = ValueType&>
 using any_random_access_iterator =
-    any_<random_access_iterator, ValueType, Reference>;
+    any<random_access_iterator, ValueType, Reference>;
 
 template <typename Value, typename Ref>
 auto operator-(any_random_access_iterator<Value, Ref> const& lhs,

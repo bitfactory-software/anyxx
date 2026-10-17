@@ -9,7 +9,7 @@ TRAIT_TEMPLATE(((AnyIterator)), range, dynamic_copyable, (),
                 FN(AnyIterator, end, (), const)))
 
 template <typename AnyIterator, typename Proxy = anyxx::cref>
-using any_range = any<Proxy, range, AnyIterator>;
+using any_range = any_<Proxy, range, AnyIterator>;
 
 template <typename ValueType, typename Reference = ValueType,
           typename Proxy = anyxx::cref>

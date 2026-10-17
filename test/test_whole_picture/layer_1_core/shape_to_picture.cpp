@@ -15,7 +15,7 @@ core::shapes::picture core::shape_to_picture(
     architecture::any_shape<anyxx::cref> const& shape) {
   core::shapes::picture picture{shape.top_left(), core::surface{shape.size()}};
   shape_surface_adapter adapter{picture};
-  anyxx::any<anyxx::mutref, architecture::surface> surface{adapter};
+  anyxx::any_<anyxx::mutref, architecture::surface> surface{adapter};
   shape.draw(surface);
   return picture;
 }

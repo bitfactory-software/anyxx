@@ -105,7 +105,7 @@
    \example 31_Animals_any_dispatch.cpp
    Open multi-dispatch example
    \example X1_any_weak_const.cpp
-   Using any with weak and const proxies
+   Using any_ with weak and const proxies
    \example README.cpp
    README showcases
 */

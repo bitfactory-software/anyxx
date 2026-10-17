@@ -27,7 +27,7 @@ struct is_key_impl<key<T>> : std::true_type {};
 template <typename T>
 concept is_key = is_key_impl<T>::value;
 
-/// \brief A class template to implement a factory for \ref any
+/// \brief A class template to implement a factory for \ref any_
 /// objects.
 template <typename Any, typename Key, typename... Args>
   requires proxy_trait<typename Any::proxy_t>::is_owner

@@ -35,18 +35,18 @@ concept call_mutable =
     requires(functor_t functor, std::string s, Any a) { a(" world") == s; };
 template <template <typename> typename F, typename OBSERVER>
 concept call_const = requires(functor_t const functor, std::string s) {
-  any<OBSERVER, F>{functor}() == s;
+  any_<OBSERVER, F>{functor}() == s;
 };
 }  // namespace
 
-static_assert(!call_mutable<any<cref, overloaded_function_object>>);
+static_assert(!call_mutable<any_<cref, overloaded_function_object>>);
 static_assert(call_const<overloaded_function_object, cref>);
-static_assert(call_mutable<any<mutref, overloaded_function_object>>);
+static_assert(call_mutable<any_<mutref, overloaded_function_object>>);
 static_assert(!call_const<overloaded_function_object, mutref>);
 
 TEST_CASE("call_operator overload with mutref") {
   functor_t functor{"hallo"};
-  any<mutref, overloaded_function_object> f{functor};
+  any_<mutref, overloaded_function_object> f{functor};
   REQUIRE(f() == "hallo");
   REQUIRE(f(" world") == "hallo");
   REQUIRE(f() == "hallo world");
@@ -63,6 +63,6 @@ TEST_CASE("call_operator overload with mutref") {
 TEST_CASE("make_overloaded_call_operator") {
   functor2_t functor{"hallo"};
 
-  auto f = any<cref, overloaded_function_object>{functor};
+  auto f = any_<cref, overloaded_function_object>{functor};
   REQUIRE(f() == "hallo");
 }

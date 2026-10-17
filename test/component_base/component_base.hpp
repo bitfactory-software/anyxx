@@ -35,14 +35,14 @@ TRAIT(get_value_i, anyxx::dynamic_smart_ptr, (FN(double, get_value, (), const)))
 TRAIT(set_value_i, get_value_i, (FN(void, set_value, (double), )))
 
 COMPONENT_BASE_EXPORT
-anyxx::any<anyxx::cref, to_string_i> get_to_string_i_co();
-COMPONENT_BASE_EXPORT anyxx::any<anyxx::shared, to_string_i> get_to_string_i_sc(
+anyxx::any_<anyxx::cref, to_string_i> get_to_string_i_co();
+COMPONENT_BASE_EXPORT anyxx::any_<anyxx::shared, to_string_i> get_to_string_i_sc(
     double v);
-COMPONENT_BASE_EXPORT anyxx::any<anyxx::unique, to_string_i> get_to_string_i_u(
+COMPONENT_BASE_EXPORT anyxx::any_<anyxx::unique, to_string_i> get_to_string_i_u(
     double v);
-COMPONENT_BASE_EXPORT anyxx::any<anyxx::shared, anyxx::dynamic_deletable> sc_X(
+COMPONENT_BASE_EXPORT anyxx::any_<anyxx::shared, anyxx::dynamic_deletable> sc_X(
     double v);
-COMPONENT_BASE_EXPORT anyxx::any<anyxx::unique, anyxx::dynamic_deletable> u_X(
+COMPONENT_BASE_EXPORT anyxx::any_<anyxx::unique, anyxx::dynamic_deletable> u_X(
     double v);
 
 }  // namespace test::component_base

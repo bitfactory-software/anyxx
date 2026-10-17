@@ -26,7 +26,7 @@ bool collision::pictures::intersect(
     core::shapes::picture const& lhs,
     architecture::any_shape<anyxx::cref> const& rhs) {
   hitpad_picture_t hitpad_picture{.picture = lhs, .hit = false};
-  anyxx::any<anyxx::mutref, architecture::surface> hitpad{
+  anyxx::any_<anyxx::mutref, architecture::surface> hitpad{
       hitpad_picture};
   rhs.draw(hitpad);
   return hitpad_picture.hit;

@@ -8,15 +8,15 @@ namespace anyxx {
 
 template <is_any Any>
     requires is_dynamic_castable_v_table<typename Any::v_table_t>
-bool is_derived_from(const std::type_info& from, Any const& any) {
-    return get_v_table(any)->is_derived_from_(from);
+bool is_derived_from(const std::type_info& from, Any const& any_) {
+    return get_v_table(any_)->is_derived_from_(from);
 }
 
 template <is_any From, is_any Any>
     requires is_dynamic_castable_v_table<typename From::v_table_t>&&
 is_dynamic_castable_v_table<typename Any::v_table_t>
-bool is_derived_from(Any const& any) {
-    return is_derived_from(typeid(typename From::v_table_t), any);
+bool is_derived_from(Any const& any_) {
+    return is_derived_from(typeid(typename From::v_table_t), any_);
 }
 
 /// \brief Safe downcast to a derived trait using runtime information from the

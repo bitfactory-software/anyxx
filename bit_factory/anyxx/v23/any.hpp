@@ -16,29 +16,29 @@ namespace anyxx {
 /// \brief The core class template to control dispatch for external
 /// polymorphism
 ///
-/// To control the behavior, `any` provides two template parameters: \ref
-/// Proxy and \ref Trait. Imagine this as a combination of a `std::any` and
+/// To control the behavior, `any_` provides two template parameters: \ref
+/// Proxy and \ref Trait. Imagine this as a combination of a `std::any_` and
 /// several `std::function`s.
 ///
-/// With the Proxy template parameter, you control whether this `any` behaves
+/// With the Proxy template parameter, you control whether this `any_` behaves
 /// like a copying function, a move-only function, a reference function, or if
-/// the target object is captured concretely inside of `any`.
+/// the target object is captured concretely inside of `any_`.
 ///
 /// With the Trait template parameter, you specify the member functions of a
-/// captured object which can be invoked on this `any`.
+/// captured object which can be invoked on this `any_`.
 ///
 /// \tparam Proxy Specifies the lifetime of the captured object. Any++
 /// provides
 /// \ref using_, \ref cref, \ref mutref, \ref shared, \ref weak, \ref unique,
 /// and
 /// \ref value. All Proxy classes must conform to the \ref is_proxy concept.
-/// \tparam Trait Specifies the functionality of this any. A class of this
+/// \tparam Trait Specifies the functionality of this any_. A class of this
 /// type is normally provided via a \ref TRAIT macro. See there
 /// for examples. If the proxy is dynamic (i.e., type erased), the Trait must
 /// conform to the \ref has_v_table concept (that means: must provide a
 /// v-Table).
 template <is_proxy Proxy, template <typename...> typename Trait, typename... Args>
-class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait<Args...>>, public Trait<Args...> {
+class ANYXX_USE_EBO any_ : public v_table_holder<Proxy, Trait<Args...>>, public Trait<Args...> {
  public:
   using proxy_t = Proxy;
   using trait_t = Trait<Args...>;
@@ -56,7 +56,7 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait<Args...>>, public T
   proxy_impl_t proxy_{};
 
  public:
-  any()
+  any_()
     requires proxy_trait_t::allow_any_default_constructibile
   {}
 
@@ -66,9 +66,9 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait<Args...>>, public T
   /// proxy_trait. See \ref using_, \ref shared, \ref weak, \ref unique, and
   /// \ref value.
   template <typename ConstructedWith>
-  explicit(false) any(ConstructedWith&& constructed_with)  // NOLINT
-    requires constructibile_for<ConstructedWith, proxy_impl_t, any> &&
-             (!std::same_as<any, std::decay_t<ConstructedWith>>) &&
+  explicit(false) any_(ConstructedWith&& constructed_with)  // NOLINT
+    requires constructibile_for<ConstructedWith, proxy_impl_t, any_> &&
+             (!std::same_as<any_, std::decay_t<ConstructedWith>>) &&
              (!is_lifetime_bound<proxy_impl_t>)
       : proxy_(
             erased<proxy_t>(std::forward<ConstructedWith>(constructed_with))) {
@@ -79,9 +79,9 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait<Args...>>, public T
   /// cref, \ref mutref
   template <typename ConstructedWith>
   explicit(false)
-      any(ConstructedWith&& constructed_with LIFETIMEBOUND)  // NOLINT
-    requires constructibile_for<ConstructedWith, proxy_impl_t, any> &&
-             (!std::same_as<any, std::decay_t<ConstructedWith>>) &&
+      any_(ConstructedWith&& constructed_with LIFETIMEBOUND)  // NOLINT
+    requires constructibile_for<ConstructedWith, proxy_impl_t, any_> &&
+             (!std::same_as<any_, std::decay_t<ConstructedWith>>) &&
              (is_lifetime_bound<proxy_impl_t>)
       : proxy_(
             erased<proxy_t>(std::forward<ConstructedWith>(constructed_with))) {
@@ -97,7 +97,7 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait<Args...>>, public T
   /// \param v The object to be forwarded into the managed storage.
   template <typename V>
     requires(!is_lifetime_bound<Proxy>)
-  any(std::in_place_t, V&& v)
+  any_(std::in_place_t, V&& v)
       : proxy_(
             proxy_trait<proxy_impl_t>::construct_in_place(std::forward<V>(v))) {
     v_table_holder_t::template init_v_table<proxy_impl_t, V>();
@@ -110,26 +110,26 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait<Args...>>, public T
   /// be forwarded.
   template <typename T, typename... TArgs>
     requires(!is_lifetime_bound<Proxy>)
-  any(std::in_place_type_t<T>, TArgs&&... args)
+  any_(std::in_place_type_t<T>, TArgs&&... args)
       : proxy_(proxy_trait_t::template construct_type_in_place<T>(
             std::forward<TArgs>(args)...)) {
     v_table_holder_t::template init_v_table<proxy_impl_t, T>();
   }
 
-  ~any() {
+  ~any_() {
     proxy_trait_t::destroy(proxy_, v_table_holder_t::get_v_table_ptr());
   }
 
-  any(const any& other)
+  any_(const any_& other)
     requires(is_dyn && can_copy_construct_from<proxy_trait_t, v_table_t>)
       : v_table_holder_t(other.get_v_table_ptr()) {
     proxy_trait_t::copy_construct_from(proxy_, nullptr, other.proxy_,
                                        other.get_v_table_ptr());
   }
-  any(const any& other)
+  any_(const any_& other)
     requires(!is_dyn && can_copy_construct_from<proxy_trait_t, v_table_t>)
       : v_table_holder_t(other.get_v_table_ptr()), proxy_(other.proxy_) {}
-  any& operator=(any const& other)
+  any_& operator=(any_ const& other)
     requires(can_copy_construct_from<proxy_trait_t, v_table_t>)
   {
     if (this == &other) return *this;
@@ -141,17 +141,17 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait<Args...>>, public T
   }
 
   template <is_any Other>
-  explicit(false) any(const Other& other)  // NOLINT(noExplicitConstructor)
+  explicit(false) any_(const Other& other)  // NOLINT(noExplicitConstructor)
     requires(borrowable_from<proxy_t, typename Other::proxy_t,
                                    typename Other::v_table_t> &&
-             (!anyxx::is_dyn<Proxy> || is_any_derived_from<Other, any>))
+             (!anyxx::is_dyn<Proxy> || is_any_derived_from<Other, any_>))
       : v_table_holder_t(other.get_v_table_ptr()),
         proxy_(borrow_proxy_as<Proxy>(other.proxy_, other.get_v_table_ptr())) {}
   template <is_any Other>
-  any& operator=(Other const& other)
+  any_& operator=(Other const& other)
     requires(borrowable_from<proxy_t, typename Other::proxy_t,
                                    typename Other::v_table_t> &&
-             (!anyxx::is_dyn<Proxy> || is_any_derived_from<Other, any>))
+             (!anyxx::is_dyn<Proxy> || is_any_derived_from<Other, any_>))
   {
     v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
     proxy_ = borrow_proxy_as<Proxy>(other.proxy_, other.get_v_table_ptr());
@@ -160,23 +160,23 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait<Args...>>, public T
 
   template <is_proxy OtherErasedData>
     requires(moveable_from<proxy_t, OtherErasedData>)
-  explicit any(OtherErasedData&& proxy, v_table_t* v_table) noexcept
+  explicit any_(OtherErasedData&& proxy, v_table_t* v_table) noexcept
       : v_table_holder_t(v_table) {
     proxy_trait_t::move_to(proxy_, nullptr, std::move(proxy), v_table);
   }
   template <is_proxy OtherErasedData>
     requires(moveable_from<proxy_t, OtherErasedData> && !is_dyn)
-  explicit any(OtherErasedData&& proxy, v_table_t* v_table) noexcept
+  explicit any_(OtherErasedData&& proxy, v_table_t* v_table) noexcept
       : v_table_holder_t(v_table), proxy_(std::move(proxy)) {}
   template <is_any Other>
-  explicit(false) any(Other&& other) noexcept  // NOLINT(noExplicitConstructor)
+  explicit(false) any_(Other&& other) noexcept  // NOLINT(noExplicitConstructor)
     requires(moveable_from<proxy_t, typename Other::proxy_t> &&
-             (!anyxx::is_dyn<Proxy> || is_any_derived_from<Other, any>))
-      : any(std::move(other.proxy_), other.release_v_table()) {}
+             (!anyxx::is_dyn<Proxy> || is_any_derived_from<Other, any_>))
+      : any_(std::move(other.proxy_), other.release_v_table()) {}
   template <is_any Other>
-  any& operator=(Other&& other) noexcept
+  any_& operator=(Other&& other) noexcept
     requires(moveable_from<proxy_t, typename Other::proxy_t> &&
-             (!anyxx::is_dyn<Proxy> || is_any_derived_from<Other, any>))
+             (!anyxx::is_dyn<Proxy> || is_any_derived_from<Other, any_>))
   {
     proxy_trait_t::move_to(proxy_, v_table_holder_t::get_v_table_ptr(),
                            std::move(other.proxy_), other.get_v_table_ptr());
@@ -185,28 +185,28 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait<Args...>>, public T
   }
 
   template <is_any Friend>
-  friend inline auto& get_proxy(Friend const& any);
+  friend inline auto& get_proxy(Friend const& any_);
   template <is_any Friend>
-  friend inline auto& get_proxy(Friend& any);
+  friend inline auto& get_proxy(Friend& any_);
   template <is_any Friend>
-  friend inline decltype(auto) move_proxy(Friend&& any);
+  friend inline decltype(auto) move_proxy(Friend&& any_);
   template <is_any Friend>
-  friend inline auto get_proxy_ptr_const(Friend const& any);
+  friend inline auto get_proxy_ptr_const(Friend const& any_);
   template <is_any Friend>
-  friend inline auto get_proxy_ptr(Friend&& any);
+  friend inline auto get_proxy_ptr(Friend&& any_);
 
   template <is_proxy ProxyFriend, template <typename...> typename TraitFriend, typename... FriendArgs>
-  friend class any;
+  friend class any_;
 
   template <typename Friend>
     requires is_any<Friend> && Friend::is_dyn
-  friend inline auto get_v_table(Friend const& any);
+  friend inline auto get_v_table(Friend const& any_);
 
   template <is_any To, is_any From>
   friend inline To unchecked_downcast_to(From from)
     requires(is_any_derived_from<To, From>);
 
-  friend inline auto release_v_table(any& from) {
+  friend inline auto release_v_table(any_& from) {
       return from.release_v_table();
   }
 
@@ -280,15 +280,15 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait<Args...>>, public T
 };
 
 template <template <typename...> typename Trait, typename... Args>
-class ANYXX_USE_EBO any_ : public any<typename Trait<Args...>::default_proxy_t, Trait, Args...>{
-  using any<typename Trait<Args...>::default_proxy_t, Trait, Args...>::any;
+class ANYXX_USE_EBO any : public any_<typename Trait<Args...>::default_proxy_t, Trait, Args...>{
+  using any_<typename Trait<Args...>::default_proxy_t, Trait, Args...>::any_;
 };
 
 
-/// A template to get an \ref any trait for a type
+/// A template to get an \ref any_ trait for a type
 /// See also \ref using_::as.
 template <typename Type, template <typename...> typename Trait, typename... Ts>
-using trait_as = any<using_<Type>, Trait, Ts...>;
+using trait_as = any_<using_<Type>, Trait, Ts...>;
 
 template <typename Type, typename Trait>
 struct make_trait_as_impl;
@@ -299,36 +299,36 @@ struct make_trait_as_impl<Type, Trait<Ts...>> {
 template <typename Type, typename Trait>
 using make_trait_as = typename make_trait_as_impl<Type, Trait>::type;
 
-/// A template to get an \ref any trait for a type
+/// A template to get an \ref any_ trait for a type
 /// See also \ref using_cref::as.
 template <typename Type, template <typename...> typename Trait, typename... Ts>
-using trait_as_cref = any<using_cref<Type>, Trait, Ts...>;
+using trait_as_cref = any_<using_cref<Type>, Trait, Ts...>;
 
-/// A factory function to bind an object as a model to an \ref any with a \ref
+/// A factory function to bind an object as a model to an \ref any_ with a \ref
 /// trait.
 /// See also \ref using_::as.
 template <template <typename...> typename Trait, typename... Ts>
 auto using_as(auto&& v) {
-    return any<using_<std::decay_t<decltype(v)>>, Trait, Ts...>{std::forward<decltype(v)>(v)};
+    return any_<using_<std::decay_t<decltype(v)>>, Trait, Ts...>{std::forward<decltype(v)>(v)};
 }
         
-/// A factory function to bind a const& as a model to an \ref any with a \ref
+/// A factory function to bind a const& as a model to an \ref any_ with a \ref
 /// trait.
 /// See also \ref using_cref::as.
 template <template <typename...> typename Trait, typename... Ts>
 auto using_as_cref(auto const& v) {
-    return any<using_cref<std::decay_t<decltype(v)>>, Trait, Ts...>{v};
+    return any_<using_cref<std::decay_t<decltype(v)>>, Trait, Ts...>{v};
 }
 
 template <typename Type, typename Trait>
 struct make_trait_class;
 template <typename Type, template <typename...> typename Trait, typename... Ts>
 struct make_trait_class<Type, Trait<Ts...>> {
-    using type = any<trait_class<Type>, Trait, Ts...>;
+    using type = any_<trait_class<Type>, Trait, Ts...>;
 };
 
 /// Helper type alias template to get a \ref trait_class for a type
-/// dispatch. Has no data member, so it doesn't capture any value and has no
+/// dispatch. Has no data member, so it doesn't capture any_ value and has no
 /// size
 ///
 /// \tparam Type The captured type

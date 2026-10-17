@@ -49,7 +49,7 @@ MODEL_MAP((subscript_operator_test::vector_t),
 
 TEST_CASE("mutable subscript_operator with mutref") {
   map_t map{{0, "hallo"}};
-  any<mutref, map_i_to_string_mutable> m{map};
+  any_<mutref, map_i_to_string_mutable> m{map};
   REQUIRE(m[0u] == "hallo");
   m[1u] = "world";
   REQUIRE(m[1u] == "world");
@@ -58,32 +58,32 @@ TEST_CASE("mutable subscript_operator with mutref") {
 
 TEST_CASE("const subscript_operator with cref") {
   vector_t vector{"hallo"};
-  any<cref, map_i_to_string_const_and_mutable> v{vector};
+  any_<cref, map_i_to_string_const_and_mutable> v{vector};
   REQUIRE(v[0u] == "hallo");
 }
 TEST_CASE("const subscript_operator with mutref") {
   vector_t vector{"hallo"};
-  any<mutref, map_i_to_string_const_and_mutable> v{vector};
+  any_<mutref, map_i_to_string_const_and_mutable> v{vector};
   REQUIRE(v[0u] == "hallo");
 }
 
 TEST_CASE("mutable subscript_operator (vector) with mutref") {
   vector_t vector{"hallo", ""};
-  any<mutref, map_i_to_string_mutable> v{vector};
+  any_<mutref, map_i_to_string_mutable> v{vector};
   REQUIRE(v[0u] == "hallo");
   v[1u] = "world";
   REQUIRE(v[1u] == "world");
   REQUIRE(vector[1u] == "world");
 
-  any<cref, map_i_to_string_const_and_mutable> v_const{vector};
+  any_<cref, map_i_to_string_const_and_mutable> v_const{vector};
   REQUIRE(v_const[0u] == "hallo");
   REQUIRE(v_const[1u] == "world");
 
-  any<cref, map_i_to_string_const_derived_mutable> v_const2{vector};
+  any_<cref, map_i_to_string_const_derived_mutable> v_const2{vector};
   REQUIRE(v_const2[0u] == "hallo");
   REQUIRE(v_const2[1u] == "world");
 
-  any<mutref, map_i_to_string_const_derived_mutable> v_mutable{vector};
+  any_<mutref, map_i_to_string_const_derived_mutable> v_mutable{vector};
   REQUIRE(v_mutable[0u] == "hallo");
   REQUIRE(v_mutable[1u] == "world");
 

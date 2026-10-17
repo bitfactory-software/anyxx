@@ -11,7 +11,7 @@
 namespace anyxx {
 
 /// Proxy to manage the captured object via std::unique_ptr-like smart pointer
-/// * If you pass a std::unique_ptr to the any constructor, this pointer will
+/// * If you pass a std::unique_ptr to the any_ constructor, this pointer will
 /// be released and the ownership goes to the unique. NOTE: The \ref
 /// any_v_table is built with the value_type of the std::unique_ptr.
 /// * If you pass an object as second parameter, with the std::in_place tag as

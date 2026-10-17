@@ -15,7 +15,7 @@ TRAIT_EX(creature, anyxx::dynamic_copyable,
          (FN(std::type_info const*, name, (), const)), , , (HAS_OPEN_DISPATCH),
          ())
 template <typename Proxy = anyxx::val<>>
-using any_creature = anyxx::any<Proxy, creature>;
+using any_creature = anyxx::any_<Proxy, creature>;
 }  // namespace
 
 namespace {
@@ -72,9 +72,9 @@ auto apply_encounters(creatures_t const& creatures) {
 }
 }  // namespace
 
-TEST_CASE("31_Animals any dispatch") {
+TEST_CASE("31_Animals any_ dispatch") {
   creatures_t creatures{dog{}, cat{}, man{}};
-  show("31_Animals any dispatch", apply_encounters(creatures));
+  show("31_Animals any_ dispatch", apply_encounters(creatures));
 
   CHECK(encounter(creatures[0], creatures[0]) ==
         encounter_result{&typeid(dog), encounter_action::snoops_at,
@@ -106,6 +106,6 @@ TEST_CASE("31_Animals any dispatch") {
 #ifdef ANYXX_RUN_BENCHMARKS
   std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE "
                "/Ob2)' is used!\n";
-  BENCHMARK("31_Animals any dispatch") { return apply_encounters(creatures); };
+  BENCHMARK("31_Animals any_ dispatch") { return apply_encounters(creatures); };
 #endif  // ANYXX_RUN_BENCHMARKS
 }

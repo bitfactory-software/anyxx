@@ -8,13 +8,13 @@
 //
 // As an illustrative example, we choose to provide a `equal_comparable` trait.
 // This means, we want a way to provide an "equal"(==) and a "not equal"(!=)
-// operator for any type, regardless of whether the type itself provides these
+// operator for any_ type, regardless of whether the type itself provides these
 // operators.
 // Whereby it should be enough for the application to provide only one of the
 // two operators. The other should be automatically provided.
 //
 // Why would you use this?
-// It allows you to write generic code that can work with any type that models
+// It allows you to write generic code that can work with any_ type that models
 // `equal_comparable`, without requiring those types to inherit from a common
 // base class or implement specific interfaces. This can be particularly useful
 // when working with third-party types or when you want to add functionality to
@@ -52,13 +52,13 @@ static_assert(is_equal_comparable_model<double>);
 static_assert(is_equal_comparable_model<bool>);
 static_assert(is_equal_comparable_model<std::string>);
 
-// This is an algorithm that use the == and != operators on objects of any
+// This is an algorithm that use the == and != operators on objects of any_
 // type that models the equal_comparable trait.
 // Because the Proxy type of the trait is a template parameter, this algorithm
 // can be used both for static AND dynamic dispatch!
 template <anyxx::is_proxy Proxy>
-void test_equal_comparable_(anyxx::any<Proxy, equal_comparable> const& a,
-                            anyxx::any<Proxy, equal_comparable> const& b) {
+void test_equal_comparable_(anyxx::any_<Proxy, equal_comparable> const& a,
+                            anyxx::any_<Proxy, equal_comparable> const& b) {
   CHECK((a == b) == (b == a));
   CHECK((a != b) == (b != a));
   CHECK((a == b) != (b != a));
@@ -67,7 +67,7 @@ void test_equal_comparable_(anyxx::any<Proxy, equal_comparable> const& a,
 
 // This is a convenience wrapper for the test algorithm above in the static
 // dispatch case. Because it is guarded by the concept
-// is_equal_comparable_model provided by the library, any missuse should get a
+// is_equal_comparable_model provided by the library, any_ missuse should get a
 // nice compiler error.
 template <is_equal_comparable_model T>
 void test_equal_comparable(T const& a, T const& b) {
@@ -118,7 +118,7 @@ TEST_CASE("equal_comparable dynamic") {
   using namespace anyxx;
   using namespace lib_2f;
   std::vector<
-      std::pair<any<val<>, equal_comparable>, any<val<>, equal_comparable>>>
+      std::pair<any_<val<>, equal_comparable>, any_<val<>, equal_comparable>>>
       v{
           {app_2f::b_type{"A"}, app_2f::b_type{"A"}},
           {app_2f::b_type{"A"}, app_2f::b_type{"B"}},
@@ -138,8 +138,8 @@ TEST_CASE("equal_comparable dynamic") {
     // This behaviour is enforced by the \ref anyxx::self keyword type.
     using namespace anyxx;
     using namespace lib_2f;
-    any_<equal_comparable> a{42};
-    any_<equal_comparable> b{3.14};
+    any<equal_comparable> a{42};
+    any<equal_comparable> b{3.14};
     CHECK_THROWS_AS(a == b, type_mismatch_error);
   }
 }

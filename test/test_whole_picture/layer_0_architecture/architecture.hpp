@@ -56,8 +56,8 @@ inline point max(point lhs, point rhs) {
 }
 
 TRAIT(surface, anyxx::dynamic_copyable, (FN(void, write, (point, char), )))
-using mutable_observed_surface = anyxx::any<anyxx::mutref, surface>;
-using unique_surface = anyxx::any<anyxx::unique, surface>;
+using mutable_observed_surface = anyxx::any_<anyxx::mutref, surface>;
+using unique_surface = anyxx::any_<anyxx::unique, surface>;
 
 TRAIT_EX(shape, anyxx::dynamic_copyable,
          (FN(void, draw, (mutable_observed_surface), const),
@@ -65,7 +65,7 @@ TRAIT_EX(shape, anyxx::dynamic_copyable,
           FN(architecture::size, size, (), const)),
          , , (HAS_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::shared>
-using any_shape = anyxx::any<Proxy, shape>;
+using any_shape = anyxx::any_<Proxy, shape>;
 
 }  // namespace whole_picture::architecture
 

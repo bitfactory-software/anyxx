@@ -18,7 +18,7 @@ std::expected<ToAny, cast_error> borrow_as(FromProxy const& from,
   });
 }
 
-/// \brief Safe crosscast via runtime information to another \ref any without
+/// \brief Safe crosscast via runtime information to another \ref any_ without
 /// changing the ownership.
 /// \ingroup casts
 template <is_any ToAny, is_any FromAny>

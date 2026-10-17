@@ -6,7 +6,7 @@
 namespace anyxx {
 
 /// Proxy to capture the type to enable static
-/// dispatch. Has no data member, so it doesn't capture any value and has no
+/// dispatch. Has no data member, so it doesn't capture any_ value and has no
 /// size
 ///
 /// \tparam Type The captured type

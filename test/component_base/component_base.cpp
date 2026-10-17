@@ -28,27 +28,27 @@ ANY_REGISTER_MODEL(X, test::component_base::get_value_i)
 ANY_REGISTER_MODEL(X, test::component_base::set_value_i)
 ANY_REGISTER_MODEL(X, test::component_base::to_string_i)
 
-any<anyxx::cref, to_string_i> test::component_base::get_to_string_i_co() {
-  any<cref, to_string_i> i{a_x};
+any_<anyxx::cref, to_string_i> test::component_base::get_to_string_i_co() {
+  any_<cref, to_string_i> i{a_x};
   auto meta = get_v_table(i)->meta_data_;
   [[maybe_unused]] const std::type_info* type_info = &meta->get_type_info(); // NOLINT
-  static_assert(is_any<any<cref, to_string_i>>);
+  static_assert(is_any<any_<cref, to_string_i>>);
   [[maybe_unused]] const std::type_info* type_info_1 = &typeid(X);
   assert(type_info == type_info_1);
   [[maybe_unused]] auto s = i.to_string();
   return i;
 }
-any<anyxx::shared, to_string_i> test::component_base::get_to_string_i_sc(
+any_<anyxx::shared, to_string_i> test::component_base::get_to_string_i_sc(
     double v) {
   return std::make_shared<X>(v);
 }
-any<anyxx::unique, to_string_i> test::component_base::get_to_string_i_u(double v) {
+any_<anyxx::unique, to_string_i> test::component_base::get_to_string_i_u(double v) {
   return std::make_unique<X>(v);
 }
 
-anyxx::any<anyxx::shared, anyxx::dynamic_deletable> test::component_base::sc_X(double v) {
+anyxx::any_<anyxx::shared, anyxx::dynamic_deletable> test::component_base::sc_X(double v) {
   return {std::make_shared<X>(v)};
 }
-anyxx::any<anyxx::unique, anyxx::dynamic_deletable> test::component_base::u_X(double v) {
-  return {anyxx::any<anyxx::unique, anyxx::dynamic_deletable>(std::make_unique<X>(v))};
+anyxx::any_<anyxx::unique, anyxx::dynamic_deletable> test::component_base::u_X(double v) {
+  return {anyxx::any_<anyxx::unique, anyxx::dynamic_deletable>(std::make_unique<X>(v))};
 }

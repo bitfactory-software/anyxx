@@ -19,7 +19,7 @@ class asteroid {};
 class spaceship {};
 
 ANY_SINGLETON_DECLARE(, thing_factory,
-                      factory<any<unique, thing>, std::string>);
+                      factory<any_<unique, thing>, std::string>);
 
 auto __ = thing_factory.register_("asteroid", []() { return asteroid{}; });
 auto __ = thing_factory.register_("spaceship", []() { return spaceship{}; });
@@ -39,7 +39,7 @@ TEST_CASE("factory1") {
 }
 
 TEST_CASE("factory2") {
-  std::vector<any<unique, thing>> things;
+  std::vector<any_<unique, thing>> things;
   std::stringstream archive{"asteroid spaceship"};
   while (archive) {
     std::string key;
@@ -55,12 +55,12 @@ TRAIT(stringable, dynamic_deletable,
                [&x]() { return std::format("{}", x); })))
 
 ANY_SINGLETON_DECLARE(, any_stringable_factory,
-                      factory<any<unique, stringable>, std::string>);
+                      factory<any_<unique, stringable>, std::string>);
 
 auto __ = any_stringable_factory.register_("int", []() { return 42; });
 
-static_assert(std::is_constructible_v<any<shared, stringable>,
-                                      any<unique, stringable>&&>);
+static_assert(std::is_constructible_v<any_<shared, stringable>,
+                                      any_<unique, stringable>&&>);
 }  // namespace example
 }  // namespace
 
@@ -77,7 +77,7 @@ ANY_SINGLETON_DECLARE(, factory_test_key, factory_test_key_kind)
 ANY_SINGLETON_DECLARE(, factory_test_negative_key, factory_test_key_kind)
 
 TEST_CASE("factory3") {
-  factory<any<unique, stringable>, factory_test_key_kind> f;
+  factory<any_<unique, stringable>, factory_test_key_kind> f;
   f.register_(factory_test_key, []() { return 42; });
   auto a1 = f.construct(factory_test_key);
   CHECK(a1.to_string() == "42");

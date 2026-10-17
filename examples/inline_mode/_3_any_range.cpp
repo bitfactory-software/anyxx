@@ -30,7 +30,7 @@ TRAIT(stringable, anyxx::dynamic_copyable,
                [&x]() { return std::format("{}", x); })))
 
 template <typename Proxy>
-using any_stringable = anyxx::any<Proxy, stringable>;
+using any_stringable = anyxx::any_<Proxy, stringable>;
 
 TRAIT(node, anyxx::dynamic_copyable,
       (FN_IMPL(public, anyxx::self, sum,
@@ -43,7 +43,7 @@ TRAIT(node, anyxx::dynamic_copyable,
                  return s;
                })));
 template <typename Proxy = anyxx::val<>>
-using any_node = anyxx::any<Proxy, node>;
+using any_node = anyxx::any_<Proxy, node>;
 
 }  // namespace example_3
 
@@ -140,7 +140,7 @@ TEST_CASE(
   }
 }
 
-TEST_CASE("example 3 any_forward_iterator (any value_type, erased iterator)") {
+TEST_CASE("example 3 any_forward_iterator (any_ value_type, erased iterator)") {
   using namespace anyxx;
   using namespace std::string_literals;
   using namespace example_3;
@@ -156,7 +156,7 @@ TEST_CASE("example 3 any_forward_iterator (any value_type, erased iterator)") {
 }
 
 TEST_CASE(
-    "example 3 any_forward_iterator (any value_type, concrete iterator) "
+    "example 3 any_forward_iterator (any_ value_type, concrete iterator) "
     "only "
     "theory, not praxis relevant") {
   using namespace anyxx;
@@ -229,7 +229,7 @@ TEST_CASE("example 3 self in range") {
   }
 }
 
-TEST_CASE("example 3 static any range of view") {
+TEST_CASE("example 3 static any_ range of view") {
   using namespace anyxx;
   using namespace std::string_literals;
   using namespace example_3;
@@ -242,7 +242,7 @@ TEST_CASE("example 3 static any range of view") {
   static_assert(std::is_trivially_copy_constructible_v<decltype(v2)>);
   static_assert(std::is_trivially_copy_assignable_v<decltype(v2)>);
   static_assert(sizeof(v2) <= anyxx::small_object_size);
-  using stringable_int = any<anyxx::using_<int>, stringable>;
+  using stringable_int = any_<anyxx::using_<int>, stringable>;
   any_forward_range<stringable_int, stringable_int> r{v2};
   std::string result;
   for (auto i : r) {
@@ -300,10 +300,10 @@ struct forward_iterator_model_map<node_base*, ValueType, Reference>
 }  // namespace anyxx
 namespace {
 using node_iterator =
-    anyxx::any<anyxx::using_<node_base*>, anyxx::forward_iterator, node_base,
+    anyxx::any_<anyxx::using_<node_base*>, anyxx::forward_iterator, node_base,
                node_base&>;
 using node_const_iterator =
-    anyxx::any<anyxx::using_<node_base*>, anyxx::forward_iterator,
+    anyxx::any_<anyxx::using_<node_base*>, anyxx::forward_iterator,
                node_base const, node_base const&>;
 }  // namespace
 namespace anyxx {
@@ -318,9 +318,9 @@ struct range_model_map<Node*, Iterator>
 
 namespace {
 using node_range =
-    anyxx::any<anyxx::using_<node_base*>, anyxx::range, node_iterator>;
+    anyxx::any_<anyxx::using_<node_base*>, anyxx::range, node_iterator>;
 using node_const_range =
-    anyxx::any<anyxx::using_<node_base*>, anyxx::range, node_const_iterator>;
+    anyxx::any_<anyxx::using_<node_base*>, anyxx::range, node_const_iterator>;
 }  // namespace
 
 TEST_CASE("example 3 iterator adaptor ") {

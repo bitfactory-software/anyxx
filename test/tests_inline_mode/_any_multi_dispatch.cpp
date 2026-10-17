@@ -15,7 +15,7 @@ namespace {
 TRAIT_EX(thing, anyxx::dynamic_copyable, (FN(std::string, name, (), const)), , ,
          (HAS_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::shared>
-using any_thing = anyxx::any<Proxy, thing>;
+using any_thing = anyxx::any_<Proxy, thing>;
 
 }  // namespace
 
@@ -143,12 +143,12 @@ TEST_CASE("multi_dispatch 4") {
   collide.define<Asteroid, Asteroid>(
       []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "a->a"; });
   collide.define<any_thing<cref>, Spaceship>(
-      [](auto const& any, [[maybe_unused]] auto const& s) {
-        return get_type_info(any).name() + "->s"s;
+      [](auto const& any_, [[maybe_unused]] auto const& s) {
+        return get_type_info(any_).name() + "->s"s;
       });
   collide.define<any_thing<cref>, Asteroid>(
-      []([[maybe_unused]] auto const& any, [[maybe_unused]] auto const& a) {
-        return "any->a";
+      []([[maybe_unused]] auto const& any_, [[maybe_unused]] auto const& a) {
+        return "any_->a";
       });
 
   Asteroid asteroid;
@@ -159,7 +159,7 @@ TEST_CASE("multi_dispatch 4") {
   CHECK(collide(thing_asteroid, thing_spaceship).contains("Asteroid"));
   CHECK(collide(thing_asteroid, thing_asteroid) == "a->a");
   CHECK(collide(thing_spaceship, thing_spaceship).contains("Spaceship"));
-  CHECK(collide(thing_spaceship, thing_asteroid) == "any->a");
+  CHECK(collide(thing_spaceship, thing_asteroid) == "any_->a");
 }
 
 }  // namespace

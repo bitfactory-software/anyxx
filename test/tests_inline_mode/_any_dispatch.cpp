@@ -10,13 +10,13 @@ namespace {
 TRAIT_EX(test_base_i, anyxx::dynamic_copyable,
          (FN(std::string, to_string, (), const)), , , (HAS_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::shared>
-using any_test_base_i = anyxx::any<Proxy, test_base_i>;
+using any_test_base_i = anyxx::any_<Proxy, test_base_i>;
 
 TRAIT_EX(test_derived_i, test_base_i,
          (FN(void, from_string, (std::string const&), )), , ,
          (HAS_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::shared>
-using any_test_derived_i = anyxx::any<Proxy, test_derived_i>;
+using any_test_derived_i = anyxx::any_<Proxy, test_derived_i>;
 
 struct x_t {
   std::string s_;

@@ -22,21 +22,21 @@ struct serializeable : anyxx::dynamic_deletable<Trait, Self> {
 };
 
 std::ostream& operator<<(std::ostream& s,
-                         anyxx::any<cref, serializeable> const& any) {
-  any.serialize(s);
+                         anyxx::any_<cref, serializeable> const& any_) {
+  any_.serialize(s);
   return s;
 }
 
-static factory<anyxx::any<unique, serializeable>, std::string, std::istream&>
+static factory<anyxx::any_<unique, serializeable>, std::string, std::istream&>
     deserialize_factory;
 
-anyxx::any<unique, serializeable> deserialize(std::istream& archive) {
+anyxx::any_<unique, serializeable> deserialize(std::istream& archive) {
   std::string type;
   archive >> type;
   return deserialize_factory.construct(type, archive);
 }
-anyxx::any<unique, node> deserialize_any_node(std::istream& archive) {
-  return move_to<anyxx::any<unique, node>>(deserialize(archive));
+anyxx::any_<unique, node> deserialize_any_node(std::istream& archive) {
+  return move_to<anyxx::any_<unique, node>>(deserialize(archive));
 }
 template <typename T>
 auto register_deserialize_binary(std::string const& key) {
@@ -48,8 +48,8 @@ auto register_deserialize_binary(std::string const& key) {
 void serialize_binary(auto const& self, std::string_view key,
                       std::ostream& archive) {
   archive << key << " "
-          << *borrow_as<anyxx::any<cref, serializeable>>(self.left)
-          << *borrow_as<anyxx::any<cref, serializeable>>(self.right);
+          << *borrow_as<anyxx::any_<cref, serializeable>>(self.left)
+          << *borrow_as<anyxx::any_<cref, serializeable>>(self.right);
 }
 
 struct Plus {
@@ -57,7 +57,7 @@ struct Plus {
   void serialize(std::ostream& archive) const {
     serialize_binary(*this, "Plus ", archive);
   }
-  anyxx::any<unique, node> left, right;
+  anyxx::any_<unique, node> left, right;
 };
 auto __ = register_deserialize_binary<Plus>("Plus");
 
@@ -66,7 +66,7 @@ struct Times {
   void serialize(std::ostream& archive) const {
     serialize_binary(*this, "Times ", archive);
   }
-  anyxx::any<unique, node> left, right;
+  anyxx::any_<unique, node> left, right;
 };
 auto __ = register_deserialize_binary<Times>("Times");
 
@@ -102,14 +102,14 @@ TEST_CASE("_21_Tree_any_borrow_as") {
 
   std::stringstream archive{
       "Plus Integer 1 Plus Times Integer 2 Integer 3 Integer 4 "};
-  static_assert(anyxx::moveable_from<anyxx::any<unique, node>::proxy_t,
+  static_assert(anyxx::moveable_from<anyxx::any_<unique, node>::proxy_t,
                                      decltype(deserialize(archive))::proxy_t>);
 
-  auto expr = move_to<anyxx::any<unique, node>>(deserialize(archive));
+  auto expr = move_to<anyxx::any_<unique, node>>(deserialize(archive));
   CHECK(expr.value() == 11);
   std::stringstream serialized;
-  borrow_as<anyxx::any<cref, serializeable>>(expr)->serialize(serialized);
+  borrow_as<anyxx::any_<cref, serializeable>>(expr)->serialize(serialized);
   std::println("{}", serialized.str());
-  auto expr2 = move_to<anyxx::any<unique, node>>(deserialize(serialized));
+  auto expr2 = move_to<anyxx::any_<unique, node>>(deserialize(serialized));
   CHECK(expr2.value() == 11);
 }

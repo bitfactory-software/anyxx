@@ -53,8 +53,8 @@ struct jacket_return<self> {
 };
 template <>
 struct jacket_return<self&> {
-  static auto& forward(auto, auto&& any) {
-    return any;  // "return *this" semantics!
+  static auto& forward(auto, auto&& any_) {
+    return any_;  // "return *this" semantics!
   }
 };
 
@@ -92,7 +92,7 @@ struct translate_sig_map {
 template <>
 struct translate_sig_map<self> {
   template <typename AnyValue>
-  using v_table_param = any<cref, dynamic_copyable>;
+  using v_table_param = any_<cref, dynamic_copyable>;
   template <typename AnyValue>
   using v_table_return = AnyValue;
   template <typename Model>
@@ -103,7 +103,7 @@ struct translate_sig_map<self> {
 template <>
 struct translate_sig_map<self const&> {
   template <typename AnyValue>
-  using v_table_param = any<cref, dynamic_copyable>;
+  using v_table_param = any_<cref, dynamic_copyable>;
   template <typename AnyValue>
   using v_table_return = int;  // dummy
   template <typename Model>
@@ -114,7 +114,7 @@ struct translate_sig_map<self const&> {
 template <>
 struct translate_sig_map<self&> {
   template <typename AnyValue>
-  using v_table_param = any<mutref, dynamic_copyable>;
+  using v_table_param = any_<mutref, dynamic_copyable>;
   template <typename AnyValue>
   using v_table_return = int;  // dummy
   template <typename Model>
@@ -126,7 +126,7 @@ template <typename T>
 struct is_use_as__impl : std::false_type {};
 template <typename T, template <typename...> typename Trait,
           typename... TraitArgs>
-struct is_use_as__impl<any<using_<T>, Trait, TraitArgs...>> : std::true_type {};
+struct is_use_as__impl<any_<using_<T>, Trait, TraitArgs...>> : std::true_type {};
 template <typename T>
 inline constexpr bool is_use_as_ = is_use_as__impl<std::decay_t<T>>::value;
 
@@ -134,7 +134,7 @@ template <typename T>
   requires is_use_as_<T>
 struct translate_sig_map<T> {
   template <typename AnyValue>
-  using v_table_param = any<mutref, dynamic_copyable>;
+  using v_table_param = any_<mutref, dynamic_copyable>;
   template <typename AnyValue>
   using v_table_return = T;  // dummy
   template <typename Model>

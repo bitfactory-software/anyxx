@@ -7,7 +7,7 @@ namespace anyxx {
 
 TRAIT_TEMPLATE(((AnyIterator)), view, view_base, ((AnyIterator)),
                (FN_IMPL(public,
-                        (any_<sentinel, typename AnyIterator::value_type,
+                        (any<sentinel, typename AnyIterator::value_type,
                               typename AnyIterator::reference>),
                         end, (), const, [&x]() { return sentinel_for(x); })))
 

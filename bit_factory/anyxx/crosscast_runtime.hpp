@@ -132,13 +132,13 @@ auto bind_v_table_to_meta_data() {
 /// @{
 
 /// \def ANY_META_CLASS_FWD
-/// \brief Declare access to the meta data for a specific model any.
+/// \brief Declare access to the meta data for a specific model any_.
 /// Must be in global namespace.
 /// \param export_ To supply an export macro in a DLL scenario
 /// \param ... Type of the model
 #define ANY_META_CLASS_FWD(...)
 /// \def ANY_META_CLASS
-/// \brief Define the meta data for a specific model any. Must be in
+/// \brief Define the meta data for a specific model any_. Must be in
 /// global namespace.
 /// \param ... Type of the model
 #define ANY_META_CLASS(...)
@@ -150,11 +150,11 @@ auto bind_v_table_to_meta_data() {
   ANY_META_CLASS(__VA_ARGS__)
 
 /// \def ANY_REGISTER_MODEL
-/// \brief Register a model class for a specific any interface. Must
+/// \brief Register a model class for a specific any_ interface. Must
 /// be in global namespace.
 /// \param class_ The model class with fully qualified name. Must be
 /// parenthesized
-/// \param interface_ Name of the \ref any (without any_ prefix).
+/// \param interface_ Name of the \ref any_ (without any prefix).
 /// \param ... Optional template parameters for the model class.
 ///
 /// See also \ref casts.

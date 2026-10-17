@@ -16,7 +16,7 @@ struct local_data : std::array<std::byte, SmallObjectSize> {
 
 /// \brief Proxy to manage the captured object as value with small object
 /// optimization
-/// * If you forward an object to any constructor, this object will be
+/// * If you forward an object to any_ constructor, this object will be
 /// forwarded to the allocated storage.
 /// * To pass an object as second parameter, with the std::in_place tag as
 /// first, has the same behavior as above

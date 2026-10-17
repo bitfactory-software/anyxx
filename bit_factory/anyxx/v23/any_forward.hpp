@@ -5,7 +5,7 @@
 namespace anyxx {
 
 template <is_proxy Proxy, template <typename...> typename Trait, typename... Args>
-class any;
+class any_;
 
 template <typename Derived, typename Base>
 struct is_any_derived_from_v {

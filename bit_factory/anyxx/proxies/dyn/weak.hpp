@@ -15,7 +15,7 @@
 namespace anyxx {
 
 /// Proxy to manage the captured object via \c std::weak_ptr.
-/// Assign or copy construct it from a  \c any<shared>
+/// Assign or copy construct it from a  \c any_<shared>
 /// \ingroup proxies
 using weak = std::weak_ptr<void const>;
 

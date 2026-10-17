@@ -14,7 +14,7 @@ struct widget_a {
 
 TRAIT(widget, dynamic_copyable, (FN(std::string, get, (), const)))
 
-any<weak, widget> any_widget_weak;
+any_<weak, widget> any_widget_weak;
 
 void observe(int expected_use_count) {
   auto s = std::make_shared<int>(1);
@@ -22,7 +22,7 @@ void observe(int expected_use_count) {
 
   CHECK(get_proxy(any_widget_weak).use_count() == expected_use_count);
   // we have to make a copy of shared pointer before usage:
-  auto any_widget_shared_const = lock<any<shared, widget>>(any_widget_weak);
+  auto any_widget_shared_const = lock<any_<shared, widget>>(any_widget_weak);
   if (expected_use_count > 0)
     CHECK(any_widget_shared_const);
   else
@@ -35,9 +35,9 @@ TEST_CASE("example X1/ weak cppreference") {
   // https://en.cppreference.com/w/cpp/memory/weak_ptr.html
   {
     auto any_widget_shared_const =
-        any<shared, widget>{std::make_shared<widget_a>()};
+        any_<shared, widget>{std::make_shared<widget_a>()};
     static_assert(
-        borrowable_from<weak, shared, any<shared, widget>::v_table_t>);
+        borrowable_from<weak, shared, any_<shared, widget>::v_table_t>);
     any_widget_weak = any_widget_shared_const;
     observe(1);
   }
@@ -45,16 +45,16 @@ TEST_CASE("example X1/ weak cppreference") {
 }
 
 namespace {
-any<shared, widget> load_widget([[maybe_unused]] int id) {
+any_<shared, widget> load_widget([[maybe_unused]] int id) {
   return std::make_shared<widget_a>();
 }
 
-static std::map<int, any<weak, widget>> cache;  // out of function for CHECK
+static std::map<int, any_<weak, widget>> cache;  // out of function for CHECK
 static std::mutex cache_mutex;
-any<shared, widget> make_widget(int id) {
+any_<shared, widget> make_widget(int id) {
   std::lock_guard hold{cache_mutex};
-  return *lock<any<shared, widget>>(cache[id]).or_else(
-      [&] -> std::optional<any<shared, widget>> {
+  return *lock<any_<shared, widget>>(cache[id]).or_else(
+      [&] -> std::optional<any_<shared, widget>> {
         auto s = load_widget(id);
         cache[id] = s;
         return s;

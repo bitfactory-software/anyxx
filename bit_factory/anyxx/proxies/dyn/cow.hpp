@@ -12,7 +12,7 @@
 namespace anyxx {
 
 /// \brief Proxy to manage the captured object as value via copy-on-write
-/// * If you forward an object to any constructor, this object will be
+/// * If you forward an object to any_ constructor, this object will be
 /// forwarded to the allocated storage.
 /// * To pass an object as second parameter, with the std::in_place tag as
 /// first, has the same behavior as above

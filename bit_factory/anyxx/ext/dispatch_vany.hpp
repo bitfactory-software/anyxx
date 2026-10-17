@@ -17,8 +17,8 @@ class dispatch_vany {
         [&]<typename TypedArg>([[maybe_unused]] TypedArg&& arg) {
           return overloads{
               StaticDispatch,
-              [&]<is_any Any, typename... Vargs>(Any&& any, Vargs&&... vargs) {
-                return dynamic_dispatch_(std::forward<Any>(any),
+              [&]<is_any Any, typename... Vargs>(Any&& any_, Vargs&&... vargs) {
+                return dynamic_dispatch_(std::forward<Any>(any_),
                                          std::forward<Vargs>(vargs)...);
               }}(std::forward<TypedArg>(arg), std::forward<Args>(args)...);
         },
@@ -111,7 +111,7 @@ class dispatch_vany {
 /// \param name Name of the dispatch.
 /// \param vany Type of \ref vany.
 /// \param signature Signature of the \ref dispatch.
-/// \param static_dispatch Static constexpr visitor for the non-any
+/// \param static_dispatch Static constexpr visitor for the non-any_
 /// members of
 ///        the \ref vany.
 ///

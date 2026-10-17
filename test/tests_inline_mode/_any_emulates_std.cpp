@@ -64,35 +64,35 @@ struct pure_functor_with_context {
 TEST_CASE("std emulated function") {
   {
     auto functor = std::make_shared<pure_functor_with_context>("hallo");
-    any<shared, string_to_string> f{functor};
+    any_<shared, string_to_string> f{functor};
     REQUIRE(f(" world") == "hallo world");
   }
   {
-    any<val<>, string_to_string> f{pure_functor_with_context("hallo")};
+    any_<val<>, string_to_string> f{pure_functor_with_context("hallo")};
     REQUIRE(f(" world") == "hallo world");
   }
   {
-    any<shared, string_to_string> f{std::make_shared<pure_functor_t>()};
+    any_<shared, string_to_string> f{std::make_shared<pure_functor_t>()};
     REQUIRE(f("hello world") == "hello world");
   }
   {
-    any<val<>, string_to_string> f{pure_functor_t{}};
+    any_<val<>, string_to_string> f{pure_functor_t{}};
     REQUIRE(f("hello world") == "hello world");
   }
   {
     functor_t functor{"hallo"};
-    any<mutref, string_to_string_mutable> f{functor};
+    any_<mutref, string_to_string_mutable> f{functor};
     REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo world");
     REQUIRE(f() == "hallo world");
     REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hallo world");
 
-    any<cref, string_to_string_mutable> fc{f};
+    any_<cref, string_to_string_mutable> fc{f};
     REQUIRE(fc() == "hallo world");
 
     functor_t fx{"hallo world"};
-    any<cref, string_to_string_mutable> fc1{fx};
+    any_<cref, string_to_string_mutable> fc1{fx};
     REQUIRE(fc1() == "hallo world");
 
     // does not work, because functor lives only during construction of
@@ -101,24 +101,24 @@ TEST_CASE("std emulated function") {
     // world"}}; CHECK(fc2() == "hallo world"); // access of member is invalid
   }
   {
-    any<val<>, string_to_string_mutable> fc2{functor_t{"hallo world"}};
+    any_<val<>, string_to_string_mutable> fc2{functor_t{"hallo world"}};
     CHECK(fc2() == "hallo world");
   }
   {
     pure_functor_t pf{};
-    any<mutref, string_to_string> f{pf};
+    any_<mutref, string_to_string> f{pf};
     REQUIRE(f("hello world") == "hello world");
   }
   {
     pure_functor_t pf{};
-    any<cref, string_to_string> f{pf};  // works, because 'pure'
+    any_<cref, string_to_string> f{pf};  // works, because 'pure'
     REQUIRE(f("hello world") == "hello world");
   }
   {
     functor_t::tracker_ = 0;
     {
       {
-        any<unique, string_to_string_deletable> f{
+        any_<unique, string_to_string_deletable> f{
             std::make_unique<functor_t>()};
         REQUIRE(functor_t::tracker_ == 1);
         REQUIRE(f("hello") == "");
@@ -126,14 +126,14 @@ TEST_CASE("std emulated function") {
       }
       REQUIRE(functor_t::tracker_ == 0);
     }
-    any<unique, string_to_string_deletable> f{
+    any_<unique, string_to_string_deletable> f{
         std::make_unique<functor_t>("hello")};
     REQUIRE(f(" world") == "hello");
     REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hello world");
     static_assert(
-        !std::assignable_from<any<unique, string_to_string_deletable>,
-                              any<unique, string_to_string_deletable>>);
-    any<unique, string_to_string_deletable> f2{std::move(f)};
+        !std::assignable_from<any_<unique, string_to_string_deletable>,
+                              any_<unique, string_to_string_deletable>>);
+    any_<unique, string_to_string_deletable> f2{std::move(f)};
     REQUIRE(!get_proxy_ptr(f));  // NOLINT
     REQUIRE(f2(", bye") == "hello world");
     REQUIRE(unchecked_unerase_cast<functor_t>(f2)->s_ == "hello world, bye");
@@ -141,31 +141,31 @@ TEST_CASE("std emulated function") {
 
   {
     auto f = [](std::string const& in) { return in + " world!"; };
-    any<cref, string_to_string> sts{f};  // works, because pure
+    any_<cref, string_to_string> sts{f};  // works, because pure
     auto hello_world = sts("hello");
     static_assert(std::is_same_v<decltype(hello_world), std::string>);
     CHECK(hello_world == "hello world!");
 
-    any_<function, ref, std::string(std::string const&) const> any_f_cref{f};
+    any<function, ref, std::string(std::string const&) const> any_f_cref{f};
     CHECK(any_f_cref("C++") == "C++ world!");
-    any_<function, ref, std::string(std::string const&)> any_f_mref{f};
+    any<function, ref, std::string(std::string const&)> any_f_mref{f};
     CHECK(any_f_mref("C++") == "C++ world!");
 
     auto const f_const = [](std::string const& in) {
       return in + " const world!";
     };
-    any_<function, ref, std::string(std::string const&) const> any_f_cref_const{
+    any<function, ref, std::string(std::string const&) const> any_f_cref_const{
         f_const};
     CHECK(any_f_cref_const("C++") == "C++ const world!");
     static_assert(std::is_constructible_v<
-                  any_<function, ref, std::string(std::string const&) const>,
+                  any<function, ref, std::string(std::string const&) const>,
                   decltype(f_const)>);
     static_assert(!std::is_constructible_v<
-                  any_<function, ref, std::string(std::string const&)>,
+                  any<function, ref, std::string(std::string const&)>,
                   decltype(f_const)>);
   }
   {
-    any_<function, moveable<>, std::string(std::string const&)> f{
+    any<function, moveable<>, std::string(std::string const&)> f{
         [](std::string const& in) { return in + " world!"; }};
     auto result = f("hello");
     CHECK(result == "hello world!");
@@ -179,7 +179,7 @@ TEST_CASE("std emulated function") {
     // auto f3 = f2; // does not compile as expected, because f2 is move-only
   }
   {
-    any_<function, moveable<>, std::string(std::string const&) const> f{
+    any<function, moveable<>, std::string(std::string const&) const> f{
         [](std::string const& in) { return in + " world!"; }};
     auto result = f("hello");
     CHECK(result == "hello world!");
@@ -194,10 +194,10 @@ TEST_CASE("std emulated function") {
   }
 }
 
-TEST_CASE("std emulated any") {
-  using any = anyxx::any_<anyxx::typed_copyable>;
+TEST_CASE("std emulated any_") {
+  using any_ = anyxx::any<anyxx::typed_copyable>;
   {
-    auto a1 = any(std::string{"hallo"});
+    auto a1 = any_(std::string{"hallo"});
     CHECK(*unerase_cast<std::string>(a1) == "hallo");
     a1 = 3;
     CHECK(*unerase_cast<int>(a1) == 3);

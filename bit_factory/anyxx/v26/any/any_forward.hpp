@@ -9,19 +9,19 @@
 namespace anyxx {
 
 template <typename Proxy, template <is_trait, typename, typename...> typename Trait, typename... Args>
-struct any;
-
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
 struct any_;
 
 template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-using dyn_self_val_t = any_<Trait, Args...>;
+struct any;
 
 template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-using dyn_self_cref_t = any<cref, Trait, Args...>;
+using dyn_self_val_t = any<Trait, Args...>;
 
 template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-using dyn_self_mutref_t = any<mutref, Trait, Args...>;
+using dyn_self_cref_t = any_<cref, Trait, Args...>;
+
+template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+using dyn_self_mutref_t = any_<mutref, Trait, Args...>;
 
 template <typename HasTraitDeclaration>
 concept has_trait_declaration =

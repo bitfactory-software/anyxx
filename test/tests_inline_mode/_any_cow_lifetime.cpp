@@ -80,7 +80,7 @@ TRAIT(getset, anyxx::dynamic_copyable,
       (FN(std::string const&, get, (), const),
        FN(void, set, (std::string const&), )))
 
-using any_getset = any<cow, getset>;
+using any_getset = any_<cow, getset>;
 
 }  // namespace
 

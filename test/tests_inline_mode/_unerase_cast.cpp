@@ -12,7 +12,7 @@ TRAIT(has_meta_data, anyxx::dynamic_copyable, )
 TEST_CASE("unerase_cast") {
   using namespace anyxx;
 
-  using value_with_meta_data = any<shared, has_meta_data>;
+  using value_with_meta_data = any_<shared, has_meta_data>;
 
   {
     auto e = erased<shared>(std::make_shared<x_t>("hallo"));

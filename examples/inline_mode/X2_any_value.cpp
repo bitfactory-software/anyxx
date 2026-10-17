@@ -4,8 +4,8 @@
 
 using namespace anyxx;
 
-TEST_CASE("example X2/ any val<>") {
-  any_<dynamic_copyable> a1{std::string{"hello world"}};
+TEST_CASE("example X2/ any_ val<>") {
+  any<dynamic_copyable> a1{std::string{"hello world"}};
   static_assert(anyxx::is_any<decltype(a1)>);
   static_assert(decltype(a1)::is_dyn);
   CHECK(*unerase_cast<std::string>(a1) == "hello world");
@@ -19,7 +19,7 @@ TEST_CASE("example X2/ any val<>") {
   CHECK(*unerase_cast<int>(a2) == 42);
   CHECK(get_type_info(a2) == typeid(int));
 
-  any_<dynamic_copyable> a3{std::in_place, std::string{"hello world"}};
+  any<dynamic_copyable> a3{std::in_place, std::string{"hello world"}};
   CHECK(*unerase_cast<std::string>(a3) == "hello world");
   CHECK(get_type_info(a3) == typeid(std::string));
 }

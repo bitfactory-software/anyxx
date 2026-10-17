@@ -5,7 +5,7 @@
 #include <bit_factory/anyxx/v23/default_proxy.hpp>
 
 // --------------------------------------------------------------------------------
-// any meta class, derived from this gem:
+// any_ meta class, derived from this gem:
 // https://github.com/AlexCodesApps/dynamic_interface
 
 #define ANYXX_JACKET_RETURN(...) \
@@ -401,8 +401,8 @@
                       __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(             \
                           a, _sig, __VA_ARGS__)));                             \
             },                                                                 \
-            [&]<anyxx::is_any Any>([[maybe_unused]] Any&& any) {               \
-              return std::forward<Any>(any).name(__VA_OPT__(                   \
+            [&]<anyxx::is_any Any>([[maybe_unused]] Any&& any_) {               \
+              return std::forward<Any>(any_).name(__VA_OPT__(                   \
                   _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
             }},                                                                \
         x);                                                                    \
@@ -628,7 +628,7 @@
             v_table_base_t::val_proxy_size);                                   \
                                                                                \
     using any_value_t =                                                        \
-        anyxx::any<anyxx::val<val_proxy_size, val_is_nullable>,                \
+        anyxx::any_<anyxx::val<val_proxy_size, val_is_nullable>,                \
                    n _detail_ANYXX_OPTIONAL_COMMA(any_template_params)         \
                        _detail_ANYXX_TEMPLATE_ARGS(any_template_params)>;      \
                                                                                \
@@ -675,7 +675,7 @@
         anyxx::compute_val_proxy_size<n##_val_size>(base_t::val_proxy_size);   \
                                                                                \
     using any_value_t =                                                        \
-        anyxx::any<anyxx::val<val_proxy_size, val_is_nullable>,                \
+        anyxx::any_<anyxx::val<val_proxy_size, val_is_nullable>,                \
                    n _detail_ANYXX_OPTIONAL_COMMA(any_template_params)         \
                        _detail_ANYXX_TEMPLATE_ARGS(any_template_params)>;      \
                                                                                \
@@ -746,14 +746,14 @@
                       (T), l, static_fns, typedefs, v_table_data, decoration)
 
 /// \addtogroup trait_macros TRAIT... macros
-/// \brief Macros to define \ref trait 's and \ref any 's
+/// \brief Macros to define \ref trait 's and \ref any_ 's
 ///
 /// Name conventions:
-/// - TRAIT: macro to define the functional behavior of an \ref any
+/// - TRAIT: macro to define the functional behavior of an \ref any_
 /// - EX: macro with decorations (additional functions and typedefs in
-/// brackets). A decoration can be any valid C++ code fragment in the context of
+/// brackets). A decoration can be any_ valid C++ code fragment in the context of
 /// the trait jacket
-/// - TEMPLATE: macro to define a template \ref trait or \ref any
+/// - TEMPLATE: macro to define a template \ref trait or \ref any_
 ///
 /// Syntax:
 ///
@@ -766,7 +766,7 @@
 
 /// \def TRAIT_EX
 /// \brief TRAIT derived from base with decoration.
-/// Macro to define the functional behavior for a \ref any, where the
+/// Macro to define the functional behavior for a \ref any_, where the
 /// behavior of base is inherited. The decoration are additional functions and
 /// typedefs (in brackets).
 #define TRAIT_EX(n, BASE, l, static_fns, typedefs, v_table_data, decoration) \
@@ -774,7 +774,7 @@
                         decoration)
 
 /// \def TRAIT
-/// \brief Macro to define the functional behavior for an \ref any.
+/// \brief Macro to define the functional behavior for an \ref any_.
 /// \ingroup trait_macros
 ///
 /// Example:
@@ -789,7 +789,7 @@
 /// \brief TRAIT template with base and decoration.
 /// \ingroup trait_macros
 ///
-/// Macro to define the functional behavior for a \ref any, with decorations.
+/// Macro to define the functional behavior for a \ref any_, with decorations.
 /// Decorations are additional functions and typedefs (in brackets).
 #define TRAIT_TEMPLATE_EX(t, n, base, base_template_types, l, static_fns,      \
                           typedefs, v_table_data, decoration)                  \
@@ -821,7 +821,7 @@
       (x.name_ext), use_mapf_concept, (x.name_ext), _detail_EXPAND params)
 
 /// \addtogroup fn_macros FN... and OP_ macros
-/// \brief Macros to define \ref trait's and \ref any's functions and operators
+/// \brief Macros to define \ref trait's and \ref any_'s functions and operators
 ///
 /// Name conventions:
 /// - FN: function

@@ -15,7 +15,7 @@ TRAIT(node, dynamic_copyable,
       (FN(int, value, (), const), FN(std::string, as_forth, (), const),
        FN(std::string, as_lisp, (), const)))
 
-using any_node = any_<node, cow>;
+using any_node = any<node, cow>;
 
 struct Plus {
   Plus(any_node left, any_node right)
@@ -70,7 +70,7 @@ TEST_CASE("21_Tree_any") {
 #ifdef ANYXX_RUN_BENCHMARKS
   std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE "
                "/Ob2)' is used!\n";
-  BENCHMARK("21_Tree any++ value") { return expr.value(); };
-  BENCHMARK("21_Tree any++ as_lisp") { return expr.as_lisp(); };
+  BENCHMARK("21_Tree any_++ value") { return expr.value(); };
+  BENCHMARK("21_Tree any_++ as_lisp") { return expr.as_lisp(); };
 #endif  // ANYXX_RUN_BENCHMARKS
 }

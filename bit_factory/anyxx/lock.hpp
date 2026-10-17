@@ -9,7 +9,7 @@
 
 namespace anyxx {
 
-/// \brief Lock a shared \ref any.
+/// \brief Lock a shared \ref any_.
 /// \ingroup casts
 template <is_any ToAny, is_any FromAny>
   requires std::same_as<typename FromAny::proxy_t, weak>

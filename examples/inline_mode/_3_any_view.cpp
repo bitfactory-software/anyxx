@@ -9,7 +9,7 @@
 
 namespace example_3_view {
 
-anyxx::any_<anyxx::view, anyxx::any_forward_iterator<int>> a_view(
+anyxx::any<anyxx::view, anyxx::any_forward_iterator<int>> a_view(
     bool use_list) {
   static std::vector<int> v = {1, 2, 3};
   static std::list<int> l = {4, 5, 6};
@@ -32,7 +32,7 @@ TEST_CASE("example3 a_view") {
 }
 
 namespace example_3_view {
-anyxx::any_<anyxx::view, anyxx::any_bidirectional_iterator<std::pair<int, int>,
+anyxx::any<anyxx::view, anyxx::any_bidirectional_iterator<std::pair<int, int>,
                                                            std::pair<int, int>>>
 a_bidirectional_view([[maybe_unused]] bool use_map) {
   static std::vector<std::pair<int, int>> v = {{1, 1}, {2, 2}, {3, 3}};
@@ -55,7 +55,7 @@ TEST_CASE("example3 a_bidirectional_view") {
 }
 
 namespace example_3_view {
-anyxx::any_<anyxx::sized_view,
+anyxx::any<anyxx::sized_view,
             anyxx::any_random_access_iterator<std::pair<int, int>>>
 a_sized_view() {
   static std::vector<std::pair<int, int>> v = {{1, 1}, {2, 2}, {3, 3}};

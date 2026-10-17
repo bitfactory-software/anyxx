@@ -7,7 +7,7 @@
 
 namespace anyxx {
 
-/// \brief Move ownership to another \ref any. Uses runtime information to
+/// \brief Move ownership to another \ref any_. Uses runtime information to
 /// crosscast, if necessary.
 /// \ingroup casts
 template <is_any ToAny, is_any FromAny>

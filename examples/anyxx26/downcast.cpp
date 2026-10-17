@@ -18,8 +18,8 @@ struct base : dynamic_castable<Trait, Self> {
     }
 };
 
-std::string process_with(std::vector<any_<base>> const& things,
-                         any_<function, std::string(any_<base> const&)> process) {
+std::string process_with(std::vector<any<base>> const& things,
+                         any<function, std::string(any<base> const&)> process) {
     std::string result;
     for(auto const& thing : things) {
         result += process(thing) + "\n";
@@ -32,12 +32,12 @@ template <is_trait Trait, typename Self>
 struct derived : base<Trait, Self> {
     static std::string decorated(Self const& self) {
         std::string decoration = std::define_static_string(std::meta::display_string_of(^^Self));
-        return decoration + ": " + any_<base>{self}.as_string();
+        return decoration + ": " + any<base>{self}.as_string();
     }
 };
 
-std::string decoration_handler(any_<base> const& thing) {
-    if(auto d = anyxx::downcast_to<any_<derived>>(thing)) {
+std::string decoration_handler(any<base> const& thing) {
+    if(auto d = anyxx::downcast_to<any<derived>>(thing)) {
         return d->decorated();
     } else {
         return "possible answer: " + thing.as_string();
@@ -52,6 +52,6 @@ TEST_CASE("anyxx downcast") {
     std::string s = "hello world";
 
     auto processed =
-        process_with({ any_<derived>{i}, any_<derived>{s}, 42 }, decoration_handler);
+        process_with({ any<derived>{i}, any<derived>{s}, 42 }, decoration_handler);
     CHECK(processed == "int: 4711\nstd::__cxx11::basic_string<char>: hello world\npossible answer: 42\n");
 }

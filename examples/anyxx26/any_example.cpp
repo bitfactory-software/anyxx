@@ -5,7 +5,7 @@
 
 using namespace anyxx;
 
-TEST_CASE("anyxx std any equivalents") {
+TEST_CASE("anyxx std any_ equivalents") {
   {
     std::any a1 = 42;
     CHECK(*std::any_cast<int>(&a1) == 42);
@@ -18,11 +18,11 @@ TEST_CASE("anyxx std any equivalents") {
     CHECK(*std::any_cast<int>(&a2) == 42);
   }
   {
-    auto a1 = any_<typed_copyable>{42};
+    auto a1 = any<typed_copyable>{42};
     CHECK(*unerase_cast<int>(a1) == 42);
     CHECK(std::type_index(anyxx::get_type_info(a1)) == std::type_index(typeid(int)));
     CHECK(!unerase_cast_if<double>(a1));
-    any_<typed_copyable> a2 = a1;
+    any<typed_copyable> a2 = a1;
     CHECK(*unerase_cast<int>(a2) == 42);
     a1 = std::string{"hello"};
     CHECK(*unerase_cast<std::string>(a1) == "hello");
@@ -30,10 +30,10 @@ TEST_CASE("anyxx std any equivalents") {
   }
 
   {
-    auto a1 = any_<typed_moveable>{42};
-    static_assert(!std::copy_constructible<any_<typed_moveable>>);
+    auto a1 = any<typed_moveable>{42};
+    static_assert(!std::copy_constructible<any<typed_moveable>>);
     CHECK(*unerase_cast<int>(a1) == 42);
-    any_<typed_moveable> a2 = std::move(a1);
+    any<typed_moveable> a2 = std::move(a1);
     CHECK(*unerase_cast<int>(a2) == 42);
   }
 }

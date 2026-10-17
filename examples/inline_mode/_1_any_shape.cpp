@@ -76,16 +76,16 @@ MODEL_MAP((std::string), drawable) {
 };
 
 void draw(std::ostream& os,
-          std::vector<any<shared, drawable>> const& any_drawables) {
+          std::vector<any_<shared, drawable>> const& any_drawables) {
   float x = 0.0, y = 0.0;
   for (auto const& any_drawable : any_drawables)
     any_drawable.draw(os, position{x++, y++});
 }
 
 void process(std::ostream& os,
-             std::vector<any<shared, drawable>> const& any_drawables,
+             std::vector<any_<shared, drawable>> const& any_drawables,
              std::function<void(std::ostream&,
-                                any<shared, drawable> const&)> const& command) {
+                                any_<shared, drawable> const&)> const& command) {
   for (auto const& any_drawable : any_drawables) command(os, any_drawable);
 }
 
@@ -108,13 +108,13 @@ TEST_CASE("example 1/1") {
 }
 
 TEST_CASE("example 1/2 upcast, downcast") {
-  std::vector<any<shared, shape>> any_shapes{
+  std::vector<any_<shared, shape>> any_shapes{
       std::make_shared<circle>(12.3),
       std::make_shared<square>(32),
       std::make_shared<rectangle>(12, 9),
       std::make_shared<regular_polygon>(4, 32),
   };
-  std::vector<any<shared, drawable>> any_drawables;
+  std::vector<any_<shared, drawable>> any_drawables;
   any_drawables.insert(any_drawables.begin(), any_shapes.begin(),
                        any_shapes.end());
   any_drawables.emplace_back(std::make_shared<std::string>("hello world"));
@@ -130,9 +130,9 @@ TEST_CASE("example 1/2 upcast, downcast") {
 
   std::stringstream os2;
   process(os2, any_drawables,
-          [](std::ostream& os, any<shared, drawable> const& drawable) {
-            downcast_to<any<shared, shape>>(drawable).and_then(
-                [&](any<shared, shape> const& shape) {
+          [](std::ostream& os, any_<shared, drawable> const& drawable) {
+            downcast_to<any_<shared, shape>>(drawable).and_then(
+                [&](any_<shared, shape> const& shape) {
                   shape.draw(os, position{});
                   os << "...area: " << shape.area() << "\n";
                   return std::optional{shape};

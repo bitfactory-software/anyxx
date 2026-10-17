@@ -18,7 +18,7 @@ struct stringable {
     std::string as_string() const;
 };
 
-void print(std::vector<any_<stringable>> const& things) {
+void print(std::vector<any<stringable>> const& things) {
     for(auto& thing : things) {
         std::println("{}", thing.as_string());
     }
@@ -127,7 +127,7 @@ TEST_CASE("anyxx hello world") {
     print({i, s, a_foo, a_boo});
   }
   {
-    any_<stringable> sb{boo{true}};
+    any<stringable> sb{boo{true}};
     auto sb_str = sb.as_string();
     CHECK(sb_str == "boo? T");
   }
@@ -150,7 +150,7 @@ TEST_CASE("anyxx mutable hello world") {
   //dump_impl<addable, add1>();
 
   add1 a1{10};
-  auto a1_dyn = any<anyxx::mutref, addable>{a1};
+  auto a1_dyn = any_<anyxx::mutref, addable>{a1};
 
   a1_dyn.add(5);
   CHECK(a1.value == 15);
@@ -179,27 +179,27 @@ struct base_and_derived {
 TEST_CASE("anyxx derived trait") {
 
   base_and_derived a1{"a1"};
-  auto dyn1 = any_<base_trait>{a1};
+  auto dyn1 = any<base_trait>{a1};
   CHECK(dyn1.basef() == "base a1");
   //CHECK(dyn1.derivedf() == "derived");
-  auto dyn2 = any_<derived_trait>{a1};
+  auto dyn2 = any<derived_trait>{a1};
   CHECK(dyn2.basef() == "base a1");
   CHECK(dyn2.derivedf() == "derived a1");
 
-  any_<base_trait> dyn3{dyn2};
+  any<base_trait> dyn3{dyn2};
   CHECK(dyn3.basef() == "base a1");
   base_and_derived a2{ "a2" };
-  any_<base_trait> dyn4{a2};
+  any<base_trait> dyn4{a2};
   CHECK(dyn4.basef() == "base a2");
   dyn4 = dyn2;
   CHECK(dyn4.basef() == "base a1");
 
-  any_<base_trait> dyn5{std::move(dyn2)};
+  any<base_trait> dyn5{std::move(dyn2)};
   CHECK(dyn5.basef() == "base a1");
-  any_<base_trait> dyn6{dyn1};
+  any<base_trait> dyn6{dyn1};
   CHECK(dyn6.basef() == "base a1");
   base_and_derived a3{ "a3" };
-  any_<derived_trait> dyn7{ a3 };
+  any<derived_trait> dyn7{ a3 };
   dyn6 = std::move(dyn7);
   CHECK(dyn6.basef() == "base a3");
 }
@@ -207,9 +207,9 @@ TEST_CASE("anyxx derived trait") {
 TEST_CASE("anyxx v_table_data") {
 
   base_and_derived a1{ "a1" };
-  any_<anyxx::typed_observeable> d1{a1};
-  //meta::print_members<any<anyxx::typed_observeable>>();
-  //meta::print_members<any<anyxx::typed_observeable>::v_table_t::fptrs_t>();
+  any<anyxx::typed_observeable> d1{a1};
+  //meta::print_members<any_<anyxx::typed_observeable>>();
+  //meta::print_members<any_<anyxx::typed_observeable>::v_table_t::fptrs_t>();
   std::println("{}", d1.v_table_->type_info_->name());
   if(auto p = unerase_cast<base_and_derived>(d1)){
       CHECK(p->name == "a1");
@@ -276,13 +276,13 @@ struct operators<anyxx::model_map, int_ptr> {
 
 TEST_CASE("anyxx operators") {
     {
-        any_<operators> ops{add_test{}};
+        any<operators> ops{add_test{}};
         auto r1 = ops + 1;
         static_assert(^^decltype(r1)::trait_declaration_t == ^^decltype(ops)::trait_declaration_t);
         static_assert(^^decltype(r1)::proxy_t == ^^decltype(ops)::proxy_t);
         CHECK(unerase_cast<add_test>(r1)->i == 1);
-        //anyxx::meta::print_members<any<operators>::v_table_t::fptrs_t>();
-        anyxx::meta::print_members<decltype(any<anyxx::val<>, operators>::op_plus_plus)>();
+        //anyxx::meta::print_members<any_<operators>::v_table_t::fptrs_t>();
+        anyxx::meta::print_members<decltype(any_<anyxx::val<>, operators>::op_plus_plus)>();
         auto& r2 = ++r1;
         CHECK(&unerase_cast<add_test>(r1)->i != &unerase_cast<add_test>(ops)->i);
         CHECK(&unerase_cast<add_test>(r1)->i == &unerase_cast<add_test>(r2)->i);
@@ -292,7 +292,7 @@ TEST_CASE("anyxx operators") {
         CHECK(unerase_cast<add_test>(r1)->i == 3);
         CHECK(unerase_cast<add_test>(r3)->i == 2);
 
-        any_<operators> ops_rhs{ add_test{3} };
+        any<operators> ops_rhs{ add_test{3} };
 	    CHECK(unerase_cast<add_test>(ops_rhs)->i == 3);
         CHECK(r1.equal(ops_rhs));
         CHECK(r1 == ops_rhs);
@@ -301,7 +301,7 @@ TEST_CASE("anyxx operators") {
     {
 		std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
 		int* p_int = arr.begin();
-        any_<operators> p{p_int};
+        any<operators> p{p_int};
         CHECK(*p == 1);
 		++p;
         CHECK(*p == 2);

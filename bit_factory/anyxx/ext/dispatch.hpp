@@ -89,9 +89,9 @@ std::size_t& dispatchs_count() {
 
 /// \brief A tag to indicate that the corresponding function
 /// parameter is an
-/// \ref any used for dispatch.
+/// \ref any_ used for dispatch.
 ///
-/// \tparam Any The \ref any used for dispatch
+/// \tparam Any The \ref any_ used for dispatch
 template <is_any Any>
   requires(Any::is_dyn && is_open_dispatch_v_table<typename Any::v_table_t>)
 struct virtual_ {
@@ -273,18 +273,18 @@ class dispatch;
 /// To declare and define a singleton, use the \ref ANY_SINGLETON and
 /// \ref ANY_SINGLETON_DECLARE macros.
 ///
-/// Each trait of the \ref any tagged as virtual must have open
+/// Each trait of the \ref any_ tagged as virtual must have open
 /// dispatch enabled. To enable open dispatch, declare a struct named
 /// 'trait_name'_has_open_dispatch.
 /// 
 /// 
 /// open dispatch evaluate, returns int, dispatched via an
-/// any_<node>:
+/// any<node>:
 /// \code
 /// struct node_has_open_dispatch {};
 /// TRAIT(node, dynamic_copyable, )
 /// // open dispatch evaluate, returns int, dispatched via an
-/// dispatch<int(virtual_<any_<node>>>)> evaluate;
+/// dispatch<int(virtual_<any<node>>>)> evaluate;
 /// \endcode
 /// Examples are listed here: \ref dispatch
 template <typename R, typename... Args>
@@ -363,9 +363,9 @@ class dispatch<R(Args...)> {
     template <typename DispatchMatrix, typename ArgsTuple,
               typename... ActualArgs>
     std::optional<R> invoke(DispatchMatrix const& target,
-                            ArgsTuple&& dispatch_args_tuple, Any const& any,
+                            ArgsTuple&& dispatch_args_tuple, Any const& any_,
                             ActualArgs&&... actual_args) const {
-      auto dispatch_table = get_v_table(any)->dispatch_table;
+      auto dispatch_table = get_v_table(any_)->dispatch_table;
       auto dispatch_dim = get_multi_dispatch_index_at(dispatch_table, index_);
       if (dispatch_dim && target.size() > dispatch_dim)
         if (auto found =
@@ -378,7 +378,7 @@ class dispatch<R(Args...)> {
         return next_t::invoke(
             target[0],
             std::tuple_cat(get_tuple_head<Dimension>(dispatch_args_tuple),
-                           std::make_tuple(&any),
+                           std::make_tuple(&any_),
                            get_tuple_tail<Dimension + 1>(dispatch_args_tuple)),
             std::forward<ActualArgs>(actual_args)...);
       return {};
@@ -399,14 +399,14 @@ class dispatch<R(Args...)> {
     }
 
     template <typename... Other>
-    R invoke(default_::function_t const& default_, Any const& any,
+    R invoke(default_::function_t const& default_, Any const& any_,
              Other&&... other) const {
-      auto v_table = get_v_table(any)->dispatch_table;
+      auto v_table = get_v_table(any_)->dispatch_table;
       auto target = get_function(v_table, index_);
       if (!target)
-        return std::invoke(default_, any, std::forward<Other>(other)...);
+        return std::invoke(default_, any_, std::forward<Other>(other)...);
       auto erased_function = reinterpret_cast<erased_function_t>(target);
-      return std::invoke(erased_function, get_proxy_ptr(any),
+      return std::invoke(erased_function, get_proxy_ptr(any_),
                          std::forward<Other>(other)...);
     }
   };
@@ -436,7 +436,7 @@ class dispatch<R(Args...)> {
   /// dispatch.
   /// \return The result of the dispatched function call.
   ///
-  /// The called function is determined by the \ref any objects
+  /// The called function is determined by the \ref any_ objects
   /// marked with \ref virtual_ in the class instantiation.
   template <typename... ActualArgs>
   auto operator()(ActualArgs&&... actual_args) const {
@@ -474,16 +474,16 @@ auto make_tuple_from_elements_at(Tuple&& tuple) {
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_DISPATCH_COUNT_FWD(export_, ns_, any_)             \
+#define ANY_DISPATCH_COUNT_FWD(export_, ns_, any)             \
   namespace ns_ {}                                             \
   namespace anyxx {                                            \
   template <>                                                  \
-  export_ std::size_t& dispatchs_count<ns_::any_##_v_table>(); \
+  export_ std::size_t& dispatchs_count<ns_::any##_v_table>(); \
   }
 
-#define ANY_DISPATCH_COUNT(ns_, any_)                          \
+#define ANY_DISPATCH_COUNT(ns_, any)                          \
   template <>                                                  \
-  std::size_t& anyxx::dispatchs_count<ns_::any_##_v_table>() { \
+  std::size_t& anyxx::dispatchs_count<ns_::any##_v_table>() { \
     static std::size_t count = 0;                              \
     return count;                                              \
   }
@@ -515,42 +515,42 @@ auto make_tuple_from_elements_at(Tuple&& tuple) {
 /// header files.
 ///
 /// ANY_DISPATCH_COUNT macros declare/define the dispatch counter for
-/// a specific any. This dispatch counter is used to assign unique
+/// a specific any_. This dispatch counter is used to assign unique
 /// indices to each dispatch.
 ///
 /// ANY_DISPATCH_FOR macros declare/define the dispatch table
-/// instance for a any. This is necessary once for each model class
+/// instance for a any_. This is necessary once for each model class
 /// that participates in open dispatch.
 ///
 ///  @{
 
 /// \def ANY_DISPATCH_COUNT_FWD
 /// \brief Declare access to the dispatch counter for a specific \ref
-/// any. Must be placed in global namespace.
+/// any_. Must be placed in global namespace.
 /// \param export_ To supply an export macro in a DLL scenario.
-/// \param ns_ Namespace of the \ref any.
-/// \param any_ Name of the \ref any (without any_ prefix).
+/// \param ns_ Namespace of the \ref any_.
+/// \param any Name of the \ref any_ (without any prefix).
 #define ANY_DISPATCH_COUNT_FWD(...)
 /// \def ANY_DISPATCH_COUNT
-/// \brief Define the dispatch counter for a specific \ref any. Must
+/// \brief Define the dispatch counter for a specific \ref any_. Must
 /// be placed in global namespace.
-/// \param ns_ Namespace of the \ref any.
-/// \param any_ Name of the \ref any (without any_ prefix).
+/// \param ns_ Namespace of the \ref any_.
+/// \param any Name of the \ref any_ (without any prefix).
 #define ANY_DISPATCH_COUNT(...)
 /// \def ANY_DISPATCH_FOR_FWD
 /// \brief Declare access to the dispatch table instance function for
 /// a model. Must be placed in global namespace.
 /// \param export_ To supply an export macro in a DLL scenario.
 /// \param class_ The model class with fully qualified name.
-/// \param interface_namespace_ Namespace of the \ref any.
-/// \param interface_ Name of the \ref any (without any_ prefix).
+/// \param interface_namespace_ Namespace of the \ref any_.
+/// \param interface_ Name of the \ref any_ (without any prefix).
 #define ANY_DISPATCH_FOR_FWD(...)
 /// \def ANY_DISPATCH_FOR
 /// \brief Define the dispatch table instance function for a model.
 /// Must be placed in global namespace
 /// \param class_ The model class with fully qualified name.
-/// \param interface_namespace_ Namespace of the \ref any.
-/// \param interface_ Name of the \ref any (without any_ prefix).
+/// \param interface_namespace_ Namespace of the \ref any_.
+/// \param interface_ Name of the \ref any_ (without any prefix).
 #define ANY_DISPATCH_FOR(...)
 
 ///  @}

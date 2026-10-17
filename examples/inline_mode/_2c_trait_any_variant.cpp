@@ -28,7 +28,7 @@ TRAIT_EX(value, anyxx::dynamic_copyable,
                     ss >> std::boolalpha >> x;
                   })),
          , , (HAS_OPEN_DISPATCH), ())
-using any_value = anyxx::any_<value>;
+using any_value = anyxx::any<value>;
 
 using vany_value = anyxx::make_vany<value, bool, int, double, std::string>;
 using concrete_value = anyxx::vany_type_trait<vany_value>::concrete_variant;
@@ -57,7 +57,7 @@ TEST_CASE("example 2ca static_ simple variant") {
   using namespace anyxx;
 
   using any_variant =
-      any<using_<std::variant<bool, int, double, std::string>>, value>;
+      any_<using_<std::variant<bool, int, double, std::string>>, value>;
 
   CHECK(any_variant{true}.to_string() == "true");
   CHECK(any_variant{42}.to_string() == "42");
@@ -65,7 +65,7 @@ TEST_CASE("example 2ca static_ simple variant") {
   CHECK(any_variant{"hello world"s}.to_string() == "hello world"s);
 }
 
-TEST_CASE("example 2cb static_ any variant") {
+TEST_CASE("example 2cb static_ any_ variant") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;
@@ -113,7 +113,7 @@ auto __ = vany_stream.define<custom>(
 
 VANY_DISPACH(example_2c, vany_stream)
 
-TEST_CASE("example 2cc static_ any variant single open dispatch") {
+TEST_CASE("example 2cc static_ any_ variant single open dispatch") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;
@@ -182,7 +182,7 @@ auto __ = vany_compare.define<concrete_value, concrete_value>(
 
 VANY_DISPACH(example_2c, vany_compare)
 
-TEST_CASE("example 2cd static_ any variant double dispatch") {
+TEST_CASE("example 2cd static_ any_ variant double dispatch") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;

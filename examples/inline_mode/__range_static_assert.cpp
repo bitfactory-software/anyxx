@@ -6,8 +6,8 @@
 TEST_CASE("range static assert") {
   using namespace anyxx;
 
-  static_assert(std::input_iterator<any_<forward_iterator, int, int>>);
-  static_assert(std::input_iterator<any_<forward_iterator, int, int&>>);
+  static_assert(std::input_iterator<any<forward_iterator, int, int>>);
+  static_assert(std::input_iterator<any<forward_iterator, int, int&>>);
   static_assert(std::input_iterator<any_input_iterator<int, int>>);
   static_assert(std::input_iterator<any_input_iterator<int>>);
   static_assert(is_compareable_iterator<forward_iterator, iterator_val, int, int>);
@@ -28,11 +28,11 @@ TEST_CASE("range static assert") {
       true);
   static_assert(
       std::same_as<any_forward_iterator<self, self>::v_table_t::any_value_t,
-                   any<nullable_val<iterator_val_proxy_size>, forward_iterator,
+                   any_<nullable_val<iterator_val_proxy_size>, forward_iterator,
                        self, self>>);
   static_assert(
       std::same_as<random_access_iterator<self, self>::v_table_t::any_value_t,
-                   any<nullable_val<iterator_val_proxy_size>,
+                   any_<nullable_val<iterator_val_proxy_size>,
                        random_access_iterator, self, self>>);
   static_assert(std::forward_iterator<any_forward_iterator<self, self>>);
 
@@ -43,14 +43,14 @@ TEST_CASE("range static assert") {
   static_assert(
       is_sentinel_trait_for<sentinel, random_access_iterator, int, int const&>);
   static_assert(
-      std::sentinel_for<any_<sentinel, int, int>, any_<input_iterator, int, int>>);
-  static_assert(std::sentinel_for<any_<sentinel, int, const int&>,
-      any_<input_iterator, int, const int&>>);
+      std::sentinel_for<any<sentinel, int, int>, any<input_iterator, int, int>>);
+  static_assert(std::sentinel_for<any<sentinel, int, const int&>,
+      any<input_iterator, int, const int&>>);
 
-  static_assert(std::sized_sentinel_for<any_<sized_sentinel, int, int&>,
-      any_<bidirectional_iterator, int, int&>>);
-  static_assert(std::sentinel_for<any_<sentinel, int, int&>,
-      any_<input_iterator, int, int&>>);
+  static_assert(std::sized_sentinel_for<any<sized_sentinel, int, int&>,
+      any<bidirectional_iterator, int, int&>>);
+  static_assert(std::sentinel_for<any<sentinel, int, int&>,
+      any<input_iterator, int, int&>>);
 
   static_assert(std::ranges::forward_range<any_forward_range<self, self>>);
 }

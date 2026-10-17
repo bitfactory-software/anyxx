@@ -16,7 +16,7 @@ struct node : anyxx::copyable<Trait, Self> {
     using dispatch_table [[= anyxx::v_table_data]] = anyxx::dispatch_table;
 };
 
-using any_node = anyxx::any_<node>;
+using any_node = anyxx::any<node>;
 static_assert(is_open_dispatch_v_table<any_node::v_table_t>);
 
 struct Plus {
@@ -78,7 +78,7 @@ using namespace anyxx;
 
 namespace _21_Tree_TE_interface_dispatch {
 
-TEST_CASE("21_Tree any++ open method") {
+TEST_CASE("21_Tree any_++ open method") {
   using namespace anyxx;
 
   any_node expr{Times{Integer(2), Plus{Integer{3}, Integer{4}}}};
@@ -93,8 +93,8 @@ TEST_CASE("21_Tree any++ open method") {
 #ifdef ANYXX_RUN_BENCHMARKS
   std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE "
                "/Ob2)' is used!\n";
-  BENCHMARK("21_Tree any++ open method evaluate") { return evaluate(expr); };
-  BENCHMARK("21_Tree any++ open method as_lisp") { return as_lisp(expr); };
+  BENCHMARK("21_Tree any_++ open method evaluate") { return evaluate(expr); };
+  BENCHMARK("21_Tree any_++ open method as_lisp") { return as_lisp(expr); };
 #endif  // !ANYXX_RUN_BENCHMARKS
 }
 
