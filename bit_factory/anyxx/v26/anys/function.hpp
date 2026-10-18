@@ -23,14 +23,16 @@ template <is_trait Trait, typename Self, typename R, typename... Args>
 struct function<Trait, Self, R(Args...)> : copyable<Trait, Self> {
     R operator()(Args... args);
 };
-struct ref {};
+
+template <is_trait Trait, typename Self, typename Arg0, typename... Args>
+struct function_ref;
 template <is_trait Trait, typename Self, typename R, typename... Args>
-struct function<Trait, Self, ref, R(Args...) const> {
+struct function_ref<Trait, Self, R(Args...) const> {
     R operator()(Args... args) const;
     using default_proxy_t = anyxx::cref;
 };
 template <is_trait Trait, typename Self, typename R, typename... Args>
-struct function<Trait, Self, ref, R(Args...)> {
+struct function_ref<Trait, Self, R(Args...)> {
     R operator()(Args... args);
     using default_proxy_t = anyxx::mutref;
 };

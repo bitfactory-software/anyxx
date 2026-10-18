@@ -4,6 +4,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_G
 
     set(CMAKE_CXX_STANDARD 26)
     add_compile_options(-freflection)
+    add_compile_options(-std=c++26)
 
     project(CmakeConfigPackageTests LANGUAGES CXX)
     include(${Catch2_SOURCE_DIR}/extras/Catch.cmake)

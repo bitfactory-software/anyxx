@@ -146,22 +146,22 @@ TEST_CASE("std emulated function") {
     static_assert(std::is_same_v<decltype(hello_world), std::string>);
     CHECK(hello_world == "hello world!");
 
-    any<function, ref, std::string(std::string const&) const> any_f_cref{f};
+    any<function_ref, std::string(std::string const&) const> any_f_cref{f};
     CHECK(any_f_cref("C++") == "C++ world!");
-    any<function, ref, std::string(std::string const&)> any_f_mref{f};
+    any<function_ref, std::string(std::string const&)> any_f_mref{f};
     CHECK(any_f_mref("C++") == "C++ world!");
 
     auto const f_const = [](std::string const& in) {
       return in + " const world!";
     };
-    any<function, ref, std::string(std::string const&) const> any_f_cref_const{
+    any<function_ref, std::string(std::string const&) const> any_f_cref_const{
         f_const};
     CHECK(any_f_cref_const("C++") == "C++ const world!");
     static_assert(std::is_constructible_v<
-                  any<function, ref, std::string(std::string const&) const>,
+                  any<function_ref, std::string(std::string const&) const>,
                   decltype(f_const)>);
     static_assert(!std::is_constructible_v<
-                  any<function, ref, std::string(std::string const&)>,
+                  any<function_ref, std::string(std::string const&)>,
                   decltype(f_const)>);
   }
   {

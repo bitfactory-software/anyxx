@@ -80,15 +80,16 @@ template <typename R, typename... Args>
 struct function<R(Args...) const>
     : function_impl<const_, copyable<>, R, Args...> {};
 
-struct ref {};
+template <typename T0, typename... Ts>
+struct function_ref;
 template <typename R, typename... Args>
-struct function<ref, R(Args...)>
+struct function_ref<R(Args...)>
     : function_impl<mutable_, observeable<>, R, Args...> {
   using default_proxy_t = mutref;
 };
 template <typename R, typename... Args>
-struct function<ref, R(Args...) const>
-    : function_impl<const_, copyable<>, R, Args...> {};
+struct function_ref<R(Args...) const>
+    : function_impl<const_, observeable<>, R, Args...> {};
 
 
 }  // namespace anyxx

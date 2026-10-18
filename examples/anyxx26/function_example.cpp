@@ -1,6 +1,7 @@
 #include <bit_factory/anyxx/v26/anys/function.hpp>
 #include <bit_factory/anyxx/v26/meta/print_members.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <functional>
 
 using namespace anyxx;
 
@@ -18,6 +19,31 @@ concept is_callable = requires(Func const& f, int i) {
 }  // namespace
 
 TEST_CASE("anyxx std function equivalents") {
+  {
+    /*
+    using namespace std;
+    using std::function;
+
+    function<double(bool, int)>                 old_function_not_const_correct;
+    copyable_function<double(bool, int) const>  const_copyable_function;
+    copyable_function<double(bool, int)>        mutable_copyable_function;
+    move_only_function<double(bool, int) const> const_moveable_function;
+    move_only_function<double(bool, int)>       mutable_moveable_function;
+    function_ref<double(bool, int) const>       const_function_ref;
+    function_ref<double(bool, int)>             mutable_function_ref;
+    */
+  }
+  {
+    using namespace anyxx;
+    auto f = [](int x) { return x + 2; };
+
+    any<function, int(int) const>             const_copyable_function{f};
+    any<function, int(int)>                   mutable_copyable_function{f};
+    any<function, moveable<>, int(int) const> const_moveable_function{[](int x) { return x + 2; }};
+    any<function, moveable<>, int(int)>       mutable_moveable_function{[](int x) { return x + 2; }};
+    any<function_ref, int(int) const>         const_function_ref{f};
+    any<function_ref, int(int)>               mutable_function_ref{f};
+  }
   {
     any<function, int(int) const> f{ [](int x) { return x + 2; }};
     CHECK(f(40) == 42);
@@ -38,14 +64,14 @@ TEST_CASE("anyxx std function equivalents") {
   }
   {
     auto lambda = +[](int x) { return x + 2; };
-    using function = any<function, ref, int(int) const>;
+    using function = any<function_ref, int(int) const>;
     function f{lambda};
     CHECK(f(40) == 42);
   }
   {
     auto const_lambda = +[](int x) { return x + 2; };
     auto mutable_lambda = [&](int x) mutable { return x + 2; };
-    using function = any<function, ref, int(int)>;
+    using function = any<function_ref, int(int)>;
     function f_mutable_lambda{mutable_lambda};
     function f_const_lambda{const_lambda};
     static_assert(std::is_invocable_v<decltype(f_mutable_lambda), int>);
@@ -69,7 +95,7 @@ TEST_CASE("anyxx std function equivalents") {
     // function f_mutable_lambda{ mutable_lambda };
     // ---
     auto const_lambda = [](int x) { return x + 2; };
-    using function = any<function, ref, int(int) const>;
+    using function = any<function_ref, int(int) const>;
     function f_const_lambda{const_lambda};
     static_assert(std::is_invocable_v<decltype(f_const_lambda), int>);
     f_const_lambda(1);
