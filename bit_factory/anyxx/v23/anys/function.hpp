@@ -65,20 +65,21 @@ struct function_impl : Lifetime {
 
 template <typename T0, typename... Ts>
 struct function;
-
-template <typename Lifetime, typename R, typename... Args>
-struct function<Lifetime, R(Args...)>
-    : function_impl<mutable_, Lifetime, R, Args...> {};
-template <typename Lifetime, typename R, typename... Args>
-struct function<Lifetime, R(Args...) const>
-    : function_impl<const_, Lifetime, R, Args...> {};
-
 template <typename R, typename... Args>
 struct function<R(Args...)> : function_impl<mutable_, copyable<>, R, Args...> {
 };
 template <typename R, typename... Args>
 struct function<R(Args...) const>
     : function_impl<const_, copyable<>, R, Args...> {};
+
+template <typename T0, typename... Ts>
+struct move_only_function;
+template <typename R, typename... Args>
+struct move_only_function<R(Args...)>
+    : function_impl<mutable_, moveable<>, R, Args...> {};
+template <typename R, typename... Args>
+struct move_only_function<R(Args...) const>
+    : function_impl<const_, moveable<>, R, Args...> {};
 
 template <typename T0, typename... Ts>
 struct function_ref;
@@ -90,6 +91,5 @@ struct function_ref<R(Args...)>
 template <typename R, typename... Args>
 struct function_ref<R(Args...) const>
     : function_impl<const_, observeable<>, R, Args...> {};
-
 
 }  // namespace anyxx

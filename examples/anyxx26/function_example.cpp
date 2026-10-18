@@ -39,8 +39,8 @@ TEST_CASE("anyxx std function equivalents") {
 
     any<function, int(int) const>             const_copyable_function{f};
     any<function, int(int)>                   mutable_copyable_function{f};
-    any<function, moveable<>, int(int) const> const_moveable_function{[](int x) { return x + 2; }};
-    any<function, moveable<>, int(int)>       mutable_moveable_function{[](int x) { return x + 2; }};
+    any<move_only_function, int(int) const> const_moveable_function{[](int x) { return x + 2; }};
+    any<move_only_function, int(int)>       mutable_moveable_function{[](int x) { return x + 2; }};
     any<function_ref, int(int) const>         const_function_ref{f};
     any<function_ref, int(int)>               mutable_function_ref{f};
   }
@@ -110,7 +110,7 @@ TEST_CASE("anyxx std function equivalents") {
   {
     auto const_lambda = [](int x) { return x + 2; };
     [[maybe_unused]] auto mutable_lambda = [&](int x) mutable { return x + 2; };
-    using function = any<function, const_referenceable, int(int) const>;
+    using function = any<function_ref, int(int) const>;
     // +++ this code does not compile, as expected
     //[[maybe_unused]] function f_mutable_lambda{ mutable_lambda };
     // ---
@@ -121,7 +121,7 @@ TEST_CASE("anyxx std function equivalents") {
   }
   {
     auto p1 = std::make_unique<int>(42);
-    using function = any<function, moveable<>, int(int)>;
+    using function = any<move_only_function, int(int)>;
     function f_moveable{[p = std::move(p1)](int x) { return x + ++*p; }};
     static_assert(!std::is_copy_constructible_v<function>);
     static_assert(std::is_move_constructible_v<function>);

@@ -165,7 +165,7 @@ TEST_CASE("std emulated function") {
                   decltype(f_const)>);
   }
   {
-    any<function, moveable<>, std::string(std::string const&)> f{
+    any<move_only_function, std::string(std::string const&)> f{
         [](std::string const& in) { return in + " world!"; }};
     auto result = f("hello");
     CHECK(result == "hello world!");
@@ -179,7 +179,7 @@ TEST_CASE("std emulated function") {
     // auto f3 = f2; // does not compile as expected, because f2 is move-only
   }
   {
-    any<function, moveable<>, std::string(std::string const&) const> f{
+    any<move_only_function, std::string(std::string const&) const> f{
         [](std::string const& in) { return in + " world!"; }};
     auto result = f("hello");
     CHECK(result == "hello world!");
