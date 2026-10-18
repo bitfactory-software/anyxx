@@ -14,8 +14,8 @@
 #include <bit_factory/anyxx/any_concept.hpp>
 #include <bit_factory/anyxx/any_forward.hpp>
 #include <bit_factory/anyxx/any_get_meta_data.hpp>
-#include <bit_factory/anyxx/any_get_type_info.hpp>
-#include <bit_factory/anyxx/any_unerase_cast.hpp>
+#include <bit_factory/anyxx/any_type_of.hpp>
+#include <bit_factory/anyxx/any_cast.hpp>
 #include <bit_factory/anyxx/borrow_as.hpp>
 #include <bit_factory/anyxx/clone_to.hpp>
 #include <bit_factory/anyxx/compute_val_proxy_size.hpp>

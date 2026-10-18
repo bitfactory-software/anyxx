@@ -189,7 +189,7 @@ TEST_CASE("example 3 transform unerase") {
     std::size_t x = 0;
     for (auto i : std::views::transform(
              r, [](any_stringable<anyxx::val<>> const& vv) -> std::size_t {
-               return *anyxx::unerase_cast<std::size_t>(vv);
+               return any_cast<std::size_t>(vv);
              })) {
       std::println("{}", i);
       CHECK(i == ++x);
@@ -207,7 +207,7 @@ TEST_CASE("example 3 self in range") {
   {
     any_node<val<>> n1{0};
     auto r = n1.sum(v);
-    CHECK(*unerase_cast<int>(r) == 6);
+    CHECK(any_cast<int>(r) == 6);
   }
   {
     any_node<using_<int>> n1{0};
@@ -224,7 +224,7 @@ TEST_CASE("example 3 self in range") {
     {
       any_node<> n1{0};
       auto result = n1.sum(r);
-      CHECK(*unerase_cast<int>(result) == 6);
+      CHECK(any_cast<int>(result) == 6);
     }
   }
 }

@@ -27,7 +27,7 @@ TRAIT_TEMPLATE_EX(
              ((any_<anyxx::cref, input_iterator, ValueType, Reference> const&)),
              const,
              [&x](auto const it) {
-               return x.value == *unerase_cast<typename T::iterator_type>(it);
+               return x.value == any_cast<typename T::iterator_type>(it);
              })),
     , , , (using default_proxy_t = nullable_val<iterator_val_proxy_size>;))
 
@@ -77,14 +77,14 @@ TRAIT_TEMPLATE_EX(
                    Reference> const&)),
              const,
              [&x](auto const it) {
-               return x.value - *unerase_cast<typename T::iterator_type>(it);
+               return x.value - any_cast<typename T::iterator_type>(it);
              }),
      FN_IMPL(public, std::ptrdiff_t, subtract_from,
              ((any_<anyxx::cref, bidirectional_iterator, ValueType,
                    Reference> const&)),
              const,
              [&x](auto const it) {
-               return *unerase_cast<typename T::iterator_type>(it) - x.value;
+               return any_cast<typename T::iterator_type>(it) - x.value;
              })),
     , , , (using default_proxy_t = nullable_val<iterator_val_proxy_size>;))
 

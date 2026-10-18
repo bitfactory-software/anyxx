@@ -24,8 +24,8 @@ TEST_CASE("typed_any/observer") {
 
   any_<cref, test_i> co{s};
   static_assert(is_any<any_<cref, test_i>>);
-  CHECK_NOTHROW([&] { CHECK(unerase_cast<x_t>(co)->s_ == "hallo"); }());
-  CHECK_THROWS_AS(unerase_cast<std::string>(co), type_mismatch_error);
+  CHECK_NOTHROW([&] { CHECK(any_cast<x_t>(co).s_ == "hallo"); }());
+  CHECK_THROWS_AS(any_cast<std::string>(co), type_mismatch_error);
 
   auto co_typed = as<x_t>(co);
   CHECK(co_typed->s_ == "hallo");
@@ -33,8 +33,8 @@ TEST_CASE("typed_any/observer") {
   CHECK_THROWS_AS(as<std::string>(co), type_mismatch_error);
 
   any_<mutref, test_i> mo{s};
-  CHECK(unerase_cast<x_t>(mo)->s_ == "hallo");
-  CHECK_THROWS_AS(unerase_cast<std::string>(mo), type_mismatch_error);
+  CHECK(any_cast<x_t>(mo).s_ == "hallo");
+  CHECK_THROWS_AS(any_cast<std::string>(mo), type_mismatch_error);
 
   auto mo_typed = as<x_t>(mo);
   CHECK(mo_typed->s_ == "hallo");
@@ -67,8 +67,8 @@ TEST_CASE("typed_any/observer/test_i") {
 
   any_<cref, test_i> co{s};
   static_assert(is_any<any_<cref, test_i>>);
-  CHECK(unerase_cast<x_t>(co)->s_ == "hallo");
-  CHECK_THROWS_AS(unerase_cast<std::string>(co), type_mismatch_error);
+  CHECK((any_cast<x_t>(co)).s_ == "hallo");
+  CHECK_THROWS_AS(any_cast<std::string>(co), type_mismatch_error);
 
   CHECK(co.to_string() == "hallo");
 
@@ -79,8 +79,8 @@ TEST_CASE("typed_any/observer/test_i") {
   CHECK_THROWS_AS(as<std::string>(co), type_mismatch_error);
 
   any_<mutref, test_i> mo{s};
-  CHECK(unerase_cast<x_t>(mo)->s_ == "hallo");
-  CHECK_THROWS_AS(unerase_cast<std::string>(mo), type_mismatch_error);
+  CHECK((any_cast<x_t>(mo)).s_ == "hallo");
+  CHECK_THROWS_AS(any_cast<std::string>(mo), type_mismatch_error);
 
   CHECK(mo.to_string() == "hallo");
 

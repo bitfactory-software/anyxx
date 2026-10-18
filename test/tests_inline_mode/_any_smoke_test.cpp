@@ -197,8 +197,8 @@ TEST_CASE("dynamic any_ shared") {
   static_assert(std::same_as<typed_circle_shape_shared_const::proxy_t, shared>);
   static_assert(is_typed_any<decltype(sc_typed)>);
   any_<shared, shape> circle_shape_vv{sc_typed};
-  auto unerased_circle = unerase_cast<circle const>(circle_shape_vv);
-  REQUIRE_THAT(unerased_circle->perimeter(),
+  decltype(auto) unerased_circle = any_cast<circle const>(circle_shape_vv);
+  REQUIRE_THAT(unerased_circle.perimeter(),
                Catch::Matchers::WithinAbs(77.2, 77.3));
   auto x = circle_shape_vv;  // NOLINT
   {

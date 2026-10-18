@@ -21,11 +21,11 @@ TEST_CASE("unerase_cast") {
   {
     value_with_meta_data v(std::make_shared<x_t>("hallo"));
     try {
-      auto x = unerase_cast<x_t>(v)->s_;    
+      decltype(auto) x = any_cast<x_t>(v).s_;    
       CHECK(x == "hallo");
     } catch (anyxx::type_mismatch_error&) {
       CHECK(false);
     }
-    CHECK_THROWS_AS(unerase_cast<std::string>(v), type_mismatch_error);
+    CHECK_THROWS_AS(any_cast<std::string>(v), type_mismatch_error);
   }
 }

@@ -198,10 +198,10 @@ TEST_CASE("std emulated any_") {
   using any_ = anyxx::any<anyxx::typed_copyable>;
   {
     auto a1 = any_(std::string{"hallo"});
-    CHECK(*unerase_cast<std::string>(a1) == "hallo");
+    CHECK(any_cast<std::string>(a1) == "hallo");
     a1 = 3;
-    CHECK(*unerase_cast<int>(a1) == 3);
-    CHECK(unerase_cast_if<std::string>(a1) == nullptr);
+    CHECK(any_cast<int>(a1) == 3);
+    CHECK(any_cast_if<std::string>(a1) == nullptr);
     CHECK(type_of(a1) == typeid(int));
   }
 }

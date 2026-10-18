@@ -85,9 +85,9 @@ TEST_CASE("example 3 architecture picture") {
 
     REQUIRE(members_count<shapes::picture>() == 1);
     auto any_shape = shapes::make_picture({0, 0}, duck);
-    auto duck_shape = anyxx::unerase_cast<shapes::picture>(any_shape);
-    CHECK(!duck_shape->get(internal::picture_author));
-    auto duck_shape_clone = *duck_shape;
+    decltype(auto) duck_shape = any_cast<shapes::picture>(any_shape);
+    CHECK(!duck_shape.get(internal::picture_author));
+    auto duck_shape_clone = duck_shape;
     duck_shape_clone[internal::picture_author] = "Max";
     CHECK(duck_shape_clone[internal::picture_author] == "Max");
   }

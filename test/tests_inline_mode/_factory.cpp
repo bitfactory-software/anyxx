@@ -31,10 +31,10 @@ namespace example {
 
 TEST_CASE("factory1") {
   auto asteroid_thing = thing_factory.construct("asteroid");
-  CHECK(unerase_cast<asteroid>(asteroid_thing) != nullptr);
+  CHECK(any_cast_if<asteroid>(asteroid_thing) != nullptr);
   CHECK(type_of(asteroid_thing) == typeid(asteroid));
   auto spaceship_thing = thing_factory.construct("spaceship");
-  CHECK(unerase_cast<spaceship>(spaceship_thing) != nullptr);
+  CHECK(any_cast_if<spaceship>(spaceship_thing) != nullptr);
   CHECK(type_of(spaceship_thing) == typeid(spaceship));
 }
 

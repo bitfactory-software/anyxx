@@ -181,14 +181,14 @@ template <typename Concrete>
 struct v_table_to_map<Concrete, self&> {
   template <typename Sig>
   static Concrete& forward(Sig&& sig) {
-    return *unerase_cast<Concrete>(sig);
+    return any_cast<Concrete>(sig);
   }
 };
 template <typename Concrete>
 struct v_table_to_map<Concrete, self const&> {
   template <typename Sig>
   static Concrete const& forward(Sig&& sig) {
-    return *unerase_cast<Concrete>(sig);
+    return any_cast<Concrete>(sig);
   }
 };
 

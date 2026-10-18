@@ -211,7 +211,7 @@ TEST_CASE("anyxx v_table_data") {
   //meta::print_members<any_<anyxx::typed_observeable>>();
   //meta::print_members<any_<anyxx::typed_observeable>::v_table_t::fptrs_t>();
   std::println("{}", d1.v_table_->type_info_->name());
-  if(auto p = unerase_cast<base_and_derived>(d1)){
+  if(auto p = any_cast_if<base_and_derived>(d1)){
       CHECK(p->name == "a1");
   } else{
       CHECK(false);
@@ -280,20 +280,20 @@ TEST_CASE("anyxx operators") {
         auto r1 = ops + 1;
         static_assert(^^decltype(r1)::trait_declaration_t == ^^decltype(ops)::trait_declaration_t);
         static_assert(^^decltype(r1)::proxy_t == ^^decltype(ops)::proxy_t);
-        CHECK(unerase_cast<add_test>(r1)->i == 1);
+        CHECK((any_cast<add_test>(r1)).i == 1);
         //anyxx::meta::print_members<any_<operators>::v_table_t::fptrs_t>();
         anyxx::meta::print_members<decltype(any_<anyxx::val<>, operators>::op_plus_plus)>();
         auto& r2 = ++r1;
-        CHECK(&unerase_cast<add_test>(r1)->i != &unerase_cast<add_test>(ops)->i);
-        CHECK(&unerase_cast<add_test>(r1)->i == &unerase_cast<add_test>(r2)->i);
-        CHECK(unerase_cast<add_test>(r1)->i == 2);
+        CHECK(&any_cast<add_test>(r1).i != &any_cast<add_test>(ops).i);
+        CHECK(&any_cast<add_test>(r1).i == &any_cast<add_test>(r2).i);
+        CHECK((any_cast<add_test>(r1)).i == 2);
         auto r3 = r2++;
-        CHECK(&unerase_cast<add_test>(r1)->i != &unerase_cast<add_test>(r3)->i);
-        CHECK(unerase_cast<add_test>(r1)->i == 3);
-        CHECK(unerase_cast<add_test>(r3)->i == 2);
+        CHECK(&any_cast<add_test>(r1).i != &any_cast<add_test>(r3).i);
+        CHECK((any_cast<add_test>(r1)).i == 3);
+        CHECK((any_cast<add_test>(r3)).i == 2);
 
         any<operators> ops_rhs{ add_test{3} };
-	    CHECK(unerase_cast<add_test>(ops_rhs)->i == 3);
+	    CHECK((any_cast<add_test>(ops_rhs)).i == 3);
         CHECK(r1.equal(ops_rhs));
         CHECK(r1 == ops_rhs);
     }

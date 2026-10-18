@@ -26,7 +26,7 @@ template <typename Concrete, typename AnyForwardRange>
 struct v_table_to_map<Concrete, AnyForwardRange const&> {
   static auto forward(auto const& any_range) {
     return std::views::transform(any_range, [](auto const& any_) {
-      return *unerase_cast<Concrete>(any_);
+      return any_cast<Concrete>(any_);
     });
   }
 };
@@ -39,7 +39,7 @@ struct forward_trait_to_map<Traited, AnyForwardRange const&> {
                                  []<typename T>(T const& any_) -> Traited {
                                    if constexpr (is_any<T>) {
                                      if constexpr (T::is_dyn) {
-                                       return *unerase_cast<Traited>(any_);
+                                       return any_cast<Traited>(any_);
                                      } else {
                                        return get_proxy_value(any_);
                                      }

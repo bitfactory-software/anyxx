@@ -3,8 +3,8 @@
 #include <bit_factory/anyxx/any_access.hpp>
 #include <bit_factory/anyxx/any_concept.hpp>
 #include <bit_factory/anyxx/any_get_meta_data.hpp>
-#include <bit_factory/anyxx/any_get_type_info.hpp>
-#include <bit_factory/anyxx/any_unerase_cast.hpp>
+#include <bit_factory/anyxx/any_type_of.hpp>
+#include <bit_factory/anyxx/any_cast.hpp>
 
 namespace anyxx {
 
