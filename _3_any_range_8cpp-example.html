@@ -283,7 +283,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">    std::size_t x = 0;</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : std::views::transform(</div>
 <div class="line">             r, [](any_stringable&lt;anyxx::val&lt;&gt;&gt; <span class="keyword">const</span>&amp; vv) -&gt; std::size_t {</div>
-<div class="line">               <span class="keywordflow">return</span> *anyxx::unerase_cast&lt;std::size_t&gt;(vv);</div>
+<div class="line">               <span class="keywordflow">return</span> any_cast&lt;std::size_t&gt;(vv);</div>
 <div class="line">             })) {</div>
 <div class="line">      std::println(<span class="stringliteral">&quot;{}&quot;</span>, i);</div>
 <div class="line">      CHECK(i == ++x);</div>
@@ -301,7 +301,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  {</div>
 <div class="line">    any_node&lt;val&lt;&gt;&gt; n1{0};</div>
 <div class="line">    <span class="keyword">auto</span> r = n1.sum(v);</div>
-<div class="line">    CHECK(*unerase_cast&lt;int&gt;(r) == 6);</div>
+<div class="line">    CHECK(any_cast&lt;int&gt;(r) == 6);</div>
 <div class="line">  }</div>
 <div class="line">  {</div>
 <div class="line">    any_node&lt;using_&lt;int&gt;&gt; n1{0};</div>
@@ -318,7 +318,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">    {</div>
 <div class="line">      any_node&lt;&gt; n1{0};</div>
 <div class="line">      <span class="keyword">auto</span> result = n1.sum(r);</div>
-<div class="line">      CHECK(*unerase_cast&lt;int&gt;(result) == 6);</div>
+<div class="line">      CHECK(any_cast&lt;int&gt;(result) == 6);</div>
 <div class="line">    }</div>
 <div class="line">  }</div>
 <div class="line">}</div>
