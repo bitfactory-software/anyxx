@@ -33,7 +33,7 @@
 #include <bit_factory/anyxx/errors/type_mismatch_error.hpp>
 #include <bit_factory/anyxx/proxies/basic_proxy_trait.hpp>
 #include <bit_factory/anyxx/proxies/proxy_concept.hpp>
-#include <bit_factory/anyxx/proxies/unerase_cast.hpp>
+#include <bit_factory/anyxx/proxies/proxy_cast.hpp>
 #include <bit_factory/anyxx/proxies/dyn/cow.hpp>
 #include <bit_factory/anyxx/proxies/dyn/observer.hpp>
 #include <bit_factory/anyxx/proxies/dyn/unique.hpp>
