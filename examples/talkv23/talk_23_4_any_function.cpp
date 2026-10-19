@@ -18,7 +18,7 @@ concept is_callable = requires(Func const& f, int i) {
 
 }  // namespace
 
-TEST_CASE("anyxx std function equivalents") {
+TEST_CASE("talk_23_4_any_function") {
   {
     /*
     using namespace std;
