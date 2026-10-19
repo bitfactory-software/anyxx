@@ -11,7 +11,7 @@ namespace anyxx {
 template <typename U, typename Any>
   requires is_any<Any> && Any::is_dyn
 inline decltype(auto) any_cast(Any const& o) {
-  return *proxy_cast<U>(get_proxy(o), get_v_table(o));
+  return proxy_cast<U>(get_proxy(o), get_v_table(o));
 }
 /// \brief Safe downcast to an unerased type using runtime information from
 /// the v-Tables.

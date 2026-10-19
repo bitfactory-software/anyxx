@@ -82,11 +82,11 @@ TEST_CASE("std emulated function") {
   {
     functor_t functor{"hallo"};
     any_<mutref, string_to_string_mutable> f{functor};
-    REQUIRE(unchecked_any_cast<functor_t>(f)->s_ == "hallo");
+    REQUIRE(unchecked_any_cast<functor_t>(f).s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo world");
     REQUIRE(f() == "hallo world");
-    REQUIRE(unchecked_any_cast<functor_t>(f)->s_ == "hallo world");
+    REQUIRE(unchecked_any_cast<functor_t>(f).s_ == "hallo world");
 
     any_<cref, string_to_string_mutable> fc{f};
     REQUIRE(fc() == "hallo world");
@@ -122,21 +122,21 @@ TEST_CASE("std emulated function") {
             std::make_unique<functor_t>()};
         REQUIRE(functor_t::tracker_ == 1);
         REQUIRE(f("hello") == "");
-        REQUIRE(unchecked_any_cast<functor_t>(f)->s_ == "hello");
+        REQUIRE(unchecked_any_cast<functor_t>(f).s_ == "hello");
       }
       REQUIRE(functor_t::tracker_ == 0);
     }
     any_<unique, string_to_string_deletable> f{
         std::make_unique<functor_t>("hello")};
     REQUIRE(f(" world") == "hello");
-    REQUIRE(unchecked_any_cast<functor_t>(f)->s_ == "hello world");
+    REQUIRE(unchecked_any_cast<functor_t>(f).s_ == "hello world");
     static_assert(
         !std::assignable_from<any_<unique, string_to_string_deletable>,
                               any_<unique, string_to_string_deletable>>);
     any_<unique, string_to_string_deletable> f2{std::move(f)};
     REQUIRE(!get_proxy_ptr(f));  // NOLINT
     REQUIRE(f2(", bye") == "hello world");
-    REQUIRE(unchecked_any_cast<functor_t>(f2)->s_ == "hello world, bye");
+    REQUIRE(unchecked_any_cast<functor_t>(f2).s_ == "hello world, bye");
   }
 
   {

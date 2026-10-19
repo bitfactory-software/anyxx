@@ -28,7 +28,7 @@ struct typed_any : public Any {
   // cppcheck-suppress-end noExplicitConstructor
 
   value_t const& operator*() const {
-    return *unchecked_any_cast<value_t const>(*this);
+    return unchecked_any_cast<value_t const>(*this);
   }
   value_t const* operator->() const {
     return &any_cast<value_t const>(*this);

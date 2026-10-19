@@ -73,7 +73,7 @@ inline To unchecked_downcast_to(From from)
 /// \brief Unsafe downcast to an unerased type
 /// \ingroup casts
 template <typename U, is_any Any>
-inline auto unchecked_any_cast(Any const& o) {
+inline decltype(auto) unchecked_any_cast(Any const& o) {
   return unchecked_proxy_cast<U>(get_proxy(o), get_v_table(o));
 }
 

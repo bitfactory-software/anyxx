@@ -53,7 +53,7 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
   }
 
   static void const* get_proxy_ptr_in(const auto& v,
-                                      [[maybe_unused]] auto* v_table) {
+                                      [[maybe_unused]] auto v_table) {
     return v.get();
   }
 

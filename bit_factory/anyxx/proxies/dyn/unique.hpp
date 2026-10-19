@@ -69,7 +69,7 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
   }
 
   static void* get_proxy_ptr_in(const auto& ptr,
-                                [[maybe_unused]] auto* v_table) {
+                                [[maybe_unused]] auto v_table) {
     return ptr.ptr;
   }
 

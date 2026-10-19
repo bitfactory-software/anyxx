@@ -423,7 +423,7 @@
                            a, _sig, __VA_ARGS__))) -> decltype(auto) {     \
     if constexpr (std::same_as<anyxx::self&, ANY_UNPAREN(type)>) {         \
       model_map{}.name(                                                    \
-          *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )     \
+          anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )     \
               __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(          \
                   a, _sig, __VA_ARGS__)));                                 \
       return anyxx::handle_self_ref_return<ANY_UNPAREN(type)>{}();         \
@@ -431,13 +431,13 @@
       using proxy_t = typename any_value_t::proxy_t;                       \
       return any_value_t{                                                  \
           anyxx::erased<proxy_t>(model_map{}.name(                         \
-              *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, ) \
+              anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, ) \
                   __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(      \
                       a, _sig, __VA_ARGS__)))),                            \
           anyxx::v_table_instance<Parent, Concrete>()};                    \
     } else {                                                               \
       return model_map{}.name(                                             \
-          *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )     \
+          anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )     \
               __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(          \
                   a, _sig, __VA_ARGS__)));                                 \
     }                                                                      \

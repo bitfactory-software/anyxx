@@ -48,8 +48,8 @@ TEST_CASE("slick_stringable observeable_v_table") {
     auto eq = a() == func(e);
     a = e;
     CHECK(eq);
-    auto x = unchecked_any_cast<X>(a);
-    CHECK((*x)() == f());
+    decltype(auto) x = unchecked_any_cast<X>(a);
+    CHECK(x() == f());
     CHECK(X::tracker_ == 1);
   }
   {

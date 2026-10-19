@@ -182,11 +182,11 @@ struct square {
 
 TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), const)))
 
-MODEL_MAP((circle), drawable) {
+MODEL_MAP(circle, drawable) {
   static std::string draw(circle const&) { return "Silent greetings"; };
 };
 
-MODEL_MAP((square), drawable) {
+MODEL_MAP(square, drawable) {
   static std::string draw(square const& self) { return self.edgy_salute(); };
 };
 
@@ -399,7 +399,7 @@ ayx::factory<ayx::any<serializable>, std::string, std::istream&> deserialize;
   return ayx::move_to<ayx::any<figure>>(deserialize.construct(type, archive));
 }
 
-MODEL_MAP((circle), serializable) {
+MODEL_MAP(circle, serializable) {
   static void serialize(circle const& self, std::ostream& os) {
     os << "circle " << self.radius << " ";
   };
@@ -412,7 +412,7 @@ auto __ = deserialize.register_("circle", [](std::istream& archive) -> circle {
 ANY_REGISTER_MODEL(circle, figure);
 ANY_REGISTER_MODEL(circle, serializable);
 
-MODEL_MAP((square), serializable) {
+MODEL_MAP(square, serializable) {
   static void serialize(square const& self, std::ostream& os) {
     os << "square " << self.edge_length << " ";
   };
@@ -546,7 +546,7 @@ using known_and_unknown_shapes = make_vany<figure, circle, square>;
 static_assert(std::same_as<
               known_and_unknown_shapes,
               any_<using_<std::variant<any<figure>, circle, square>>, figure>>);
-MODEL_MAP((std::string), figure) {
+MODEL_MAP(std::string, figure) {
   static std::string draw(std::string const& s) { return s; };
 };
 

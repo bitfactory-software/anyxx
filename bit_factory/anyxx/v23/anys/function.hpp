@@ -19,7 +19,7 @@ struct function_v_table : Lifetime::v_table_t {
   function_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
       : Lifetime::v_table_t(concrete) {
     f_ = +[](typename Constness::type self_ptr, Args... args) -> R {
-      return std::invoke(*unchecked_unerase_cast<Concrete>(self_ptr),
+      return std::invoke(unchecked_unerase_cast<Concrete>(self_ptr),
                          std::forward<Args>(args)...);
     };
   }
