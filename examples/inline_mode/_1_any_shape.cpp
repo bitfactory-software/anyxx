@@ -69,7 +69,7 @@ TRAIT(shape, drawable,
       (FN(int, count_sides, (), const), FN(double, area, (), const),
        FN(double, perimeter, (), const)))
 
-MODEL_MAP((std::string), drawable) {
+MODEL_MAP(std::string, drawable) {
   auto draw(std::string const& x, std::ostream& os, position p) const {
     os << x << " at: " << p << "\n";
   };  // namespace shapes_1

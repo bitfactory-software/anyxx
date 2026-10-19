@@ -25,7 +25,7 @@ struct model2 {
 
 }  // namespace simple
 
-MODEL_MAP((simple::model2), simple::trait1) {
+MODEL_MAP(simple::model2, simple::trait1) {
   static std::string fn1(simple::model2 const& m) {
     return std::to_string(m.x);
   };
@@ -41,4 +41,4 @@ TEST_CASE("any_ via concept simple") {
   CHECK(test2.fn1() == "42");
 
   CHECK(cat({test1, test2}) == "model142");
-}
+}   

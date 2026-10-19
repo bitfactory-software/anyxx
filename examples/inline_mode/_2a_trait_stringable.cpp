@@ -12,13 +12,13 @@ TRAIT(stringable, anyxx::dynamic_copyable,
 
 }  // namespace example_2a
 
-MODEL_MAP((bool), example_2a::stringable) {
+MODEL_MAP(bool, example_2a::stringable) {
   static std::string to_string(bool const& value) {
     return value ? "wahr" : "falsch";
   };
 };
 
-MODEL_MAP((double), example_2a::stringable) {
+MODEL_MAP(double, example_2a::stringable) {
   static std::string to_string(const double& value) {
     return std::format("{:6.3}", value);
   };

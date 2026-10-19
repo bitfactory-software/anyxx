@@ -69,13 +69,13 @@ struct b_type {
 bool eq_impl(app_2g::b_type const& b, app_2g::a_type const& a);
 }  // namespace app_2g
 
-TEMPLATE_MODEL_MAP((app_2g::b_type), lib_2g::equal_comparable_to,
+TEMPLATE_MODEL_MAP(app_2g::b_type, lib_2g::equal_comparable_to,
                        ((app_2g::a_type))) {
   static bool eq(app_2g::b_type const& self, app_2g::a_type const& r) {
     return eq_impl(self, r);
   };
 };
-TEMPLATE_MODEL_MAP((app_2g::a_type), lib_2g::equal_comparable_to,
+TEMPLATE_MODEL_MAP(app_2g::a_type, lib_2g::equal_comparable_to,
                        ((app_2g::b_type))) {
   static bool eq(app_2g::a_type const& self, app_2g::b_type const& r) {
     return eq_impl(r, self);

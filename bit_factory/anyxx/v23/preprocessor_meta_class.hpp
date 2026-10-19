@@ -1087,9 +1087,10 @@
 ///
 /// Must be placed in global namespace, and reachable for the instantiation of
 /// the associated v-table.
-#define TEMPLATE_MODEL_MAP(model_, trait_, trait_types) \
-  __ANY_MODEL_MAP(trait_, __detail_ANYXX_ADD_HEAD(      \
-                              model_, _detail_REMOVE_PARENS(trait_types)))
+#define TEMPLATE_MODEL_MAP(model_, trait_, trait_types)          \
+  __ANY_MODEL_MAP(trait_,                                        \
+                  __detail_ANYXX_ADD_HEAD((ANY_UNPAREN(model_)), \
+                                          _detail_REMOVE_PARENS(trait_types)))
 
 /// \def MODEL_MAP
 /// \brief MODEL_MAP macro
@@ -1098,7 +1099,7 @@
 ///
 /// Must be placed in global namespace, and reachable for the instantiation of
 /// the associated v-table.
-#define MODEL_MAP(model_, trait_) __ANY_MODEL_MAP(trait_, model_)
+#define MODEL_MAP(model_, trait_) __ANY_MODEL_MAP(trait_, (ANY_UNPAREN(model_)))
 /// @}
 
 #define _detail_ANYXX_FN_EMPTY(name, ret) \
