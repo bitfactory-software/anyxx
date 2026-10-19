@@ -28,28 +28,28 @@ struct typed_any : public Any {
   // cppcheck-suppress-end noExplicitConstructor
 
   value_t const& operator*() const {
-    return *unchecked_unerase_cast<value_t const>(*this);
+    return *unchecked_any_cast<value_t const>(*this);
   }
   value_t const* operator->() const {
-    return unchecked_unerase_cast<value_t const>(*this);
+    return &any_cast<value_t const>(*this);
   }
   value_t const* get() const {
-    return unchecked_unerase_cast<value_t const>(*this);
+    return &any_cast<value_t const>(*this);
   }
   value_t& operator*() const
     requires(!is_const)
   {
-    return *unchecked_unerase_cast<value_t>(*this);
+    return any_cast<value_t>(*this);
   }
   value_t* operator->() const
     requires(!is_const)
   {
-    return unchecked_unerase_cast<value_t>(*this);
+    return &any_cast<value_t>(*this);
   }
   value_t* get() const
     requires(!is_const)
   {
-    return unchecked_unerase_cast<value_t>(*this);
+    return &any_cast<value_t>(*this);
   }
   explicit operator bool() const { return static_cast<bool>(this->proxy_); }
 };

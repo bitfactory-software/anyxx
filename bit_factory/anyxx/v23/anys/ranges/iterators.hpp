@@ -57,7 +57,7 @@ struct reference_impl<void*, Reference> {
 
 TRAIT_TEMPLATE_EX(
     ((ValueType), (Reference)), input_iterator, dynamic_copyable, (),
-    (OP(anyxx::self&, ++, op_pre_increment, (), ),
+    (UNARY_OP(anyxx::self&, ++, op_pre_increment, ),
      UNARY_OP(Reference, *, op_dereference, const),
      FN_IMPL(public, bool, equal, (anyxx::self const&), const,
              [&x](auto const& rhs) { return x == rhs; })),
@@ -102,7 +102,7 @@ using any_forward_iterator = any<forward_iterator, ValueType, Reference>;
 
 TRAIT_TEMPLATE_EX(((ValueType), (Reference)), bidirectional_iterator,
                   forward_iterator, ((ValueType), (Reference)),
-                  (OP(anyxx::self&, --, op_pre_decrement, (), )), ,
+                  (UNARY_OP(anyxx::self&, --, op_pre_decrement, )), ,
                   (USING((), iterator_category, std::bidirectional_iterator_tag,
                          (std::bidirectional_iterator_tag))),
                   , ())

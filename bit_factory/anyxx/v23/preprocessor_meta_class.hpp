@@ -401,8 +401,8 @@
                       __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(             \
                           a, _sig, __VA_ARGS__)));                             \
             },                                                                 \
-            [&]<anyxx::is_any Any>([[maybe_unused]] Any&& any_) {               \
-              return std::forward<Any>(any_).name(__VA_OPT__(                   \
+            [&]<anyxx::is_any Any>([[maybe_unused]] Any&& any_) {              \
+              return std::forward<Any>(any_).name(__VA_OPT__(                  \
                   _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
             }},                                                                \
         x);                                                                    \
@@ -628,9 +628,9 @@
             v_table_base_t::val_proxy_size);                                   \
                                                                                \
     using any_value_t =                                                        \
-        anyxx::any_<anyxx::val<val_proxy_size, val_is_nullable>,                \
-                   n _detail_ANYXX_OPTIONAL_COMMA(any_template_params)         \
-                       _detail_ANYXX_TEMPLATE_ARGS(any_template_params)>;      \
+        anyxx::any_<anyxx::val<val_proxy_size, val_is_nullable>,               \
+                    n _detail_ANYXX_OPTIONAL_COMMA(any_template_params)        \
+                        _detail_ANYXX_TEMPLATE_ARGS(any_template_params)>;     \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       if constexpr (anyxx::is_dynamic_castable_v_table<v_table_base_t>) {      \
@@ -675,9 +675,9 @@
         anyxx::compute_val_proxy_size<n##_val_size>(base_t::val_proxy_size);   \
                                                                                \
     using any_value_t =                                                        \
-        anyxx::any_<anyxx::val<val_proxy_size, val_is_nullable>,                \
-                   n _detail_ANYXX_OPTIONAL_COMMA(any_template_params)         \
-                       _detail_ANYXX_TEMPLATE_ARGS(any_template_params)>;      \
+        anyxx::any_<anyxx::val<val_proxy_size, val_is_nullable>,               \
+                    n _detail_ANYXX_OPTIONAL_COMMA(any_template_params)        \
+                        _detail_ANYXX_TEMPLATE_ARGS(any_template_params)>;     \
                                                                                \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
@@ -751,8 +751,8 @@
 /// Name conventions:
 /// - TRAIT: macro to define the functional behavior of an \ref any_
 /// - EX: macro with decorations (additional functions and typedefs in
-/// brackets). A decoration can be any_ valid C++ code fragment in the context of
-/// the trait jacket
+/// brackets). A decoration can be any_ valid C++ code fragment in the context
+/// of the trait jacket
 /// - TEMPLATE: macro to define a template \ref trait or \ref any_
 ///
 /// Syntax:
@@ -958,8 +958,9 @@
 /// Use if in a base TRAIT exists an equally named FN, or you want to provide a
 /// specific name for the operator in the map to have a defined name for
 /// overriding in derived TRAITs.
-#define UNARY_OP(ret, op, name, const_) \
-  OP_IMPL(public, ret, op, name, (), const_, ([&x]() -> ret { return op x; }))
+#define UNARY_OP(ret, op, name, const_)      \
+  OP_IMPL(public, ret, op, name, (), const_, \
+          ([&x]() -> decltype(auto) { return op x; }))
 
 /// \def OP_
 /// \brief TRAIT operator with default behavior is to call the related operator
@@ -1087,7 +1088,7 @@
 /// Must be placed in global namespace, and reachable for the instantiation of
 /// the associated v-table.
 #define TEMPLATE_MODEL_MAP(model_, trait_, trait_types) \
-  __ANY_MODEL_MAP(trait_, __detail_ANYXX_ADD_HEAD(          \
+  __ANY_MODEL_MAP(trait_, __detail_ANYXX_ADD_HEAD(      \
                               model_, _detail_REMOVE_PARENS(trait_types)))
 
 /// \def MODEL_MAP
