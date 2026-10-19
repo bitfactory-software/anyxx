@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <bit_factory/anyxx.hpp>
-#include <bit_factory/anyxx/v23/anys/ranges.hpp>
+#include <bit_factory/anyxx/anys/ranges.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
 #include <list>
@@ -10,10 +10,6 @@
 namespace example_3_view {
 
 static_assert(std::is_pointer_v<const int*>);
-// static_assert(std::same_as<std::remove_const_t<const int*>, int*>);
-//
-// static_assert(std::same_as<anyxx::unerased<anyxx::nullable_val<>, const
-// int*>, int*>);
 
 const int* inc(const int*& p) { return ++p; }
 
@@ -25,8 +21,7 @@ static_assert(incrementable<const int*>);
 static_assert(
     std::same_as<anyxx::map_return<const int*, anyxx::self&>, const int*&>);
 
-anyxx::any<anyxx::view, anyxx::any_forward_iterator<int const>> a_view(
-    int use) {
+anyxx::any<anyxx::view, anyxx::forward, int const, int const&> a_view(int use) {
   static std::vector<int> v = {1, 2, 3};
   static std::list<int> l = {4, 5, 6};
   static int s = 7;
@@ -48,15 +43,15 @@ TEST_CASE("example3 a_view") {
   for (auto x : example_3_view::a_view(1)) {
     CHECK(x == i++);
   }
-  for(auto x : example_3_view::a_view(3)) {
-      CHECK(x == i++);
+  for (auto x : example_3_view::a_view(3)) {
+    CHECK(x == i++);
   }
   CHECK(i == 8);
 }
 
 namespace example_3_view {
-anyxx::any<anyxx::view, anyxx::any_bidirectional_iterator<std::pair<int, int>,
-                                                          std::pair<int, int>>>
+anyxx::any<anyxx::view, anyxx::bidirectional, std::pair<int, int>,
+           std::pair<int, int>>
 a_bidirectional_view([[maybe_unused]] bool use_map) {
   static std::vector<std::pair<int, int>> v = {{1, 1}, {2, 2}, {3, 3}};
   static std::map<int, int> m = {{4, 4}, {5, 5}, {6, 6}};
@@ -78,8 +73,8 @@ TEST_CASE("example3 a_bidirectional_view") {
 }
 
 namespace example_3_view {
-anyxx::any<anyxx::sized_view,
-           anyxx::any_random_access_iterator<std::pair<int, int>>>
+anyxx::any<anyxx::sized_view, anyxx::random_access, std::pair<int, int>,
+           std::pair<int, int>&>
 a_sized_view() {
   static std::vector<std::pair<int, int>> v = {{1, 1}, {2, 2}, {3, 3}};
   return std::views::all(v);
