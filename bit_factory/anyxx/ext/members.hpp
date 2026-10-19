@@ -32,13 +32,13 @@ struct members {
   typename Member::value_t const* get(Member member) const {
     const auto& val = table_[member.index];
     if (!val) return {};
-    return unchecked_unerase_cast<typename Member::value_t>(val);
+    return unchecked_any_cast<typename Member::value_t>(val);
   }
   template <typename Member>
   typename Member::value_t* get(Member member) {
     auto& val = table_[member.index];
     if (!val) return {};
-    return unchecked_unerase_cast<typename Member::value_t>(val);
+    return unchecked_any_cast<typename Member::value_t>(val);
   }
   template <typename Member>
   typename Member::value_t& operator[](Member member) {

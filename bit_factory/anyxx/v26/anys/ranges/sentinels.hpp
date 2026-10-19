@@ -21,7 +21,7 @@ struct sentinel : copyable<Trait, Self> {
     using default_proxy_t = anyxx::nullable_val<>;
 
     static bool equal(Self const& self, any_<anyxx::cref, input_iterator, Value, Ref> const& it){
-        return self.value == *unerase_cast<typename Self::iterator_type>(it);
+        return self.value == any_cast<typename Self::iterator_type>(it);
     }
 };
 template <template <is_trait, typename, typename...> typename SentinelTrait, template <is_trait, typename, typename...> typename IteratorTrait, typename... Args>
@@ -59,10 +59,10 @@ static_assert(std::sentinel_for<any<sentinel, int, const int&>, any<input_iterat
 template <is_trait Trait, typename Self, typename Value, typename Ref>
 struct sized_sentinel : sentinel<Trait, Self, Value, Ref> {
     static std::ptrdiff_t subtract(Self const& self, any_<anyxx::cref, bidirectional_iterator, Value, Ref> const& it){
-        return self.value - *unerase_cast<typename Self::iterator_type>(it);
+        return self.value - any_cast<typename Self::iterator_type>(it);
     }
     static std::ptrdiff_t subtract_from(Self const& self, any_<anyxx::cref, bidirectional_iterator, Value, Ref> const& it){
-        return *unerase_cast<typename Self::iterator_type>(it) - self.value;
+        return any_cast<typename Self::iterator_type>(it) - self.value;
     }
 };
 template <typename Value, typename Ref, template<is_trait, typename, typename...> typename IteratorTrait>

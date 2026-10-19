@@ -17,25 +17,25 @@ auto unchecked_unerase_cast(mutable_void p) {
 }
 
 template <typename U, is_proxy Proxy>
-auto unchecked_unerase_cast(Proxy const& o, auto v_table) {
+auto unchecked_proxy_cast(Proxy const& o, auto v_table) {
   return unchecked_unerase_cast<U>(get_proxy_ptr(o, v_table));
 }
 
 template <typename U, is_proxy Proxy>
-auto unerase_cast(Proxy const& o, auto* v_table) {
+auto proxy_cast(Proxy const& o, auto* v_table) {
   check_type_match<U>(v_table);
-  return unchecked_unerase_cast<U>(o, v_table);
+  return unchecked_proxy_cast<U>(o, v_table);
 }
 template <typename U, is_proxy Proxy>
-U const* unerase_cast_if(Proxy const& o, auto* v_table) {
-  if (type_match<U>(v_table)) return unchecked_unerase_cast<U>(o, v_table);
+U const* proxy_cast_if(Proxy const& o, auto* v_table) {
+  if (type_match<U>(v_table)) return unchecked_proxy_cast<U>(o, v_table);
   return nullptr;
 }
 template <typename U, is_proxy Proxy>
-U* unerase_cast_if(Proxy const& o, auto* v_table)
+U* proxy_cast_if(Proxy const& o, auto* v_table)
   requires(!is_const_data<Proxy>)
 {
-  if (type_match<U>(v_table)) return unchecked_unerase_cast<U>(o, v_table);
+  if (type_match<U>(v_table)) return unchecked_proxy_cast<U>(o, v_table);
   return nullptr;
 }
 

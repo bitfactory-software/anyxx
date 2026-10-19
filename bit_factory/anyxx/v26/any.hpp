@@ -4,6 +4,7 @@
 #include <bit_factory/anyxx/ANY_UNPAREN.hpp>
 #include <bit_factory/anyxx/any_cast.hpp>
 #include <bit_factory/anyxx/any_constructibile_for.hpp>
+#include <bit_factory/anyxx/any_access.hpp>
 #include <bit_factory/anyxx/proxies/dyn/moveable_from.hpp>
 #include <bit_factory/anyxx/proxies/dyn/borrowable_from.hpp>
 #include <bit_factory/anyxx/v26/any/bases.hpp>
@@ -229,21 +230,21 @@ __dyn_OP_MUTATING(op_greater_greater_equals, >>=)
 #undef __dyn_OP0_MUTATING
 
 
-/// \brief Safe downcast to an unerased type using runtime information from
-/// the v-Tables.
-/// \ingroup casts
-template <typename U, template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
-inline constexpr auto unerase_cast(any_<Proxy, Trait, Args...> const& o) {
-    return anyxx::unerase_cast_if<U>(o.proxy_, o.v_table_);
-}
-/// \brief Safe downcast to an unerased type using runtime information from
-/// the v-Tables.
-/// \ingroup casts
-template <typename U, template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
-inline constexpr auto unerase_cast_if(any_<Proxy, Trait, Args...> const& o) {
-    return anyxx::unerase_cast_if<U>(o.proxy_, o.v_table_);
-}
-
+///// \brief Safe downcast to an unerased type using runtime information from
+///// the v-Tables.
+///// \ingroup casts
+//template <typename U, template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+//inline constexpr decltype(auto) any_cast(any_<Proxy, Trait, Args...> const& o) {
+//    return anyxx::proxy_cast_if<U>(o.proxy_, o.v_table_);
+//}
+///// \brief Safe downcast to an unerased type using runtime information from
+///// the v-Tables.
+///// \ingroup casts
+//template <typename U, template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+//inline constexpr auto any_cast_if(any_<Proxy, Trait, Args...> const& o) {
+//    return anyxx::proxy_cast_if<U>(o.proxy_, o.v_table_);
+//}
+//
 template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
 inline constexpr auto get_v_table(any_<Proxy, Trait, Args...> const& any_) {
     return v_table_cast<typename any_<Proxy, Trait, Args...>::v_table_t>(any_.v_table_);
