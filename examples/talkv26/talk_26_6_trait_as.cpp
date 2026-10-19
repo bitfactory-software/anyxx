@@ -1,5 +1,5 @@
 #include <algorithm>
-#include <bit_factory/anyxx/v26/trait_as.hpp>
+#include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <format>
 #include <string>
@@ -39,7 +39,7 @@ auto print(V s) {
 
 }  // namespace
 
-TEST_CASE("example trait_as stringable") {
+TEST_CASE("talk_26_6_trait_as") {
   CHECK(print("Hello world!") == "Hello world!\n");
   CHECK(print(true) == "wahr\n");
   CHECK(print(3.14) == "  3.14\n");
