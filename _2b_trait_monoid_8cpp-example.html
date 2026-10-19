@@ -139,7 +139,7 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">}  <span class="comment">// namespace example_2b</span></div>
 <div class="line"> </div>
-<div class="line">MODEL_MAP((<span class="keywordtype">int</span>), example_2b::monoid) {</div>
+<div class="line">MODEL_MAP(<span class="keywordtype">int</span>, example_2b::monoid) {</div>
 <div class="line">  <span class="keyword">static</span> <span class="keywordtype">int</span> concat(<span class="keywordtype">int</span> self, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">    std::println(<span class="stringliteral">&quot;concat {}&quot;</span>, <span class="keyword">typeid</span>(<span class="keywordtype">int</span>).name());</div>
 <div class="line">    <span class="keywordflow">return</span> std::ranges::fold_left(r, self,</div>
@@ -147,7 +147,7 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">  };</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">MODEL_MAP((std::string), example_2b::monoid) {</div>
+<div class="line">MODEL_MAP(std::string, example_2b::monoid) {</div>
 <div class="line">  <span class="keyword">static</span> std::string op(std::string <span class="keyword">const</span>&amp; self, std::string <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">    std::println(<span class="stringliteral">&quot;op {}&quot;</span>, <span class="keyword">typeid</span>(std::string).name());</div>
 <div class="line">    <span class="keywordflow">return</span> self + r;</div>
