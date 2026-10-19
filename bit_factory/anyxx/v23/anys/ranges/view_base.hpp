@@ -1,11 +1,14 @@
 #pragma once
 
 #include <bit_factory/anyxx/v23/anys/ranges/iterators.hpp>
+#include <bit_factory/anyxx/anys/ranges/iterator_categories.hpp>
+#include <ranges>
 
 namespace anyxx {
 
-TRAIT_TEMPLATE(((AnyIterator)), view_base, dynamic_copyable, (),
-               (FN_IMPL(public, AnyIterator, begin, (), const,
+TRAIT_TEMPLATE(((Category), (Value), (Ref)), view_base, dynamic_copyable, (),
+               (FN_IMPL(public, (any<Category::template iterator, Value, Ref>), begin, (), const,
                         [&x]() { return std::ranges::begin(x); })))
 
 }  // namespace anyxx
+

@@ -21,6 +21,8 @@ TEST_CASE("range static assert") {
       std::random_access_iterator<any_random_access_iterator<int, int>>);
   static_assert(
       std::random_access_iterator<any_random_access_iterator<int>>);
+  static_assert(
+      std::contiguous_iterator<any<contiguous_iterator, int, int&>>);
   static_assert(is_any_self_forward_range<any_self_forward_range>);
 
   static_assert(

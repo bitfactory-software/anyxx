@@ -9,14 +9,31 @@
 
 namespace example_3_view {
 
-anyxx::any<anyxx::view, anyxx::any_forward_iterator<int>> a_view(
+static_assert(std::is_pointer_v<const int*>);
+//static_assert(std::same_as<std::remove_const_t<const int*>, int*>);
+//
+//static_assert(std::same_as<anyxx::unerased<anyxx::nullable_val<>, const int*>, int*>);
+
+const int* inc(const int* p) { return ++p; }
+
+
+anyxx::any<anyxx::view, anyxx::forward, int, int&> a_view(
     bool use_list) {
+
+  using namespace anyxx;
+  const int x = 0;
+  void* erased = &x;
+  auto a1u = unchecked_unerase_cast<const int*>{get_proxy(a1)};
   static std::vector<int> v = {1, 2, 3};
   static std::list<int> l = {4, 5, 6};
+  static int s = 1;
+  inc(&s);
   if (use_list)
     return std::views::all(l);
+  //else
+  //  return std::views::all(v);
   else
-    return std::views::all(v);
+      return std::views::single(s);
 }
 
 }  // namespace example_3_view
@@ -32,8 +49,7 @@ TEST_CASE("example3 a_view") {
 }
 
 namespace example_3_view {
-anyxx::any<anyxx::view, anyxx::any_bidirectional_iterator<std::pair<int, int>,
-                                                           std::pair<int, int>>>
+anyxx::any<anyxx::view, anyxx::bidirectional, std::pair<int, int>, std::pair<int, int>>
 a_bidirectional_view([[maybe_unused]] bool use_map) {
   static std::vector<std::pair<int, int>> v = {{1, 1}, {2, 2}, {3, 3}};
   static std::map<int, int> m = {{4, 4}, {5, 5}, {6, 6}};
@@ -56,7 +72,7 @@ TEST_CASE("example3 a_bidirectional_view") {
 
 namespace example_3_view {
 anyxx::any<anyxx::sized_view,
-            anyxx::any_random_access_iterator<std::pair<int, int>>>
+            anyxx::random_access, std::pair<int, int>, std::pair<int, int>>
 a_sized_view() {
   static std::vector<std::pair<int, int>> v = {{1, 1}, {2, 2}, {3, 3}};
   return std::views::all(v);

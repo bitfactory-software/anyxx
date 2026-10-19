@@ -145,4 +145,25 @@ auto operator+(std::ptrdiff_t n,
   return it + n;
 }
 
+TRAIT_TEMPLATE_EX(((ValueType), (Reference)), contiguous_iterator,
+                  random_access_iterator, ((ValueType), (Reference)),
+                  (OP(ValueType*, ->, op_arrow, (), const)), ,
+                  (USING((), iterator_category, std::contiguous_iterator_tag,
+                         (std::contiguous_iterator_tag))),
+                  , ())
+
+template <typename ValueType, typename Reference = ValueType&>
+using any_contiguous_iterator = any<contiguous_iterator, ValueType, Reference>;
+
+template <typename Value, typename Ref>
+auto operator-(any_contiguous_iterator<Value, Ref> const& lhs,
+    any_contiguous_iterator<Value, Ref> const& rhs) {
+    return lhs.difference_to(rhs);
+}
+template <typename Value, typename Ref>
+auto operator+(std::ptrdiff_t n,
+               any_contiguous_iterator<Value, Ref> const& it) {
+  return it + n;
+}
+
 }  // namespace anyxx

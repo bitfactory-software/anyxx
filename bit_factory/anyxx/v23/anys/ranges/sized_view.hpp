@@ -5,10 +5,15 @@
 
 namespace anyxx {
 
-TRAIT_TEMPLATE(((AnyIterator)), sized_view, view_base, ((AnyIterator)),
-               (FN_IMPL(public,
-                        (any<sized_sentinel, typename AnyIterator::value_type,
-                              typename AnyIterator::reference>),
-                        end, (), const, [&x]() { return sentinel_for(x); })))
+TRAIT_TEMPLATE(((Category), (Value), (Ref)), sized_view, view_base,
+               ((Category), (Value), (Ref)),
+               (FN_IMPL(public, (any<sized_sentinel, Value, Ref>), end, (),
+                        const, [&x]() { return sentinel_for(x); })))
 
 }  // namespace anyxx
+
+namespace std::ranges {
+template <typename Category, typename Value, typename Ref>
+constexpr bool enable_view<anyxx::any<anyxx::sized_view, Category, Value, Ref>> =
+true;
+}  // namespace std::ranges
