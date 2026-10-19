@@ -20,12 +20,6 @@ template <typename U, is_proxy Proxy>
 auto unchecked_unerase_cast(Proxy const& o, auto v_table) {
   return unchecked_unerase_cast<U>(get_proxy_ptr(o, v_table));
 }
-template <typename U, is_proxy Proxy>
-auto unchecked_unerase_cast(Proxy const& o, auto v_table)
-  requires(!is_const_data<Proxy>)
-{
-  return unchecked_unerase_cast<U>(get_proxy_ptr(o, v_table));
-}
 
 template <typename U, is_proxy Proxy>
 auto unerase_cast(Proxy const& o, auto* v_table) {
