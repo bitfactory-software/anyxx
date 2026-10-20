@@ -812,14 +812,12 @@
 
 /// @}
 
-#define FN_(...) (__VA_ARGS__)
 #define ANY_OVERLOAD(name) using base_t::name;
 
 #define __detail_ANYXX_MEMBER_FN(access, overload, ret, name, name_ext, \
                                  exact_const, const_, params)           \
-  FN_(access, overload, ret, name, name_ext, exact_const, const_,       \
-      (self.name_ext), use_mapf_concept, (self.name_ext),               \
-      _detail_EXPAND params)
+  (access, overload, ret, name, name_ext, exact_const, const_,          \
+   (self.name_ext), use_mapf_concept, (self.name_ext), _detail_EXPAND params)
 
 /// \addtogroup fn_macros FN... and OP_ macros
 /// \brief Macros to define \ref trait's and \ref any_'s functions and operators
@@ -865,31 +863,31 @@
 /// \def FN_PURE
 /// \brief TRAIT function, which must be provided by the model.
 /// \ingroup trait_macros
-#define FN_PURE(ret, name, params, const_)       \
-  FN_(private, , ret, name, name, false, const_, \
-      (_detail_ANYXX_FN_EMPTY(name, ret)),       \
-      ignore_mapf_concept_with_always_false, self.name, _detail_EXPAND params)
+#define FN_PURE(ret, name, params, const_)                                     \
+  (private, , ret, name, name, false, const_,                                  \
+   (_detail_ANYXX_FN_EMPTY(name, ret)), ignore_mapf_concept_with_always_false, \
+   self.name, _detail_EXPAND params)
 
 /// \def FN_PURE_EXACT
 /// \brief TRAIT function, which must be provided by the model.
 /// \ingroup trait_macros
-#define FN_PURE_EXACT(ret, name, params, const_) \
-  FN_(private, , ret, name, name, true, const_,  \
-      (_detail_ANYXX_FN_EMPTY(name, ret)),       \
-      ignore_mapf_concept_with_always_false, self.name, _detail_EXPAND params)
+#define FN_PURE_EXACT(ret, name, params, const_)                               \
+  (private, , ret, name, name, true, const_,                                   \
+   (_detail_ANYXX_FN_EMPTY(name, ret)), ignore_mapf_concept_with_always_false, \
+   self.name, _detail_EXPAND params)
 
 /// \def FN_IMPL
 /// \brief TRAIT function with default behavior.
 /// \ingroup trait_macros
-#define FN_IMPL(access, ret, name, params, const_, ...)        \
-  FN_(access, , ret, name, name, false, const_, (__VA_ARGS__), \
-      ignore_mapf_concept_with_always_true, self.name, _detail_EXPAND params)
+#define FN_IMPL(access, ret, name, params, const_, ...)     \
+  (access, , ret, name, name, false, const_, (__VA_ARGS__), \
+   ignore_mapf_concept_with_always_true, self.name, _detail_EXPAND params)
 
 /// \def FN_IMPL_EXACT
 /// \brief TRAIT function with default behavior
 #define FN_IMPL_EXACT(access, ret, name, params, const_, ...) \
-  FN_(access, , ret, name, name, true, const_, (__VA_ARGS__), \
-      ignore_mapf_concept_with_always_true, self.name, _detail_EXPAND params)
+  (access, , ret, name, name, true, const_, (__VA_ARGS__),    \
+   ignore_mapf_concept_with_always_true, self.name, _detail_EXPAND params)
 
 /// \def FN
 /// \brief TRAIT function whose default behavior is to call an equally named
@@ -948,9 +946,9 @@
 /// Use if in a base TRAIT exists an equally named FN, or you want to provide a
 /// specific name for the operator in the map to have a defined name for
 /// overriding in derived TRAITs.
-#define OP_FREE(ret, op, name, params, const_)                    \
-  FN_(public, , ret, name, operator op, false, const_, (self op), \
-      use_mapf_concept, self op, _detail_EXPAND params)
+#define OP_FREE(ret, op, name, params, const_)                 \
+  (public, , ret, name, operator op, false, const_, (self op), \
+   use_mapf_concept, self op, _detail_EXPAND params)
 
 /// \def UNARY_OP
 /// \brief TRAIT operator with default behavior is to call the related unary
@@ -973,10 +971,10 @@
 /// \brief TRAIT operator with default behavior.
 ///
 /// Use if in a base TRAIT exists an equally named FN.
-#define OP_IMPL(access, ret, op, name, params, const_, ...)           \
-  FN_(access, , ret, name, operator op, false, const_, (__VA_ARGS__), \
-      ignore_mapf_concept_with_always_true, self.operator op,         \
-      _detail_EXPAND params)
+#define OP_IMPL(access, ret, op, name, params, const_, ...)        \
+  (access, , ret, name, operator op, false, const_, (__VA_ARGS__), \
+   ignore_mapf_concept_with_always_true, self.operator op,         \
+   _detail_EXPAND params)
 
 #define ANY_OP_EXACT_MAP_NAMED(ret, op, name, params, const_)              \
   __detail_ANYXX_MEMBER_FN(public, , ret, name, operator op, true, const_, \
@@ -996,9 +994,9 @@
 ///
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_OP_DEF_EXACT(access, ret, op, name, params, const_, ...) \
-  FN_(access, , ret, name, operator op, true, const_, (__VA_ARGS__), \
-      ignore_mapf_concept_with_always_true, (anyxx::dummy),          \
-      _detail_EXPAND params)
+  (access, , ret, name, operator op, true, const_, (__VA_ARGS__),    \
+   ignore_mapf_concept_with_always_true, (anyxx::dummy),             \
+   _detail_EXPAND params)
 
 /// \def ANY_OP_EXACT_OVERLOAD_MAP_NAMED
 /// \brief TRAIT operator with default behavior and a programmer-chosen name
@@ -1022,10 +1020,10 @@
 /// \brief TRAIT operator with default behavior.
 ///
 /// Use if in a base TRAIT exists an equally named FN.
-#define ANY_OP_EXACT_OVERLOAD_DEF(access, ret, op, name, params, const_, ...)  \
-  FN_(access, ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, \
-      (__VA_ARGS__), ignore_mapf_concept_with_always_true, self.operator op,   \
-      _detail_EXPAND params)
+#define ANY_OP_EXACT_OVERLOAD_DEF(access, ret, op, name, params, const_, ...) \
+  (access, ANY_OVERLOAD(operator op), ret, name, operator op, true, const_,   \
+   (__VA_ARGS__), ignore_mapf_concept_with_always_true, self.operator op,     \
+   _detail_EXPAND params)
 
 /// \def FN_STATIC_PURE
 /// \brief Static TRAIT function, which must be provided by the model. This
@@ -1033,8 +1031,8 @@
 /// using_ \ref Proxy.
 /// \ingroup trait_macros
 #define FN_STATIC_PURE(template_params, return_type, name, params, ...) \
-  FN_(template_params, return_type, name,                               \
-      (_detail_ANYXX_FN_EMPTY(name, return_type)), _detail_EXPAND params)
+  (template_params, return_type, name,                                  \
+   (_detail_ANYXX_FN_EMPTY(name, return_type)), _detail_EXPAND params)
 
 /// \def FN_STATIC_DEF
 /// \brief Static TRAIT function, which has a default implementation. This
@@ -1042,7 +1040,7 @@
 /// using_ und \ref trait_class \ref Proxy.
 /// \ingroup trait_macros
 #define FN_STATIC_DEF(template_params, return_type, name, params, ...) \
-  FN_(template_params, return_type, name, (__VA_ARGS__), _detail_EXPAND params)
+  (template_params, return_type, name, (__VA_ARGS__), _detail_EXPAND params)
 
 /// \def USING
 /// \brief Dependent type definition in a TRAIT. This is useful for defining
