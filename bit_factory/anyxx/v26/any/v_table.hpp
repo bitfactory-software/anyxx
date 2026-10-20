@@ -31,13 +31,6 @@ constexpr v_table<Trait, Args...>* v_table_instance() {
    return anyxx::v_table_instance<v_table<Trait, Args...>, V>();
 };
 
-template <typename T, template <typename, typename, typename...> typename Trait, typename... Args>
-struct register_trait {
-    constexpr register_trait() {
-        anyxx::bind_v_table_to_meta_data<v_table<Trait, Args...>, T>();
-    }
-};
-
 template <typename ToVtable, typename FromVTable>
     requires anyxx::is_any_derived_from<FromVTable, ToVtable>
 constexpr ToVtable* v_table_cast(FromVTable* from) {

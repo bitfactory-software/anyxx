@@ -58,7 +58,7 @@ class factory {
     register_impl(key, construct);
     return nullptr;
   }
-  auto construct(auto key, Args&&... args) {
+  auto operator()(auto key, Args&&... args) {
     return construct_impl(key, std::forward<Args>(args)...);
   }
 };

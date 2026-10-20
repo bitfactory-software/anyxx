@@ -59,48 +59,56 @@ ANY_META_CLASS_STATIC(
     std::map<int, std::map<std::string, std::map<int, double>>>)
 ANY_META_CLASS_STATIC(std::map<std::string, std::map<int, double>>)
 
-ANY_REGISTER_MODEL((std::map<std::string, int>), template_test::map,
-                   (std::string), (int))
+anyxx::register_trait<std::map<std::string, int>, template_test::map,
+                      std::string, int>
+    __;
 
 TEMPLATE_MODEL_MAP((std::map<std::string, int>), template_test::map,
-                       ((std::string), (int))) {
+                   ((std::string), (int))) {
   int const& at(std::map<std::string, int> const& x, std::string const& i) {
     return x.at(i);
   };
 };
 
-using KEY1 =
-    anyxx::any_<anyxx::cref, recursive_map, std::string,
-               anyxx::any_<anyxx::cref, mutable_map, int, double>, anyxx::cref>;
-ANY_REGISTER_MODEL(
-    (std::map<int, std::map<std::string, std::map<int, double>>>),
-    recursive_map, (int), (KEY1))
+using KEY1 = anyxx::any_<anyxx::cref, recursive_map, std::string,
+                         anyxx::any_<anyxx::cref, mutable_map, int, double>,
+                         anyxx::cref>;
+anyxx::register_trait<
+    std::map<int, std::map<std::string, std::map<int, double>>>, recursive_map,
+    int, KEY1>
+    __;
 
-using KEY2 = anyxx::any_<anyxx::cref, recursive_map, std::string,
-                        anyxx::any_<anyxx::cref, map, int, double>, anyxx::cref>;
-ANY_REGISTER_MODEL(
-    (std::map<int, std::map<std::string, std::map<int, double>>>),
-    recursive_map, (int), (KEY2))
+using KEY2 =
+    anyxx::any_<anyxx::cref, recursive_map, std::string,
+                anyxx::any_<anyxx::cref, map, int, double>, anyxx::cref>;
+anyxx::register_trait<
+    std::map<int, std::map<std::string, std::map<int, double>>>, recursive_map,
+    int, KEY2>
+    __;
 
 using KEY3 = anyxx::any_<anyxx::mutref, mutable_recursive_map, std::string,
-                        anyxx::any_<anyxx::mutref, mutable_map, int, double>,
-                        anyxx::mutref>;
-ANY_REGISTER_MODEL(
-    (std::map<int, std::map<std::string, std::map<int, double>>>),
-    mutable_recursive_map, (int), (KEY3))
+                         anyxx::any_<anyxx::mutref, mutable_map, int, double>,
+                         anyxx::mutref>;
+anyxx::register_trait<
+    std::map<int, std::map<std::string, std::map<int, double>>>,
+    mutable_recursive_map, int, KEY3>
+    __;
 
 using KEY4 = anyxx::any_<anyxx::cref, map, int, double>;
-ANY_REGISTER_MODEL((std::map<std::string, std::map<int, double>>),
-                   test::component_base::recursive_map, (std::string), (KEY4))
+anyxx::register_trait<std::map<std::string, std::map<int, double>>,
+                      test::component_base::recursive_map, std::string, KEY4>
+    __;
 
 using KEY5 = anyxx::any_<anyxx::cref, mutable_map, int, double>;
-ANY_REGISTER_MODEL((std::map<std::string, std::map<int, double>>),
-                   test::component_base::recursive_map, (std::string), (KEY5))
+anyxx::register_trait<std::map<std::string, std::map<int, double>>,
+                      test::component_base::recursive_map, std::string, KEY5>
+    __;
 
 using KEY6 = anyxx::any_<anyxx::mutref, mutable_map, int, double>;
-ANY_REGISTER_MODEL((std::map<std::string, std::map<int, double>>),
-                   test::component_base::mutable_recursive_map, (std::string),
-                   (KEY6))
+anyxx::register_trait<std::map<std::string, std::map<int, double>>,
+                      test::component_base::mutable_recursive_map, std::string,
+                      KEY6>
+    __;
 
 TEST_CASE("any_ template test") {
   using namespace template_test;
@@ -154,7 +162,7 @@ TEST_CASE("any_ template test3") {
       [](anyxx::any_<
           anyxx::cref, recursive_map, int,
           anyxx::any_<anyxx::cref, recursive_map, std::string,
-                     anyxx::any_<anyxx::cref, map, int, double>, anyxx::cref>,
+                      anyxx::any_<anyxx::cref, map, int, double>, anyxx::cref>,
           anyxx::cref>
              map_i) {
         auto x = map_i.at(1);
@@ -170,7 +178,7 @@ TEST_CASE("any_ template test3") {
       [](anyxx::any_<
           anyxx::mutref, mutable_recursive_map, int,
           anyxx::any_<anyxx::mutref, mutable_recursive_map, std::string,
-                     anyxx::any_<anyxx::mutref, mutable_map, int, double>>>
+                      anyxx::any_<anyxx::mutref, mutable_map, int, double>>>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");

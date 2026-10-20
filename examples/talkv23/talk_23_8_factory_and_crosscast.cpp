@@ -43,7 +43,7 @@ auto deserialize_from(std::istream& archive) {
   for (archive >> more; more != "end"; archive >> more) {
     std::string type;
     archive >> type;
-    out.push_back(deserialize.construct(type, archive));
+    out.push_back(deserialize(type, archive));
   }
   return out;
 }
@@ -70,16 +70,16 @@ auto __ = db::deserialize.register_("circle", [](std::istream& ar) {
   ar >> c.radius;
   return c;
 });
-ANY_REGISTER_MODEL(application::circle, db::serializable);
-ANY_REGISTER_MODEL(application::circle, geometry::shape);
+register_trait<application::circle, db::serializable> __;
+register_trait<application::circle, geometry::shape> __;
 
 auto __ = db::deserialize.register_("square", [](std::istream& ar) {
   application::square s;
   ar >> s.edge_length;
   return s;
 });
-ANY_REGISTER_MODEL(application::square, db::serializable);
-ANY_REGISTER_MODEL(application::square, geometry::shape);
+register_trait<application::square, db::serializable> __;
+register_trait<application::square, geometry::shape> __;
 
 }  // namespace
 

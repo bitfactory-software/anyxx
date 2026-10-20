@@ -31,7 +31,7 @@ ANY_SINGLETON_DECLARE(
 any_<unique, serializeable> deserialize(std::istream& archive) {
   std::string type;
   archive >> type;
-  return deserialize_factory.construct(type, archive);
+  return deserialize_factory(type, archive);
 }
 any_<unique, node> deserialize_any_node(std::istream& archive) {
   return move_to<any_<unique, node>>(deserialize(archive));
@@ -86,12 +86,14 @@ using namespace _21_Tree_any_borrow_as;
 
 ANY_SINGLETON(_21_Tree_any_borrow_as, deserialize_factory)
 
-ANY_REGISTER_MODEL(Plus, node);
-ANY_REGISTER_MODEL(Plus, serializeable);
-ANY_REGISTER_MODEL(Times, node);
-ANY_REGISTER_MODEL(Times, serializeable);
-ANY_REGISTER_MODEL(Integer, node);
-ANY_REGISTER_MODEL(Integer, serializeable);
+namespace {
+register_trait<Plus, node> __;
+register_trait<Plus, serializeable> __;
+register_trait<Times, node> __;
+register_trait<Times, serializeable> __;
+register_trait<Integer, node> __;
+register_trait<Integer, serializeable> __;
+}
 
 TEST_CASE("_21_Tree_any_borrow_as") {
   using namespace anyxx;

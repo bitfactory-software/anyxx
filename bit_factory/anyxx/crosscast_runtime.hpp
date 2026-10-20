@@ -1,16 +1,15 @@
 #pragma once
 
+#include <bit_factory/anyxx/ANY_UNPAREN.hpp>
 #include <bit_factory/anyxx/any_concept.hpp>
 #include <bit_factory/anyxx/errors/cast_error.hpp>
-#include <bit_factory/anyxx/v_table_instance.hpp>
 #include <bit_factory/anyxx/v_table_data.hpp>
-#include <bit_factory/anyxx/ANY_UNPAREN.hpp>
-
+#include <bit_factory/anyxx/v_table_instance.hpp>
 #include <expected>
-#include <vector>
+#include <ranges>
 #include <typeindex>
 #include <typeinfo>
-#include <ranges>
+#include <vector>
 
 namespace anyxx {
 
@@ -86,8 +85,7 @@ class meta_data {
   template <typename VTable>
   std::expected<VTable*, cast_error> get_v_table() const {
     if (auto v_table = find_v_table<VTable>(); v_table) return v_table;
-    return std::unexpected(
-        cast_error{.to = typeid(VTable), .from = type()});
+    return std::unexpected(cast_error{.to = typeid(VTable), .from = type()});
   }
   template <typename VTable>
   auto register_v_table(VTable* v_table) {
@@ -105,9 +103,9 @@ auto& runtime_implementation() {
 
 template <typename VTable, typename Concrete>
 auto bind_v_table_to_meta_data() {
-    auto v_table = v_table_instance<VTable, Concrete>();
-    get_meta_data<Concrete>().register_v_table(v_table);
-    return v_table;
+  auto v_table = v_table_instance<VTable, Concrete>();
+  get_meta_data<Concrete>().register_v_table(v_table);
+  return v_table;
 }
 
 }  // namespace anyxx
@@ -149,19 +147,3 @@ auto bind_v_table_to_meta_data() {
   ANY_META_CLASS_FWD(, __VA_ARGS__) \
   ANY_META_CLASS(__VA_ARGS__)
 
-/// \def ANY_REGISTER_MODEL
-/// \brief Register a model class for a specific any_ interface. Must
-/// be in global namespace.
-/// \param class_ The model class with fully qualified name. Must be
-/// parenthesized
-/// \param interface_ Name of the \ref any_ (without any prefix).
-/// \param ... Optional template parameters for the model class.
-///
-/// See also \ref casts.
-#define ANY_REGISTER_MODEL(class_, interface_, ...)                           \
-  namespace {                                                                 \
-  static auto __ = anyxx::bind_v_table_to_meta_data<                          \
-      interface_##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(__VA_ARGS__), \
-      ANY_UNPAREN(class_)>();                                               \
-  }
-/// @}

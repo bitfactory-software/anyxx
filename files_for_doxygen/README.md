@@ -396,7 +396,7 @@ ayx::factory<ayx::any<serializable>, std::string, std::istream&> deserialize;
 [[nodiscard]] ayx::any<figure> deserialize_any_figure(std::istream& archive) {
   std::string type;
   archive >> type;
-  return ayx::move_to<ayx::any<figure>>(deserialize.construct(type, archive));
+  return ayx::move_to<ayx::any<figure>>(deserialize(type, archive));
 }
 
 MODEL_MAP(circle, serializable) {
@@ -409,8 +409,8 @@ auto __ = deserialize.register_("circle", [](std::istream& archive) -> circle {
   archive >> c.radius;
   return c;
 });
-ANY_REGISTER_MODEL(circle, figure);
-ANY_REGISTER_MODEL(circle, serializable);
+anyxx::register_trait<circle, figure> __;
+anyxx::register_trait<circle, serializable> __;
 
 MODEL_MAP(square, serializable) {
   static void serialize(square const& self, std::ostream& os) {
@@ -422,8 +422,8 @@ auto __ = deserialize.register_("square", [](std::istream& archive) {
   archive >> s.edge_length;
   return s;
 });
-ANY_REGISTER_MODEL(square, figure);
-ANY_REGISTER_MODEL(square, serializable);
+anyxx::register_trait<square, figure> __;
+anyxx::register_trait<square, serializable> __;
 
 void areas(std::stringstream& os,
            std::vector<ayx::any<figure>> const& figures) {

@@ -7,57 +7,57 @@
     /Zc:preprocessor (see CMakeLists.txt for example)
 */
 
-#include <bit_factory/anyxx/config.hpp>
-
 #include <bit_factory/anyxx/ANY_UNIQUE_NAME.hpp>
 #include <bit_factory/anyxx/any_access.hpp>
+#include <bit_factory/anyxx/any_cast.hpp>
 #include <bit_factory/anyxx/any_concept.hpp>
 #include <bit_factory/anyxx/any_forward.hpp>
 #include <bit_factory/anyxx/any_get_meta_data.hpp>
 #include <bit_factory/anyxx/any_type_of.hpp>
-#include <bit_factory/anyxx/any_cast.hpp>
 #include <bit_factory/anyxx/borrow_as.hpp>
 #include <bit_factory/anyxx/clone_to.hpp>
 #include <bit_factory/anyxx/compute_val_proxy_size.hpp>
+#include <bit_factory/anyxx/config.hpp>
 #include <bit_factory/anyxx/crosscast_runtime.hpp>
 #include <bit_factory/anyxx/dll_mode.hpp>
 #include <bit_factory/anyxx/downcast.hpp>
+#include <bit_factory/anyxx/errors/type_mismatch_error.hpp>
 #include <bit_factory/anyxx/lock.hpp>
 #include <bit_factory/anyxx/move_to.hpp>
 #include <bit_factory/anyxx/observeable.hpp>
-#include <bit_factory/anyxx/small_object_size.hpp>
-#include <bit_factory/anyxx/utilities.hpp>
-#include <bit_factory/anyxx/v_table_instance.hpp>
-#include <bit_factory/anyxx/v_table_data.hpp>
-#include <bit_factory/anyxx/voidness.hpp>
-#include <bit_factory/anyxx/errors/type_mismatch_error.hpp>
 #include <bit_factory/anyxx/proxies/basic_proxy_trait.hpp>
-#include <bit_factory/anyxx/proxies/proxy_concept.hpp>
-#include <bit_factory/anyxx/proxies/proxy_cast.hpp>
-#include <bit_factory/anyxx/proxies/dyn/cow.hpp>
-#include <bit_factory/anyxx/proxies/dyn/observer.hpp>
-#include <bit_factory/anyxx/proxies/dyn/unique.hpp>
-#include <bit_factory/anyxx/proxies/dyn/shared.hpp>
-#include <bit_factory/anyxx/proxies/dyn/weak.hpp>
-#include <bit_factory/anyxx/proxies/dyn/val.hpp>
 #include <bit_factory/anyxx/proxies/dyn/borrowable_from.hpp>
 #include <bit_factory/anyxx/proxies/dyn/cloneable_to.hpp>
+#include <bit_factory/anyxx/proxies/dyn/cow.hpp>
 #include <bit_factory/anyxx/proxies/dyn/moveable_from.hpp>
+#include <bit_factory/anyxx/proxies/dyn/observer.hpp>
+#include <bit_factory/anyxx/proxies/dyn/shared.hpp>
+#include <bit_factory/anyxx/proxies/dyn/unique.hpp>
+#include <bit_factory/anyxx/proxies/dyn/val.hpp>
+#include <bit_factory/anyxx/proxies/dyn/weak.hpp>
+#include <bit_factory/anyxx/proxies/proxy_cast.hpp>
+#include <bit_factory/anyxx/proxies/proxy_concept.hpp>
 #include <bit_factory/anyxx/proxies/static/trait_class.hpp>
-#include <bit_factory/anyxx/proxies/static/using_cref.hpp>
 #include <bit_factory/anyxx/proxies/static/using_.hpp>
+#include <bit_factory/anyxx/proxies/static/using_cref.hpp>
+#include <bit_factory/anyxx/small_object_size.hpp>
+#include <bit_factory/anyxx/utilities.hpp>
+#include <bit_factory/anyxx/v_table_data.hpp>
+#include <bit_factory/anyxx/v_table_instance.hpp>
+#include <bit_factory/anyxx/voidness.hpp>
 #ifdef ANYXX_26
 #include <bit_factory/anyxx/v26/any.hpp>
+#include <bit_factory/anyxx/v26/any/register_trait.hpp>
 #include <bit_factory/anyxx/v26/trait_as.hpp>
 #else
 #include <bit_factory/anyxx/v23/any.hpp>
+#include <bit_factory/anyxx/v23/any/register_trait.hpp>
 #include <bit_factory/anyxx/v23/preprocessor_meta_class.hpp>
-#include <bit_factory/anyxx/v23/v_table_data.hpp>
 #include <bit_factory/anyxx/v23/signature_handling.hpp>
+#include <bit_factory/anyxx/v23/v_table_data.hpp>
 #include <bit_factory/anyxx/v23/v_table_holder/v_table_holder_dyn.hpp>
 #include <bit_factory/anyxx/v23/v_table_holder/v_table_holder_static.hpp>
 #endif  // !ANYXX_26
-
 
 /**
    \example _1_any_shape.cpp
@@ -109,4 +109,3 @@
    \example README.cpp
    README showcases
 */
-

@@ -30,10 +30,10 @@ namespace {
 namespace example {
 
 TEST_CASE("factory1") {
-  auto asteroid_thing = thing_factory.construct("asteroid");
+  auto asteroid_thing = thing_factory("asteroid");
   CHECK(any_cast_if<asteroid>(asteroid_thing) != nullptr);
   CHECK(type_of(asteroid_thing) == typeid(asteroid));
-  auto spaceship_thing = thing_factory.construct("spaceship");
+  auto spaceship_thing = thing_factory("spaceship");
   CHECK(any_cast_if<spaceship>(spaceship_thing) != nullptr);
   CHECK(type_of(spaceship_thing) == typeid(spaceship));
 }
@@ -44,7 +44,7 @@ TEST_CASE("factory2") {
   while (archive) {
     std::string key;
     archive >> key;
-    if (!key.empty()) things.emplace_back(thing_factory.construct(key));
+    if (!key.empty()) things.emplace_back(thing_factory(key));
   }
   CHECK(type_of(things[0]) == typeid(asteroid));
   CHECK(type_of(things[1]) == typeid(spaceship));
@@ -80,9 +80,9 @@ ANY_SINGLETON_DECLARE(, factory_test_negative_key, factory_test_key_kind)
 TEST_CASE("factory3") {
   factory<any_<unique, stringable>, factory_test_key_kind> f;
   f.register_(factory_test_key, []() { return 42; });
-  auto a1 = f.construct(factory_test_key);
+  auto a1 = f(factory_test_key);
   CHECK(a1.to_string() == "42");
-  CHECK_THROWS_AS(f.construct(factory_test_negative_key),
+  CHECK_THROWS_AS(f(factory_test_negative_key),
                   unknown_factory_key_error);
 }
 

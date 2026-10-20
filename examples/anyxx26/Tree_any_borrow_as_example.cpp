@@ -33,7 +33,7 @@ static factory<anyxx::any_<unique, serializeable>, std::string, std::istream&>
 anyxx::any_<unique, serializeable> deserialize(std::istream& archive) {
   std::string type;
   archive >> type;
-  return deserialize_factory.construct(type, archive);
+  return deserialize_factory(type, archive);
 }
 anyxx::any_<unique, node> deserialize_any_node(std::istream& archive) {
   return move_to<anyxx::any_<unique, node>>(deserialize(archive));

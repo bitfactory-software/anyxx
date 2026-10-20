@@ -28,6 +28,6 @@ auto ___ = make_any_test.register_("test_class", []() { return test_class{}; });
 }  // namespace
 
 TEST_CASE("_dyns_v_table_in_dll_mode") {
-  auto a = make_any_test.construct("test_class");
+  auto a = make_any_test("test_class");
   CHECK(a.fun() == 42);
 }
