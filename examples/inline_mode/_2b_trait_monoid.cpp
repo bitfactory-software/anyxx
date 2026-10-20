@@ -15,9 +15,9 @@ namespace anyxx {
 namespace example_2b {
 
 TRAIT_EX(monoid, anyxx::dynamic_copyable,
-         (FN_IMPL(public, anyxx::self, id, (), const, []() { return T{}; }),
+         (FN_IMPL(public, anyxx::self, id, (), const, () { return T{}; }),
           FN_IMPL(public, anyxx::self, op, (anyxx::self const&), const,
-                  [&self](auto const& r) {
+                  (auto const& r) {
                     std::println("op-default {}", typeid(T).name());
                     auto self_ = using_as<monoid>(self);
                     return get_proxy(self_.concat(
@@ -25,7 +25,7 @@ TRAIT_EX(monoid, anyxx::dynamic_copyable,
                   }),
           FN_IMPL(public, anyxx::self, concat,
                   (anyxx::any_self_forward_range const&), const,
-                  [&self](const auto& r) {
+                  (const auto& r) {
                     std::println("concat-default {}", typeid(T).name());
                     auto self_ = using_as<monoid>(self);
                     return get_proxy(std::ranges::fold_left(
@@ -37,7 +37,7 @@ TRAIT_EX(monoid, anyxx::dynamic_copyable,
                         }));
                   }),
           OP_IMPL(public, bool, ==, eq, (anyxx::self const&), const,
-                  ([&self](auto const& r) { return self == r; }))),
+                  (auto const& r) { return self == r; })),
          , , , ())
 
 template <typename Proxy = anyxx::val<>>

@@ -8,7 +8,7 @@ namespace anyxx {
 TRAIT_TEMPLATE(((Category), (Value), (Ref)), sized_view, view_base,
                ((Category), (Value), (Ref)),
                (FN_IMPL(public, (any<sized_sentinel, Value, Ref>), end, (),
-                        const, [&self]() { return sentinel_for(self); })))
+                        const, () { return sentinel_for(self); })))
 
 }  // namespace anyxx
 

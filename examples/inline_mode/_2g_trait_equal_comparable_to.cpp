@@ -12,7 +12,7 @@ TRAIT_TEMPLATE(
              ((anyxx::trait_as<To, equal_comparable_to, T> const&)), const),
      OP_IMPL(public, bool, !=, ne,
              ((anyxx::trait_as<To, equal_comparable_to, T> const&)), const,
-             ([&self](auto const& r) { return !Map{}.eq(self, r); }))))
+             (auto const& r) { return !Map{}.eq(self, r); })))
 
 template <typename L, typename R>
 using using_as_equal_comparable_to =

@@ -24,7 +24,7 @@ TRAIT(map_i_to_string_mutable, anyxx::dynamic_copyable,
 TRAIT(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
       (ANY_OP_EXACT_OVERLOAD_DEF(
           public, std::string const&, [], subscript, (std::size_t), const,
-          [&self](std::size_t i) -> std::string const& { return self.at(i); })))
+          (std::size_t i) -> std::string const& { return self.at(i); })))
 
 }  // namespace subscript_operator_test
 }  // namespace

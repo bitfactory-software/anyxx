@@ -10,7 +10,7 @@ namespace {
 
 TRAIT(stringable, observeable,
       (FN_IMPL(public, std::string, as_string, (), const,
-               [&self]() { return std::format("{}", self); })))
+               () { return std::format("{}", self); })))
 
 MODEL_MAP(bool, stringable) {
   std::string as_string(bool const& self) { return self ? "wahr" : "falsch"; };

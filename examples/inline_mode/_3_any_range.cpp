@@ -26,22 +26,23 @@ anyxx::any_forward_range<int, int const&, anyxx::val<>> a_range_value(
 }
 
 TRAIT(stringable, anyxx::dynamic_copyable,
-      (FN_IMPL(public, std::string, to_string, (), const,
-               [&self]() { return std::format("{}", self); })))
+      (FN_IMPL(
+          public, std::string, to_string, (), const,
+          () { return std::format("{}", self); })))
 
 template <typename Proxy>
 using any_stringable = anyxx::any_<Proxy, stringable>;
 
 TRAIT(node, anyxx::dynamic_copyable,
-      (FN_IMPL(public, anyxx::self, sum,
-               ((anyxx::any_self_forward_range const&)), const,
-               [&self](auto const& r) {
-                 auto s = self;
-                 for (auto i : r) {
-                   s += i;
-                 }
-                 return s;
-               })));
+      (FN_IMPL(
+          public, anyxx::self, sum, ((anyxx::any_self_forward_range const&)),
+          const, (auto const& r) {
+            auto s = self;
+            for (auto i : r) {
+              s += i;
+            }
+            return s;
+          })));
 template <typename Proxy = anyxx::val<>>
 using any_node = anyxx::any_<Proxy, node>;
 
@@ -295,16 +296,18 @@ namespace anyxx {
 template <typename ValueType, typename Reference>
 struct forward_iterator_model_map<node_base*, ValueType, Reference>
     : forward_iterator_default_model_map<node_base*, ValueType, Reference> {
-  node_base* op_pre_increment(node_base*& self) const { return self = self->next(); }
+  node_base* op_pre_increment(node_base*& self) const {
+    return self = self->next();
+  }
 };
 }  // namespace anyxx
 namespace {
 using node_iterator =
     anyxx::any_<anyxx::using_<node_base*>, anyxx::forward_iterator, node_base,
-               node_base&>;
+                node_base&>;
 using node_const_iterator =
     anyxx::any_<anyxx::using_<node_base*>, anyxx::forward_iterator,
-               node_base const, node_base const&>;
+                node_base const, node_base const&>;
 }  // namespace
 namespace anyxx {
 template <typename Node, typename Iterator>

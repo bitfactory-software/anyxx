@@ -240,7 +240,7 @@
     }))                                                                       \
   {                                                                           \
     using namespace anyxx;                                                    \
-    return _detail_REMOVE_PARENS(trait_body)(                                 \
+    return [&self] _detail_REMOVE_PARENS(trait_body)(                         \
         __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));  \
   };
 
@@ -813,15 +813,15 @@
 /// @}
 
 #define _detail_ANYXX_FN_EMPTY(name, ret) \
-  ([]<typename... Args>([[maybe_unused]] Args...) -> ret { return {}; })
+  (<typename... Args>([[maybe_unused]] Args...)->ret { return {}; })
 
-#define _detail_ANYXX_FN_MEMBER(name)                            \
-  ([&self]<typename... Args>(Args&&... args) -> decltype(auto) { \
-    return self.name(std::forward<Args>(args)...);               \
+#define _detail_ANYXX_FN_MEMBER(name)                     \
+  (<typename... Args>(Args && ... args)->decltype(auto) { \
+    return self.name(std::forward<Args>(args)...);        \
   })
-#define __detail_ANYXX_FREE_OP(name)                    \
-  ([&self]<typename Rhs>(Rhs&& rhs) -> decltype(auto) { \
-    return self name std::forward<Rhs>(rhs);            \
+#define __detail_ANYXX_FREE_OP(name)            \
+  (<typename Rhs>(Rhs && rhs)->decltype(auto) { \
+    return self name std::forward<Rhs>(rhs);    \
   })
 
 #define __detail_ANYXX_MEMBER_FN(access, overload, ret, name, name_ext,  \
@@ -959,9 +959,10 @@
 /// Use if in a base TRAIT exists an equally named FN, or you want to provide a
 /// specific name for the operator in the map to have a defined name for
 /// overriding in derived TRAITs.
-#define OP_FREE(ret, op, name, params, const_)                 \
-  (public, , ret, name, operator op, false, const_, __detail_ANYXX_FREE_OP(op), \
-   use_mapf_concept, self op, _detail_EXPAND params)
+#define OP_FREE(ret, op, name, params, const_)            \
+  (public, , ret, name, operator op, false, const_,       \
+   __detail_ANYXX_FREE_OP(op), use_mapf_concept, self op, \
+   _detail_EXPAND params)
 
 /// \def UNARY_OP
 /// \brief TRAIT operator with default behavior is to call the related unary
@@ -970,9 +971,10 @@
 /// Use if in a base TRAIT exists an equally named FN, or you want to provide a
 /// specific name for the operator in the map to have a defined name for
 /// overriding in derived TRAITs.
-#define UNARY_OP(ret, op, name, const_)      \
-  OP_IMPL(public, ret, op, name, (), const_, \
-          ([&self]() -> decltype(auto) { return op self; }))
+#define UNARY_OP(ret, op, name, const_)  \
+  OP_IMPL(                               \
+      public, ret, op, name, (), const_, \
+      ()->decltype(auto) { return op self; })
 
 /// \def OP_
 /// \brief TRAIT operator with default behavior is to call the related operator

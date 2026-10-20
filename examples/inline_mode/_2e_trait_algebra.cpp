@@ -11,7 +11,7 @@ namespace algebra {
 TRAIT(equal_comparable, anyxx::dynamic_copyable,
       (OP_FREE(bool, ==, eq, (anyxx::self const&), const),
        OP_IMPL(public, bool, !=, ne, (anyxx::self const&), const,
-               [&self](auto const& r) {
+               (auto const& r) {
                  return !(using_as<equal_comparable>(self) ==
                           using_as<equal_comparable>(r));
                })))

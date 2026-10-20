@@ -1,0 +1,3 @@
+BasedOnStyle: Google
+MacroBlockEnd: 'END'
+WhitespaceSensitiveMacros: ['TRAIT','TRAIT_EX', 'TRAIT_TEMPLATE','TRAIT_TEMPLATE_EX']

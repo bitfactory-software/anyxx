@@ -6,23 +6,22 @@ namespace _2p_lib {
 
 TRAIT(equal_comparable, anyxx::dynamic_copyable,
       (OP_FREE(bool, ==, eq, (anyxx::self const&), const),
-       OP_IMPL(public, bool, !=, ne, (anyxx::self const&), const,
-               [&self](auto const& r) {
-                 return !(using_as<equal_comparable>(self) ==
-                          using_as<equal_comparable>(r));
-               })))
+       OP_IMPL(
+           public, bool, !=, ne, (anyxx::self const&), const, (auto const& r) {
+             return !(using_as<equal_comparable>(self) ==
+                      using_as<equal_comparable>(r));
+           })))
 
 // An optional as a customizable trait.
 // It is default represented as a variant of the value type and a
 // monostate. When there is a class template called 'trait-name'_default_rep,
 // this type is used as the representation;
 // This type must be constructible from the type 'T' being modeled.
-// If 'trait-name'_default_rep is default constructible, then the any_ using this
-// trait  is default constructible.
-// In our case is this effect used to model the 'no value' state.
-// 'has_value' and 'get_value' are implemented in terms of the variant.
-// Operator * and -> are implemented in terms if the (eventually derived)
-// _object_map.
+// If 'trait-name'_default_rep is default constructible, then the any_ using
+// this trait  is default constructible. In our case is this effect used to
+// model the 'no value' state. 'has_value' and 'get_value' are implemented in
+// terms of the variant. Operator * and -> are implemented in terms if the
+// (eventually derived) _object_map.
 template <typename T>
 struct nullable_default_rep : std::variant<std::monostate, T> {
   using std::variant<std::monostate, T>::variant;
@@ -30,22 +29,27 @@ struct nullable_default_rep : std::variant<std::monostate, T> {
                          nullable_default_rep const& r) = default;
 };
 
-TRAIT(nullable, anyxx::dynamic_copyable,
-      (FN_IMPL(public, bool, has_value, (), const,
-               [self]() { return std::holds_alternative<T>(self); }),
-       FN_IMPL_EXACT(public, T const&, get_value, (), const,
-                     [&self]() -> T const& { return std::get<T>(self); }),
-       FN_IMPL_EXACT(public, T&, get_value, (), ,
-                     [&self]() -> T& { return std::get<T>(self); }),
-       ANY_OP_DEF_EXACT(public, T const&, ->, arrow_const, (), const,
-                        [&self]() -> T const& { return Map{}.get_value(self); }),
-       ANY_OP_DEF_EXACT(public, T&, ->, arrow, (), ,
-                        [&self]() -> T& { return Map{}.get_value(self); }),
-       ANY_OP_DEF_EXACT(public, T const&, *, deref_const, (), const,
-                        [&self]() -> T const& { return Map{}.get_value(self); }),
-       ANY_OP_DEF_EXACT(public, T&, *, deref, (), ,
-                        [&self]() -> T& { return Map{}.get_value(self); }),
-       OP_FREE(bool, ==, eq, (anyxx::self const&), const)))
+TRAIT(
+    nullable, anyxx::dynamic_copyable,
+    (FN_IMPL(
+         public, bool, has_value, (), const,
+         () -> bool { return std::holds_alternative<T>(self); }),
+     FN_IMPL_EXACT(
+         public, T const&, get_value, (), const,
+         ()->T const& { return std::get<T>(self); }),
+     FN_IMPL_EXACT(
+         public, T&, get_value, (), , ()->T& { return std::get<T>(self); }),
+     ANY_OP_DEF_EXACT(
+         public, T const&, ->, arrow_const, (), const,
+         ()->T const& { return Map{}.get_value(self); }),
+     ANY_OP_DEF_EXACT(
+         public, T&, ->, arrow, (), , ()->T& { return Map{}.get_value(self); }),
+     ANY_OP_DEF_EXACT(
+         public, T const&, *, deref_const, (), const,
+         ()->T const& { return Map{}.get_value(self); }),
+     ANY_OP_DEF_EXACT(
+         public, T&, *, deref, (), , ()->T& { return Map{}.get_value(self); }),
+     OP_FREE(bool, ==, eq, (anyxx::self const&), const)))
 
 template <typename T>
 using optional = anyxx::any_<anyxx::using_<T>, nullable>;

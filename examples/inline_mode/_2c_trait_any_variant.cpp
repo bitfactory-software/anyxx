@@ -20,13 +20,15 @@ struct custom {
 };
 
 TRAIT_EX(value, anyxx::dynamic_copyable,
-         (FN_IMPL(public, std::string, to_string, (), const,
-                  [&self]() { return std::format("{}", self); }),
-          FN_IMPL(public, void, from_string, (std::string_view), ,
-                  [&self](std::string_view sv) -> void {
-                    std::stringstream ss{std::string{sv}, std::ios_base::in};
-                    ss >> std::boolalpha >> self;
-                  })),
+         (FN_IMPL(
+              public, std::string, to_string, (), const,
+              () { return std::format("{}", self); }),
+          FN_IMPL(
+              public, void, from_string, (std::string_view), ,
+              (std::string_view sv)->void {
+                std::stringstream ss{std::string{sv}, std::ios_base::in};
+                ss >> std::boolalpha >> self;
+              })),
          , , (HAS_OPEN_DISPATCH), ())
 using any_value = anyxx::any<value>;
 

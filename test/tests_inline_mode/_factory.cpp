@@ -51,8 +51,9 @@ TEST_CASE("factory2") {
 }
 
 TRAIT(stringable, dynamic_deletable,
-      (FN_IMPL(public, std::string, to_string, (), const,
-               [&self]() { return std::format("{}", self); })))
+      (FN_IMPL(
+          public, std::string, to_string, (), const,
+          () { return std::format("{}", self); })))
 
 ANY_SINGLETON_DECLARE(, any_stringable_factory,
                       factory<any_<unique, stringable>, std::string>);

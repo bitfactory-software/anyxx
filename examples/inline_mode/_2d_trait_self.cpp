@@ -5,8 +5,9 @@
 namespace example_2d {
 
 TRAIT(has_equal, anyxx::dynamic_copyable,
-      (FN_IMPL(public, bool, is_equal, (anyxx::self const&), const,
-               [&self](T const& y) { return self == y; })))
+      (FN_IMPL(
+          public, bool, is_equal, (anyxx::self const&), const,
+          (T const& y) { return self == y; })))
 
 template <typename Proxy = anyxx::val<>>
 using any_has_equal = anyxx::any_<Proxy, has_equal>;
@@ -35,13 +36,15 @@ TEST_CASE("example 2da any_has_equal") {
 namespace example_2d {
 
 TRAIT(has_plus, has_equal,
-      (FN_IMPL(public, anyxx::self, plus, (anyxx::self const&), const,
-               ([&self](T const& y) {
-                 return get_proxy_value(using_as<has_plus>(self) +
-                                        using_as<has_plus>(y));
-               })),
+      (FN_IMPL(
+           public, anyxx::self, plus, (anyxx::self const&), const,
+           (T const& y) {
+             return get_proxy_value(using_as<has_plus>(self) +
+                                    using_as<has_plus>(y));
+           }),
        OP_IMPL(public, anyxx::self, +, plus_op, (anyxx::self const&), const,
-               ([&self](T const& y) { return self + y; }))))
+           (T const& y) { 
+             return self + y; })))
 
 template <typename Proxy = anyxx::val<>>
 using any_has_plus = anyxx::any_<Proxy, has_plus>;
