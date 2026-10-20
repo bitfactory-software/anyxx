@@ -43,7 +43,7 @@ TRAIT(equal_comparable, anyxx::dynamic_copyable,
        // We can use the == operator of the external interface to
        // provide a default implementation for the != operator.
        OP_IMPL(public, bool, !=, ne, (anyxx::self const&), const,
-               [&x](auto const& r) { return !Map{}.eq(x, r); })))
+           [&self](auto const& r) { return !Map{}.eq(self, r); })))
 
 // TRAIT automatically defines the is_equal_comparable_model concept.
 // Here we use this concept to check that some basic types model the trait:

@@ -10,15 +10,15 @@ namespace {
 
 TRAIT(stringable, observeable,
       (FN_IMPL(public, std::string, as_string, (), const,
-               [&x]() { return std::format("{}", x); })))
+               [&self]() { return std::format("{}", self); })))
 
 MODEL_MAP(bool, stringable) {
   std::string as_string(bool const& self) { return self ? "wahr" : "falsch"; };
 };
 
 MODEL_MAP(double, stringable) {
-  std::string as_string(const double& value) {
-    return std::format("{:6.3}", value);
+  std::string as_string(const double& self) {
+    return std::format("{:6.3}", self);
   };
 };
 

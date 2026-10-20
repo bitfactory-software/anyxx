@@ -26,8 +26,8 @@ TRAIT_TEMPLATE_EX(
     (FN_IMPL(public, bool, equal_to_iterator,
              ((any_<anyxx::cref, input_iterator, ValueType, Reference> const&)),
              const,
-             [&x](auto const it) {
-               return x.value == any_cast<typename T::iterator_type>(it);
+             [&self](auto const it) {
+               return self.value == any_cast<typename T::iterator_type>(it);
              })),
     , , , (using default_proxy_t = nullable_val<iterator_val_proxy_size>;))
 
@@ -76,15 +76,15 @@ TRAIT_TEMPLATE_EX(
              ((any_<anyxx::cref, bidirectional_iterator, ValueType,
                    Reference> const&)),
              const,
-             [&x](auto const it) {
-               return x.value - any_cast<typename T::iterator_type>(it);
+             [&self](auto const it) {
+               return self.value - any_cast<typename T::iterator_type>(it);
              }),
      FN_IMPL(public, std::ptrdiff_t, subtract_from,
              ((any_<anyxx::cref, bidirectional_iterator, ValueType,
                    Reference> const&)),
              const,
-             [&x](auto const it) {
-               return any_cast<typename T::iterator_type>(it) - x.value;
+             [&self](auto const it) {
+               return any_cast<typename T::iterator_type>(it) - self.value;
              })),
     , , , (using default_proxy_t = nullable_val<iterator_val_proxy_size>;))
 

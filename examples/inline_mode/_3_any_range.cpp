@@ -27,7 +27,7 @@ anyxx::any_forward_range<int, int const&, anyxx::val<>> a_range_value(
 
 TRAIT(stringable, anyxx::dynamic_copyable,
       (FN_IMPL(public, std::string, to_string, (), const,
-               [&x]() { return std::format("{}", x); })))
+               [&self]() { return std::format("{}", self); })))
 
 template <typename Proxy>
 using any_stringable = anyxx::any_<Proxy, stringable>;
@@ -35,8 +35,8 @@ using any_stringable = anyxx::any_<Proxy, stringable>;
 TRAIT(node, anyxx::dynamic_copyable,
       (FN_IMPL(public, anyxx::self, sum,
                ((anyxx::any_self_forward_range const&)), const,
-               [&x](auto const& r) {
-                 auto s = x;
+               [&self](auto const& r) {
+                 auto s = self;
                  for (auto i : r) {
                    s += i;
                  }
@@ -295,7 +295,7 @@ namespace anyxx {
 template <typename ValueType, typename Reference>
 struct forward_iterator_model_map<node_base*, ValueType, Reference>
     : forward_iterator_default_model_map<node_base*, ValueType, Reference> {
-  node_base* op_pre_increment(node_base*& x) const { return x = x->next(); }
+  node_base* op_pre_increment(node_base*& self) const { return self = self->next(); }
 };
 }  // namespace anyxx
 namespace {

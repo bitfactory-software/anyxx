@@ -22,9 +22,9 @@ TRAIT(map_i_to_string_const_and_mutable, anyxx::dynamic_copyable,
 TRAIT(map_i_to_string_mutable, anyxx::dynamic_copyable,
       (ANY_OP_EXACT(std::string&, [], (std::size_t), )))
 TRAIT(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
-     (ANY_OP_EXACT_OVERLOAD_DEF(
-         public, std::string const&, [], subscript, (std::size_t), const,
-         [&x](std::size_t i) -> std::string const& { return x.at(i); })))
+      (ANY_OP_EXACT_OVERLOAD_DEF(
+          public, std::string const&, [], subscript, (std::size_t), const,
+          [&self](std::size_t i) -> std::string const& { return self.at(i); })))
 
 }  // namespace subscript_operator_test
 }  // namespace
@@ -32,7 +32,7 @@ TRAIT(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
 using namespace subscript_operator_test;
 
 MODEL_MAP(subscript_operator_test::map_t,
-              subscript_operator_test::map_i_to_string_const_and_mutable) {
+          subscript_operator_test::map_i_to_string_const_and_mutable) {
   static std::string const& subscript(map_t const& self,
                                       std::size_t const key) {  // NOLINT
     return self.at(key);
@@ -40,7 +40,7 @@ MODEL_MAP(subscript_operator_test::map_t,
 };
 
 MODEL_MAP(subscript_operator_test::vector_t,
-              subscript_operator_test::map_i_to_string_const_and_mutable) {
+          subscript_operator_test::map_i_to_string_const_and_mutable) {
   static std::string const& subscript(vector_t const& self,
                                       std::size_t const key) {  // NOLINT
     return self.at(key);

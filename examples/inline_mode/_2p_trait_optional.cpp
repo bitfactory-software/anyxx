@@ -7,8 +7,8 @@ namespace _2p_lib {
 TRAIT(equal_comparable, anyxx::dynamic_copyable,
       (OP_FREE(bool, ==, eq, (anyxx::self const&), const),
        OP_IMPL(public, bool, !=, ne, (anyxx::self const&), const,
-               [&x](auto const& r) {
-                 return !(using_as<equal_comparable>(x) ==
+               [&self](auto const& r) {
+                 return !(using_as<equal_comparable>(self) ==
                           using_as<equal_comparable>(r));
                })))
 
@@ -26,25 +26,25 @@ TRAIT(equal_comparable, anyxx::dynamic_copyable,
 template <typename T>
 struct nullable_default_rep : std::variant<std::monostate, T> {
   using std::variant<std::monostate, T>::variant;
-  friend bool operator==(nullable_default_rep const& x,
+  friend bool operator==(nullable_default_rep const& self,
                          nullable_default_rep const& r) = default;
 };
 
 TRAIT(nullable, anyxx::dynamic_copyable,
       (FN_IMPL(public, bool, has_value, (), const,
-               [x]() { return std::holds_alternative<T>(x); }),
+               [self]() { return std::holds_alternative<T>(self); }),
        FN_IMPL_EXACT(public, T const&, get_value, (), const,
-                     [&x]() -> T const& { return std::get<T>(x); }),
+                     [&self]() -> T const& { return std::get<T>(self); }),
        FN_IMPL_EXACT(public, T&, get_value, (), ,
-                     [&x]() -> T& { return std::get<T>(x); }),
+                     [&self]() -> T& { return std::get<T>(self); }),
        ANY_OP_DEF_EXACT(public, T const&, ->, arrow_const, (), const,
-                        [&x]() -> T const& { return Map{}.get_value(x); }),
+                        [&self]() -> T const& { return Map{}.get_value(self); }),
        ANY_OP_DEF_EXACT(public, T&, ->, arrow, (), ,
-                        [&x]() -> T& { return Map{}.get_value(x); }),
+                        [&self]() -> T& { return Map{}.get_value(self); }),
        ANY_OP_DEF_EXACT(public, T const&, *, deref_const, (), const,
-                        [&x]() -> T const& { return Map{}.get_value(x); }),
+                        [&self]() -> T const& { return Map{}.get_value(self); }),
        ANY_OP_DEF_EXACT(public, T&, *, deref, (), ,
-                        [&x]() -> T& { return Map{}.get_value(x); }),
+                        [&self]() -> T& { return Map{}.get_value(self); }),
        OP_FREE(bool, ==, eq, (anyxx::self const&), const)))
 
 template <typename T>
@@ -111,8 +111,8 @@ class foo {
 // functions accordingly.
 MODEL_MAP(_2p_app::foo, _2p_lib::nullable) {
   using rep_type = _2p_app::foo;
-  bool has_value(_2p_app::foo const& x) { return x.v_ != nullptr; };
-  auto& get_value(auto&& x) { return std::forward<decltype(x)>(x); };
+  bool has_value(_2p_app::foo const& self) { return self.v_ != nullptr; };
+  auto& get_value(auto&& self) { return std::forward<decltype(self)>(self); };
 };
 
 namespace {

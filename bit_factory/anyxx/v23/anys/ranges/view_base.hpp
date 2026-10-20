@@ -8,7 +8,7 @@ namespace anyxx {
 
 TRAIT_TEMPLATE(((Category), (Value), (Ref)), view_base, dynamic_copyable, (),
                (FN_IMPL(public, (any<Category::template iterator, Value, Ref>), begin, (), const,
-                        [&x]() { return std::ranges::begin(x); })))
+                        [&self]() { return std::ranges::begin(self); })))
 
 }  // namespace anyxx
 

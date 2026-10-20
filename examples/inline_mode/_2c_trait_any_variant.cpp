@@ -21,11 +21,11 @@ struct custom {
 
 TRAIT_EX(value, anyxx::dynamic_copyable,
          (FN_IMPL(public, std::string, to_string, (), const,
-                  [&x]() { return std::format("{}", x); }),
+                  [&self]() { return std::format("{}", self); }),
           FN_IMPL(public, void, from_string, (std::string_view), ,
-                  [&x](std::string_view sv) -> void {
+                  [&self](std::string_view sv) -> void {
                     std::stringstream ss{std::string{sv}, std::ios_base::in};
-                    ss >> std::boolalpha >> x;
+                    ss >> std::boolalpha >> self;
                   })),
          , , (HAS_OPEN_DISPATCH), ())
 using any_value = anyxx::any<value>;
@@ -43,11 +43,11 @@ static_assert(std::same_as<any_in_variant, any_value>);
 }  // namespace example_2c
 
 MODEL_MAP(example_2c::custom, example_2c::value) {
-  static std::string to_string(custom const& x) {
-    return "{" + x.answer + "}";
+  static std::string to_string(custom const& self) {
+    return "{" + self.answer + "}";
   };
-  static void from_string(custom & x, std::string_view sv) {
-    x.answer = sv.substr(1, sv.length() - 2);
+  static void from_string(custom & self, std::string_view sv) {
+    self.answer = sv.substr(1, sv.length() - 2);
   };
 };
 

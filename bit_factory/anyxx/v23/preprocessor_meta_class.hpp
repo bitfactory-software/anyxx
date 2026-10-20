@@ -228,10 +228,10 @@
   template <typename Map>                                                     \
   AYXFORCEDINLINE auto name(                                                  \
       [[maybe_unused]] this Map const& map,                                   \
-      [[maybe_unused]] auto const_& x __VA_OPT__(                             \
+      [[maybe_unused]] auto const_& self __VA_OPT__(                          \
           , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))            \
       -> anyxx::map_return<T, ANY_UNPAREN(type)>                              \
-    requires(anyxx::mapf_concept(requires(T const_ x __VA_OPT__(              \
+    requires(anyxx::mapf_concept(requires(T const_ self __VA_OPT__(           \
         , _detail_ANYXX_CONCEPT_PARAM_LIST_H(a, sig_, __VA_ARGS__))) {        \
       {                                                                       \
         mapf_concept_lhs(__VA_OPT__(                                          \
@@ -390,7 +390,7 @@
 #define _detail_ANYXX_MAP_VARIANT_IMPL(access, overload, type, name, name_ext, \
                                        exact_const, const_, trait_body,        \
                                        mapf_concept, mapf_concept_lhs, ...)    \
-  AYXFORCEDINLINE auto name([[maybe_unused]] T const_& x __VA_OPT__(           \
+  AYXFORCEDINLINE auto name([[maybe_unused]] T const_& self __VA_OPT__(        \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))                 \
       -> decltype(auto) {                                                      \
     return std::visit(                                                         \
@@ -405,7 +405,7 @@
               return std::forward<Any>(any_).name(__VA_OPT__(                  \
                   _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
             }},                                                                \
-        x);                                                                    \
+        self);                                                                 \
   };
 
 #define _detail_ANYXX_FUNCTION_PTR_DECL(                                   \
@@ -423,7 +423,7 @@
                            a, _sig, __VA_ARGS__))) -> decltype(auto) {     \
     if constexpr (std::same_as<anyxx::self&, ANY_UNPAREN(type)>) {         \
       model_map{}.name(                                                    \
-          anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )     \
+          anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )      \
               __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(          \
                   a, _sig, __VA_ARGS__)));                                 \
       return anyxx::handle_self_ref_return<ANY_UNPAREN(type)>{}();         \
@@ -431,13 +431,13 @@
       using proxy_t = typename any_value_t::proxy_t;                       \
       return any_value_t{                                                  \
           anyxx::erased<proxy_t>(model_map{}.name(                         \
-              anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, ) \
+              anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )  \
                   __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(      \
                       a, _sig, __VA_ARGS__)))),                            \
           anyxx::v_table_instance<Parent, Concrete>()};                    \
     } else {                                                               \
       return model_map{}.name(                                             \
-          anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )     \
+          anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )      \
               __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(          \
                   a, _sig, __VA_ARGS__)));                                 \
     }                                                                      \
@@ -818,7 +818,8 @@
 #define __detail_ANYXX_MEMBER_FN(access, overload, ret, name, name_ext, \
                                  exact_const, const_, params)           \
   FN_(access, overload, ret, name, name_ext, exact_const, const_,       \
-      (x.name_ext), use_mapf_concept, (x.name_ext), _detail_EXPAND params)
+      (self.name_ext), use_mapf_concept, (self.name_ext),               \
+      _detail_EXPAND params)
 
 /// \addtogroup fn_macros FN... and OP_ macros
 /// \brief Macros to define \ref trait's and \ref any_'s functions and operators
@@ -829,7 +830,7 @@
 /// - PURE: function must be provided by the model
 /// - DEF: function has a default behavior defined by the last parameter. Must
 /// be a lambda. The target model can be accessed via a capture in the lambda of
-/// the variable x. This lambda is the last parameter of the macro.
+/// the variable self. This lambda is the last parameter of the macro.
 /// - OVERLOAD: use if in a base TRAIT exists an equally named FN or OP
 /// - MAP_NAMED: use to provide a programmer-chosen name for an operator in the
 /// map to have an defined name for overriding in derived TRAITs
@@ -867,7 +868,7 @@
 #define FN_PURE(ret, name, params, const_)       \
   FN_(private, , ret, name, name, false, const_, \
       (_detail_ANYXX_FN_EMPTY(name, ret)),       \
-      ignore_mapf_concept_with_always_false, x.name, _detail_EXPAND params)
+      ignore_mapf_concept_with_always_false, self.name, _detail_EXPAND params)
 
 /// \def FN_PURE_EXACT
 /// \brief TRAIT function, which must be provided by the model.
@@ -875,20 +876,20 @@
 #define FN_PURE_EXACT(ret, name, params, const_) \
   FN_(private, , ret, name, name, true, const_,  \
       (_detail_ANYXX_FN_EMPTY(name, ret)),       \
-      ignore_mapf_concept_with_always_false, x.name, _detail_EXPAND params)
+      ignore_mapf_concept_with_always_false, self.name, _detail_EXPAND params)
 
 /// \def FN_IMPL
 /// \brief TRAIT function with default behavior.
 /// \ingroup trait_macros
 #define FN_IMPL(access, ret, name, params, const_, ...)        \
   FN_(access, , ret, name, name, false, const_, (__VA_ARGS__), \
-      ignore_mapf_concept_with_always_true, x.name, _detail_EXPAND params)
+      ignore_mapf_concept_with_always_true, self.name, _detail_EXPAND params)
 
 /// \def FN_IMPL_EXACT
 /// \brief TRAIT function with default behavior
 #define FN_IMPL_EXACT(access, ret, name, params, const_, ...) \
   FN_(access, , ret, name, name, true, const_, (__VA_ARGS__), \
-      ignore_mapf_concept_with_always_true, x.name, _detail_EXPAND params)
+      ignore_mapf_concept_with_always_true, self.name, _detail_EXPAND params)
 
 /// \def FN
 /// \brief TRAIT function whose default behavior is to call an equally named
@@ -947,9 +948,9 @@
 /// Use if in a base TRAIT exists an equally named FN, or you want to provide a
 /// specific name for the operator in the map to have a defined name for
 /// overriding in derived TRAITs.
-#define OP_FREE(ret, op, name, params, const_)                 \
-  FN_(public, , ret, name, operator op, false, const_, (x op), \
-      use_mapf_concept, x op, _detail_EXPAND params)
+#define OP_FREE(ret, op, name, params, const_)                    \
+  FN_(public, , ret, name, operator op, false, const_, (self op), \
+      use_mapf_concept, self op, _detail_EXPAND params)
 
 /// \def UNARY_OP
 /// \brief TRAIT operator with default behavior is to call the related unary
@@ -960,7 +961,7 @@
 /// overriding in derived TRAITs.
 #define UNARY_OP(ret, op, name, const_)      \
   OP_IMPL(public, ret, op, name, (), const_, \
-          ([&x]() -> decltype(auto) { return op x; }))
+          ([&self]() -> decltype(auto) { return op self; }))
 
 /// \def OP_
 /// \brief TRAIT operator with default behavior is to call the related operator
@@ -974,7 +975,7 @@
 /// Use if in a base TRAIT exists an equally named FN.
 #define OP_IMPL(access, ret, op, name, params, const_, ...)           \
   FN_(access, , ret, name, operator op, false, const_, (__VA_ARGS__), \
-      ignore_mapf_concept_with_always_true, x.operator op,            \
+      ignore_mapf_concept_with_always_true, self.operator op,         \
       _detail_EXPAND params)
 
 #define ANY_OP_EXACT_MAP_NAMED(ret, op, name, params, const_)              \
@@ -1023,7 +1024,7 @@
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_OP_EXACT_OVERLOAD_DEF(access, ret, op, name, params, const_, ...)  \
   FN_(access, ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, \
-      (__VA_ARGS__), ignore_mapf_concept_with_always_true, x.operator op,      \
+      (__VA_ARGS__), ignore_mapf_concept_with_always_true, self.operator op,   \
       _detail_EXPAND params)
 
 /// \def FN_STATIC_PURE
