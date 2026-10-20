@@ -100,7 +100,7 @@ $(function(){initNavTree('_2d_trait_self_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">TRAIT(has_equal, anyxx::dynamic_copyable,</div>
 <div class="line">      (FN_IMPL(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, is_equal, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
-<div class="line">               [&amp;x](T <span class="keyword">const</span>&amp; y) { <span class="keywordflow">return</span> x == y; })))</div>
+<div class="line">               [&amp;self](T <span class="keyword">const</span>&amp; y) { <span class="keywordflow">return</span> self == y; })))</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Proxy = anyxx::val&lt;&gt;&gt;</div>
 <div class="line"><span class="keyword">using</span> any_has_equal = anyxx::any_&lt;Proxy, has_equal&gt;;</div>
@@ -130,12 +130,12 @@ $(function(){initNavTree('_2d_trait_self_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">TRAIT(has_plus, has_equal,</div>
 <div class="line">      (FN_IMPL(<span class="keyword">public</span>, anyxx::self, plus, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
-<div class="line">               ([&amp;x](T <span class="keyword">const</span>&amp; y) {</div>
-<div class="line">                 <span class="keywordflow">return</span> get_proxy_value(using_as&lt;has_plus&gt;(x) +</div>
+<div class="line">               ([&amp;self](T <span class="keyword">const</span>&amp; y) {</div>
+<div class="line">                 <span class="keywordflow">return</span> get_proxy_value(using_as&lt;has_plus&gt;(self) +</div>
 <div class="line">                                        using_as&lt;has_plus&gt;(y));</div>
 <div class="line">               })),</div>
 <div class="line">       OP_IMPL(<span class="keyword">public</span>, anyxx::self, +, plus_op, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
-<div class="line">               ([&amp;x](T <span class="keyword">const</span>&amp; y) { <span class="keywordflow">return</span> x + y; }))))</div>
+<div class="line">               ([&amp;self](T <span class="keyword">const</span>&amp; y) { <span class="keywordflow">return</span> self + y; }))))</div>
 <div class="line"> </div>
 <div class="line">template &lt;typename Proxy = anyxx::val&lt;&gt;&gt;</div>
 <div class="line">using any_has_plus = anyxx::any_&lt;Proxy, has_plus&gt;;</div>

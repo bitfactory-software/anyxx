@@ -101,8 +101,8 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">TRAIT(equal_comparable, anyxx::dynamic_copyable,</div>
 <div class="line">      (OP_FREE(<span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
 <div class="line">       OP_IMPL(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, !=, ne, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
-<div class="line">               [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
-<div class="line">                 <span class="keywordflow">return</span> !(using_as&lt;equal_comparable&gt;(x) ==</div>
+<div class="line">               [&amp;self](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
+<div class="line">                 <span class="keywordflow">return</span> !(using_as&lt;equal_comparable&gt;(self) ==</div>
 <div class="line">                          using_as&lt;equal_comparable&gt;(r));</div>
 <div class="line">               })))</div>
 <div class="line"> </div>
@@ -120,25 +120,25 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">template &lt;typename T&gt;</div>
 <div class="line"><span class="keyword">struct</span> nullable_default_rep : std::variant&lt;std::monostate, T&gt; {</div>
 <div class="line">  <span class="keyword">using </span>std::variant&lt;std::monostate, T&gt;::variant;</div>
-<div class="line">  <span class="keyword">friend</span> <span class="keywordtype">bool</span> operator==(nullable_default_rep <span class="keyword">const</span>&amp; x,</div>
+<div class="line">  <span class="keyword">friend</span> <span class="keywordtype">bool</span> operator==(nullable_default_rep <span class="keyword">const</span>&amp; self,</div>
 <div class="line">                         nullable_default_rep <span class="keyword">const</span>&amp; r) = <span class="keywordflow">default</span>;</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line">TRAIT(nullable, anyxx::dynamic_copyable,</div>
 <div class="line">      (FN_IMPL(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, has_value, (), <span class="keyword">const</span>,</div>
-<div class="line">               [x]() { <span class="keywordflow">return</span> std::holds_alternative&lt;T&gt;(x); }),</div>
+<div class="line">               [self]() { <span class="keywordflow">return</span> std::holds_alternative&lt;T&gt;(self); }),</div>
 <div class="line">       FN_IMPL_EXACT(<span class="keyword">public</span>, T <span class="keyword">const</span>&amp;, get_value, (), <span class="keyword">const</span>,</div>
-<div class="line">                     [&amp;x]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> std::get&lt;T&gt;(x); }),</div>
+<div class="line">                     [&amp;self]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> std::get&lt;T&gt;(self); }),</div>
 <div class="line">       FN_IMPL_EXACT(<span class="keyword">public</span>, T&amp;, get_value, (), ,</div>
-<div class="line">                     [&amp;x]() -&gt; T&amp; { <span class="keywordflow">return</span> std::get&lt;T&gt;(x); }),</div>
+<div class="line">                     [&amp;self]() -&gt; T&amp; { <span class="keywordflow">return</span> std::get&lt;T&gt;(self); }),</div>
 <div class="line">       ANY_OP_DEF_EXACT(<span class="keyword">public</span>, T <span class="keyword">const</span>&amp;, -&gt;, arrow_const, (), <span class="keyword">const</span>,</div>
-<div class="line">                        [&amp;x]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
+<div class="line">                        [&amp;self]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> Map{}.get_value(self); }),</div>
 <div class="line">       ANY_OP_DEF_EXACT(<span class="keyword">public</span>, T&amp;, -&gt;, arrow, (), ,</div>
-<div class="line">                        [&amp;x]() -&gt; T&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
+<div class="line">                        [&amp;self]() -&gt; T&amp; { <span class="keywordflow">return</span> Map{}.get_value(self); }),</div>
 <div class="line">       ANY_OP_DEF_EXACT(<span class="keyword">public</span>, T <span class="keyword">const</span>&amp;, *, deref_const, (), <span class="keyword">const</span>,</div>
-<div class="line">                        [&amp;x]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
+<div class="line">                        [&amp;self]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> Map{}.get_value(self); }),</div>
 <div class="line">       ANY_OP_DEF_EXACT(<span class="keyword">public</span>, T&amp;, *, deref, (), ,</div>
-<div class="line">                        [&amp;x]() -&gt; T&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
+<div class="line">                        [&amp;self]() -&gt; T&amp; { <span class="keywordflow">return</span> Map{}.get_value(self); }),</div>
 <div class="line">       OP_FREE(<span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">template &lt;typename T&gt;</div>
@@ -205,8 +205,8 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"><span class="comment">// functions accordingly.</span></div>
 <div class="line">MODEL_MAP(_2p_app::foo, _2p_lib::nullable) {</div>
 <div class="line">  <span class="keyword">using </span>rep_type = _2p_app::foo;</div>
-<div class="line">  <span class="keywordtype">bool</span> has_value(_2p_app::foo <span class="keyword">const</span>&amp; x) { <span class="keywordflow">return</span> x.v_ != <span class="keyword">nullptr</span>; };</div>
-<div class="line">  <span class="keyword">auto</span>&amp; get_value(<span class="keyword">auto</span>&amp;&amp; x) { <span class="keywordflow">return</span> std::forward&lt;decltype(x)&gt;(x); };</div>
+<div class="line">  <span class="keywordtype">bool</span> has_value(_2p_app::foo <span class="keyword">const</span>&amp; self) { <span class="keywordflow">return</span> self.v_ != <span class="keyword">nullptr</span>; };</div>
+<div class="line">  <span class="keyword">auto</span>&amp; get_value(<span class="keyword">auto</span>&amp;&amp; self) { <span class="keywordflow">return</span> std::forward&lt;decltype(self)&gt;(self); };</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>{</div>

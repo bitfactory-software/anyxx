@@ -121,7 +121,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">TRAIT(stringable, anyxx::dynamic_copyable,</div>
 <div class="line">      (FN_IMPL(<span class="keyword">public</span>, std::string, to_string, (), <span class="keyword">const</span>,</div>
-<div class="line">               [&amp;x]() { <span class="keywordflow">return</span> std::format(<span class="stringliteral">&quot;{}&quot;</span>, x); })))</div>
+<div class="line">               [&amp;self]() { <span class="keywordflow">return</span> std::format(<span class="stringliteral">&quot;{}&quot;</span>, self); })))</div>
 <div class="line"> </div>
 <div class="line">template &lt;typename Proxy&gt;</div>
 <div class="line"><span class="keyword">using</span> any_stringable = anyxx::any_&lt;Proxy, stringable&gt;;</div>
@@ -129,8 +129,8 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">TRAIT(node, anyxx::dynamic_copyable,</div>
 <div class="line">      (FN_IMPL(<span class="keyword">public</span>, anyxx::self, sum,</div>
 <div class="line">               ((anyxx::any_self_forward_range <span class="keyword">const</span>&amp;)), <span class="keyword">const</span>,</div>
-<div class="line">               [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
-<div class="line">                 <span class="keyword">auto</span> s = x;</div>
+<div class="line">               [&amp;self](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
+<div class="line">                 <span class="keyword">auto</span> s = self;</div>
 <div class="line">                 <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) {</div>
 <div class="line">                   s += i;</div>
 <div class="line">                 }</div>
@@ -389,7 +389,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> ValueType, <span class="keyword">typename</span> Reference&gt;</div>
 <div class="line"><span class="keyword">struct </span>forward_iterator_model_map&lt;node_base*, ValueType, Reference&gt;</div>
 <div class="line">    : forward_iterator_default_model_map&lt;node_base*, ValueType, Reference&gt; {</div>
-<div class="line">  node_base* op_pre_increment(node_base*&amp; x)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> x = x-&gt;next(); }</div>
+<div class="line">  node_base* op_pre_increment(node_base*&amp; self)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> self = self-&gt;next(); }</div>
 <div class="line">};</div>
 <div class="line">}  <span class="comment">// namespace anyxx</span></div>
 <div class="line"><span class="keyword">namespace </span>{</div>
