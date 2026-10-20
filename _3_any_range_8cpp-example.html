@@ -120,22 +120,23 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line">TRAIT(stringable, anyxx::dynamic_copyable,</div>
-<div class="line">      (FN_IMPL(<span class="keyword">public</span>, std::string, to_string, (), <span class="keyword">const</span>,</div>
-<div class="line">               [&amp;self]() { <span class="keywordflow">return</span> std::format(<span class="stringliteral">&quot;{}&quot;</span>, self); })))</div>
+<div class="line">      (FN_IMPL(</div>
+<div class="line">          <span class="keyword">public</span>, std::string, to_string, (), <span class="keyword">const</span>,</div>
+<div class="line">          () { <span class="keywordflow">return</span> std::format(<span class="stringliteral">&quot;{}&quot;</span>, self); })))</div>
 <div class="line"> </div>
 <div class="line">template &lt;typename Proxy&gt;</div>
 <div class="line"><span class="keyword">using</span> any_stringable = anyxx::any_&lt;Proxy, stringable&gt;;</div>
 <div class="line"> </div>
 <div class="line">TRAIT(node, anyxx::dynamic_copyable,</div>
-<div class="line">      (FN_IMPL(<span class="keyword">public</span>, anyxx::self, sum,</div>
-<div class="line">               ((anyxx::any_self_forward_range <span class="keyword">const</span>&amp;)), <span class="keyword">const</span>,</div>
-<div class="line">               [&amp;self](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
-<div class="line">                 <span class="keyword">auto</span> s = self;</div>
-<div class="line">                 <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) {</div>
-<div class="line">                   s += i;</div>
-<div class="line">                 }</div>
-<div class="line">                 <span class="keywordflow">return</span> s;</div>
-<div class="line">               })));</div>
+<div class="line">      (FN_IMPL(</div>
+<div class="line">          <span class="keyword">public</span>, anyxx::self, sum, ((anyxx::any_self_forward_range <span class="keyword">const</span>&amp;)),</div>
+<div class="line">          <span class="keyword">const</span>, (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
+<div class="line">            <span class="keyword">auto</span> s = self;</div>
+<div class="line">            <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) {</div>
+<div class="line">              s += i;</div>
+<div class="line">            }</div>
+<div class="line">            <span class="keywordflow">return</span> s;</div>
+<div class="line">          })));</div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Proxy = anyxx::val&lt;&gt;&gt;</div>
 <div class="line"><span class="keyword">using </span>any_node = anyxx::any_&lt;Proxy, node&gt;;</div>
 <div class="line"> </div>
@@ -389,16 +390,18 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> ValueType, <span class="keyword">typename</span> Reference&gt;</div>
 <div class="line"><span class="keyword">struct </span>forward_iterator_model_map&lt;node_base*, ValueType, Reference&gt;</div>
 <div class="line">    : forward_iterator_default_model_map&lt;node_base*, ValueType, Reference&gt; {</div>
-<div class="line">  node_base* op_pre_increment(node_base*&amp; self)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> self = self-&gt;next(); }</div>
+<div class="line">  node_base* op_pre_increment(node_base*&amp; self)<span class="keyword"> const </span>{</div>
+<div class="line">    <span class="keywordflow">return</span> self = self-&gt;next();</div>
+<div class="line">  }</div>
 <div class="line">};</div>
 <div class="line">}  <span class="comment">// namespace anyxx</span></div>
 <div class="line"><span class="keyword">namespace </span>{</div>
 <div class="line"><span class="keyword">using </span>node_iterator =</div>
 <div class="line">    anyxx::any_&lt;anyxx::using_&lt;node_base*&gt;, anyxx::forward_iterator, node_base,</div>
-<div class="line">               node_base&amp;&gt;;</div>
+<div class="line">                node_base&amp;&gt;;</div>
 <div class="line"><span class="keyword">using </span>node_const_iterator =</div>
 <div class="line">    anyxx::any_&lt;anyxx::using_&lt;node_base*&gt;, anyxx::forward_iterator,</div>
-<div class="line">               node_base <span class="keyword">const</span>, node_base <span class="keyword">const</span>&amp;&gt;;</div>
+<div class="line">                node_base <span class="keyword">const</span>, node_base <span class="keyword">const</span>&amp;&gt;;</div>
 <div class="line">}  <span class="comment">// namespace</span></div>
 <div class="line"><span class="keyword">namespace </span>anyxx {</div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Node, <span class="keyword">typename</span> Iterator&gt;</div>
