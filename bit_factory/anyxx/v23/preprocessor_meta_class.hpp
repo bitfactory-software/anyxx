@@ -813,7 +813,7 @@
 /// @}
 
 #define _detail_ANYXX_FN_EMPTY(name, ret) \
-  []<typename... Args>([[maybe_unused]] Args...) -> ret { return {}; }
+  ([]<typename... Args>([[maybe_unused]] Args...) -> ret { return {}; })
 
 #define _detail_ANYXX_FN_MEMBER(name)                            \
   ([&self]<typename... Args>(Args&&... args) -> decltype(auto) { \
@@ -874,7 +874,7 @@
 /// \ingroup trait_macros
 #define FN_PURE(ret, name, params, const_)                                     \
   (private, , ret, name, name, false, const_,                                  \
-   (_detail_ANYXX_FN_EMPTY(name, ret)), ignore_mapf_concept_with_always_false, \
+   _detail_ANYXX_FN_EMPTY(name, ret), ignore_mapf_concept_with_always_false, \
    self.name, _detail_EXPAND params)
 
 /// \def FN_PURE_EXACT
@@ -882,7 +882,7 @@
 /// \ingroup trait_macros
 #define FN_PURE_EXACT(ret, name, params, const_)                               \
   (private, , ret, name, name, true, const_,                                   \
-   (_detail_ANYXX_FN_EMPTY(name, ret)), ignore_mapf_concept_with_always_false, \
+   _detail_ANYXX_FN_EMPTY(name, ret), ignore_mapf_concept_with_always_false, \
    self.name, _detail_EXPAND params)
 
 /// \def FN_IMPL
@@ -1041,7 +1041,7 @@
 /// \ingroup trait_macros
 #define FN_STATIC_PURE(template_params, return_type, name, params, ...) \
   (template_params, return_type, name,                                  \
-   (_detail_ANYXX_FN_EMPTY(name, return_type)), _detail_EXPAND params)
+   _detail_ANYXX_FN_EMPTY(name, return_type), _detail_EXPAND params)
 
 /// \def FN_STATIC_DEF
 /// \brief Static TRAIT function, which has a default implementation. This
