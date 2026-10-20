@@ -819,14 +819,18 @@
   ([&self]<typename... Args>(Args&&... args) -> decltype(auto) { \
     return self.name(std::forward<Args>(args)...);               \
   })
-
-#define ANY_OVERLOAD(name) using base_t::name;
+#define __detail_ANYXX_FREE_OP(name)                    \
+  ([&self]<typename Rhs>(Rhs&& rhs) -> decltype(auto) { \
+    return self name std::forward<Rhs>(rhs);            \
+  })
 
 #define __detail_ANYXX_MEMBER_FN(access, overload, ret, name, name_ext,  \
                                  exact_const, const_, params)            \
   (access, overload, ret, name, name_ext, exact_const, const_,           \
    _detail_ANYXX_FN_MEMBER(name_ext), use_mapf_concept, (self.name_ext), \
    _detail_EXPAND params)
+
+#define ANY_OVERLOAD(name) using base_t::name;
 
 /// \addtogroup fn_macros FN... and OP_ macros
 /// \brief Macros to define \ref trait's and \ref any_'s functions and operators
@@ -872,16 +876,16 @@
 /// \def FN_PURE
 /// \brief TRAIT function, which must be provided by the model.
 /// \ingroup trait_macros
-#define FN_PURE(ret, name, params, const_)                                     \
-  (private, , ret, name, name, false, const_,                                  \
+#define FN_PURE(ret, name, params, const_)                                   \
+  (private, , ret, name, name, false, const_,                                \
    _detail_ANYXX_FN_EMPTY(name, ret), ignore_mapf_concept_with_always_false, \
    self.name, _detail_EXPAND params)
 
 /// \def FN_PURE_EXACT
 /// \brief TRAIT function, which must be provided by the model.
 /// \ingroup trait_macros
-#define FN_PURE_EXACT(ret, name, params, const_)                               \
-  (private, , ret, name, name, true, const_,                                   \
+#define FN_PURE_EXACT(ret, name, params, const_)                             \
+  (private, , ret, name, name, true, const_,                                 \
    _detail_ANYXX_FN_EMPTY(name, ret), ignore_mapf_concept_with_always_false, \
    self.name, _detail_EXPAND params)
 
@@ -956,7 +960,7 @@
 /// specific name for the operator in the map to have a defined name for
 /// overriding in derived TRAITs.
 #define OP_FREE(ret, op, name, params, const_)                 \
-  (public, , ret, name, operator op, false, const_, (self op), \
+  (public, , ret, name, operator op, false, const_, __detail_ANYXX_FREE_OP(op), \
    use_mapf_concept, self op, _detail_EXPAND params)
 
 /// \def UNARY_OP
