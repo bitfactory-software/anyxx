@@ -57,7 +57,7 @@ TRAIT_EX(moveable, observeable, , , ,
 
 TRAIT_EX(copyable, moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
 
-TRAIT_EX(typed_observeable, observeable, , , , (ANY_CLASS_TYPE_INFO), ());
+TRAIT_EX(typed_observeable, observeable, , , , (ANY_CLASS_TYPE_INFO), (using default_proxy_t = cref;));
 
 TRAIT_EX(typed_moveable, typed_observeable, , , ,
          (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
