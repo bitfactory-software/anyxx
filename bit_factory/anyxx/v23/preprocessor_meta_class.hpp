@@ -812,12 +812,21 @@
 
 /// @}
 
+#define _detail_ANYXX_FN_EMPTY(name, ret) \
+  []<typename... Args>([[maybe_unused]] Args...) -> ret { return {}; }
+
+#define _detail_ANYXX_FN_MEMBER(name)                            \
+  ([&self]<typename... Args>(Args&&... args) -> decltype(auto) { \
+    return self.name(std::forward<Args>(args)...);               \
+  })
+
 #define ANY_OVERLOAD(name) using base_t::name;
 
-#define __detail_ANYXX_MEMBER_FN(access, overload, ret, name, name_ext, \
-                                 exact_const, const_, params)           \
-  (access, overload, ret, name, name_ext, exact_const, const_,          \
-   (self.name_ext), use_mapf_concept, (self.name_ext), _detail_EXPAND params)
+#define __detail_ANYXX_MEMBER_FN(access, overload, ret, name, name_ext,  \
+                                 exact_const, const_, params)            \
+  (access, overload, ret, name, name_ext, exact_const, const_,           \
+   _detail_ANYXX_FN_MEMBER(name_ext), use_mapf_concept, (self.name_ext), \
+   _detail_EXPAND params)
 
 /// \addtogroup fn_macros FN... and OP_ macros
 /// \brief Macros to define \ref trait's and \ref any_'s functions and operators
@@ -1100,6 +1109,3 @@
 /// the associated v-table.
 #define MODEL_MAP(model_, trait_) __ANY_MODEL_MAP(trait_, (ANY_UNPAREN(model_)))
 /// @}
-
-#define _detail_ANYXX_FN_EMPTY(name, ret) \
-  []<typename... Args>([[maybe_unused]] Args...) -> ret { return {}; }
