@@ -23,9 +23,9 @@ TRAIT(shape, dynamic_castable, (FN(double, area, (), const)))
 
 template <range_of<any<shape>> Shapes>
 double sum_area(const Shapes& shapes) {
-  return std::ranges::fold_right(
+  return std::ranges::fold_left(
       shapes, 0.0,
-      [](const any<shape>& s, double acc) { return acc + s.area(); });
+      [](double acc, const any<shape>& s) { return acc + s.area(); });
 }
 }  // namespace geometry
 
