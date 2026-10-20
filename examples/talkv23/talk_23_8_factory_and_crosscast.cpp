@@ -3,6 +3,7 @@
 #include <bit_factory/anyxx.hpp>
 #include <bit_factory/anyxx/ext/factory.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <format>
 #include <ranges>
 #include <sstream>
@@ -93,5 +94,5 @@ TEST_CASE("talk_23_8_factory_and_crosscast") {
                 });
   static_assert(std::same_as<std::ranges::range_value_t<decltype(shapes)>,
                              any<geometry::shape>>);
-  CHECK(geometry::sum_area(shapes) == 85.64);
+  CHECK_THAT(geometry::sum_area(shapes), Catch::Matchers::WithinAbs(85.64, 0.01));
 }
