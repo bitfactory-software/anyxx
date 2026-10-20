@@ -1,6 +1,6 @@
 #include <array>
 #include <bit_factory/anyxx.hpp>
-#include <bit_factory/anyxx/v26/anys/function.hpp>
+#include <bit_factory/anyxx/anys/function.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <format>
 #include <string>
@@ -52,5 +52,5 @@ TEST_CASE("talk_26_7_downcast") {
 
     auto processed =
         process_with({ any<derived>{i}, any<derived>{s}, 42 }, decoration_handler);
-    CHECK(processed == "exact: 4711\nexact: hello world\npossible answer: 42\n"); // gcc
+    CHECK(processed == "exact: 4711\nexact: hello world\npossible answer: 42\n");
 }
