@@ -11,7 +11,7 @@ on:
       - andi-unified-any
 
 env:
-  CLANG_TIDY_VERSION: "21"
+  CLANG_TIDY_VERSION: "23"
   VERBOSE: 1
 
 jobs:
