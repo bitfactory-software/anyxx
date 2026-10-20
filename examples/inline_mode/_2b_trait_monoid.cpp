@@ -15,7 +15,7 @@ namespace anyxx {
 namespace example_2b {
 
 TRAIT_EX(monoid, anyxx::dynamic_copyable,
-         (FN_IMPL(public, anyxx::self, id, (), const, () { return T{}; }),
+         (FN_IMPL(public, anyxx::self, id, (), const, () { std::ignore = self; return T{}; }),
           FN_IMPL(public, anyxx::self, op, (anyxx::self const&), const,
                   (auto const& r) {
                     std::println("op-default {}", typeid(T).name());

@@ -10,8 +10,8 @@ namespace {
 using namespace anyxx;
 
 class container {
-  std::vector<int> v{{1}, {2}, {3}, {4}, {5}};
-  std::list<int> l{{1}, {2}, {3}, {4}, {5}};
+  std::vector<int> v{1, 2, 3, 4, 5};
+  std::list<int> l{1, 2, 3, 4, 5};
   int s{1};
 
  public:
@@ -22,7 +22,7 @@ class container {
     } else if (i == 1) {
       return std::views::all(l);
     } else {
-      return std::move(std::views::single(s));
+      return std::views::single(s);
     }
   };
 };

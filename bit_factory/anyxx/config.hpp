@@ -43,6 +43,8 @@
 #pragma GCC diagnostic ignored "-Wshadow"
 #if not defined(_MSC_VER) 
 #pragma GCC diagnostic ignored "-Wcounter-extension"
+#else
+#pragma GCC diagnostic ignored "-Wc2y-extensions"
 #endif
 #endif
 #if defined(__GNUC__) and !defined(__clang__)

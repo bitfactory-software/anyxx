@@ -10,7 +10,7 @@
 namespace {
 
 struct Circle {
-  double radius;
+  double radius = 0.0;
 };
 
 using namespace anyxx;
