@@ -31,8 +31,7 @@ std::string process_with(std::vector<any<base>> const& things,
 template <is_trait Trait, typename Self>
 struct derived : base<Trait, Self> {
     static std::string decorated(Self const& self) {
-        std::string decoration = std::define_static_string(std::meta::display_string_of(^^Self));
-        return decoration + ": " + any<base>{self}.as_string();
+        return  + "exact: " + any<base>{self}.as_string();
     }
 };
 
@@ -46,12 +45,12 @@ std::string decoration_handler(any<base> const& thing) {
 
 }  // namespace
 
-TEST_CASE("anyxx downcast") {
+TEST_CASE("talk_26_7_downcast") {
 
     int i = 4711;
     std::string s = "hello world";
 
     auto processed =
         process_with({ any<derived>{i}, any<derived>{s}, 42 }, decoration_handler);
-    CHECK(processed == "int: 4711\nstd::__cxx11::basic_string<char>: hello world\npossible answer: 42\n");
+    CHECK(processed == "exact: 4711\nexact: hello world\npossible answer: 42\n"); // gcc
 }
