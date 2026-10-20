@@ -125,7 +125,7 @@ $(function(){initNavTree('21_Tree_any_borrow_as_8cpp-example.html','',''); });
 <div class="line">any_&lt;unique, serializeable&gt; deserialize(std::istream&amp; archive) {</div>
 <div class="line">  std::string type;</div>
 <div class="line">  archive &gt;&gt; type;</div>
-<div class="line">  <span class="keywordflow">return</span> deserialize_factory.construct(type, archive);</div>
+<div class="line">  <span class="keywordflow">return</span> deserialize_factory(type, archive);</div>
 <div class="line">}</div>
 <div class="line">any_&lt;unique, node&gt; deserialize_any_node(std::istream&amp; archive) {</div>
 <div class="line">  <span class="keywordflow">return</span> move_to&lt;any_&lt;unique, node&gt;&gt;(deserialize(archive));</div>
@@ -180,12 +180,14 @@ $(function(){initNavTree('21_Tree_any_borrow_as_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">ANY_SINGLETON(_21_Tree_any_borrow_as, deserialize_factory)</div>
 <div class="line"> </div>
-<div class="line">ANY_REGISTER_MODEL(Plus, node);</div>
-<div class="line">ANY_REGISTER_MODEL(Plus, serializeable);</div>
-<div class="line">ANY_REGISTER_MODEL(Times, node);</div>
-<div class="line">ANY_REGISTER_MODEL(Times, serializeable);</div>
-<div class="line">ANY_REGISTER_MODEL(Integer, node);</div>
-<div class="line">ANY_REGISTER_MODEL(Integer, serializeable);</div>
+<div class="line"><span class="keyword">namespace </span>{</div>
+<div class="line">register_trait&lt;Plus, node&gt; __;</div>
+<div class="line">register_trait&lt;Plus, serializeable&gt; __;</div>
+<div class="line">register_trait&lt;Times, node&gt; __;</div>
+<div class="line">register_trait&lt;Times, serializeable&gt; __;</div>
+<div class="line">register_trait&lt;Integer, node&gt; __;</div>
+<div class="line">register_trait&lt;Integer, serializeable&gt; __;</div>
+<div class="line">}</div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;_21_Tree_any_borrow_as&quot;</span>) {</div>
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>

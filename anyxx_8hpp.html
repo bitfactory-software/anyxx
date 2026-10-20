@@ -94,48 +94,49 @@ $(function(){initNavTree('anyxx_8hpp.html','',''); });
 
 <p>C++ header only library for external polymorphism.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;bit_factory/anyxx/config.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/ANY_UNIQUE_NAME.hpp&gt;</code><br />
+<div class="textblock"><code>#include &lt;bit_factory/anyxx/ANY_UNIQUE_NAME.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/any_access.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/any_cast.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/any_concept.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/any_forward.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/any_get_meta_data.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/any_type_of.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/any_cast.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/borrow_as.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/clone_to.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/compute_val_proxy_size.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/config.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/crosscast_runtime.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/dll_mode.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/downcast.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/errors/type_mismatch_error.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/lock.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/move_to.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/observeable.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/small_object_size.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/utilities.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/v_table_instance.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/v_table_data.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/voidness.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/errors/type_mismatch_error.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/basic_proxy_trait.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/proxies/proxy_concept.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/proxies/proxy_cast.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/proxies/dyn/cow.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/proxies/dyn/observer.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/proxies/dyn/unique.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/proxies/dyn/shared.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/proxies/dyn/weak.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/proxies/dyn/val.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/dyn/borrowable_from.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/dyn/cloneable_to.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/proxies/dyn/cow.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/dyn/moveable_from.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/proxies/dyn/observer.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/proxies/dyn/shared.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/proxies/dyn/unique.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/proxies/dyn/val.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/proxies/dyn/weak.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/proxies/proxy_cast.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/proxies/proxy_concept.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/static/trait_class.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/proxies/static/using_cref.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/static/using_.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/proxies/static/using_cref.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/small_object_size.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/utilities.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/v_table_data.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/v_table_instance.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/voidness.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/v23/any.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/v23/any/register_trait.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/v23/preprocessor_meta_class.hpp&gt;</code><br />
-<code>#include &lt;bit_factory/anyxx/v23/v_table_data.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/v23/signature_handling.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/v23/v_table_data.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/v23/v_table_holder/v_table_holder_dyn.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/v23/v_table_holder/v_table_holder_static.hpp&gt;</code><br />
 </div>
