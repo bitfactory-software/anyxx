@@ -59,16 +59,17 @@ ANY_META_CLASS_STATIC(
     std::map<int, std::map<std::string, std::map<int, double>>>)
 ANY_META_CLASS_STATIC(std::map<std::string, std::map<int, double>>)
 
+TEMPLATE_MODEL_MAP((std::map<std::string, int>), template_test::map,
+    ((std::string), (int))) {
+    int const& at(std::map<std::string, int> const& x, std::string const& i) {
+        return x.at(i);
+    };
+};
+
+namespace{
 anyxx::register_trait<std::map<std::string, int>, template_test::map,
                       std::string, int>
     __;
-
-TEMPLATE_MODEL_MAP((std::map<std::string, int>), template_test::map,
-                   ((std::string), (int))) {
-  int const& at(std::map<std::string, int> const& x, std::string const& i) {
-    return x.at(i);
-  };
-};
 
 using KEY1 = anyxx::any_<anyxx::cref, recursive_map, std::string,
                          anyxx::any_<anyxx::cref, mutable_map, int, double>,
@@ -109,6 +110,7 @@ anyxx::register_trait<std::map<std::string, std::map<int, double>>,
                       test::component_base::mutable_recursive_map, std::string,
                       KEY6>
     __;
+}
 
 TEST_CASE("any_ template test") {
   using namespace template_test;
