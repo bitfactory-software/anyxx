@@ -29,7 +29,7 @@ jobs:
         compiler:
           # you can specify the version after `-` like "llvm-15.0.2".
           - llvm-23
-          - gcc-16.1
+          - gcc-16
         generator:
           - "Ninja Multi-Config"
         build_type:
@@ -40,12 +40,12 @@ jobs:
         exclude:
           # mingw is determined by this author to be too buggy to support
           - os: windows-latest
-            compiler: gcc-16.1
+            compiler: gcc-16
 
         include:
           # Add appropriate variables for gcov version required. This will intentionally break
           # if you try to use a compiler that does not have gcov set
-          - compiler: gcc-16.1
+          - compiler: gcc-16
             enable_ipo: Off
 
           - compiler: llvm-23
