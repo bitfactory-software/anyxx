@@ -54,15 +54,11 @@ auto __ = collide.define<Spaceship, Asteroid>([](auto l, auto) {  //
 });
 }  // namespace
 
- TEST_CASE("talk_2310_basic_multi_dispatch") {
-   auto winner = run({Asteroid{"Chicxulub"}, Spaceship{"NCC-1701"},
-                      Spaceship{"USGS Powell"}, Asteroid{"Tunguska"}});
-   // Output:
-   // Asteroid: Chicxulub <=> Spaceship - NCC - 1701->Asteroid : Chicxulub!
-   // Asteroid : Chicxulub <=> Spaceship - USGS Powell->Asteroid : Chicxulub!
-   // Asteroid : Chicxulub <=> Asteroid : Tunguska->Asteroid : Tunguska!
-   CHECK(winner.registry() == "Asteroid: Tunguska");
- }
+TEST_CASE("talk_2310_basic_multi_dispatch") {
+  auto winner = run({Asteroid{"Chicxulub"}, Spaceship{"NCC-1701"},
+                     Spaceship{"USGS Powell"}, Asteroid{"Tunguska"}});
+  CHECK(winner.registry() == "Asteroid: Tunguska");
+}
 
 namespace {
 struct DeathStar {

@@ -20,7 +20,7 @@ MODEL_MAP(Circle, Shape) {
   double area(const Circle& self) { return M_PI * self.radius * self.radius; };
 };
 
-TEST_CASE("ShapesAny++23") {
+TEST_CASE("talk_2310_ShapesAny++23") {
   std::initializer_list<any_<unique, Shape>> shapes = {Circle{5.0}};
   for (const auto& shape : shapes) {
     std::println("Area: {}", shape.area());
@@ -28,7 +28,7 @@ TEST_CASE("ShapesAny++23") {
   }
 }
 
-TEST_CASE("ShapesAny++23 simplified") {
+TEST_CASE("talk_2310_ShapesAny++23 simplified") {
   std::initializer_list<any<Shape>> shapes = {Circle{5.0}};
   for (const auto& shape : shapes) {
     std::println("Area: {}", shape.area());

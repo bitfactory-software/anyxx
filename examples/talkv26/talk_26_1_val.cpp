@@ -31,7 +31,7 @@ struct Shape<model_map, Circle> {
   }
 };
 
-TEST_CASE("ShapesAny++26 val") {
+TEST_CASE("talk_2610_ShapesAny++26 val") {
   print_area(Circle{5.0});
 }
 

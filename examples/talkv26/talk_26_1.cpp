@@ -24,7 +24,7 @@ struct Shape<model_map, Circle> {
   static double area(const Circle& self) { return M_PI * self.radius * self.radius; }
 };
 
-TEST_CASE("ShapesAny++26") {
+TEST_CASE("talk_2610_ShapesAny++26") {
   std::initializer_list<any<Shape>> shapes = {Circle{5.0}};
   for (const auto& shape : shapes) {
     std::println("Area: {}", shape.area());

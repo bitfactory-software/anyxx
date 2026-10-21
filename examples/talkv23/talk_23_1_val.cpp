@@ -24,7 +24,7 @@ MODEL_MAP(Circle, Shape) {
   double area(const Circle& self) { return M_PI * self.radius * self.radius; };
 };
 
-TEST_CASE("ShapesAny++23 val") {
+TEST_CASE("talk_2310_ShapesAny++23 val") {
   print_area(Circle{ 5.0 });
 }
 
