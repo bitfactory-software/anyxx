@@ -172,7 +172,7 @@ auto get_tuple_head(std::tuple<Ts...> from) {
 template <std::size_t FromN, typename... Ts>
 auto get_tuple_tail(std::tuple<Ts...> from) {
   return [&]<std::size_t... I>(std::index_sequence<I...>) {
-    return std::make_tuple(std::get<I>(from)...);
+    return std::make_tuple(std::get<I + FromN>(from)...);
   }(std::make_index_sequence<std::tuple_size_v<std::tuple<Ts...>> - FromN>{});
 }
 
