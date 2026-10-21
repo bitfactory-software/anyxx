@@ -1,12 +1,5 @@
 #pragma once
 
-/*! \file bit_factory/anyxx.hpp
-    \brief C++ header only library for external polymorphism.
-
-    for Microsoft C++, you must enable the C-Preprocessor with this flag:
-    /Zc:preprocessor (see CMakeLists.txt for example)
-*/
-
 #include <bit_factory/anyxx/any_access.hpp>
 #include <bit_factory/anyxx/any_concept.hpp>
 #include <bit_factory/anyxx/errors/error.hpp>
@@ -36,10 +29,6 @@ dispatch_table_t* dispatch_table_instance() {
   return dispatch_table_instance_implementation<AnyVTable, Class>();
 }
 #endif
-
-#define HAS_OPEN_DISPATCH                                    \
-  ANY_V_TABLE_DATA(anyxx::dispatch_table_t*, dispatch_table, \
-                   anyxx::dispatch_table_instance<v_table_t, Concrete>())
 
 void insert_function(dispatch_table_t* table, std::size_t index, auto fp) {
   if (table->size() <= index) table->resize(index + 1);
