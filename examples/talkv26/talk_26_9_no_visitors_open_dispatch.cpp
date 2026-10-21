@@ -18,19 +18,12 @@ struct node : anyxx::copyable<Trait, Self> {
 static_assert(is_open_dispatch_v_table<any<node>::v_table_t>);
 
 struct Plus {
-    Plus(any<node> const& left, any<node> const& right)
-        : left_(left), right_(right) {
-    }
     any<node> left_, right_;
 };
 struct Times {
-    Times(any<node> const& left, any<node> const& right)
-        : left_(left), right_(right) {
-    }
     any<node> left_, right_;
 };
 struct Integer {
-    explicit Integer(int i_) : i(i_) {}
     int i;
 };
 

@@ -2,6 +2,7 @@
 
 #include <bit_factory/anyxx.hpp>
 #include <bit_factory/anyxx/ext/dispatch.hpp>
+#include <bit_factory/anyxx/ext/dispatch_table.hpp>
 #include <cmath>
 
 #ifndef ARCHITECTURE_EXPORT
