@@ -12,7 +12,7 @@ using namespace anyxx;
 
 namespace {
 
-TRAIT_EX(node, anyxx::dynamic_copyable, , , , 
+TRAIT_EX(node, anyxx::dynamic_copyable, , , ,
     (HAS_OPEN_DISPATCH), (using default_proxy_t = anyxx::cow))
 
 struct Plus {
@@ -65,19 +65,16 @@ auto __ = as_lisp.define<Integer>(
 //-----------------------------------------------------------------------------
 }  // namespace
 
-using namespace anyxx;
-
 TEST_CASE("talk_23_9_no_visitors_open_dispatch") {
-  using namespace anyxx;
 
   any<node> expr{Times{Integer(2), Plus{Integer{3}, Integer{4}}}};
 
   auto v = evaluate(expr);
-  REQUIRE(v == 14);
+  CHECK(v == 14);
   std::stringstream out;
   out << as_forth(expr) << " = " << as_lisp(expr) << " = " << evaluate(expr);
   std::cout << out.str() << "\n";
-  REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
+  CHECK(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
 
 #ifdef ANYXX_RUN_BENCHMARKS
   BENCHMARK("23_Tree any_++ open method evaluate") { return evaluate(expr); };

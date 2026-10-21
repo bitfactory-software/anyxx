@@ -18,13 +18,13 @@ struct node : anyxx::copyable<Trait, Self> {
 static_assert(is_open_dispatch_v_table<any<node>::v_table_t>);
 
 struct Plus {
-    any<node> left_, right_;
+  any<node> left_, right_;
 };
 struct Times {
-    any<node> left_, right_;
+  any<node> left_, right_;
 };
 struct Integer {
-    int i;
+  int i;
 };
 
 // =============================================================================
@@ -68,8 +68,6 @@ auto __ = as_lisp.define<Integer>(
 }  // namespace
 
 TEST_CASE("talk_26_9_no_visitors_open_dispatch") {
-  using namespace anyxx;
-
   any<node> expr{Times{Integer(2), Plus{Integer{3}, Integer{4}}}};
 
   auto v = evaluate(expr);
