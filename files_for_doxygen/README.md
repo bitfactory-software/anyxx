@@ -548,18 +548,18 @@ using known_and_unknown_shapes = make_vany<figure, circle, square>;
 static_assert(std::same_as<
               known_and_unknown_shapes,
               any_<using_<std::variant<any<figure>, circle, square>>, figure>>);
-MODEL_MAP(std::string, figure) {
-  static std::string draw(std::string const& s) { return s; };
-};
-
-void draw(std::stringstream& os,
-          std::vector<known_and_unknown_shapes> const& figures) {
-  for (auto const& f : figures) os << f.draw() << "\n";
+void draw_vany(std::stringstream& os,
+    std::vector<known_and_unknown_shapes> const& figures) {
+    for(auto const& f : figures) os << f.draw() << "\n";
 }
+
+MODEL_MAP(std::string, figure) {
+  std::string draw(std::string const& s) { return s; };
+};
 
 TEST_CASE("Showcase7") {
   std::stringstream ss;
-  draw(ss, {circle{}, square{}, any<figure>{"The big unknown..."s}});
+  draw_vany(ss, {circle{}, square{}, any<figure>{"The big unknown..."s}});
   CHECK(ss.str() == "Hello\nWorld\nThe big unknown...\n");
 }
 }  // namespace showcase7
