@@ -20,14 +20,14 @@ consteval std::vector<interface_spec_with_target> make_interface_specs_with_targ
         if constexpr(is_function_or_operator(spec) && !is_v_table_data(spec)) {
             auto args = std::define_static_array(template_arguments_of(spec.declaration_trait) | std::views::drop(2));
             auto implementation_member = find_function_impl(spec.member, template_of(spec.declaration_trait), ^^V, args);
-            if(implementation_member != spec.member) {
+            if (!is_defaulted_function_spec(implementation_member)) {
                 interface_specs_with_target.push_back(interface_spec_with_target{ spec, implementation_member });
             } else {
                 constexpr auto target = find_candidate_in<V, spec.member>();
                 if constexpr(target != std::meta::info{}) {
                     interface_specs_with_target.push_back(interface_spec_with_target{ spec, target });
                 } else {
-                    interface_specs_with_target.push_back(interface_spec_with_target{ spec, std::meta::info{} });
+                    interface_specs_with_target.push_back(interface_spec_with_target{ spec, implementation_member });
                 }   
             }
         }
