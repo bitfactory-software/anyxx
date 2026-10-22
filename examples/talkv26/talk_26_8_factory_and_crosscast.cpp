@@ -1,3 +1,4 @@
+#define ANYXX_26
 #include <algorithm>
 #include <array>
 #include <bit_factory/anyxx.hpp>

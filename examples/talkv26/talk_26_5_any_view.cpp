@@ -1,3 +1,4 @@
+#define ANYXX_26
 #include <bit_factory/anyxx.hpp>
 #include <bit_factory/anyxx/v26/anys/ranges.hpp>
 #include <catch2/catch_test_macros.hpp>

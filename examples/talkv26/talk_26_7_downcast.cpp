@@ -1,3 +1,4 @@
+#define ANYXX_26
 #include <array>
 #include <bit_factory/anyxx.hpp>
 #include <bit_factory/anyxx/anys/function.hpp>

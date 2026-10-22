@@ -17,7 +17,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_G
         bit_factory::anyxx
         Catch2::Catch2WithMain
     )
-    target_compile_definitions(talk_v26_examples PUBLIC ANYXX_26)
     if(MSVC)
         set_target_properties(talk_v26_examples PROPERTIES VS_DEBUGGER_ENVIRONMENT "PATH=$(VC_ExecutablePath_x64);%PATH%")
     endif()

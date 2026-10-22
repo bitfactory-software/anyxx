@@ -1,3 +1,4 @@
+#define ANYXX_26
 #include <algorithm>
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>

@@ -1,4 +1,5 @@
-﻿#include <bit_factory/anyxx.hpp>
+﻿#define ANYXX_26
+#include <bit_factory/anyxx.hpp>
 #include <bit_factory/anyxx/ext/dispatch.hpp>
 #include <bit_factory/anyxx/ext/dispatch_table.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>

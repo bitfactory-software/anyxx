@@ -1,3 +1,4 @@
+#define ANYXX_26
 #include <bit_factory/anyxx.hpp>
 #include <bit_factory/anyxx/ext/dispatch.hpp>
 #include <bit_factory/anyxx/ext/dispatch_table.hpp>
@@ -16,7 +17,6 @@ namespace {
 template <is_trait Trait, typename Self>
 struct thing : copyable<Trait, Self> {
   std::string registry() const;
-  using default_proxy_t = anyxx::cow;
   using dispatch_table[[= anyxx::v_table_data]] = anyxx::dispatch_table;
 };
 

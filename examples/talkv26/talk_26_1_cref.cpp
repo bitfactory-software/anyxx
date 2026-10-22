@@ -1,4 +1,5 @@
 #define _USE_MATH_DEFINES
+#define ANYXX_26
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <cmath>
