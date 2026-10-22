@@ -30,8 +30,8 @@ struct drawable : copyable<Trait, Self> {
  struct drawable<model_map, std::variant<Vs...>> {
    static std::string draw(std::variant<Vs...> const& v) {
      return std::visit(
-         [](auto const& x) {
-           return trait_as<decltype(x), drawable>(x).draw();
+         []<typename T>(T const& x) {
+           return trait_as<T, drawable>(x).draw();
          },
          v);
    }
