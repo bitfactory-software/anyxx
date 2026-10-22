@@ -37,7 +37,7 @@ consteval auto static_facade_overloaded_calls() {
 
 template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_trait_facade() {
-    return meta::make_struct_with(static_facade_overloaded_calls<V, Trait, Args...>());
+    return meta::make_struct_with(static_facade_overloaded_calls<std::decay_t<V>, Trait, Args...>());
 };
 
 }  // namespace anyxx
