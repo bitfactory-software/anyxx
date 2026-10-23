@@ -49,8 +49,8 @@ auto __ = collide.define<Asteroid, Asteroid>([](auto l, auto r) {  //
 auto __ = collide.define<Spaceship, Spaceship>([](auto l, auto r) {  //
   return l.registry() < r.registry() ? l : r;
 });
-auto __ = collide.define<Spaceship, Asteroid>([](auto l, auto) {  //
-  return l;
+auto __ = collide.define<Spaceship, Asteroid>([](auto, auto r) {  //
+  return r;
 });
 }  // namespace
 
