@@ -544,7 +544,7 @@ struct square {
 
 TRAIT(figure, dynamic_copyable, (FN(std::string, draw, (), const)))
 
-using known_and_unknown_shapes = make_vany<figure, circle, square>;
+using known_and_unknown_shapes = vany<figure, circle, square>;
 static_assert(std::same_as<
               known_and_unknown_shapes,
               any_<using_<std::variant<any<figure>, circle, square>>, figure>>);
@@ -571,7 +571,7 @@ Showcase 7 demonstrates how to use `Any++` to combine open type erasure with `st
 heterogeneous collections. Let us call them "vany" (variant-any_).
 - Two types, `circle` and `square`, are defined, each with a `draw()` method returning a string.
 - A `figure` trait is declared, specifying the required interface (`draw() const -> std::string`).
-- The type alias `known_and_unknown_shapes` is created using `anyxx::make_vany`, which produces a type-erased wrapper over a `std::variant` containing:
+- The type alias `known_and_unknown_shapes` is created using `anyxx::vany`, which produces a type-erased wrapper over a `std::variant` containing:
   - All known types (`circle`, `square`)
   - An open-ended type-erased fallback (`any_figure<ayx::val<>>`)
 - A model map is provided for `std::string`, allowing strings to be handled as figures.

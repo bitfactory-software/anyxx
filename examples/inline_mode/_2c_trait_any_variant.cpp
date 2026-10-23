@@ -33,7 +33,7 @@ TRAIT_EX(value, anyxx::dynamic_copyable,
          , , (HAS_OPEN_DISPATCH), ())
 using any_value = anyxx::any<value>;
 
-using vany_value = anyxx::make_vany<value, bool, int, double, std::string>;
+using vany_value = anyxx::vany<value, bool, int, double, std::string>;
 using concrete_value = anyxx::vany_type_trait<vany_value>::concrete_variant;
 using any_in_variant = anyxx::vany_type_trait<vany_value>::any_in_variant;
 

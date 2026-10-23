@@ -58,7 +58,7 @@ TEST_CASE("talk_2611_variant_dispatch") {
 }
 
 // namespace {
-// using known_and_unknown_shapes = make_vany<drawable, circle, square>;
+// using known_and_unknown_shapes = vany<drawable, circle, square>;
 // static_assert(std::same_as<
 //               known_and_unknown_shapes,
 //               trait_as<std::variant<any<drawable>, circle, square>,
