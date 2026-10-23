@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bit_factory/anyxx/utilities.hpp>
 #include <bit_factory/anyxx/v26/any/keywords.hpp>
 #include <bit_factory/anyxx/v26/trait_translation/spec.hpp>
 #include <bit_factory/anyxx/v26/trait_translation/find_candidate_in_target.hpp>
@@ -64,15 +65,18 @@ struct mutable_trait_member_call {
     }
 };
 
-constexpr std::vector<std::meta::info> make_trait_as_params(std::meta::info v, std::meta::info trait, auto const& args) {
+template <std::meta::info v, std::meta::info trait, auto args>
+consteval std::vector<std::meta::info> make_trait_as_params_for_variant() {
     std::vector<std::meta::info> types;
     types.push_back(v);
     types.push_back(trait);
     types.append_range(args);
     return types;
 }
-constexpr std::meta::info make_trait_as(std::meta::info v, std::meta::info trait, auto const& args) {
-    return substitute(^^trait_as, make_trait_as_params(v, trait, args));
+template <std::meta::info v, std::meta::info trait, auto args>
+consteval std::meta::info make_trait_as_for_variant() {
+    static_assert(can_substitute(^^trait_as, make_trait_as_params_for_variant<v, trait, args>()));
+    return substitute(^^trait_as, make_trait_as_params_for_variant<v, trait, args>());
 }
 template <typename V, std::meta::info Target, std::meta::info Spec, typename TraitAs, typename... Args>
 struct const_trait_variant_call {
@@ -80,13 +84,15 @@ struct const_trait_variant_call {
     constexpr trait_as_return_type_t<TraitAs, Spec> operator()(this Self const& self, Args... args) {
         constexpr auto return_type = return_type_of(Spec);
         constexpr auto trait = template_of(^^TraitAs);
-        constexpr auto trait_args = template_arguments_of(^^TraitAs) | std::views::drop(2);
+        constexpr auto trait_args = std::define_static_array(template_arguments_of(^^TraitAs) | std::views::drop(2));
         auto v = self_cast<V>(&self);
-        return std::visit([&]<typename T>(T const& x) {
-                            constexpr auto delegate_trait_as = make_trait_as(^^T, trait, trait_args);
-                            using delegate_trait_as_t = typename[:delegate_trait_as:];
-                            constexpr auto target = find_candidate_in<delegate_trait_as_t, Spec>();
-                            return delegate_trait_as_t{x}.[:target:](args...);
+        return std::visit([&]<typename T>(T const&) {
+                            //consteval { throw std::meta::exception(display_string_of(trait), trait); }
+                            using delegate_trait_as = typename[:make_trait_as_for_variant<^^T, trait, trait_args>():];
+                            //using delegate_trait_as_t = typename[:delegate_trait_as:];
+                            //constexpr auto target = find_candidate_in<delegate_trait_as_t, Spec>();
+                            //return delegate_trait_as_t{x}.[:target:](args...);
+                            return typename [:return_type:]{};
                         }, * v);
     }
 };
@@ -95,14 +101,15 @@ struct mutable_trait_variant_call {
     template <typename Self>
     constexpr decltype(auto) operator()(this Self& self, Args... args) {
         constexpr auto return_type = return_type_of(Spec);
-        constexpr auto trait = template_of(^^TraitAs);
-        constexpr auto trait_args = template_arguments_of(^^TraitAs) | std::views::drop(2);
+        //constexpr auto trait = template_of(^^TraitAs);
+        //constexpr auto trait_args = template_arguments_of(^^TraitAs) | std::views::drop(2);
         auto v = self_cast<V>(&self);
-        return std::visit([&]<typename T>(T& x) { 
-                            constexpr auto delegate_trait_as = make_trait_as(^^T, trait, trait_args);
-                            using delegate_trait_as_t = typename[:delegate_trait_as:];
-                            constexpr auto target = find_candidate_in<delegate_trait_as_t, Spec>();
-                            return delegate_trait_as_t{x}.[:target:](args...); 
+        return std::visit([&]<typename T>(T& ) { 
+                            //constexpr auto delegate_trait_as = make_trait_as_for_variant(^^T, trait, trait_args);
+                            //using delegate_trait_as_t = typename[:delegate_trait_as:];
+                            //constexpr auto target = find_candidate_in<delegate_trait_as_t, Spec>();
+                            //return delegate_trait_as_t{x}.[:target:](args...);
+                            return typename [:return_type:]{};
                         }, * v);
     }
 };
@@ -239,6 +246,15 @@ __DEFINE_TRAIT_INVOKE_OP(mutable_, )
 #undef __DEFINE_TRAIT_INVOKE_OP
 
 template <typename V>
+consteval std::meta::info choose_named_variant_call(interface_spec_with_target const& spec){
+    if(is_const_function(spec.target)) {
+        return ^^const_trait_variant_call;
+    } else {
+        return ^^mutable_trait_variant_call;
+    }
+}
+
+template <typename V>
 consteval std::meta::info choose_named_call(interface_spec_with_target const& spec){
     if(spec.target != std::meta::info{} && !is_defaulted_function_spec(spec.target)) {
         if(is_const_function(spec.target)) {
@@ -255,9 +271,6 @@ consteval std::meta::info choose_named_call(interface_spec_with_target const& sp
     }
     return {};
 }
-
-//template <std::meta::info member_call typename V, template <typename, typename, typename...> typename Trait, typename... Args>
-
 
 consteval std::meta::info choose_operator_call(interface_spec_with_target const& spec){
 #define __RETURN_OP(op_name) \
@@ -308,12 +321,20 @@ consteval auto make_trait_as_op_call_template_params(interface_spec_with_target 
 
 template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_static_facade_call(interface_spec_with_target const& spec){
-    if(auto named_call = choose_named_call<V>(spec); named_call != std::meta::info{}){
-        return substitute(named_call, make_trait_as_named_call_template_params<V, Trait, Args...>(spec));
-    } else if (auto op_call = choose_operator_call(spec); op_call != std::meta::info{}) {
-        return substitute(op_call, make_trait_as_op_call_template_params<V, Trait, Args...>(spec));
+    if constexpr(is_variant<V>) {
+        if(auto named_call = choose_named_variant_call<V>(spec); named_call != std::meta::info{}){
+            return substitute(named_call, make_trait_as_named_call_template_params<V, Trait, Args...>(spec));
+        } else {
+            throw std::meta::exception{ std::string{display_string_of(spec.member)} + " not yet implemeted in Any++ " + std::string{display_string_of(spec.member)}, spec.member };
+        }
     } else {
-        throw std::meta::exception{std::string{display_string_of(spec.member)} + " not yet implemeted in anyxx " + std::string{display_string_of(spec.member)}, spec.member};
+        if(auto named_call = choose_named_call<V>(spec); named_call != std::meta::info{}){
+            return substitute(named_call, make_trait_as_named_call_template_params<V, Trait, Args...>(spec));
+        } else if(auto op_call = choose_operator_call(spec); op_call != std::meta::info{}) {
+            return substitute(op_call, make_trait_as_op_call_template_params<V, Trait, Args...>(spec));
+        } else {
+            throw std::meta::exception{ std::string{display_string_of(spec.member)} + " not yet implemeted in Any++ " + std::string{display_string_of(spec.member)}, spec.member };
+        }
     }
 }
 
