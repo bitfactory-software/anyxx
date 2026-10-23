@@ -73,7 +73,7 @@ MODEL_MAP(std::string, drawable) {
 
 TEST_CASE("talk_2311_vany_dispatch") {
   std::stringstream ss;
-  draw_vany(ss, {circle{}, square{}, any<drawable>{"In the beginning..."s}});
-  CHECK(ss.str() == "circle\nsquare\nIn the beginning...\n");
+  draw_vany(ss, {circle{}, square{}, any<drawable>{"In the end shall be traits…"s}});
+  CHECK(ss.str() == "circle\nsquare\nIn the end shall be traits…\n");
 }
 
