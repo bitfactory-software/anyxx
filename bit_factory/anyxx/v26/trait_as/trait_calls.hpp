@@ -2,11 +2,7 @@
 
 #include <bit_factory/anyxx/v26/any/keywords.hpp>
 #include <bit_factory/anyxx/v26/trait_translation/spec.hpp>
-#include <bit_factory/anyxx/v26/trait_translation/find_candidate_in_target.hpp>
 #include <bit_factory/anyxx/v26/trait_as/signature_translation.hpp>
-#include <vector>
-#include <ranges>
-#include <variant>  
 
 namespace anyxx {
 
@@ -61,49 +57,6 @@ struct mutable_trait_member_call {
         } else {
             return forward_trait_as_return<TraitAs, Spec>(self, self_cast<V>(&self)->[:Target:](forward_trait_as_param<TraitAs, Spec, Args>(args)...));
         }
-    }
-};
-
-constexpr std::vector<std::meta::info> make_trait_as_params(std::meta::info v, std::meta::info trait, auto const& args) {
-    std::vector<std::meta::info> types;
-    types.push_back(v);
-    types.push_back(trait);
-    types.append_range(args);
-    return types;
-}
-constexpr std::meta::info make_trait_as(std::meta::info v, std::meta::info trait, auto const& args) {
-    return substitute(^^trait_as, make_trait_as_params(v, trait, args));
-}
-template <typename V, std::meta::info Target, std::meta::info Spec, typename TraitAs, typename... Args>
-struct const_trait_variant_call {
-    template <typename Self>
-    constexpr trait_as_return_type_t<TraitAs, Spec> operator()(this Self const& self, Args... args) {
-        constexpr auto return_type = return_type_of(Spec);
-        constexpr auto trait = template_of(^^TraitAs);
-        constexpr auto trait_args = template_arguments_of(^^TraitAs) | std::views::drop(2);
-        auto v = self_cast<V>(&self);
-        return std::visit([&]<typename T>(T const& x) {
-                            constexpr auto delegate_trait_as = make_trait_as(^^T, trait, trait_args);
-                            using delegate_trait_as_t = typename[:delegate_trait_as:];
-                            constexpr auto target = find_candidate_in<delegate_trait_as_t, Spec>();
-                            return delegate_trait_as_t{x}.[:target:](args...);
-                        }, * v);
-    }
-};
-template <typename V, std::meta::info Target, std::meta::info Spec, typename TraitAs, typename... Args>
-struct mutable_trait_variant_call {
-    template <typename Self>
-    constexpr decltype(auto) operator()(this Self& self, Args... args) {
-        constexpr auto return_type = return_type_of(Spec);
-        constexpr auto trait = template_of(^^TraitAs);
-        constexpr auto trait_args = template_arguments_of(^^TraitAs) | std::views::drop(2);
-        auto v = self_cast<V>(&self);
-        return std::visit([&]<typename T>(T& x) { 
-                            constexpr auto delegate_trait_as = make_trait_as(^^T, trait, trait_args);
-                            using delegate_trait_as_t = typename[:delegate_trait_as:];
-                            constexpr auto target = find_candidate_in<delegate_trait_as_t, Spec>();
-                            return delegate_trait_as_t{x}.[:target:](args...); 
-                        }, * v);
     }
 };
 
