@@ -638,7 +638,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">TRAIT(figure, dynamic_copyable, (FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
-<div class="line">using known_and_unknown_shapes = make_vany&lt;figure, circle, square&gt;;</div>
+<div class="line">using known_and_unknown_shapes = vany&lt;figure, circle, square&gt;;</div>
 <div class="line">static_assert(std::same_as&lt;</div>
 <div class="line">              known_and_unknown_shapes,</div>
 <div class="line">              any_&lt;using_&lt;std::variant&lt;any&lt;figure&gt;, circle, square&gt;&gt;, figure&gt;&gt;);</div>
@@ -665,7 +665,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">heterogeneous collections. Let us call them <span class="stringliteral">&quot;vany&quot;</span> (variant-any_).</div>
 <div class="line">- Two types, `circle` and `square`, are defined, each with a `draw()` method returning a <span class="keywordtype">string</span>.</div>
 <div class="line">- A `figure` trait is declared, specifying the required interface (`draw() <span class="keyword">const</span> -&gt; std::string`).</div>
-<div class="line">- The type alias `known_and_unknown_shapes` is created <span class="keyword">using </span>`anyxx::make_vany`, which produces a type-erased wrapper over a `std::variant` containing:</div>
+<div class="line">- The type alias `known_and_unknown_shapes` is created <span class="keyword">using </span>`anyxx::vany`, which produces a type-erased wrapper over a `std::variant` containing:</div>
 <div class="line">  - All known types (`circle`, `square`)</div>
 <div class="line">  - An open-ended type-erased fallback (`any_figure&lt;ayx::val&lt;&gt;&gt;`)</div>
 <div class="line">- A model map is provided <span class="keywordflow">for</span> `std::string`, allowing strings to be handled as figures.</div>

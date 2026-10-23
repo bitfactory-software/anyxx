@@ -576,7 +576,7 @@ Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 <div class="line"> </div>
 <div class="line">TRAIT(figure, dynamic_copyable, (FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
-<div class="line">using known_and_unknown_shapes = make_vany&lt;figure, circle, square&gt;;</div>
+<div class="line">using known_and_unknown_shapes = vany&lt;figure, circle, square&gt;;</div>
 <div class="line">static_assert(std::same_as&lt;</div>
 <div class="line">              known_and_unknown_shapes,</div>
 <div class="line">              any_&lt;using_&lt;std::variant&lt;any&lt;figure&gt;, circle, square&gt;&gt;, figure&gt;&gt;);</div>
@@ -601,7 +601,7 @@ Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 </div><!-- fragment --><p> Showcase 7 demonstrates how to use <span class="tt">Any++</span> to combine open type erasure with <span class="tt">std::variant</span> for extensible, heterogeneous collections. Let us call them "vany" (variant-any_).</p><ul>
 <li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with a <span class="tt">draw()</span> method returning a string.</li>
 <li>A <span class="tt">figure</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</li>
-<li>The type alias <span class="tt">known_and_unknown_shapes</span> is created using <span class="tt">anyxx::make_vany</span>, which produces a type-erased wrapper over a <span class="tt">std::variant</span> containing:<ul>
+<li>The type alias <span class="tt">known_and_unknown_shapes</span> is created using <span class="tt">anyxx::vany</span>, which produces a type-erased wrapper over a <span class="tt">std::variant</span> containing:<ul>
 <li>All known types (<span class="tt">circle</span>, <span class="tt">square</span>)</li>
 <li>An open-ended type-erased fallback (<span class="tt">any_figure&lt;ayx::val&lt;&gt;&gt;</span>)</li>
 </ul>
