@@ -505,8 +505,8 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  archive &gt;&gt; c.radius;</div>
 <div class="line">  <span class="keywordflow">return</span> c;</div>
 <div class="line">});</div>
-<div class="line">anyxx::register_trait&lt;circle, figure&gt; __;</div>
-<div class="line">anyxx::register_trait&lt;circle, serializable&gt; __;</div>
+<div class="line">anyxx::enable_dynamic&lt;circle, figure&gt; __;</div>
+<div class="line">anyxx::enable_dynamic&lt;circle, serializable&gt; __;</div>
 <div class="line"> </div>
 <div class="line">MODEL_MAP(square, serializable) {</div>
 <div class="line">  <span class="keyword">static</span> <span class="keywordtype">void</span> serialize(square <span class="keyword">const</span>&amp; self, std::ostream&amp; os) {</div>
@@ -518,8 +518,8 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  archive &gt;&gt; s.edge_length;</div>
 <div class="line">  <span class="keywordflow">return</span> s;</div>
 <div class="line">});</div>
-<div class="line">anyxx::register_trait&lt;square, figure&gt; __;</div>
-<div class="line">anyxx::register_trait&lt;square, serializable&gt; __;</div>
+<div class="line">anyxx::enable_dynamic&lt;square, figure&gt; __;</div>
+<div class="line">anyxx::enable_dynamic&lt;square, serializable&gt; __;</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> areas(std::stringstream&amp; os,</div>
 <div class="line">           std::vector&lt;ayx::any&lt;figure&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
