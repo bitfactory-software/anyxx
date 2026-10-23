@@ -10,7 +10,7 @@ using namespace anyxx;
 
 ANY_META_CLASS(line)
 namespace {
-register_trait<shapes::line, whole_picture::architecture::shape> __;
+enable_dynamic<shapes::line, whole_picture::architecture::shape> __;
 }
 ANY_DISPATCH_FOR(line, whole_picture::architecture, shape)
 

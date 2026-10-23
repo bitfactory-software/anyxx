@@ -11,7 +11,7 @@ using namespace anyxx;
 
 ANY_META_CLASS(circle)
 namespace{
-register_trait<circle, whole_picture::architecture::shape> __;
+enable_dynamic<circle, whole_picture::architecture::shape> __;
 }
 ANY_DISPATCH_FOR(circle, whole_picture::architecture, shape)
 

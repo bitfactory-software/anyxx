@@ -411,8 +411,8 @@ auto __ = deserialize.register_("circle", [](std::istream& archive) -> circle {
   archive >> c.radius;
   return c;
 });
-anyxx::register_trait<circle, figure> __;
-anyxx::register_trait<circle, serializable> __;
+anyxx::enable_dynamic<circle, figure> __;
+anyxx::enable_dynamic<circle, serializable> __;
 
 MODEL_MAP(square, serializable) {
   static void serialize(square const& self, std::ostream& os) {
@@ -424,8 +424,8 @@ auto __ = deserialize.register_("square", [](std::istream& archive) {
   archive >> s.edge_length;
   return s;
 });
-anyxx::register_trait<square, figure> __;
-anyxx::register_trait<square, serializable> __;
+anyxx::enable_dynamic<square, figure> __;
+anyxx::enable_dynamic<square, serializable> __;
 
 void areas(std::stringstream& os,
            std::vector<ayx::any<figure>> const& figures) {

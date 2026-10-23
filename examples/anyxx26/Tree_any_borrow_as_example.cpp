@@ -88,12 +88,12 @@ auto __ = deserialize_factory.register_("Integer", [](std::istream& archive) {
 using namespace _21_Tree_any_borrow_as;
 
 namespace {
-anyxx::register_trait<Plus, node> __;
-anyxx::register_trait<Plus, serializeable> __;
-anyxx::register_trait<Times, node> __;
-anyxx::register_trait<Times, serializeable> __;
-anyxx::register_trait<Integer, node> __;
-anyxx::register_trait<Integer, serializeable> __;
+anyxx::enable_dynamic<Plus, node> __;
+anyxx::enable_dynamic<Plus, serializeable> __;
+anyxx::enable_dynamic<Times, node> __;
+anyxx::enable_dynamic<Times, serializeable> __;
+anyxx::enable_dynamic<Integer, node> __;
+anyxx::enable_dynamic<Integer, serializeable> __;
 };  // namespace
 
 TEST_CASE("_21_Tree_any_borrow_as") {

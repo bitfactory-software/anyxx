@@ -47,11 +47,11 @@
 #include <bit_factory/anyxx/voidness.hpp>
 #ifdef ANYXX_26
 #include <bit_factory/anyxx/v26/any.hpp>
-#include <bit_factory/anyxx/v26/any/register_trait.hpp>
+#include <bit_factory/anyxx/v26/any/enable_dynamic.hpp>
 #include <bit_factory/anyxx/v26/trait_as.hpp>
 #else
 #include <bit_factory/anyxx/v23/any.hpp>
-#include <bit_factory/anyxx/v23/any/register_trait.hpp>
+#include <bit_factory/anyxx/v23/any/enable_dynamic.hpp>
 #include <bit_factory/anyxx/v23/preprocessor_meta_class.hpp>
 #include <bit_factory/anyxx/v23/signature_handling.hpp>
 #include <bit_factory/anyxx/v23/v_table_data.hpp>

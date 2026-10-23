@@ -25,10 +25,10 @@ using namespace test::component_base;
 //
 ANY_META_CLASS_STATIC(X)
 namespace {
-register_trait<X, test::component_base::get_value_i> __;
-register_trait<X, test::component_base::set_value_i> __;
-register_trait<X, test::component_base::to_string_i> __;
-}
+enable_dynamic<X, test::component_base::get_value_i> __;
+enable_dynamic<X, test::component_base::set_value_i> __;
+enable_dynamic<X, test::component_base::to_string_i> __;
+}  // namespace
 
 any_<anyxx::cref, to_string_i> test::component_base::get_to_string_i_co() {
   any_<cref, to_string_i> i{a_x};
