@@ -7,24 +7,13 @@ using namespace anyxx;
 
 namespace {
 
-template <is_trait Trait, typename Self, typename Value>
+template <typename Self, typename Value>
 struct mapable {
     Value const& at(std::size_t) const;
     Value const& operator[](std::size_t) const;
     Value& at(std::size_t);
     Value& operator[](std::size_t);
     std::size_t size() const;
-    void set_all_to(Value const&);
-};
-
-template <typename Self, typename Value>
-struct mapable<anyxx::model_map, Self, Value> {
-    //static Value const& at(Self const& self, std::size_t i) {
-    //    return self.at(i);
-    //}
-    //static Value& at(Self& self, std::size_t i) {
-    //    return self.at(i);
-    //}
     static void set_all_to(Self& self, Value const& value) {
       for (auto& v : self) {
             v = value;
@@ -71,7 +60,7 @@ TEST_CASE("anyxx const correctness overloading trait_as") {
     consteval{
         //constexpr auto trait_declaration = anyxx::trait_declaration_t<mapable, int>;
         //constexpr auto trait_model_map = anyxx::trait_model_map<mapable, std::vector<int>>;
-        constexpr auto spec = ^^mapable<declaration, std::vector<int>, int>::size;
+        constexpr auto spec = ^^mapable<std::vector<int>, int>::size;
         constexpr auto target = find_candidate_in_target<spec, std::vector<int>, void, void const*>();
         static_assert(target == ^^std::vector<int>::size);
         constexpr auto target2 = find_candidate_in<std::vector<int>, spec>();
@@ -122,7 +111,7 @@ TEST_CASE("anyxx const correctness overloading trait_as") {
 }
 
 namespace{
-template <is_trait Trait, typename Self, typename Value>
+template <typename Self, typename Value>
 struct pointable_to {
     Value& operator*() const;
     Value* operator->() const;

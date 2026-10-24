@@ -20,7 +20,7 @@
 
 namespace anyxx {
 
-template <template <typename, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename...> typename Trait, typename... Args>
 constexpr decltype(auto) preprocess_constructed_with(auto&& constructed_with) {
     using ConstructedWith = decltype(constructed_with);
     using trait_declaration_t = anyxx::trait_declaration_t<Trait, Args...>;
@@ -31,11 +31,11 @@ constexpr decltype(auto) preprocess_constructed_with(auto&& constructed_with) {
     }
 }
 
-template <typename ConstructedWith, template <typename, typename, typename...> typename Trait, typename... Args>
+template <typename ConstructedWith, template <typename, typename...> typename Trait, typename... Args>
 using preprocess_constructed_with_t =
     std::decay_t<decltype(preprocess_constructed_with<Trait, Args...>(std::declval<ConstructedWith>()))>;
 
-template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
+template <template <typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct any_base : deduced_typenames<Trait, Args...> {
   using trait_declaration_t = anyxx::trait_declaration_t<Trait, Args...>;
   using dyn_self_t = any<Trait, Args...>;
@@ -145,20 +145,20 @@ struct any_base : deduced_typenames<Trait, Args...> {
   friend constexpr auto release_v_table(any_base& self) { return std::exchange(self.v_table_, nullptr); }
 };
 
-template <template <is_trait, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
+template <template <typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct any_with_facade : any_base<Trait, Proxy, Args...>, [:make_dyn_facade<any_base<Trait, Proxy, Args...>>() :] {
     using any_base<Trait, Proxy, Args...>::any_base;
 };
-template <anyxx::is_proxy Proxy, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <anyxx::is_proxy Proxy, template <typename, typename...> typename Trait, typename... Args>
 struct any_with_decorator : any_with_facade<Trait, Proxy, Args...>, trait_facade_decorator_t<any_<Proxy, Trait, Args...>, Trait, Args...> {
     using any_with_facade<Trait, Proxy, Args...>::any_with_facade;
 };
 
-template <typename Proxy, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename Proxy, template <typename, typename...> typename Trait, typename... Args>
 struct any_ : any_with_decorator<Proxy, Trait, Args...> {
     using any_with_decorator<Proxy, Trait, Args...>::any_with_decorator;
 };
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename...> typename Trait, typename... Args>
 struct any: any_with_decorator<default_proxy_t<Trait, Args...>, Trait, Args...> {
     using any_with_decorator<default_proxy_t<Trait, Args...>, Trait, Args...>::any_with_decorator;
 };
@@ -233,28 +233,28 @@ __dyn_OP_MUTATING(op_greater_greater_equals, >>=)
 ///// \brief Safe downcast to an unerased type using runtime information from
 ///// the v-Tables.
 ///// \ingroup casts
-//template <typename U, template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+//template <typename U, template <typename, typename...> typename Trait, typename Proxy, typename... Args>
 //inline constexpr decltype(auto) any_cast(any_<Proxy, Trait, Args...> const& o) {
 //    return anyxx::proxy_cast_if<U>(o.proxy_, o.v_table_);
 //}
 ///// \brief Safe downcast to an unerased type using runtime information from
 ///// the v-Tables.
 ///// \ingroup casts
-//template <typename U, template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+//template <typename U, template <typename, typename...> typename Trait, typename Proxy, typename... Args>
 //inline constexpr auto any_cast_if(any_<Proxy, Trait, Args...> const& o) {
 //    return anyxx::proxy_cast_if<U>(o.proxy_, o.v_table_);
 //}
 //
-template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+template <template <typename, typename...> typename Trait, typename Proxy, typename... Args>
 inline constexpr auto get_v_table(any_<Proxy, Trait, Args...> const& any_) {
     return v_table_cast<typename any_<Proxy, Trait, Args...>::v_table_t>(any_.v_table_);
 }
-template <template <typename, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename...> typename Trait, typename... Args>
 inline constexpr auto get_v_table(any<Trait, Args...> const& any_) {
     return v_table_cast<typename any<Trait, Args...>::v_table_t>(any_.v_table_);
 }
 
-template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+template <template <typename, typename...> typename Trait, typename Proxy, typename... Args>
 inline constexpr auto release_v_table(any_<Proxy, Trait, Args...>& any_) { return std::exchange(any_.v_table_, nullptr); }
 
 }  // namespace anyxx

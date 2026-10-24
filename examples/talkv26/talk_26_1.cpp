@@ -16,12 +16,12 @@ struct Circle {
 
 using namespace anyxx;
 
-template <is_trait Trait, typename Self>
-struct Shape : deleteable<Trait, Self> {
+template <typename Self>
+struct Shape : deleteable<Self> {
   double area() const;
 };
 template <>
-struct Shape<model_map, Circle> {
+struct Shape<Circle> {
   static double area(const Circle& self) { return M_PI * self.radius * self.radius; }
 };
 

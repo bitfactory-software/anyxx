@@ -16,34 +16,34 @@ struct sentinel_for{
 template <std::ranges::range Range>
 sentinel_for(Range&& range) -> sentinel_for<std::ranges::sentinel_t<Range>, std::ranges::iterator_t<Range>>;
 
-template <is_trait Trait, typename Self, typename Value, typename Ref = Value&>
-struct sentinel : copyable<Trait, Self> {
+template <typename Self, typename Value, typename Ref = Value&>
+struct sentinel : copyable<Self> {
     using default_proxy_t = anyxx::nullable_val<>;
 
     static bool equal(Self const& self, any_<anyxx::cref, input_iterator, Value, Ref> const& it){
         return self.value == any_cast<typename Self::iterator_type>(it);
     }
 };
-template <template <is_trait, typename, typename...> typename SentinelTrait, template <is_trait, typename, typename...> typename IteratorTrait, typename... Args>
+template <template <typename, typename...> typename SentinelTrait, template <typename, typename...> typename IteratorTrait, typename... Args>
 concept is_sentinel_trait_for = requires(any<SentinelTrait, Args...> const& s, any<IteratorTrait, Args...> const& it) {
   { s.equal(it) } -> std::convertible_to<bool>;
 };
-template <template <is_trait, typename, typename...> typename SentinelTrait, template<is_trait, typename, typename...> typename IteratorTrait, typename... Args>
+template <template <typename, typename...> typename SentinelTrait, template<typename, typename...> typename IteratorTrait, typename... Args>
     requires(is_sentinel_trait_for<SentinelTrait, IteratorTrait, Args...>)
 bool operator==(any<IteratorTrait, Args...> const& it, any<SentinelTrait, Args...> const& s) {
     return s.equal(it);
 }
-template <template <is_trait, typename, typename...> typename SentinelTrait, template<is_trait, typename, typename...> typename IteratorTrait, typename... Args>
+template <template <typename, typename...> typename SentinelTrait, template<typename, typename...> typename IteratorTrait, typename... Args>
     requires(is_sentinel_trait_for<SentinelTrait, IteratorTrait, Args...>)
 bool operator!=(any<IteratorTrait, Args...> const& it, any<SentinelTrait, Args...> const& s) {
     return !s.equal(it);
 }
-template <template <is_trait, typename, typename...> typename SentinelTrait, template<is_trait, typename, typename...> typename IteratorTrait, typename... Args>
+template <template <typename, typename...> typename SentinelTrait, template<typename, typename...> typename IteratorTrait, typename... Args>
     requires(is_sentinel_trait_for<SentinelTrait, IteratorTrait, Args...>)
 bool operator==(any<SentinelTrait, Args...> const& s, any<IteratorTrait, Args...> const& it) {
     return s.equal(it);
 }
-template <template <is_trait, typename, typename...> typename SentinelTrait, template<is_trait, typename, typename...> typename IteratorTrait, typename... Args>
+template <template <typename, typename...> typename SentinelTrait, template<typename, typename...> typename IteratorTrait, typename... Args>
     requires(is_sentinel_trait_for<SentinelTrait, IteratorTrait, Args...>)
 bool operator!=(any<SentinelTrait, Args...> const& s, any<IteratorTrait, Args...> const& it) {
     return !s.equal(it);
@@ -56,8 +56,8 @@ static_assert(std::sentinel_for<any<sentinel, int>, any<input_iterator, int>>);
 static_assert(std::sentinel_for<any<sentinel, int, const int&>, any<input_iterator, int, const int&>>);
 
 
-template <is_trait Trait, typename Self, typename Value, typename Ref>
-struct sized_sentinel : sentinel<Trait, Self, Value, Ref> {
+template <typename Self, typename Value, typename Ref>
+struct sized_sentinel : sentinel<Self, Value, Ref> {
     static std::ptrdiff_t subtract(Self const& self, any_<anyxx::cref, bidirectional_iterator, Value, Ref> const& it){
         return self.value - any_cast<typename Self::iterator_type>(it);
     }
@@ -65,11 +65,11 @@ struct sized_sentinel : sentinel<Trait, Self, Value, Ref> {
         return any_cast<typename Self::iterator_type>(it) - self.value;
     }
 };
-template <typename Value, typename Ref, template<is_trait, typename, typename...> typename IteratorTrait>
+template <typename Value, typename Ref, template<typename, typename...> typename IteratorTrait>
 std::ptrdiff_t operator-(any<sized_sentinel, Value, Ref> const& s, any<IteratorTrait, Value, Ref> const& it) {
     return s.subtract(it);
 }
-template <typename Value, typename Ref, template<is_trait, typename, typename...> typename IteratorTrait>
+template <typename Value, typename Ref, template<typename, typename...> typename IteratorTrait>
 std::ptrdiff_t operator-(any<IteratorTrait, Value, Ref> const& it, any<sized_sentinel, Value, Ref> const& s) {
     return s.subtract_from(it);
 }

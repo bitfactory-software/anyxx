@@ -16,7 +16,7 @@ struct Circle {
 
 using namespace anyxx;
 
-template <is_trait Trait, typename Self>
+template <typename Self>
 struct Shape {
   double area() const;
 };
@@ -26,7 +26,7 @@ void print_area(const any<Shape>& shape) {
 }
 
 template <>
-struct Shape<model_map, Circle> {
+struct Shape<Circle> {
   static double area(const Circle& self) {
     return M_PI * self.radius * self.radius;
   }

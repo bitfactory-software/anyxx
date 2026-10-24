@@ -8,19 +8,17 @@ namespace anyxx {
 
 struct declaration {};
 struct model_map {};
-template <typename Trait>
-concept is_trait = std::same_as<Trait, declaration> || std::same_as<Trait, model_map>;
 
-template <template <is_trait, typename, typename...> typename Trait>
+template <template <typename, typename...> typename Trait>
 using base_v_table_t = anyxx::observeable<>::v_table_t;
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename...> typename Trait, typename... Args>
 struct v_table;
 
-template <template <is_trait, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
+template <template <typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct any_base;
 
-template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <typename, typename...> typename Trait, typename... Args>
 class trait_as;
 
 struct default_t {};
@@ -46,13 +44,13 @@ consteval std::meta::info void_self(bool is_const) {
   }
 }
 
-consteval std::meta::info trait_for(std::meta::info trait_template, std::meta::info type, std::meta::info mapped_type, auto args){
-    std::vector<std::meta::info> params{ type, mapped_type };
+consteval std::meta::info trait_for(std::meta::info trait_template, std::meta::info mapped_type, auto args){
+    std::vector<std::meta::info> params{ mapped_type };
     params.append_range(args);
     return substitute(trait_template, params);
 }
 consteval std::meta::info trait_model_map(std::meta::info trait_template, std::meta::info mapped_type, auto args){
-  return trait_for(trait_template, ^^model_map, mapped_type, args);
+  return trait_for(trait_template, mapped_type, args);
 }
 template<std::meta::info TraitTemplate, typename V, std::meta::info... Args>
 consteval std::meta::info trait_model_map(){
@@ -60,14 +58,14 @@ consteval std::meta::info trait_model_map(){
 }
 
 consteval std::meta::info trait_declaration(std::meta::info trait_template, auto args){
-    return trait_for(trait_template, ^^declaration, ^^declaration, args);
+    return trait_for(trait_template, ^^declaration, args);
 }
 template<std::meta::info TraitTemplate, std::meta::info... Args>
 consteval std::meta::info trait_declaration(){
     return trait_declaration(TraitTemplate, std::vector<std::meta::info>{ Args... });
 }
 template<template<typename, typename...> typename TraitTemplate, typename... Args>
-using trait_declaration_t = TraitTemplate<declaration, declaration, Args...>;
+using trait_declaration_t = TraitTemplate<declaration, Args...>;
 
 struct empty_t {};
 }

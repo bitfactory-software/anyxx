@@ -12,8 +12,8 @@ using namespace anyxx;
 namespace {
 
 // base architecture layer
-template <is_trait Trait, typename Self>
-struct base : dynamic_castable<Trait, Self> {
+template <typename Self>
+struct base : dynamic_castable<Self> {
     static std::string as_string(Self const& self){
         return std::format("{}", self);
     }
@@ -29,8 +29,8 @@ std::string process_with(std::vector<any<base>> const& things,
 }
 
 // higher architecture layer
-template <is_trait Trait, typename Self>
-struct derived : base<Trait, Self> {
+template <typename Self>
+struct derived : base<Self> {
     static std::string decorated(Self const& self) {
         return  + "exact: " + any<base>{self}.as_string();
     }

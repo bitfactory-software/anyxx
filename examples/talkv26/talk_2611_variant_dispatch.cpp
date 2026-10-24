@@ -21,13 +21,13 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-template <is_trait Trait, typename Self>
-struct drawable : copyable<Trait, Self> {
+template <typename Self>
+struct drawable : copyable<Self> {
   std::string draw() const;
 };
 
  template <typename... Vs>
- struct drawable<model_map, std::variant<Vs...>> {
+ struct drawable<std::variant<Vs...>> {
    static std::string draw(std::variant<Vs...> const& v) {
      return std::visit(
          [](auto const& x) {

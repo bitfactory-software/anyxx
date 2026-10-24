@@ -5,8 +5,8 @@
 
 namespace anyxx {
 
-template <is_trait Trait, typename Self, typename Value, typename Ref = Value&>
-struct input_iterator : typed_copyable<Trait, Self> {
+template <typename Self, typename Value, typename Ref = Value&>
+struct input_iterator : typed_copyable<Self> {
     using default_proxy_t = anyxx::nullable_val<>;
 
     bool operator==(Self const&) const;
@@ -23,24 +23,24 @@ struct input_iterator : typed_copyable<Trait, Self> {
 	};
 };
 
-template <is_trait Trait, typename Self, typename Value, typename Ref = Value&>
-struct forward_iterator : input_iterator<Trait, Self, Value, Ref> {
-	struct typenames : input_iterator<Trait, Self, Value, Ref>::typenames {
+template <typename Self, typename Value, typename Ref = Value&>
+struct forward_iterator : input_iterator<Self, Value, Ref> {
+	struct typenames : input_iterator<Self, Value, Ref>::typenames {
 		using iterator_category = std::forward_iterator_tag;
 	};
 };
 
-template <is_trait Trait, typename Self, typename Value, typename Ref = Value&>
-struct bidirectional_iterator : forward_iterator<Trait, Self, Value, Ref> {
+template <typename Self, typename Value, typename Ref = Value&>
+struct bidirectional_iterator : forward_iterator<Self, Value, Ref> {
     Self& operator--();
 
-    struct typenames : forward_iterator<Trait, Self, Value, Ref>::typenames {
+    struct typenames : forward_iterator<Self, Value, Ref>::typenames {
         using iterator_category = std::bidirectional_iterator_tag;
     };
 };
 
-template <is_trait Trait, typename Self, typename Value, typename Ref = Value&>
-struct random_access_iterator : bidirectional_iterator<Trait, Self, Value, Ref> {
+template <typename Self, typename Value, typename Ref = Value&>
+struct random_access_iterator : bidirectional_iterator<Self, Value, Ref> {
     bool operator<(Self const&) const;
     bool operator>(Self const&) const;
     bool operator<=(Self const&) const;
@@ -59,20 +59,20 @@ struct random_access_iterator : bidirectional_iterator<Trait, Self, Value, Ref> 
     //    }
     //}
 
-    struct typenames : bidirectional_iterator<Trait, Self, Value, Ref>::typenames {
+    struct typenames : bidirectional_iterator<Self, Value, Ref>::typenames {
         using iterator_category = std::random_access_iterator_tag;
     };
 };
-template <template<is_trait, typename, typename...> typename IteratorTrait, typename... Args>
+template <template<typename, typename...> typename IteratorTrait, typename... Args>
 auto operator+(std::ptrdiff_t n, any<IteratorTrait, Args...> const& it) {
     return it + n;
 }
 
-template <is_trait Trait, typename Self, typename Value, typename Ref = Value&>
-struct contiguous_iterator : random_access_iterator<Trait, Self, Value, Ref> {
+template <typename Self, typename Value, typename Ref = Value&>
+struct contiguous_iterator : random_access_iterator<Self, Value, Ref> {
     Value* operator->() const;
 
-    struct typenames : random_access_iterator<Trait, Self, Value, Ref>::typenames {
+    struct typenames : random_access_iterator<Self, Value, Ref>::typenames {
         using iterator_category = std::contiguous_iterator_tag;
     };
 };

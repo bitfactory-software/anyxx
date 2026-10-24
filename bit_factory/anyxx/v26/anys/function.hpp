@@ -4,37 +4,37 @@
 
 namespace anyxx {
 
-template <is_trait Trait, typename Self, typename Arg0, typename... Args>
+template <typename Self, typename Arg0, typename... Args>
 struct function;
-template <is_trait Trait, typename Self, typename R, typename... Args>
-struct function<Trait, Self, R(Args...) const> : copyable<Trait, Self> {
+template <typename Self, typename R, typename... Args>
+struct function<Self, R(Args...) const> : copyable<Self> {
     R operator()(Args... args) const;
 };
-template <is_trait Trait, typename Self, typename R, typename... Args>
-struct function<Trait, Self, R(Args...)> : copyable<Trait, Self> {
+template <typename Self, typename R, typename... Args>
+struct function<Self, R(Args...)> : copyable<Self> {
     R operator()(Args... args);
 };
 
-template <is_trait Trait, typename Self, typename Arg0, typename... Args>
+template <typename Self, typename Arg0, typename... Args>
 struct move_only_function;
-template <is_trait Trait, typename Self, typename R, typename... Args>
-struct move_only_function<Trait, Self, R(Args...) const> : moveable<Trait, Self> {
+template <typename Self, typename R, typename... Args>
+struct move_only_function<Self, R(Args...) const> : moveable<Self> {
     R operator()(Args... args) const;
 };
-template <is_trait Trait, typename Self, typename R, typename... Args>
-struct move_only_function<Trait, Self, R(Args...)> : moveable<Trait, Self> {
+template <typename Self, typename R, typename... Args>
+struct move_only_function<Self, R(Args...)> : moveable<Self> {
     R operator()(Args... args);
 };
 
-template <is_trait Trait, typename Self, typename Arg0, typename... Args>
+template <typename Self, typename Arg0, typename... Args>
 struct function_ref;
-template <is_trait Trait, typename Self, typename R, typename... Args>
-struct function_ref<Trait, Self, R(Args...) const> {
+template <typename Self, typename R, typename... Args>
+struct function_ref<Self, R(Args...) const> {
     R operator()(Args... args) const;
     using default_proxy_t = anyxx::cref;
 };
-template <is_trait Trait, typename Self, typename R, typename... Args>
-struct function_ref<Trait, Self, R(Args...)> {
+template <typename Self, typename R, typename... Args>
+struct function_ref<Self, R(Args...)> {
     R operator()(Args... args);
     using default_proxy_t = anyxx::mutref;
 };

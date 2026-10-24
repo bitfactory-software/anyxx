@@ -11,8 +11,8 @@ using namespace anyxx;
 
 namespace {
 
-template <anyxx::is_trait Trait, typename Self>
-struct node : anyxx::copyable<Trait, Self> {
+template <typename Self>
+struct node : anyxx::copyable<Self> {
   using default_proxy_t = anyxx::cow;
   using dispatch_table[[= anyxx::v_table_data]] = anyxx::dispatch_table;
 };

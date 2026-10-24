@@ -209,7 +209,7 @@ consteval std::meta::info choose_named_call(interface_spec_with_target const& sp
     return {};
 }
 
-//template <std::meta::info member_call typename V, template <typename, typename, typename...> typename Trait, typename... Args>
+//template <std::meta::info member_call typename V, template <typename, typename...> typename Trait, typename... Args>
 
 
 consteval std::meta::info choose_operator_call(interface_spec_with_target const& spec){
@@ -241,7 +241,7 @@ consteval std::meta::info choose_operator_call(interface_spec_with_target const&
 #undef __RETURN_OP
 }
 
-template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <typename, typename...> typename Trait, typename... Args>
 consteval auto make_trait_as_named_call_template_params(interface_spec_with_target const& spec) {
     auto self_t = is_const_function(spec.member) ? ^^ const V : ^^V;
     using trait_as_t = trait_as<V, Trait, Args...>;
@@ -250,7 +250,7 @@ consteval auto make_trait_as_named_call_template_params(interface_spec_with_targ
     return args;
 }
 
-template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <typename, typename...> typename Trait, typename... Args>
 consteval auto make_trait_as_op_call_template_params(interface_spec_with_target const& spec) {
     auto self_t = is_const_function(spec.member) ? ^^ const V : ^^V;
     using trait_as_t = trait_as<V, Trait, Args...>;
@@ -259,7 +259,7 @@ consteval auto make_trait_as_op_call_template_params(interface_spec_with_target 
     return args;
 }
 
-template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_static_facade_call(interface_spec_with_target const& spec){
     if(auto named_call = choose_named_call<V>(spec); named_call != std::meta::info{}){
         return substitute(named_call, make_trait_as_named_call_template_params<V, Trait, Args...>(spec));

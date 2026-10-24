@@ -9,20 +9,20 @@ using namespace anyxx;
 
 namespace {
 
-template <is_trait Trait, typename Self>
+template <typename Self>
 struct stringable {
   static std::string as_string(Self const& s) { return std::format("{}", s); }
 };
 
 template <>
-struct stringable<model_map, bool> {
+struct stringable<bool> {
   static std::string as_string(bool const& self) {
     return self ? "wahr" : "falsch";
   }
 };
 
 template <>
-struct stringable<model_map, double> {
+struct stringable<double> {
   static std::string as_string(const double& value) {
     return std::format("{:6.3}", value);
   }

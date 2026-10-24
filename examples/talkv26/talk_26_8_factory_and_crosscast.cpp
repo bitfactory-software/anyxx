@@ -21,8 +21,8 @@ concept range_of =
 
 namespace geometry {
 
-template <is_trait Trait, typename Self>
-struct shape : dynamic_castable<Trait, Self> {
+template <typename Self>
+struct shape : dynamic_castable<Self> {
   double area() const;
 };
 
@@ -36,8 +36,8 @@ double sum_area(const Shapes& shapes) {
 
 namespace db {
 
-template <is_trait Trait, typename Self>
-struct serializable : dynamic_moveable<Trait, Self> {
+template <typename Self>
+struct serializable : dynamic_moveable<Self> {
   void serialize(std::ostream&) const;
 };
 

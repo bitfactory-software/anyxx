@@ -12,8 +12,8 @@ using namespace anyxx;
 
 static_assert(has_deduced_typenames<input_iterator, int>);
 static_assert(has_identifier(compute_deduced_typenames<input_iterator, int>()));
-static_assert(has_identifier(^^input_iterator<declaration, declaration, int>::typenames));
-static_assert(std::same_as<deduced_typenames<input_iterator, int>, input_iterator<declaration, declaration, int>::typenames>);
+static_assert(has_identifier(^^input_iterator<declaration, int>::typenames));
+static_assert(std::same_as<deduced_typenames<input_iterator, int>, input_iterator<declaration, int>::typenames>);
 
 
 static_assert(std::input_iterator<any<input_iterator, int>>);

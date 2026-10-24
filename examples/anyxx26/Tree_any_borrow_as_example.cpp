@@ -12,12 +12,12 @@ using namespace anyxx;
 
 namespace _21_Tree_any_borrow_as {
 
-template <anyxx::is_trait Trait, typename Self>
-struct node : anyxx::dynamic_deletable<Trait, Self> {
+template <typename Self>
+struct node : anyxx::dynamic_deletable<Self> {
   int value() const;
 };
-template <anyxx::is_trait Trait, typename Self>
-struct serializeable : anyxx::dynamic_deletable<Trait, Self> {
+template <typename Self>
+struct serializeable : anyxx::dynamic_deletable<Self> {
   void serialize(std::ostream&) const;
 };
 

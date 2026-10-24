@@ -14,7 +14,7 @@
 
 namespace anyxx {
 
-template <template <typename, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename...> typename Trait, typename... Args>
 struct v_table
     : [: make_v_table_members_type<Trait, Args...>():] {
     using v_table_t = v_table;
@@ -26,7 +26,7 @@ struct v_table
     }
 };
 
-template <template <typename, typename, typename...> typename Trait, typename V, typename... Args>
+template <template <typename, typename...> typename Trait, typename V, typename... Args>
 constexpr v_table<Trait, Args...>* v_table_instance() {
    return anyxx::v_table_instance<v_table<Trait, Args...>, V>();
 };
@@ -41,7 +41,7 @@ constexpr ToVtable* v_table_cast(FromVTable* from) {
 consteval std::meta::info v_table_of_trait(std::meta::info declaration_trait) {
     std::vector<std::meta::info> v_table_template_args;
     v_table_template_args.push_back(template_of(declaration_trait));
-    v_table_template_args.append_range(template_arguments_of(declaration_trait) | std::views::drop(2));
+    v_table_template_args.append_range(template_arguments_of(declaration_trait) | std::views::drop(1));
     return substitute(^^v_table, v_table_template_args);
 }
 

@@ -15,7 +15,7 @@
 
 namespace anyxx {
 
-template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info static_facade_named_overloaded_calls(overload_set_spec_with_target const& spec){
     std::vector<std::meta::info> overloads;
     for(auto overload : std::define_static_array(spec.specs)) {
@@ -26,7 +26,7 @@ consteval std::meta::info static_facade_named_overloaded_calls(overload_set_spec
     return std::meta::data_member_spec(meta::overloaded_calls(overloads), { .name = spec.name, .no_unique_address = true });
 }
 
-template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <typename, typename...> typename Trait, typename... Args>
 consteval auto static_facade_overloaded_calls() {
     std::vector<std::meta::info> calls;
     for(auto const& set : make_overload_sets_specs_with_target<V, Trait, Args...>()) {
@@ -35,7 +35,7 @@ consteval auto static_facade_overloaded_calls() {
     return calls;
 }
 
-template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_trait_facade() {
     return meta::make_struct_with(static_facade_overloaded_calls<std::decay_t<V>, Trait, Args...>());
 };

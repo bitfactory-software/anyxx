@@ -14,8 +14,8 @@ using namespace anyxx;
 
 namespace {
 
-template <is_trait Trait, typename Self>
-struct thing : copyable<Trait, Self> {
+template <typename Self>
+struct thing : copyable<Self> {
   std::string registry() const;
   using dispatch_table[[= anyxx::v_table_data]] = anyxx::dispatch_table;
 };

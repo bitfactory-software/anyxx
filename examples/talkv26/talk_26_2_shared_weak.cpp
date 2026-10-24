@@ -16,8 +16,8 @@ struct widget_2 {
 };
 
 using namespace anyxx;
-template <is_trait Trait, typename Self>
-struct widget : deleteable<Trait, Self> {
+template <typename Self>
+struct widget : deleteable<Self> {
   std::string get() const;
   using default_proxy_t = shared;
 };
