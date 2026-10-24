@@ -65,7 +65,7 @@ consteval std::meta::info find_function_impl(auto fitting_parameter_type, std::m
         return found_in_base;
     } else {
         throw std::meta::exception("Function " + std::string(display_string_of(interface_function)) + " not found in impl trait "
-            + std::string(display_string_of(trait_model_map(trait_template, mapped_type, args)))
+            + std::string(display_string_of(trait_trait_map(trait_template, mapped_type, args)))
             + " or base trait " + std::string(display_string_of(trait_declaration(trait_template, args))), interface_function);
     }
 }

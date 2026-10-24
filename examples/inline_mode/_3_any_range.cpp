@@ -294,8 +294,8 @@ struct node : node_base {
 
 namespace anyxx {
 template <typename ValueType, typename Reference>
-struct forward_iterator_model_map<node_base*, ValueType, Reference>
-    : forward_iterator_default_model_map<node_base*, ValueType, Reference> {
+struct forward_iterator_trait_map<node_base*, ValueType, Reference>
+    : forward_iterator_default_trait_map<node_base*, ValueType, Reference> {
   node_base* op_pre_increment(node_base*& self) const {
     return self = self->next();
   }
@@ -312,8 +312,8 @@ using node_const_iterator =
 namespace anyxx {
 template <typename Node, typename Iterator>
   requires std::derived_from<Node, node_base>
-struct range_model_map<Node*, Iterator>
-    : range_default_model_map<node_base*, Iterator> {
+struct range_trait_map<Node*, Iterator>
+    : range_default_trait_map<node_base*, Iterator> {
   node_base* begin(Node* node) { return node; }
   node_base* end(Node*) { return nullptr; }
 };

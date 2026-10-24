@@ -70,12 +70,12 @@ concept is_meta_data_v_table = requires(VTable* v_table) {
 };
 
 template <typename M, typename V>
-concept is_op_pre_increment_model_map =
-    requires(M model_map, V v) { model_map.op_pre_increment(v); };
+concept is_op_pre_increment_trait_map =
+    requires(M trait_map, V v) { trait_map.op_pre_increment(v); };
 
 template <typename M, typename V>
-concept is_op_pre_decrement_model_map =
-    requires(M model_map, V v) { model_map.op_pre_decrement(v); };
+concept is_op_pre_decrement_trait_map =
+    requires(M trait_map, V v) { trait_map.op_pre_decrement(v); };
 
 template <typename VTable>
 concept is_op_pre_increment_v_table =

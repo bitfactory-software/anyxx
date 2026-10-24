@@ -251,7 +251,7 @@
   requires requires(                                                          \
       __VA_OPT__(_detail_ANYXX_CONCEPT_PARAM_LIST_H(a, sig_, __VA_ARGS__))) { \
     {                                                                         \
-      model_map.name(model __VA_OPT__(                                        \
+      trait_map.name(model __VA_OPT__(                                        \
           , _detail_ANYXX_CONCEPT_ARG_LIST_H(a, sig_, __VA_ARGS__)))          \
     } -> std::convertible_to<anyxx::map_return<T, ANY_UNPAREN(type)>>;        \
   };
@@ -262,14 +262,14 @@
   requires requires(                                                          \
       __VA_OPT__(_detail_ANYXX_CONCEPT_PARAM_LIST_H(a, sig_, __VA_ARGS__))) { \
     {                                                                         \
-      model_map.name(trait_class __VA_OPT__(                                  \
+      trait_map.name(trait_class __VA_OPT__(                                  \
           , _detail_ANYXX_CONCEPT_ARG_LIST_H(a, sig_, __VA_ARGS__)))          \
     } -> std::convertible_to<anyxx::map_return<T, ANY_UNPAREN(return_type)>>; \
   };
 
 #define _detail_ANYXX_CONCEPT_TYPE_H(l) _detail_ANYXX_CONCEPT_TYPE l
 #define _detail_ANYXX_CONCEPT_TYPE(template_params, name, erased, default_) \
-  requires !std::same_as<typename decltype(model_map)::deduced_type::       \
+  requires !std::same_as<typename decltype(trait_map)::deduced_type::       \
                              _detail_ANYXX_OPTIONAL_TEMPLATE(               \
                                  _detail_REMOVE_PARENS(template_params))    \
                                  name _detail_ANYXX_DUMMY_INT_PARAM_LIST(   \
@@ -396,7 +396,7 @@
     return std::visit(                                                         \
         anyxx::overloads{                                                      \
             [&]<typename V>(V&& v) {                                           \
-              return x_model_map<std::decay_t<V>>{}.name(                      \
+              return x_trait_map<std::decay_t<V>>{}.name(                      \
                   std::forward<V>(v) __VA_OPT__(, )                            \
                       __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(             \
                           a, _sig, __VA_ARGS__)));                             \
@@ -422,7 +422,7 @@
                      , _detail_ANYXX_V_TABLE_PARAM_LIST(                   \
                            a, _sig, __VA_ARGS__))) -> decltype(auto) {     \
     if constexpr (std::same_as<anyxx::self&, ANY_UNPAREN(type)>) {         \
-      model_map{}.name(                                                    \
+      trait_map{}.name(                                                    \
           anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )      \
               __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(          \
                   a, _sig, __VA_ARGS__)));                                 \
@@ -430,13 +430,13 @@
     } else if constexpr (std::same_as<anyxx::self, ANY_UNPAREN(type)>) {   \
       using proxy_t = typename any_value_t::proxy_t;                       \
       return any_value_t{                                                  \
-          anyxx::erased<proxy_t>(model_map{}.name(                         \
+          anyxx::erased<proxy_t>(trait_map{}.name(                         \
               anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )  \
                   __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(      \
                       a, _sig, __VA_ARGS__)))),                            \
           anyxx::v_table_instance<Parent, Concrete>()};                    \
     } else {                                                               \
-      return model_map{}.name(                                             \
+      return trait_map{}.name(                                             \
           anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )      \
               __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(          \
                   a, _sig, __VA_ARGS__)));                                 \
@@ -560,9 +560,9 @@
 
 // cppcheck-suppress-macro performance-unnecessary-value-param
 #define TRAIT_META_FUNCTION(                                                   \
-    any_template_params, model_map_template_params, concrete_template_params,  \
-    static_dispatch_template_params, variant_model_map_template_params, n,     \
-    BASE, base_template_params, base_model_map_template_params, l, static_fns, \
+    any_template_params, trait_map_template_params, concrete_template_params,  \
+    static_dispatch_template_params, variant_trait_map_template_params, n,     \
+    BASE, base_template_params, base_trait_map_template_params, l, static_fns, \
     typedefs, v_table_data, decoration)                                        \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)             \
@@ -570,41 +570,41 @@
                     typename UnusedType = void>                                \
   struct n;                                                                    \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(trait_map_template_params)>      \
   struct n##_default_rep;                                                      \
   struct n##_is_nullable;                                                      \
   struct n##_val_size;                                                         \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
-  struct n##_default_model_map {                                               \
-    using default_map = n##_default_model_map;                                 \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(trait_map_template_params)>      \
+  struct n##_default_trait_map {                                               \
+    using default_map = n##_default_trait_map;                                 \
     using rep_type = T;                                                        \
                                                                                \
     struct deduced_type                                                        \
         : BASE<_detail_ANYXX_TEMPLATE_ARGS(                                    \
-              base_template_params)>::template model_map<T>::deduced_type {    \
+              base_template_params)>::template trait_map<T>::deduced_type {    \
       _detail_ANYXX_MAP_TYPES(typedefs);                                       \
     };                                                                         \
     _detail_ANYXX_MAP_FUNCTIONS(l);                                            \
     _detail_ANYXX_MAP_STATIC_FUNCTIONS(static_fns);                            \
   };                                                                           \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
-  struct n##_model_map : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(    \
-                             model_map_template_params)> {                     \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(trait_map_template_params)>      \
+  struct n##_trait_map : n##_default_trait_map<_detail_ANYXX_TEMPLATE_ARGS(    \
+                             trait_map_template_params)> {                     \
     using rep_type =                                                           \
         anyxx::default_rep<T, n##_default_rep<_detail_ANYXX_TEMPLATE_ARGS(     \
-                                  model_map_template_params)>>;                \
+                                  trait_map_template_params)>>;                \
   };                                                                           \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(trait_map_template_params)>      \
     requires(anyxx::is_variant<T>)                                             \
-  struct n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)> \
-      : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(                     \
-            model_map_template_params)> {                                      \
+  struct n##_trait_map<_detail_ANYXX_TEMPLATE_ARGS(trait_map_template_params)> \
+      : n##_default_trait_map<_detail_ANYXX_TEMPLATE_ARGS(                     \
+            trait_map_template_params)> {                                      \
     using rep_type = T;                                                        \
     template <typename V>                                                      \
-    using x_model_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(             \
-        variant_model_map_template_params)>;                                   \
+    using x_trait_map = n##_trait_map<_detail_ANYXX_TEMPLATE_ARGS(             \
+        variant_trait_map_template_params)>;                                   \
     _detail_ANYXX_MAP_VARIANT_FUNCTIONS(l)                                     \
   };                                                                           \
                                                                                \
@@ -664,8 +664,8 @@
     using base_t = BASE<_detail_ANYXX_TEMPLATE_ARGS(base_template_params)>;    \
                                                                                \
     template <typename T>                                                      \
-    using model_map =                                                          \
-        n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)>; \
+    using trait_map =                                                          \
+        n##_trait_map<_detail_ANYXX_TEMPLATE_ARGS(trait_map_template_params)>; \
                                                                                \
     using val_is_nullable =                                                    \
         std::conditional_t<anyxx::is_type_complete<n##_is_nullable>,           \
@@ -683,7 +683,7 @@
     using v_table_t =                                                          \
         n##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(any_template_params); \
     template <typename StaticDispatchType>                                     \
-    using static_dispatch_map_t = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(   \
+    using static_dispatch_map_t = n##_trait_map<_detail_ANYXX_TEMPLATE_ARGS(   \
         static_dispatch_template_params)>;                                     \
                                                                                \
     template <typename M>                                                      \
@@ -694,17 +694,17 @@
     _detail_REMOVE_PARENS(decoration);                                         \
   };                                                                           \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params),      \
-            typename deduced_type = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS( \
-                model_map_template_params)>::deduced_type>                     \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(trait_map_template_params),      \
+            typename deduced_type = n##_trait_map<_detail_ANYXX_TEMPLATE_ARGS( \
+                trait_map_template_params)>::deduced_type>                     \
   concept _detail_CONCAT(_detail_CONCAT(is_, n), _model) =                     \
       requires(T model,                                                        \
                anyxx::any_trait_class<                                         \
                    T, n<_detail_ANYXX_TEMPLATE_ARGS(any_template_params)>>     \
                    trait_class,                                                \
-               n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(                      \
-                   model_map_template_params)>                                 \
-                   model_map) {                                                \
+               n##_trait_map<_detail_ANYXX_TEMPLATE_ARGS(                      \
+                   trait_map_template_params)>                                 \
+                   trait_map) {                                                \
         requires anyxx::is_type_complete<T>;                                   \
         _detail_ANYXX_CONCEPT_FUNCTIONS(l)                                     \
             _detail_ANYXX_CONCEPT_STATIC_FUNCTIONS(static_fns)                 \
@@ -722,7 +722,7 @@
                            UnusedType>::modeled_by() {                         \
     return _detail_CONCAT(                                                     \
         _detail_CONCAT(is_, n),                                                \
-        _model)<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)>;       \
+        _model)<_detail_ANYXX_TEMPLATE_ARGS(trait_map_template_params)>;       \
   };                                                                           \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
@@ -732,8 +732,8 @@
       std::in_place_type_t<Concrete> concrete,                                 \
       std::in_place_type_t<Parent> parent)                                     \
       : v_table_base_t(concrete, parent) {                                     \
-    using model_map =                                                          \
-        n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(concrete_template_params)>;  \
+    using trait_map =                                                          \
+        n##_trait_map<_detail_ANYXX_TEMPLATE_ARGS(concrete_template_params)>;  \
                                                                                \
     _detail_ANYXX_V_TABLE_LAMBDAS(l);                                          \
     _detail_ANYXX_V_TABLE_DATA_INITS(v_table_data);                            \
@@ -853,12 +853,12 @@
 /// member function of the model
 ///
 /// Some FN/OP forms allow an access specifier. This specifier means
-/// - private: this FN/OP must be specified in every model_map. No default
+/// - private: this FN/OP must be specified in every trait_map. No default
 /// available.
-/// - protected: this FN/OP must be specified in every model_map. A default
-/// implementation is available in ..._default_model_map.
-/// - public: this FN/OP can be specified in every model_map. If it is not
-/// specified there, then the default implementation from ..._default_model_map
+/// - protected: this FN/OP must be specified in every trait_map. A default
+/// implementation is available in ..._default_trait_map.
+/// - public: this FN/OP can be specified in every trait_map. If it is not
+/// specified there, then the default implementation from ..._default_trait_map
 /// is used.
 ///
 /// syntax:
@@ -1064,7 +1064,7 @@
 /// \param name name of the type definition
 /// \param erased type to be used in the erased context, to simpliy usage.
 /// \param default_ default type definition. Used \ref undefined to request
-/// specification in the model_map
+/// specification in the trait_map
 /// \ingroup trait_macros
 #define USING(...) (__VA_ARGS__)
 
@@ -1082,15 +1082,15 @@
 
 /// @}
 
-/// \addtogroup model_map_macros TRAIT_MAP macros
+/// \addtogroup trait_map_macros TRAIT_MAP macros
 /// \brief Macros to define behavior of models for \ref trait's
 ///
 ///  @{
 
 #define __ANY_MODEL_MAP(trait_, t)                          \
   template <>                                               \
-  struct trait_##_model_map<_detail_ANYXX_TEMPLATE_ARGS(t)> \
-      : trait_##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(t)>
+  struct trait_##_trait_map<_detail_ANYXX_TEMPLATE_ARGS(t)> \
+      : trait_##_default_trait_map<_detail_ANYXX_TEMPLATE_ARGS(t)>
 
 /// \def TEMPLATE_MODEL_MAP
 /// \brief TEMPLATE_MODEL_MAP macro

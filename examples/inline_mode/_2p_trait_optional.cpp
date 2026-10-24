@@ -67,7 +67,7 @@ struct reference_wrapper {
 };
 
 template <typename T>
-struct nullable_model_map<T&> : nullable_default_model_map<T const&> {
+struct nullable_trait_map<T&> : nullable_default_trait_map<T const&> {
   using rep_type = reference_wrapper<T>;
   bool has_value(rep_type const& x) { return x.get() != nullptr; };
   auto& get_value(auto&& x) { return *(std::forward<decltype(x)>(x)).get(); };
@@ -106,7 +106,7 @@ class foo {
   foo() = default;
   std::shared_ptr<voo> v_;
   friend struct anyxx::using_<foo>;
-  friend struct _2p_lib::nullable_model_map<foo>;
+  friend struct _2p_lib::nullable_trait_map<foo>;
 };
 }  // namespace _2p_app
 // class foo has an internal state for 'no value'(v_ == nullptr), so we can

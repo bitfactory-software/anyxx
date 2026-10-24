@@ -59,7 +59,7 @@ TEST_CASE("anyxx const correctness overloading any_") {
 TEST_CASE("anyxx const correctness overloading trait_as") {
     consteval{
         //constexpr auto trait_declaration = anyxx::trait_declaration_t<mapable, int>;
-        //constexpr auto trait_model_map = anyxx::trait_model_map<mapable, std::vector<int>>;
+        //constexpr auto trait_trait_map = anyxx::trait_trait_map<mapable, std::vector<int>>;
         constexpr auto spec = ^^mapable<std::vector<int>, int>::size;
         constexpr auto target = find_candidate_in_target<spec, std::vector<int>, void, void const*>();
         static_assert(target == ^^std::vector<int>::size);

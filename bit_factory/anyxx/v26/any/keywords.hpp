@@ -7,7 +7,7 @@
 namespace anyxx {
 
 struct declaration {};
-struct model_map {};
+struct trait_map {};
 
 template <template <typename, typename...> typename Trait>
 using base_v_table_t = anyxx::observeable<>::v_table_t;
@@ -49,12 +49,12 @@ consteval std::meta::info trait_for(std::meta::info trait_template, std::meta::i
     params.append_range(args);
     return substitute(trait_template, params);
 }
-consteval std::meta::info trait_model_map(std::meta::info trait_template, std::meta::info mapped_type, auto args){
+consteval std::meta::info trait_trait_map(std::meta::info trait_template, std::meta::info mapped_type, auto args){
   return trait_for(trait_template, mapped_type, args);
 }
 template<std::meta::info TraitTemplate, typename V, std::meta::info... Args>
-consteval std::meta::info trait_model_map(){
-    return trait_model_map(TraitTemplate, ^^V, std::vector<std::meta::info>{ Args... });
+consteval std::meta::info trait_trait_map(){
+    return trait_trait_map(TraitTemplate, ^^V, std::vector<std::meta::info>{ Args... });
 }
 
 consteval std::meta::info trait_declaration(std::meta::info trait_template, auto args){

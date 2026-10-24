@@ -7,7 +7,7 @@
 namespace anyxx {
 
 template <typename V, std::meta::info Target, std::meta::info Spec, typename TraitAs, typename... Args>
-struct const_trait_model_map_call {
+struct const_trait_trait_map_call {
   template <typename Self>
   constexpr trait_as_return_type_t<TraitAs, Spec> operator()(this Self const& self, Args... args){
       constexpr auto return_type = return_type_of(Spec);
@@ -20,7 +20,7 @@ struct const_trait_model_map_call {
   }
 };
 template <typename V, std::meta::info Target, std::meta::info Spec, typename TraitAs, typename... Args>
-struct mutable_trait_model_map_call {
+struct mutable_trait_trait_map_call {
     template <typename Self>
     constexpr trait_as_return_type_t<TraitAs, Spec> operator()(this Self&  self, Args... args) {
         constexpr auto return_type = return_type_of(Spec);
@@ -195,9 +195,9 @@ template <typename V>
 consteval std::meta::info choose_named_call(interface_spec_with_target const& spec){
     if(spec.target != std::meta::info{} && !is_defaulted_function_spec(spec.target)) {
         if(is_const_function(spec.target)) {
-            return ^^const_trait_model_map_call;
+            return ^^const_trait_trait_map_call;
         } else {
-            return ^^mutable_trait_model_map_call;
+            return ^^mutable_trait_trait_map_call;
         }
     } else if(is_class_type(^^std::remove_cvref_t<V>)){
         if(is_const_function(spec.member)) {

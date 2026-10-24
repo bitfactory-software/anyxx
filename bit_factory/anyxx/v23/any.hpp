@@ -47,8 +47,8 @@ class ANYXX_USE_EBO any_ : public v_table_holder<Proxy, Trait<Args...>>, public 
   using v_table_holder_t = v_table_holder<Proxy, trait_t>;
   using v_table_t = typename v_table_holder_t::v_table_t;
   using T = proxy_trait_t::static_dispatch_t;
-  using model_map_t = typename trait_t::template static_dispatch_map_t<T>;
-  using rep_type = typename model_map_t::rep_type;
+  using trait_map_t = typename trait_t::template static_dispatch_map_t<T>;
+  using rep_type = typename trait_map_t::rep_type;
   using proxy_impl_t = typename proxy_trait_t::template proxy_impl<rep_type>;
   static constexpr bool is_dyn = anyxx::is_dyn<Proxy>;
 
@@ -228,7 +228,7 @@ class ANYXX_USE_EBO any_ : public v_table_holder<Proxy, Trait<Args...>>, public 
   template <typename Self>
   Self operator++(this Self& self, int)
     requires(is_dyn && is_op_pre_increment_v_table<v_table_t>) ||
-            (!is_dyn && is_op_pre_increment_model_map<model_map_t, T>)
+            (!is_dyn && is_op_pre_increment_trait_map<trait_map_t, T>)
 
   {
     auto r = self;
@@ -246,16 +246,16 @@ class ANYXX_USE_EBO any_ : public v_table_holder<Proxy, Trait<Args...>>, public 
   }
   template <typename Self>
   Self& operator++(this Self&& self)
-    requires(!is_dyn && is_op_pre_increment_model_map<model_map_t, T>)
+    requires(!is_dyn && is_op_pre_increment_trait_map<trait_map_t, T>)
   {
-    model_map_t{}.op_pre_increment(get_proxy_value(std::forward<Self>(self)));
+    trait_map_t{}.op_pre_increment(get_proxy_value(std::forward<Self>(self)));
     return std::forward<Self>(self);
   }
 
   template <typename Self>
   Self operator--(this Self& self, int)
     requires(is_dyn && is_op_pre_decrement_v_table<v_table_t>) ||
-            (!is_dyn && is_op_pre_decrement_model_map<model_map_t, T>)
+            (!is_dyn && is_op_pre_decrement_trait_map<trait_map_t, T>)
 
   {
     auto r = self;
@@ -272,9 +272,9 @@ class ANYXX_USE_EBO any_ : public v_table_holder<Proxy, Trait<Args...>>, public 
   }
   template <typename Self>
   Self& operator--(this Self&& self)
-    requires(!is_dyn && is_op_pre_decrement_model_map<model_map_t, T>)
+    requires(!is_dyn && is_op_pre_decrement_trait_map<trait_map_t, T>)
   {
-    model_map_t{}.op_pre_decrement(get_proxy_value(std::forward<Self>(self)));
+    trait_map_t{}.op_pre_decrement(get_proxy_value(std::forward<Self>(self)));
     return std::forward<Self>(self);
   }
 };
