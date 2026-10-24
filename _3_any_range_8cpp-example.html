@@ -388,8 +388,8 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>anyxx {</div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> ValueType, <span class="keyword">typename</span> Reference&gt;</div>
-<div class="line"><span class="keyword">struct </span>forward_iterator_model_map&lt;node_base*, ValueType, Reference&gt;</div>
-<div class="line">    : forward_iterator_default_model_map&lt;node_base*, ValueType, Reference&gt; {</div>
+<div class="line"><span class="keyword">struct </span>forward_iterator_trait_map&lt;node_base*, ValueType, Reference&gt;</div>
+<div class="line">    : forward_iterator_default_trait_map&lt;node_base*, ValueType, Reference&gt; {</div>
 <div class="line">  node_base* op_pre_increment(node_base*&amp; self)<span class="keyword"> const </span>{</div>
 <div class="line">    <span class="keywordflow">return</span> self = self-&gt;next();</div>
 <div class="line">  }</div>
@@ -406,8 +406,8 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">namespace </span>anyxx {</div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Node, <span class="keyword">typename</span> Iterator&gt;</div>
 <div class="line">  <span class="keyword">requires</span> std::derived_from&lt;Node, node_base&gt;</div>
-<div class="line"><span class="keyword">struct </span>range_model_map&lt;Node*, Iterator&gt;</div>
-<div class="line">    : range_default_model_map&lt;node_base*, Iterator&gt; {</div>
+<div class="line"><span class="keyword">struct </span>range_trait_map&lt;Node*, Iterator&gt;</div>
+<div class="line">    : range_default_trait_map&lt;node_base*, Iterator&gt; {</div>
 <div class="line">  node_base* begin(Node* node) { <span class="keywordflow">return</span> node; }</div>
 <div class="line">  node_base* end(Node*) { <span class="keywordflow">return</span> <span class="keyword">nullptr</span>; }</div>
 <div class="line">};</div>

@@ -276,11 +276,11 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
-<div class="line">MODEL_MAP(circle, drawable) {</div>
+<div class="line">TRAIT_MAP(circle, drawable) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(circle <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;Silent greetings&quot;</span>; };</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">MODEL_MAP(square, drawable) {</div>
+<div class="line">TRAIT_MAP(square, drawable) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(square <span class="keyword">const</span>&amp; self) { <span class="keywordflow">return</span> self.edgy_salute(); };</div>
 <div class="line">};</div>
 <div class="line"> </div>
@@ -495,7 +495,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  <span class="keywordflow">return</span> ayx::move_to&lt;ayx::any&lt;figure&gt;&gt;(deserialize(type, archive));</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line">MODEL_MAP(circle, serializable) {</div>
+<div class="line">TRAIT_MAP(circle, serializable) {</div>
 <div class="line">  <span class="keyword">static</span> <span class="keywordtype">void</span> serialize(circle <span class="keyword">const</span>&amp; self, std::ostream&amp; os) {</div>
 <div class="line">    os &lt;&lt; <span class="stringliteral">&quot;circle &quot;</span> &lt;&lt; self.radius &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
 <div class="line">  };</div>
@@ -508,7 +508,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">anyxx::enable_dynamic&lt;circle, figure&gt; __;</div>
 <div class="line">anyxx::enable_dynamic&lt;circle, serializable&gt; __;</div>
 <div class="line"> </div>
-<div class="line">MODEL_MAP(square, serializable) {</div>
+<div class="line">TRAIT_MAP(square, serializable) {</div>
 <div class="line">  <span class="keyword">static</span> <span class="keywordtype">void</span> serialize(square <span class="keyword">const</span>&amp; self, std::ostream&amp; os) {</div>
 <div class="line">    os &lt;&lt; <span class="stringliteral">&quot;square &quot;</span> &lt;&lt; self.edge_length &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
 <div class="line">  };</div>
@@ -647,7 +647,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">    <span class="keywordflow">for</span>(<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures) os &lt;&lt; f.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line">MODEL_MAP(std::string, figure) {</div>
+<div class="line">TRAIT_MAP(std::string, figure) {</div>
 <div class="line">  std::string draw(std::string <span class="keyword">const</span>&amp; s) { <span class="keywordflow">return</span> s; };</div>
 <div class="line">};</div>
 <div class="line"> </div>

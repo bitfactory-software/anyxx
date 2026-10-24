@@ -161,7 +161,7 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><span class="keyword">struct </span>nullable_model_map&lt;T&amp;&gt; : nullable_default_model_map&lt;T const&amp;&gt; {</div>
+<div class="line"><span class="keyword">struct </span>nullable_trait_map&lt;T&amp;&gt; : nullable_default_trait_map&lt;T const&amp;&gt; {</div>
 <div class="line">  <span class="keyword">using </span>rep_type = reference_wrapper&lt;T&gt;;</div>
 <div class="line">  <span class="keywordtype">bool</span> has_value(rep_type <span class="keyword">const</span>&amp; x) { <span class="keywordflow">return</span> x.get() != <span class="keyword">nullptr</span>; };</div>
 <div class="line">  <span class="keyword">auto</span>&amp; get_value(<span class="keyword">auto</span>&amp;&amp; x) { <span class="keywordflow">return</span> *(std::forward&lt;decltype(x)&gt;(x)).get(); };</div>
@@ -200,14 +200,14 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">  foo() = <span class="keywordflow">default</span>;</div>
 <div class="line">  std::shared_ptr&lt;voo&gt; v_;</div>
 <div class="line">  <span class="keyword">friend</span> <span class="keyword">struct </span>anyxx::using_&lt;foo&gt;;</div>
-<div class="line">  <span class="keyword">friend</span> <span class="keyword">struct </span>_2p_lib::nullable_model_map&lt;foo&gt;;</div>
+<div class="line">  <span class="keyword">friend</span> <span class="keyword">struct </span>_2p_lib::nullable_trait_map&lt;foo&gt;;</div>
 <div class="line">};</div>
 <div class="line">}  <span class="comment">// namespace _2p_app</span></div>
 <div class="line"><span class="comment">// class foo has an internal state for &#39;no value&#39;(v_ == nullptr), so we can</span></div>
 <div class="line"><span class="comment">// directly use it as the representation of the nullable trait. This is done be</span></div>
 <div class="line"><span class="comment">// seting &#39;rep_type&#39; to &#39;foo&#39; and providing the &#39;has_value&#39; and &#39;get_value&#39;</span></div>
 <div class="line"><span class="comment">// functions accordingly.</span></div>
-<div class="line">MODEL_MAP(_2p_app::foo, _2p_lib::nullable) {</div>
+<div class="line">TRAIT_MAP(_2p_app::foo, _2p_lib::nullable) {</div>
 <div class="line">  <span class="keyword">using </span>rep_type = _2p_app::foo;</div>
 <div class="line">  <span class="keywordtype">bool</span> has_value(_2p_app::foo <span class="keyword">const</span>&amp; self) { <span class="keywordflow">return</span> self.v_ != <span class="keyword">nullptr</span>; };</div>
 <div class="line">  <span class="keyword">auto</span>&amp; get_value(<span class="keyword">auto</span>&amp;&amp; self) { <span class="keywordflow">return</span> std::forward&lt;decltype(self)&gt;(self); };</div>
