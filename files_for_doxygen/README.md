@@ -182,11 +182,11 @@ struct square {
 
 TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), const)))
 
-MODEL_MAP(circle, drawable) {
+TRAIT_MAP(circle, drawable) {
   static std::string draw(circle const&) { return "Silent greetings"; };
 };
 
-MODEL_MAP(square, drawable) {
+TRAIT_MAP(square, drawable) {
   static std::string draw(square const& self) { return self.edgy_salute(); };
 };
 
@@ -388,10 +388,12 @@ struct square {
   double edge_length = 0.0;
 };
 
-struct figure_has_open_dispatch {};
-TRAIT(figure, ayx::dynamic_copyable, (FN(double, area, (), const)))
+TRAIT(figure, ayx::dynamic_copyable, 
+  (FN(double, area, (), const))
+)
 TRAIT(serializable, ayx::dynamic_copyable,
-      (FN(void, serialize, (std::ostream&), const)))
+  (FN(void, serialize, (std::ostream&), const))
+)
 
 ayx::factory<ayx::any<serializable>, std::string, std::istream&> deserialize;
 
@@ -401,7 +403,7 @@ ayx::factory<ayx::any<serializable>, std::string, std::istream&> deserialize;
   return ayx::move_to<ayx::any<figure>>(deserialize(type, archive));
 }
 
-MODEL_MAP(circle, serializable) {
+TRAIT_MAP(circle, serializable) {
   static void serialize(circle const& self, std::ostream& os) {
     os << "circle " << self.radius << " ";
   };
@@ -411,10 +413,10 @@ auto __ = deserialize.register_("circle", [](std::istream& archive) -> circle {
   archive >> c.radius;
   return c;
 });
-anyxx::register_trait<circle, figure> __;
-anyxx::register_trait<circle, serializable> __;
+anyxx::enable_dynamic<circle, figure> __;
+anyxx::enable_dynamic<circle, serializable> __;
 
-MODEL_MAP(square, serializable) {
+TRAIT_MAP(square, serializable) {
   static void serialize(square const& self, std::ostream& os) {
     os << "square " << self.edge_length << " ";
   };
@@ -424,8 +426,8 @@ auto __ = deserialize.register_("square", [](std::istream& archive) {
   archive >> s.edge_length;
   return s;
 });
-anyxx::register_trait<square, figure> __;
-anyxx::register_trait<square, serializable> __;
+anyxx::enable_dynamic<square, figure> __;
+anyxx::enable_dynamic<square, serializable> __;
 
 void areas(std::stringstream& os,
            std::vector<ayx::any<figure>> const& figures) {
@@ -553,7 +555,7 @@ void draw_vany(std::stringstream& os,
     for(auto const& f : figures) os << f.draw() << "\n";
 }
 
-MODEL_MAP(std::string, figure) {
+TRAIT_MAP(std::string, figure) {
   std::string draw(std::string const& s) { return s; };
 };
 

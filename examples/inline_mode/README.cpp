@@ -388,10 +388,12 @@ struct square {
   double edge_length = 0.0;
 };
 
-struct figure_has_open_dispatch {};
-TRAIT(figure, ayx::dynamic_copyable, (FN(double, area, (), const)))
+TRAIT(figure, ayx::dynamic_copyable, 
+  (FN(double, area, (), const))
+)
 TRAIT(serializable, ayx::dynamic_copyable,
-      (FN(void, serialize, (std::ostream&), const)))
+  (FN(void, serialize, (std::ostream&), const))
+)
 
 ayx::factory<ayx::any<serializable>, std::string, std::istream&> deserialize;
 
