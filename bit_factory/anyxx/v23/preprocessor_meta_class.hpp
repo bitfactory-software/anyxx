@@ -1082,7 +1082,7 @@
 
 /// @}
 
-/// \addtogroup model_map_macros MODEL_MAP macros
+/// \addtogroup model_map_macros TRAIT_MAP macros
 /// \brief Macros to define behavior of models for \ref trait's
 ///
 ///  @{
@@ -1106,12 +1106,12 @@
                   __detail_ANYXX_ADD_HEAD((ANY_UNPAREN(model_)), \
                                           _detail_REMOVE_PARENS(trait_types)))
 
-/// \def MODEL_MAP
-/// \brief MODEL_MAP macro
+/// \def TRAIT_MAP
+/// \brief TRAIT_MAP macro
 /// \param class_ name of the model, including namespace, in brackets
 /// \param trait_ name of the trait, including namespace
 ///
 /// Must be placed in global namespace, and reachable for the instantiation of
 /// the associated v-table.
-#define MODEL_MAP(model_, trait_) __ANY_MODEL_MAP(trait_, (ANY_UNPAREN(model_)))
+#define TRAIT_MAP(model_, trait_) __ANY_MODEL_MAP(trait_, (ANY_UNPAREN(model_)))
 /// @}

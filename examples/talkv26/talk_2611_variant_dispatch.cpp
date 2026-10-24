@@ -69,7 +69,7 @@ TEST_CASE("talk_2611_variant_dispatch") {
 //     for(auto const& f : figures) os << f.draw() << "\n";
 // }
 //
-// MODEL_MAP(std::string, drawable) {
+// TRAIT_MAP(std::string, drawable) {
 //   std::string draw(std::string const& s) { return s; };
 // };
 //

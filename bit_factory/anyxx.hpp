@@ -73,7 +73,7 @@
 
    \example _2b_trait_monoid.cpp
    A self referntial trait that models a variant of a monoid.
-   Show how to use a MODEL_MAP that acts simultanious as runtime and
+   Show how to use a TRAIT_MAP that acts simultanious as runtime and
    complitem customization point.
 
    \example _2f_trait_equal_comparable.cpp

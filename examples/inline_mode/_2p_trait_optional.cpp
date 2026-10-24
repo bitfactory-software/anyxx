@@ -113,7 +113,7 @@ class foo {
 // directly use it as the representation of the nullable trait. This is done be
 // seting 'rep_type' to 'foo' and providing the 'has_value' and 'get_value'
 // functions accordingly.
-MODEL_MAP(_2p_app::foo, _2p_lib::nullable) {
+TRAIT_MAP(_2p_app::foo, _2p_lib::nullable) {
   using rep_type = _2p_app::foo;
   bool has_value(_2p_app::foo const& self) { return self.v_ != nullptr; };
   auto& get_value(auto&& self) { return std::forward<decltype(self)>(self); };

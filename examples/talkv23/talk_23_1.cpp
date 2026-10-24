@@ -16,7 +16,7 @@ struct Circle {
 using namespace anyxx;
 TRAIT(Shape, deleteable, (FN(double, area, (), const)))
 
-MODEL_MAP(Circle, Shape) {
+TRAIT_MAP(Circle, Shape) {
   double area(const Circle& self) { return M_PI * self.radius * self.radius; };
 };
 

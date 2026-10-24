@@ -22,12 +22,12 @@ ANY_MEMBERS_COUNT_FWD(CORE_EXPORT, whole_picture::core::shapes, picture)
 ANY_META_CLASS_FWD(CORE_EXPORT, whole_picture::core::shapes::picture)
 ANY_DISPATCH_FOR_FWD(CORE_EXPORT, whole_picture::core::shapes::picture,
                      whole_picture::architecture, shape)
-MODEL_MAP(whole_picture::core::shapes::picture,
+TRAIT_MAP(whole_picture::core::shapes::picture,
               whole_picture::architecture::surface) {
   void write(auto& self, point p, char ch) { self.content.write(p, ch); };
 };
 
-MODEL_MAP(whole_picture::core::shapes::picture,
+TRAIT_MAP(whole_picture::core::shapes::picture,
               whole_picture::architecture::shape) {
   using picture = whole_picture::core::shapes::picture;
   void draw(picture const& self,

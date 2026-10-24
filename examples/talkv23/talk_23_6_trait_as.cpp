@@ -12,11 +12,11 @@ TRAIT(stringable, observeable,
       (FN_IMPL(public, std::string, as_string, (), const,
                () { return std::format("{}", self); })))
 
-MODEL_MAP(bool, stringable) {
+TRAIT_MAP(bool, stringable) {
   std::string as_string(bool const& self) { return self ? "wahr" : "falsch"; };
 };
 
-MODEL_MAP(double, stringable) {
+TRAIT_MAP(double, stringable) {
   std::string as_string(const double& self) {
     return std::format("{:6.3}", self);
   };

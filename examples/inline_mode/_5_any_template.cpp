@@ -38,10 +38,10 @@ TRAIT_TEMPLATE(((KEY), (VALUE)), mutable_recursive_map, anyxx::dynamic_copyable,
 TRAIT_TEMPLATE(((KEY)), map_to_string, anyxx::dynamic_copyable, (),
                (FN((any_to_string<cref>), at, (KEY const&), const)))
 
-MODEL_MAP(int, stringable) {
+TRAIT_MAP(int, stringable) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
 };
-MODEL_MAP(double, stringable) {
+TRAIT_MAP(double, stringable) {
   auto to_string(double const& x) -> std::string { return std::to_string(x); };
 };
 }  // namespace

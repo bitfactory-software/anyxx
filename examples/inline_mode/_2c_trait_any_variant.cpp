@@ -45,7 +45,7 @@ static_assert(std::same_as<any_in_variant, any_value>);
 
 }  // namespace example_2c
 
-MODEL_MAP(example_2c::custom, example_2c::value) {
+TRAIT_MAP(example_2c::custom, example_2c::value) {
   static std::string to_string(custom const& self) {
     return "{" + self.answer + "}";
   };

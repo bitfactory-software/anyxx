@@ -20,7 +20,7 @@ void print_area(const any<Shape>& shape) {
   std::println("Area: {}", shape.area());
 }
 
-MODEL_MAP(Circle, Shape) {
+TRAIT_MAP(Circle, Shape) {
   double area(const Circle& self) { return M_PI * self.radius * self.radius; };
 };
 

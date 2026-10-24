@@ -31,7 +31,7 @@ TRAIT(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
 
 using namespace subscript_operator_test;
 
-MODEL_MAP(subscript_operator_test::map_t,
+TRAIT_MAP(subscript_operator_test::map_t,
           subscript_operator_test::map_i_to_string_const_and_mutable) {
   static std::string const& subscript(map_t const& self,
                                       std::size_t const key) {  // NOLINT
@@ -39,7 +39,7 @@ MODEL_MAP(subscript_operator_test::map_t,
   };
 };
 
-MODEL_MAP(subscript_operator_test::vector_t,
+TRAIT_MAP(subscript_operator_test::vector_t,
           subscript_operator_test::map_i_to_string_const_and_mutable) {
   static std::string const& subscript(vector_t const& self,
                                       std::size_t const key) {  // NOLINT

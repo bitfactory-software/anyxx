@@ -101,7 +101,7 @@ struct b_type {
 
 // ... but for which we provide a model map, so the provided concept is
 // satisfied:
-MODEL_MAP(app_2f::b_type, lib_2f::equal_comparable) {
+TRAIT_MAP(app_2f::b_type, lib_2f::equal_comparable) {
   static auto eq(app_2f::b_type const& self, app_2f::b_type const& r) {
     return self.name == r.name;
   };
