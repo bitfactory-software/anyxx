@@ -236,11 +236,11 @@ Showcase 2: <em>Any++</em> with Model Map</h3>
 <div class="line"> </div>
 <div class="line">TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
-<div class="line">MODEL_MAP(circle, drawable) {</div>
+<div class="line">TRAIT_MAP(circle, drawable) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(circle <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;Silent greetings&quot;</span>; };</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">MODEL_MAP(square, drawable) {</div>
+<div class="line">TRAIT_MAP(square, drawable) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(square <span class="keyword">const</span>&amp; self) { <span class="keywordflow">return</span> self.edgy_salute(); };</div>
 <div class="line">};</div>
 <div class="line"> </div>
@@ -428,10 +428,12 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line">  <span class="keywordtype">double</span> edge_length = 0.0;</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">struct </span>figure_has_open_dispatch {};</div>
-<div class="line">TRAIT(figure, ayx::dynamic_copyable, (FN(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(figure, ayx::dynamic_copyable, </div>
+<div class="line">  (FN(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>))</div>
+<div class="line">)</div>
 <div class="line">TRAIT(serializable, ayx::dynamic_copyable,</div>
-<div class="line">      (FN(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), const)))</div>
+<div class="line">  (FN(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), const))</div>
+<div class="line">)</div>
 <div class="line"> </div>
 <div class="line">ayx::factory&lt;ayx::any&lt;serializable&gt;, std::<span class="keywordtype">string</span>, std::istream&amp;&gt; deserialize;</div>
 <div class="line"> </div>
@@ -441,7 +443,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line">  <span class="keywordflow">return</span> ayx::move_to&lt;ayx::any&lt;figure&gt;&gt;(deserialize(type, archive));</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line">MODEL_MAP(circle, serializable) {</div>
+<div class="line">TRAIT_MAP(circle, serializable) {</div>
 <div class="line">  <span class="keyword">static</span> <span class="keywordtype">void</span> serialize(circle <span class="keyword">const</span>&amp; self, std::ostream&amp; os) {</div>
 <div class="line">    os &lt;&lt; <span class="stringliteral">&quot;circle &quot;</span> &lt;&lt; self.radius &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
 <div class="line">  };</div>
@@ -451,10 +453,10 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line">  archive &gt;&gt; c.radius;</div>
 <div class="line">  <span class="keywordflow">return</span> c;</div>
 <div class="line">});</div>
-<div class="line">anyxx::register_trait&lt;circle, figure&gt; __;</div>
-<div class="line">anyxx::register_trait&lt;circle, serializable&gt; __;</div>
+<div class="line">anyxx::enable_dynamic&lt;circle, figure&gt; __;</div>
+<div class="line">anyxx::enable_dynamic&lt;circle, serializable&gt; __;</div>
 <div class="line"> </div>
-<div class="line">MODEL_MAP(square, serializable) {</div>
+<div class="line">TRAIT_MAP(square, serializable) {</div>
 <div class="line">  <span class="keyword">static</span> <span class="keywordtype">void</span> serialize(square <span class="keyword">const</span>&amp; self, std::ostream&amp; os) {</div>
 <div class="line">    os &lt;&lt; <span class="stringliteral">&quot;square &quot;</span> &lt;&lt; self.edge_length &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
 <div class="line">  };</div>
@@ -464,8 +466,8 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line">  archive &gt;&gt; s.edge_length;</div>
 <div class="line">  <span class="keywordflow">return</span> s;</div>
 <div class="line">});</div>
-<div class="line">anyxx::register_trait&lt;square, figure&gt; __;</div>
-<div class="line">anyxx::register_trait&lt;square, serializable&gt; __;</div>
+<div class="line">anyxx::enable_dynamic&lt;square, figure&gt; __;</div>
+<div class="line">anyxx::enable_dynamic&lt;square, serializable&gt; __;</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> areas(std::stringstream&amp; os,</div>
 <div class="line">           std::vector&lt;ayx::any&lt;figure&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
@@ -585,7 +587,7 @@ Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 <div class="line">    <span class="keywordflow">for</span>(<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures) os &lt;&lt; f.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line">MODEL_MAP(std::string, figure) {</div>
+<div class="line">TRAIT_MAP(std::string, figure) {</div>
 <div class="line">  std::string draw(std::string <span class="keyword">const</span>&amp; s) { <span class="keywordflow">return</span> s; };</div>
 <div class="line">};</div>
 <div class="line"> </div>

@@ -482,10 +482,12 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  <span class="keywordtype">double</span> edge_length = 0.0;</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">struct </span>figure_has_open_dispatch {};</div>
-<div class="line">TRAIT(figure, ayx::dynamic_copyable, (FN(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(figure, ayx::dynamic_copyable, </div>
+<div class="line">  (FN(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>))</div>
+<div class="line">)</div>
 <div class="line">TRAIT(serializable, ayx::dynamic_copyable,</div>
-<div class="line">      (FN(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), const)))</div>
+<div class="line">  (FN(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), const))</div>
+<div class="line">)</div>
 <div class="line"> </div>
 <div class="line">ayx::factory&lt;ayx::any&lt;serializable&gt;, std::<span class="keywordtype">string</span>, std::istream&amp;&gt; deserialize;</div>
 <div class="line"> </div>
