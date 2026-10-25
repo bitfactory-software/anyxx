@@ -26,10 +26,9 @@ TRAIT_MAP(data, greetable){
   std::string greet(const data&) { return "Hello"; }
 };
 
-enable_dynamic<data, source> __;
 enable_dynamic<data, greetable> __;
 
-}  // namespace db
+}  // namespace
 
 TEST_CASE("talk_23_8_crosscast") {
   using namespace anyxx;

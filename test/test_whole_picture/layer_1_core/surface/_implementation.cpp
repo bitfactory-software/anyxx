@@ -8,8 +8,7 @@ using namespace whole_picture;
 using namespace whole_picture::core;
 using namespace whole_picture::architecture;
 
-//ANY_META_CLASS(core::surface)
-//ANY_MODEL(core::surface, whole_picture::architecture, surface);
+META_CLASS(core::surface)
 
 core::surface::surface(architecture::size size)
     : lines_(static_cast<std::size_t>(size.cy), make_line(static_cast<std::size_t>(size.cx))) {}

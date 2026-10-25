@@ -23,7 +23,7 @@ using namespace anyxx;
 using namespace test::component_base;
 
 //
-ANY_META_CLASS_STATIC(X)
+META_CLASS_STATIC(X)
 namespace {
 enable_dynamic<X, test::component_base::get_value_i> __;
 enable_dynamic<X, test::component_base::set_value_i> __;

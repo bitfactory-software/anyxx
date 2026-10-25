@@ -24,7 +24,7 @@ struct is_derived_from_{
 struct meta_data_{
     using type = anyxx::meta_data*;
     template<typename Concrete>
-    static auto init(auto){ return nullptr; };
+    static auto init(auto){ return &get_meta_data<Concrete>(); };
 };
 struct model_size {
     using type = anyxx::model_size_t;

@@ -5,7 +5,7 @@
 
 namespace {
 
-TRAIT_TEMPLATE(((KEY), (VALUE)), map, anyxx::dynamic_copyable, (),
+TRAIT_TEMPLATE(((KEY), (VALUE)), map, anyxx::copyable, (),
                (FN_EXACT(VALUE const&, at, (KEY const&), const),
                 FN(std::size_t, size, (), const)))
 
@@ -13,11 +13,11 @@ TRAIT_TEMPLATE(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),
                (FN_OVERLOAD_EXACT(VALUE&, at, (KEY const&), ),
                 OP_(VALUE&, [], (KEY const&), )))
 
-TRAIT_TEMPLATE(((KEY), (VALUE)), recursive_map, anyxx::dynamic_copyable, (),
+TRAIT_TEMPLATE(((KEY), (VALUE)), recursive_map, anyxx::copyable, (),
                (FN(VALUE, at, (KEY const&), const),
                 FN(std::size_t, size, (), const)))
 
-TRAIT_TEMPLATE(((KEY), (VALUE)), mutable_recursive_map, anyxx::dynamic_copyable,
+TRAIT_TEMPLATE(((KEY), (VALUE)), mutable_recursive_map, anyxx::copyable,
                (),
                (FN(VALUE, at, (KEY const&), ),
                 FN(std::size_t, size, (), const)))
@@ -43,10 +43,10 @@ struct X {
 
 namespace template_test {
 
-TRAIT(stringable, anyxx::dynamic_copyable,
+TRAIT(stringable, anyxx::copyable,
       (FN(std::string, to_string, (), const)))
 
-TRAIT_TEMPLATE(((KEY)), map_to_string, anyxx::dynamic_copyable, (),
+TRAIT_TEMPLATE(((KEY)), map_to_string, anyxx::copyable, (),
                (FN((anyxx::any_<anyxx::cref, stringable>), at, (KEY const&),
                    const)))
 

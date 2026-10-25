@@ -19,7 +19,7 @@ struct picture : anyxx::members<picture> {
 }  // namespace whole_picture::core::shapes
 
 ANY_MEMBERS_COUNT_FWD(CORE_EXPORT, whole_picture::core::shapes, picture)
-ANY_META_CLASS_FWD(CORE_EXPORT, whole_picture::core::shapes::picture)
+META_CLASS_FWD(CORE_EXPORT, whole_picture::core::shapes::picture)
 ANY_DISPATCH_FOR_FWD(CORE_EXPORT, whole_picture::core::shapes::picture,
                      whole_picture::architecture, shape)
 TRAIT_MAP(whole_picture::core::shapes::picture,

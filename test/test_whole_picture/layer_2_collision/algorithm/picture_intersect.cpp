@@ -8,7 +8,7 @@ struct hitpad_picture_t {
   bool hit = false;
 };
 }  // namespace
-
+META_CLASS_STATIC(hitpad_picture_t)
 TRAIT_MAP(hitpad_picture_t, architecture::surface) {
   void write(hitpad_picture_t & self, architecture::point p,
              [[maybe_unused]] char ch) {

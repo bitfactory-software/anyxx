@@ -5,6 +5,7 @@
 #include <bit_factory/anyxx/errors/cast_error.hpp>
 #include <bit_factory/anyxx/v_table_data.hpp>
 #include <bit_factory/anyxx/v_table_instance.hpp>
+#include <cassert>
 #include <expected>
 #include <ranges>
 #include <typeindex>
@@ -18,15 +19,23 @@ class meta_data;
 template <typename TYPE>
 auto& runtime_implementation();
 
+template <typename TYPE>
+struct meta_data_access;
+
 #ifdef ANY_DLL_MODE
-template <typename T>
-meta_data& get_meta_data();
 #else
+template <typename TYPE>
+struct meta_data_access {
+  static meta_data& operator()() {
+    return runtime_implementation<std::decay_t<TYPE> >();
+  }
+};
+
+#endif
 template <typename T>
 meta_data& get_meta_data() {
-  return runtime_implementation<std::decay_t<T>>();
+  return meta_data_access<T>{}();
 }
-#endif
 
 template <is_any ToAny, is_dynamic_castable_v_table FromVTable>
   requires is_dynamic_castable_v_table<typename ToAny::v_table_t>
@@ -89,7 +98,7 @@ class meta_data {
   }
   template <typename VTable>
   auto register_v_table(VTable* v_table) {
-    v_table->meta_data_ = this;
+    assert(v_table->meta_data_ == this);
     if (!find_v_table<VTable>()) i_table_.push_back({v_table});
     return v_table;
   }
@@ -112,38 +121,37 @@ auto bind_v_table_to_meta_data() {
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_META_CLASS_FWD(export_, ...) \
-  template <>                            \
-  export_ anyxx::meta_data& anyxx::get_meta_data<__VA_ARGS__>();
+#define META_CLASS_FWD(export_, ...)                    \
+  template <>                                           \
+  struct export_ anyxx::meta_data_access<__VA_ARGS__> { \
+    static anyxx::meta_data& operator()();              \
+  };
 
-#define ANY_META_CLASS(...)                                             \
-  template <>                                                           \
-  anyxx::meta_data& anyxx::get_meta_data<std::decay_t<__VA_ARGS__>>() { \
-    return runtime_implementation<__VA_ARGS__>();                       \
+#define META_CLASS(...)                                                  \
+  anyxx::meta_data& anyxx::meta_data_access<__VA_ARGS__>::operator()() { \
+    return anyxx::runtime_implementation<__VA_ARGS__>();                 \
   }
 
 #else
 
-/// \addtogroup meta_class_macros ANY_META_CLASS macros for crosscast
+/// \addtogroup meta_class_macros META_CLASS macros for crosscast
 /// \brief Macros to define static runtime type data for a \ref
 /// model. Only neccessary for DLL \b and crosscast scenarios.
 /// @{
 
-/// \def ANY_META_CLASS_FWD
+/// \def META_CLASS_FWD
 /// \brief Declare access to the meta data for a specific model any_.
 /// Must be in global namespace.
 /// \param export_ To supply an export macro in a DLL scenario
 /// \param ... Type of the model
-#define ANY_META_CLASS_FWD(...)
-/// \def ANY_META_CLASS
+#define META_CLASS_FWD(...)
+/// \def META_CLASS
 /// \brief Define the meta data for a specific model any_. Must be in
 /// global namespace.
 /// \param ... Type of the model
-#define ANY_META_CLASS(...)
+#define META_CLASS(...)
 
 #endif
 
-#define ANY_META_CLASS_STATIC(...)  \
-  ANY_META_CLASS_FWD(, __VA_ARGS__) \
-  ANY_META_CLASS(__VA_ARGS__)
-
+#define META_CLASS_STATIC(...) \
+  META_CLASS_FWD(, __VA_ARGS__) META_CLASS(__VA_ARGS__)

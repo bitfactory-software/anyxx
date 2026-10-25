@@ -19,7 +19,7 @@ namespace anyxx {
         return static_is_derived_from(from);                                 \
       })
 #define ANY_CAN_TYPE_SAVE_CROSSCAST \
-  ANY_V_TABLE_DATA(meta_data*, meta_data_, nullptr)
+  ANY_V_TABLE_DATA(meta_data*, meta_data_, &get_meta_data<Concrete>())
 #define ANY_MODEL_SIZE \
   ANY_V_TABLE_DATA(model_size_t, model_size, compute_model_size<Concrete>())
 #define ANY_COPY_CONSTRUCTOR                                              \

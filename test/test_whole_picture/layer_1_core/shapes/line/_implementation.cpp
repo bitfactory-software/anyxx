@@ -8,7 +8,7 @@ using namespace whole_picture::core::shapes;
 
 using namespace anyxx;
 
-ANY_META_CLASS(line)
+META_CLASS(line)
 namespace {
 enable_dynamic<shapes::line, whole_picture::architecture::shape> __;
 }

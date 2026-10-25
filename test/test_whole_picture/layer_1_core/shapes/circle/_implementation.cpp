@@ -9,7 +9,7 @@ using namespace whole_picture::core::shapes;
 
 using namespace anyxx;
 
-ANY_META_CLASS(circle)
+META_CLASS(circle)
 namespace{
 enable_dynamic<circle, whole_picture::architecture::shape> __;
 }

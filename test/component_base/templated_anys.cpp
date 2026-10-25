@@ -3,9 +3,9 @@
 #include <map>  // NOLINT
 #include <string>
 
-ANY_META_CLASS(std::map<int, double>)
-ANY_META_CLASS(std::map<std::string, int>)
-ANY_META_CLASS(std::map<std::string, double>)
+META_CLASS(std::map<int, double>)
+META_CLASS(std::map<std::string, int>)
+META_CLASS(std::map<std::string, double>)
 
 namespace {
 anyxx::enable_dynamic<std::map<std::string, int>,

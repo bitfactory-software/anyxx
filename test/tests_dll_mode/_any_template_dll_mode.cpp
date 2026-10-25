@@ -53,11 +53,11 @@ using namespace anyxx;
 
 using namespace template_test;
 
-ANY_META_CLASS_STATIC(int)
-ANY_META_CLASS_STATIC(double)
-ANY_META_CLASS_STATIC(
+META_CLASS_STATIC(int)
+META_CLASS_STATIC(double)
+META_CLASS_STATIC(
     std::map<int, std::map<std::string, std::map<int, double>>>)
-ANY_META_CLASS_STATIC(std::map<std::string, std::map<int, double>>)
+META_CLASS_STATIC(std::map<std::string, std::map<int, double>>)
 
 TEMPLATE_MODEL_MAP((std::map<std::string, int>), template_test::map,
     ((std::string), (int))) {
