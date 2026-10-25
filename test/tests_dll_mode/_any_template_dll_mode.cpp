@@ -67,14 +67,14 @@ TEMPLATE_MODEL_MAP((std::map<std::string, int>), template_test::map,
 };
 
 namespace{
-anyxx::enable_dynamic<std::map<std::string, int>, template_test::map,
+anyxx::castable_to<std::map<std::string, int>, template_test::map,
                       std::string, int>
     __;
 
 using KEY1 = anyxx::any_<anyxx::cref, recursive_map, std::string,
                          anyxx::any_<anyxx::cref, mutable_map, int, double>,
                          anyxx::cref>;
-anyxx::enable_dynamic<
+anyxx::castable_to<
     std::map<int, std::map<std::string, std::map<int, double>>>, recursive_map,
     int, KEY1>
     __;
@@ -82,7 +82,7 @@ anyxx::enable_dynamic<
 using KEY2 =
     anyxx::any_<anyxx::cref, recursive_map, std::string,
                 anyxx::any_<anyxx::cref, map, int, double>, anyxx::cref>;
-anyxx::enable_dynamic<
+anyxx::castable_to<
     std::map<int, std::map<std::string, std::map<int, double>>>, recursive_map,
     int, KEY2>
     __;
@@ -90,23 +90,23 @@ anyxx::enable_dynamic<
 using KEY3 = anyxx::any_<anyxx::mutref, mutable_recursive_map, std::string,
                          anyxx::any_<anyxx::mutref, mutable_map, int, double>,
                          anyxx::mutref>;
-anyxx::enable_dynamic<
+anyxx::castable_to<
     std::map<int, std::map<std::string, std::map<int, double>>>,
     mutable_recursive_map, int, KEY3>
     __;
 
 using KEY4 = anyxx::any_<anyxx::cref, map, int, double>;
-anyxx::enable_dynamic<std::map<std::string, std::map<int, double>>,
+anyxx::castable_to<std::map<std::string, std::map<int, double>>,
                       test::component_base::recursive_map, std::string, KEY4>
     __;
 
 using KEY5 = anyxx::any_<anyxx::cref, mutable_map, int, double>;
-anyxx::enable_dynamic<std::map<std::string, std::map<int, double>>,
+anyxx::castable_to<std::map<std::string, std::map<int, double>>,
                       test::component_base::recursive_map, std::string, KEY5>
     __;
 
 using KEY6 = anyxx::any_<anyxx::mutref, mutable_map, int, double>;
-anyxx::enable_dynamic<std::map<std::string, std::map<int, double>>,
+anyxx::castable_to<std::map<std::string, std::map<int, double>>,
                       test::component_base::mutable_recursive_map, std::string,
                       KEY6>
     __;

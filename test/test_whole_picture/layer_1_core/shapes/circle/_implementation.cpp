@@ -11,7 +11,7 @@ using namespace anyxx;
 
 META_CLASS(circle)
 namespace{
-enable_dynamic<circle, whole_picture::architecture::shape> __;
+castable_to<circle, whole_picture::architecture::shape> __;
 }
 ANY_DISPATCH_FOR(circle, whole_picture::architecture, shape)
 

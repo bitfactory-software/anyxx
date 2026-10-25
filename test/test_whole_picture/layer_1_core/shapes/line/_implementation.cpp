@@ -10,7 +10,7 @@ using namespace anyxx;
 
 META_CLASS(line)
 namespace {
-enable_dynamic<shapes::line, whole_picture::architecture::shape> __;
+castable_to<shapes::line, whole_picture::architecture::shape> __;
 }
 ANY_DISPATCH_FOR(line, whole_picture::architecture, shape)
 

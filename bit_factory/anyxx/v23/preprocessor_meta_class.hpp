@@ -633,10 +633,11 @@
                         _detail_ANYXX_TEMPLATE_ARGS(any_template_params)>;     \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
+      if (typeid(v_table_t) == from) {                                         \
+        return true;                                                           \
+      }                                                                        \
       if constexpr (anyxx::is_dynamic_castable_v_table<v_table_base_t>) {      \
-        return typeid(v_table_t) == from                                       \
-                   ? true                                                      \
-                   : v_table_base_t::static_is_derived_from(from);             \
+        return v_table_base_t::static_is_derived_from(from);                   \
       } else {                                                                 \
         return false;                                                          \
       }                                                                        \

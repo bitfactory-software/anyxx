@@ -9,7 +9,7 @@ using namespace anyxx;
 
 META_CLASS(shapes::picture)
 ANY_MEMBERS_COUNT_IMPL(whole_picture::core::shapes, picture)
-enable_dynamic<shapes::picture, whole_picture::architecture::shape> __;
+castable_to<shapes::picture, whole_picture::architecture::shape> __;
 ANY_DISPATCH_FOR(shapes::picture, whole_picture::architecture, shape)
 
 shape shapes::make_picture(architecture::point top_left,

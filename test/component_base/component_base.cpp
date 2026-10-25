@@ -25,9 +25,9 @@ using namespace test::component_base;
 //
 META_CLASS_STATIC(X)
 namespace {
-enable_dynamic<X, test::component_base::get_value_i> __;
-enable_dynamic<X, test::component_base::set_value_i> __;
-enable_dynamic<X, test::component_base::to_string_i> __;
+castable_to<X, test::component_base::get_value_i> __;
+castable_to<X, test::component_base::set_value_i> __;
+castable_to<X, test::component_base::to_string_i> __;
 }  // namespace
 
 any_<anyxx::cref, to_string_i> test::component_base::get_to_string_i_co() {

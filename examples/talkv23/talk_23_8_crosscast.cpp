@@ -18,24 +18,22 @@ struct data {};
 
 TRAIT(source, dynamic_castable, )
 
-TRAIT(greetable, dynamic_castable, 
+TRAIT(greeting, dynamic_castable, 
   (FN(std::string, greet, (), const))
 ) 
 
-TRAIT_MAP(data, greetable){
+TRAIT_MAP(data, greeting){
   std::string greet(const data&) { return "Hello"; }
 };
 
-enable_dynamic<data, greetable> __;
+castable_to<data, greeting> __;
 
 }  // namespace
 
 TEST_CASE("talk_23_8_crosscast") {
-  using namespace anyxx;
-
   auto d = data{};
   auto s = any<source>{d};
-  auto g = *borrow_as<any<greetable>>(s);
+  auto g = *borrow_as<any<greeting>>(s);
   CHECK(g.greet() == "Hello");
 }
 

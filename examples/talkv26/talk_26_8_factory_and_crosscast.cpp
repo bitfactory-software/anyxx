@@ -91,15 +91,15 @@ auto __ = db::deserialize.register_("circle", [](std::istream& ar) {
     ar >> c.radius;
     return c;
 });
-enable_dynamic<application::circle, db::serializable> __;
-enable_dynamic<application::circle, geometry::shape> __;
+castable_to<application::circle, db::serializable> __;
+castable_to<application::circle, geometry::shape> __;
 
 auto __ = db::deserialize.register_("square", [](std::istream& ar) {
     application::square s;
     ar >> s.edge_length;
     return s;
 });
-enable_dynamic<application::square, db::serializable> __;
-enable_dynamic<application::square, geometry::shape> __;
+castable_to<application::square, db::serializable> __;
+castable_to<application::square, geometry::shape> __;
 }  // namespace
 

@@ -87,12 +87,12 @@ using namespace _21_Tree_any_borrow_as;
 ANY_SINGLETON(_21_Tree_any_borrow_as, deserialize_factory)
 
 namespace {
-enable_dynamic<Plus, node> __;
-enable_dynamic<Plus, serializeable> __;
-enable_dynamic<Times, node> __;
-enable_dynamic<Times, serializeable> __;
-enable_dynamic<Integer, node> __;
-enable_dynamic<Integer, serializeable> __;
+castable_to<Plus, node> __;
+castable_to<Plus, serializeable> __;
+castable_to<Times, node> __;
+castable_to<Times, serializeable> __;
+castable_to<Integer, node> __;
+castable_to<Integer, serializeable> __;
 }
 
 TEST_CASE("_21_Tree_any_borrow_as") {
