@@ -20,10 +20,10 @@ TRAIT(source, dynamic_castable, )
 
 TRAIT(greeting, dynamic_castable, 
   (FN(std::string, greet, (), const))
-) 
+)
 
-TRAIT_MAP(data, greeting){
-  std::string greet(const data&) { return "Hello"; }
+TRAIT_MAP(data, greeting) {
+  std::string greet(const data&) { return "Hello"; };
 };
 
 castable_to<data, greeting> __;
@@ -33,7 +33,10 @@ castable_to<data, greeting> __;
 TEST_CASE("talk_23_8_crosscast") {
   auto d = data{};
   auto s = any<source>{d};
-  auto g = *borrow_as<any<greeting>>(s);
-  CHECK(g.greet() == "Hello");
+  if (auto g = borrow_as<any<greeting>>(s)) {
+    CHECK(g->greet() == "Hello");
+  } else {
+    FAIL(std::format("crosscast from {} to {} failed", g.error().from.name(),
+                     g.error().to.name()));
+  }
 }
-

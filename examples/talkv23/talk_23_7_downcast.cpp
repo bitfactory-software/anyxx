@@ -26,6 +26,9 @@ TEST_CASE("talk_23_7_downcast") {
   auto d = data{};
   auto g1 = any<greeting>{d};
   auto a = any<dynamic_castable>{g1};
-  auto g = *downcast_to<any<greeting>>(a);
-  CHECK(g.greet() == "Hello");
+  if (auto g = downcast_to<any<greeting>>(a)) {
+    CHECK(g->greet() == "Hello");
+  } else {
+    CHECK(!"downcast failed");
+  }
 }
