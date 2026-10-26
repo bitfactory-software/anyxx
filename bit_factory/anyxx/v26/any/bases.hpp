@@ -72,25 +72,16 @@ struct destructor {
 
 // clang-format off
 struct mutable_referenceable {
-    template <typename Self, typename...>
-    struct self_apply {
-        using default_proxy_t = anyxx::mutref;
-    };
+    using default_proxy_t = anyxx::mutref;
 };
 struct const_referenceable {
-    template <typename Self, typename...>
-    struct self_apply {
-        using default_proxy_t = anyxx::cref;
-    };
+    using default_proxy_t = anyxx::cref;
 };
 
 template <typename Self = declaration>
 struct deleteable {
     using delete_ [[= v_table_data]] = anyxx::delete_;
-    template <typename ApplSelf>
-    struct self_apply {
-        using default_proxy_t = anyxx::unique;
-    };
+    using default_proxy_t = anyxx::unique;
 };
 
 template <typename Self = declaration>
@@ -99,20 +90,14 @@ struct moveable {
     using move_constructor [[= v_table_data]] = anyxx::move_constructor;
     using destructor [[= v_table_data]] = anyxx::destructor;
     using default_proxy_t = anyxx::val<>;
-    template <typename ApplSelf>
-    using self_apply = moveable<ApplSelf    >;
 };
     template <typename Self = declaration>
     struct copyable : moveable<Self> {
         using copy_constructor [[= v_table_data]] = anyxx::copy_constructor;
-        template <typename ApplSelf>
-        using self_apply = copyable<ApplSelf>;
     };
 template <typename Self = declaration>
 struct typed_observeable {
     using type_info_ [[= v_table_data]] = anyxx::type_info_;
-    template <typename ApplSelf>
-    using self_apply = typed_observeable<ApplSelf>;
 };
     template <typename Self = declaration>
     struct typed_moveable : typed_observeable<Self> {
@@ -120,35 +105,25 @@ struct typed_observeable {
         using move_constructor [[= v_table_data]] = anyxx::move_constructor;
         using destructor [[= v_table_data]] = anyxx::destructor;
         using default_proxy_t = anyxx::val<>;
-        template <typename ApplSelf>
-        using self_apply = typed_moveable<ApplSelf>;
     };
         template <typename Self = declaration>
         struct typed_copyable : typed_moveable<Self> {
             using copy_constructor [[= v_table_data]] = anyxx::copy_constructor;
-            template <typename ApplSelf>
-            using self_apply = typed_copyable<ApplSelf>;
         };
     template <typename Self = declaration >
     struct dynamic_castable : typed_observeable<Self> {
         using is_derived_from_ [[= v_table_data]] = anyxx::is_derived_from_;
         using meta_data_ [[= v_table_data]] = anyxx::meta_data_;
-        template <typename ApplSelf>
-        using self_apply = dynamic_castable<ApplSelf>;
     };
         template <typename Self = declaration>
         struct dynamic_deletable : dynamic_castable<Self> {
             using delete_ [[= v_table_data]] = anyxx::delete_;
             using default_proxy_t = anyxx::shared;
-            template <typename ApplSelf>
-            using self_apply = dynamic_deletable<ApplSelf>;
         };
             template <typename Self = declaration>
             struct dynamic_smart_ptr : dynamic_deletable<Self> {
                 using model_size [[= v_table_data]] = anyxx::model_size;
                 using move_constructor [[= v_table_data]] = anyxx::move_constructor;
-                template <typename ApplSelf>
-                using self_apply = dynamic_smart_ptr<ApplSelf>;
             };
         template <typename Self = declaration>
         struct dynamic_moveable : dynamic_castable<Self> {
@@ -156,14 +131,10 @@ struct typed_observeable {
             using move_constructor [[= v_table_data]] = anyxx::move_constructor;
             using destructor [[= v_table_data]] = anyxx::destructor;
             using default_proxy_t = anyxx::val<>;
-            template <typename ApplSelf>
-            using self_apply = dynamic_moveable<ApplSelf>;
         };
             template <typename Self = declaration>
             struct dynamic_copyable : dynamic_moveable<Self> {
                 using copy_constructor [[= v_table_data]] = anyxx::copy_constructor;
-                template <typename ApplSelf>
-                using self_apply = dynamic_copyable<ApplSelf>;
             };
 // clang-format on
 
