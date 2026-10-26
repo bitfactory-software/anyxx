@@ -12,9 +12,8 @@ using namespace anyxx;
 namespace {
 
 template <typename Self>
-struct node : anyxx::copyable<Self> {
-  using default_proxy_t = anyxx::cow;
-  using dispatch_table[[= anyxx::v_table_data]] = anyxx::dispatch_table;
+struct node : anyxx::deleteable<Self> {
+  using dispatch_table[[= v_table_data]] = anyxx::dispatch_table;
 };
 static_assert(is_open_dispatch_v_table<any<node>::v_table_t>);
 
