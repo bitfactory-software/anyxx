@@ -32,7 +32,7 @@ struct Integer {
 
 //-----------------------------------------------------------------------------
 // open dispatch evaluate, returns int, dispatched via an any<node>;
-dispatch<int(virtual_<any_<cref, node>>)> evaluate;
+dispatch<int(virtual_<any<node>>)> evaluate;
 auto __ = evaluate.define<Plus>([](auto const& expr) {
   return evaluate(expr.left_) + evaluate(expr.right_);
 });
@@ -43,7 +43,7 @@ auto __ = evaluate.define<Integer>([](auto const& expr) { return expr.i; });
 //
 //-----------------------------------------------------------------------------
 // render as Forth
-dispatch<std::string(virtual_<any_<cref, node>>)> as_forth;
+dispatch<std::string(virtual_<any<node>>)> as_forth;
 auto __ = as_forth.define<Plus>([](auto const& expr) {
   return as_forth(expr.left_) + " " + as_forth(expr.right_) + " +";
 });
@@ -55,7 +55,7 @@ auto __ = as_forth.define<Integer>(
 //
 //-----------------------------------------------------------------------------
 // render as Lisp
-dispatch<std::string(virtual_<any_<cref, node>>)> as_lisp;
+dispatch<std::string(virtual_<any<node>>)> as_lisp;
 auto __ = as_lisp.define<Plus>([](auto const& expr) {
   return "(plus " + as_lisp(expr.left_) + " " + as_lisp(expr.right_) + ")";
 });
