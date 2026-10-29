@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bit_factory/anyxx/ANY_SINGLETON.hpp>
 #include <bit_factory/anyxx/ext/dispatch.hpp>
 #include <bit_factory/anyxx/ext/vany.hpp>
 
