@@ -17,7 +17,7 @@ struct widget_2 {
 
 using namespace anyxx;
 template <typename Self>
-struct widget : deleteable<Self> {
+struct widget {
   std::string get() const;
   using default_proxy_t = shared;
 };
