@@ -69,19 +69,15 @@ VANY_DISPACH_DECLARE(
     (value(virtual_<any<evaluable>>, virtual_<any<evaluable>>)),
     ([]<typename L, typename R>(L&& l, R&& r) -> value
        requires(!anyxx::is_any<L> && !anyxx::is_any<R>)
-     {
-  return std::forward<L>(l) * std::forward<R>(r); },
+     { return std::forward<L>(l) * std::forward<R>(r); },
      []<typename R>(bool l, R&& r) -> value
        requires(!anyxx::is_any<R>)
-     {
-  return static_cast<int>(l) * std::forward<R>(r); },
+     { return static_cast<int>(l) * std::forward<R>(r); },
      []<typename L>(L&& l, bool r) -> value
        requires(!anyxx::is_any<L>)
-     {
-  return std::forward<L>(l) * static_cast<int>(r); },
+     { return std::forward<L>(l) * static_cast<int>(r); },
      [](bool l, bool r) -> value 
-     {
-  return l && r; }));
+     { return l && r; }));
 
 struct plus {
   any<node> left_, right_;
@@ -194,7 +190,8 @@ TEST_CASE("talk_2312_vany_open_dispatch string ext") {
   CHECK_THROWS_AS(expr1.evaluate(), no_default_function_error);
 
   any<node> expr2{any<node>{
-      std::in_place_type<plus>, any<node>{std::in_place_type<std::string>, std::string{"Hello, "}},
+      std::in_place_type<plus>,
+      any<node>{std::in_place_type<std::string>, std::string{"Hello, "}},
       any<node>{std::in_place_type<std::string>, std::string{"world"}}}};
   auto v2 = expr2.evaluate();
   CHECK(v2.to_string() == "Hello, world");
