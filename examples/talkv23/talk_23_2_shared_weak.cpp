@@ -15,7 +15,7 @@ struct widget_2 {
 };
 
 using namespace anyxx;
-TRAIT_EX(widget, deleteable, (FN(std::string, get, (), const)), , , ,
+TRAIT_EX(widget, observeable, (FN(std::string, get, (), const)), , , ,
          (using default_proxy_t = shared;))
 
 any<widget> load_widget(int id) {
@@ -35,7 +35,7 @@ any<widget> make_widget(int id) {
   return *found;
 }
 
-TEST_CASE("example talk_23_2_shared_weak X1/ sutters favorite 10 cpp lines") {
+TEST_CASE("talk_23_2_shared_weak sutters favorite 10 cpp lines") {
   // https://youtu.be/JfmTagWcqoE?si=sKPgf2sU-3q6p0TU&t=2027
   {
     auto w1 = make_widget(0);
