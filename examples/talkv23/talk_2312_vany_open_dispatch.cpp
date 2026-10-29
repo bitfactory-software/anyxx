@@ -145,51 +145,57 @@ TEST_CASE("talk_2312_vany_open_dispatch core") {
   CHECK(v3.to_string() == "7.5");
 }
 
-//namespace {
-//namespace sample_12 {
-//TRAIT_MAP(std::string, node) {
-//  value evaluate(std::string const& self) { return self; };
-//};
-//TRAIT_MAP(std::string, evaluable) {
-//  std::string as_string(std::string const& self) { return self; };
-//  bool to_bool(auto const& self) { return !self.empty(); };
-//  int to_int(auto const& self) { return std::atoi(self); };
-//  double to_double(auto const& self) { return std::atof(self); };
-//};
-//auto __ = evaluate_plus.define<std::string, std::string>(
-//    [](const auto& lhs, const auto& rhs) -> value { return lhs + rhs; });
-//auto __ = evaluate_plus.define<concrete_values, std::string>(
-//    [](const auto& lhs, const auto& rhs) -> value {
-//      return std::visit(
-//          [&]<typename LHS>(LHS v) -> value {
-//            return v + value_to<LHS>(using_as<evaluable>(rhs));
-//          },
-//          lhs);
-//    });
-//auto __ = evaluate_plus.define<std::string, concrete_values>(
-//    [](const auto& lhs, const auto& rhs) -> value {
-//      return std::visit(
-//          [&]<typename RHS>(RHS v) -> value {
-//            return value_to<RHS>(using_as<evaluable>(lhs)) + v;
-//          },
-//          rhs);
-//    });
-//}  // namespace sample_12
-//}  // namespace
-//
-//TEST_CASE("talk_2312_vany_open_dispatch string ext") {
-//  using namespace sample_12;
-//  any<node> expr{std::in_place_type<plus>,
-//                 any<node>{std::in_place_type<value>, 2},
-//                 any<node>{std::in_place_type<plus>,
-//                           any<node>{std::in_place_type<value>, 3},
-//                           any<node>{std::in_place_type<std::string>, "4"}}};
-//
-//  auto v = expr.evaluate();
-//  CHECK(v.to_string() == "14");
-//
-//  any<node> expr1{any<node>{
-//      std::in_place_type<times>, any<node>{std::in_place_type<value>, 3},
-//      any<node>{std::in_place_type<std::string>, std::string{"4"}}}};
-//  CHECK_THROWS_AS(expr.evaluate(), no_default_function_error);
-//}
+namespace {
+namespace sample_12 {
+TRAIT_MAP(std::string, node) {
+  value evaluate(std::string const& self) { return self; };
+};
+TRAIT_MAP(std::string, evaluable) {
+  std::string as_string(std::string const& self) { return self; };
+  bool to_bool(auto const& self) { return !self.empty(); };
+  int to_int(auto const& self) { return std::atoi(self.c_str()); };
+  double to_double(auto const& self) { return std::atof(self.c_str()); };
+};
+auto __ = evaluate_plus.define<std::string, std::string>(
+    [](const auto& lhs, const auto& rhs) -> value { return lhs + rhs; });
+auto __ = evaluate_plus.define<concrete_values, std::string>(
+    [](const auto& lhs, const auto& rhs) -> value {
+      return std::visit(
+          [&]<typename LHS>(LHS v) -> value {
+            return v + value_to<LHS>(using_as<evaluable>(rhs));
+          },
+          lhs);
+    });
+auto __ = evaluate_plus.define<std::string, concrete_values>(
+    [](const auto& lhs, const auto& rhs) -> value {
+      return std::visit(
+          [&]<typename RHS>(RHS v) -> value {
+            return value_to<RHS>(using_as<evaluable>(lhs)) + v;
+          },
+          rhs);
+    });
+}  // namespace sample_12
+}  // namespace
+
+TEST_CASE("talk_2312_vany_open_dispatch string ext") {
+  using namespace sample_12;
+  any<node> expr{std::in_place_type<plus>,
+                 any<node>{std::in_place_type<value>, 2},
+                 any<node>{std::in_place_type<plus>,
+                           any<node>{std::in_place_type<value>, 3},
+                           any<node>{std::in_place_type<std::string>, "4"}}};
+
+  auto v = expr.evaluate();
+  CHECK(v.to_string() == "9");
+
+  any<node> expr1{any<node>{
+      std::in_place_type<times>, any<node>{std::in_place_type<value>, 3},
+      any<node>{std::in_place_type<std::string>, std::string{"4"}}}};
+  CHECK_THROWS_AS(expr1.evaluate(), no_default_function_error);
+
+  any<node> expr2{any<node>{
+      std::in_place_type<plus>, any<node>{std::in_place_type<std::string>, std::string{"Hello, "}},
+      any<node>{std::in_place_type<std::string>, std::string{"world"}}}};
+  auto v2 = expr2.evaluate();
+  CHECK(v2.to_string() == "Hello, world");
+}
