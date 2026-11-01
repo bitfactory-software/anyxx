@@ -8,8 +8,8 @@ TRAIT(equal_comparable, anyxx::dynamic_copyable,
       (OP_FREE(bool, ==, eq, (anyxx::self const&), const),
        OP_IMPL(
            public, bool, !=, ne, (anyxx::self const&), const, (auto const& r) {
-             return !(using_as<equal_comparable>(self) ==
-                      using_as<equal_comparable>(r));
+             return !(as<equal_comparable>(self) ==
+                      as<equal_comparable>(r));
            })))
 
 // An optional as a customizable trait.

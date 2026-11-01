@@ -107,6 +107,39 @@ TEST_CASE("talk_23_1 external static concept") {
 
 }  // namespace External_Polymorphism_Static
 
+namespace External_Polymorphism_Static_Dynamic {
+
+using namespace anyxx;
+TRAIT(Shape, observeable, (FN(double, area, (), const)))
+void print(std::vector<any_<shared, Shape>> const& shapes) {
+  for (auto const& s : shapes) {
+    std::println("Area dyn: {}", s.area());
+  }
+}
+template <typename... Args>
+void print_(trait_as<Args, Shape> const&... shapes) {
+  (std::println("Area : {}", shapes.area()), ...);
+}
+
+struct Circle {
+  double r = 0.0;
+};
+TRAIT_MAP(Circle, Shape) {
+  double area(const Circle& self) { return M_PI * self.r * self.r; };
+};
+struct Rect {
+  double w, h;
+};
+TRAIT_MAP(Rect, Shape) {
+  double area(const Rect& self) { return self.w * self.h; };
+};
+
+TEST_CASE("talk_236_1 external static & dynamic") {
+  print({Circle{5.0}, Rect{3.0, 4.0}});
+  print_(as<Shape>(Circle{5.0}), as<Shape>(Rect{3.0, 4.0}));
+}
+}  // namespace External_Polymorphism_Static_Dynamic
+
 struct Circle {
   double radius = 0.0;
 };

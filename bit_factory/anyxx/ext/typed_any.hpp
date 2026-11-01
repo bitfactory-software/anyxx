@@ -55,12 +55,12 @@ struct typed_any : public Any {
 };
 
 template <typename V, is_any Any>
-auto as(Any source) {
+auto as_typed(Any source) {
   return typed_any<V, Any>{std::move(source)};
 }
 
 template <typename To, typename V, is_any Any>
-auto as(typed_any<V, Any> source)
+auto as_typed(typed_any<V, Any> source)
   requires std::convertible_to<V*, To*>
 {
   if constexpr (typed_any<V, Any>::is_const) {

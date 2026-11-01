@@ -158,7 +158,7 @@ auto __ = evaluate_plus.define<concrete_values, std::string>(
     [](const auto& lhs, const auto& rhs) -> value {
       return std::visit(
           [&]<typename LHS>(LHS v) -> value {
-            return v + value_to<LHS>(using_as<evaluable>(rhs));
+            return v + value_to<LHS>(as<evaluable>(rhs));
           },
           lhs);
     });
@@ -166,7 +166,7 @@ auto __ = evaluate_plus.define<std::string, concrete_values>(
     [](const auto& lhs, const auto& rhs) -> value {
       return std::visit(
           [&]<typename RHS>(RHS v) -> value {
-            return value_to<RHS>(using_as<evaluable>(lhs)) + v;
+            return value_to<RHS>(as<evaluable>(lhs)) + v;
           },
           rhs);
     });

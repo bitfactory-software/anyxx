@@ -26,8 +26,8 @@ TEST_CASE("example 2da any_has_equal") {
     CHECK(!b.is_equal(a));
   }
   {
-    auto a = using_as<has_equal>("a"s);
-    auto b = using_as<has_equal>("b"s);
+    auto a = as<has_equal>("a"s);
+    auto b = as<has_equal>("b"s);
     CHECK(a.is_equal(a));
     CHECK(!b.is_equal(a));
   }
@@ -39,8 +39,8 @@ TRAIT(has_plus, has_equal,
       (FN_IMPL(
            public, anyxx::self, plus, (anyxx::self const&), const,
            (T const& y) {
-             return get_proxy_value(using_as<has_plus>(self) +
-                                    using_as<has_plus>(y));
+             return get_proxy_value(as<has_plus>(self) +
+                                    as<has_plus>(y));
            }),
        OP_IMPL(public, anyxx::self, +, plus_op, (anyxx::self const&), const,
            (T const& y) { 
@@ -69,10 +69,10 @@ TEST_CASE("example 2db any_has_plus static") {
   using namespace anyxx;
   using namespace std::string_literals;
   {
-    auto a = using_as<has_plus>("a"s);
-    auto b = using_as<has_plus>("b"s);
-    auto aa = using_as<has_plus>("aa"s);
-    auto bb = using_as<has_plus>("ab"s);
+    auto a = as<has_plus>("a"s);
+    auto b = as<has_plus>("b"s);
+    auto aa = as<has_plus>("aa"s);
+    auto bb = as<has_plus>("ab"s);
     CHECK((a + a).is_equal(aa));
     CHECK((a + b).is_equal(bb));
     CHECK((a.plus(a)).is_equal(aa));

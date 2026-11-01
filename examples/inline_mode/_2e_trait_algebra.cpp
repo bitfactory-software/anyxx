@@ -12,8 +12,8 @@ TRAIT(equal_comparable, anyxx::dynamic_copyable,
       (OP_FREE(bool, ==, eq, (anyxx::self const&), const),
        OP_IMPL(public, bool, !=, ne, (anyxx::self const&), const,
                (auto const& r) {
-                 return !(using_as<equal_comparable>(self) ==
-                          using_as<equal_comparable>(r));
+                 return !(as<equal_comparable>(self) ==
+                          as<equal_comparable>(r));
                })))
 
 TRAIT(semigroup, equal_comparable,
@@ -54,7 +54,7 @@ struct monoid_trait_map<int> : monoid_default_trait_map<int> {
     using namespace anyxx;
     std::println("concat {}", typeid(int).name());
     return get_proxy_value(std::ranges::fold_left(
-        r, using_as<monoid>(0),
+        r, as<monoid>(0),
         [&](trait_as<int, monoid> const& m1, trait_as<int, monoid> const& m2) {
           return m1.op(m2);
         }));
@@ -157,20 +157,20 @@ TEST_CASE("algebra basics") {
     any_<using_<int>, monoid> im{999};
     static_assert(is_proxy<trait_class<int>>);
     static_assert(is_any<any_<trait_class<int>, monoid>>);
-    bool eq0 = im.identity() == using_as<monoid>(0);
+    bool eq0 = im.identity() == as<monoid>(0);
     CHECK(eq0);
-    auto x1 = im.concat(std::vector{using_as<monoid>(1), using_as<monoid>(2)});
-    auto y2 = using_as<monoid>(3);
+    auto x1 = im.concat(std::vector{as<monoid>(1), as<monoid>(2)});
+    auto y2 = as<monoid>(3);
     CHECK(x1 == y2);
   }
   {
     any_<using_<std::string>, monoid> sm{"XXX"};
     auto i = sm.identity();
 
-    CHECK(sm.identity() == using_as<monoid>(""s));
+    CHECK(sm.identity() == as<monoid>(""s));
     auto x1 =
-        sm.concat(std::vector{using_as<monoid>("A"s), using_as<monoid>("B"s)});
-    auto y2 = using_as<monoid>("AB"s);
+        sm.concat(std::vector{as<monoid>("A"s), as<monoid>("B"s)});
+    auto y2 = as<monoid>("AB"s);
     CHECK(x1 == y2);
   }
 }
@@ -183,13 +183,13 @@ TEST_CASE("algebra monoid") {
 
   test_monoid((1), std::vector{2, 3});
   test_monoid<any_<using_<int>, monoid>>(
-      using_as<monoid>(1), std::vector<any_<using_<int>, monoid>>{{2}, {3}});
+      as<monoid>(1), std::vector<any_<using_<int>, monoid>>{{2}, {3}});
   test_monoid((1), std::vector<any_<using_<int>, monoid>>{{2}, {3}});
-  test_monoid<any_<using_<int>, monoid>>(using_as<monoid>(1), std::vector{2, 3});
+  test_monoid<any_<using_<int>, monoid>>(as<monoid>(1), std::vector{2, 3});
 
   test_monoid(("1"s), std::vector{"2"s, "3"s});
   test_monoid<any_<using_<std::string>, monoid>>(
-      using_as<monoid>("1"s),
+      as<monoid>("1"s),
       std::vector<any_<using_<std::string>, monoid>>{{"2"s}, {"3"s}});
 
   //  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
@@ -266,7 +266,7 @@ TEST_CASE("algebra group") {
   }
   test_group((1), std::vector{2, 3});
   test_group<any_<using_<int>, group>>(
-      using_as<group>(1), std::vector<any_<using_<int>, group>>{{2}, {3}});
+      as<group>(1), std::vector<any_<using_<int>, group>>{{2}, {3}});
 }
 
 namespace algebra_test {

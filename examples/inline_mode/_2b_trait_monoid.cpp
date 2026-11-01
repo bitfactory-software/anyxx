@@ -19,18 +19,18 @@ TRAIT_EX(monoid, anyxx::dynamic_copyable,
           FN_IMPL(public, anyxx::self, op, (anyxx::self const&), const,
                   (auto const& r) {
                     std::println("op-default {}", typeid(T).name());
-                    auto self_ = using_as<monoid>(self);
+                    auto self_ = as<monoid>(self);
                     return get_proxy(self_.concat(
-                        std::vector{using_as<monoid>(r)}));  // NOLINT
+                        std::vector{as<monoid>(r)}));  // NOLINT
                   }),
           FN_IMPL(public, anyxx::self, concat,
                   (anyxx::any_self_forward_range const&), const,
                   (const auto& r) {
                     std::println("concat-default {}", typeid(T).name());
-                    auto self_ = using_as<monoid>(self);
+                    auto self_ = as<monoid>(self);
                     return get_proxy(std::ranges::fold_left(
                         r | std::views::transform([](auto const& y) {
-                          return using_as<monoid>(y);
+                          return as<monoid>(y);
                         }),
                         self_, [&](auto const& m1, auto const& m2) {
                           return m1.op(m2);
@@ -132,7 +132,7 @@ TEST_CASE("example 2b monoid a") {
 
   test_monoid((1), std::vector{2, 3});
   test_monoid<any_<using_<int>, monoid>>(
-      using_as<monoid>(1), std::vector<any_<using_<int>, monoid>>{{2}, {3}});
+      as<monoid>(1), std::vector<any_<using_<int>, monoid>>{{2}, {3}});
 
   //  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
 }
@@ -143,7 +143,7 @@ TEST_CASE("example 2b monoid b") {
 
   test_monoid("1"s, std::vector{"2"s, "3"s});
   test_monoid<any_<using_<std::string>, monoid>>(
-      using_as<monoid>("1"s),
+      as<monoid>("1"s),
       std::vector<any_<using_<std::string>, monoid>>{{"2"s}, {"3"s}});
 }
 TEST_CASE("example 2b monoid c") {
