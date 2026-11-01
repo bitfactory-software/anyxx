@@ -102,8 +102,8 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">      (OP_FREE(<span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
 <div class="line">       OP_IMPL(</div>
 <div class="line">           <span class="keyword">public</span>, <span class="keywordtype">bool</span>, !=, ne, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>, (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
-<div class="line">             <span class="keywordflow">return</span> !(using_as&lt;equal_comparable&gt;(self) ==</div>
-<div class="line">                      using_as&lt;equal_comparable&gt;(r));</div>
+<div class="line">             <span class="keywordflow">return</span> !(as&lt;equal_comparable&gt;(self) ==</div>
+<div class="line">                      as&lt;equal_comparable&gt;(r));</div>
 <div class="line">           })))</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// An optional as a customizable trait.</span></div>
