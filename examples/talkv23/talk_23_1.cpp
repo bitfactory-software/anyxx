@@ -97,9 +97,9 @@ struct Circle {
 double area(Circle const& c) { return M_PI * c.r * c.r; };
 
 struct Rect {
-  double w_, h_;
+  double w, h;
 };
-double area(Rect const& r) { return r.w_ * r.h_; };
+double area(Rect const& r) { return r.w * r.h; };
 
 TEST_CASE("talk_23_1 external static concept") {
   print_area(Circle{5.0}, Rect{3.0, 4.0});
