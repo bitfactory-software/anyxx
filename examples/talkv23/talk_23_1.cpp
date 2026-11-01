@@ -4,11 +4,108 @@
 #include <catch2/catch_test_macros.hpp>
 #include <cmath>
 #include <iostream>
+#include <map>
 #include <print>
+#include <sstream>
 #include <string>
 #include <vector>
 
 namespace {
+
+namespace Internal_Polymorphism_Dynamic {
+
+struct Shape {
+  virtual ~Shape() = default;
+  virtual double area() const = 0;
+};
+using shape_ptr = std::shared_ptr<Shape const>;
+using shapes = std::vector<shape_ptr>;
+void print_area(shapes const& shapes) {
+  std::println("Area: {}", std::ranges::fold_left(
+                               shapes, 0.0, [](auto sum, shape_ptr const& s) {
+                                 return sum + s->area();
+                               }));
+}
+struct Circle : Shape {
+  double r_;
+  Circle(double r) : r_(r) {}
+  double area() const override { return M_PI * r_ * r_; }
+};
+struct Rect : Shape {
+  double w_, h_;
+  Rect(double w, double h) : w_(w), h_(h) {}
+  double area() const override { return w_ * h_; }
+};
+
+TEST_CASE("talk_23_1 internal dynamic") {
+  print_area({std::make_shared<Circle>(5.0), std::make_shared<Rect>(3.0, 4.0)});
+}
+
+using shape_factory = shape_ptr (*)(std::istream&);
+std::map<std::string, shape_factory> shape_factories;
+shapes load_shapes(std::istream& shapes_archive);
+
+TEST_CASE("talk_23_2 internal dynamic ioc") {
+  std::stringstream is("Circle 5.0\nRect 3.0 4.0\n");
+  print_area(load_shapes(is));
+}
+
+auto __ = shape_factories["Circle"] = [](std::istream& is) -> shape_ptr {
+  double r;
+  is >> r;
+  return std::make_shared<Circle>(r);
+};
+auto __ = shape_factories["Rect"] = [](std::istream& is) -> shape_ptr {
+  double w, h;
+  is >> w >> h;
+  return std::make_shared<Rect>(w, h);
+};
+
+shape_ptr load_shape(std::istream& shape_archive) {
+  std::string shape_type;
+  shape_archive >> shape_type;
+  auto it = shape_factories.find(shape_type);
+  if (it != shape_factories.end()) {
+    return it->second(shape_archive);
+  }
+  return nullptr;
+}
+shapes load_shapes(std::istream& shapes_archive) {
+  shapes result;
+  while (auto s = load_shape(shapes_archive)) {
+    result.push_back(s);
+  }
+  return result;
+}
+
+}  // namespace Internal_Polymorphism_Dynamic
+
+namespace External_Polymorphism_Static {
+
+template <typename S>
+concept Shape = requires(S s) {
+  { area(s) } -> std::convertible_to<double>;
+};
+template <typename... Shapes>
+void print_area(Shapes const&... shapes) {
+  std::println("Area: {}", (area(shapes) + ...));
+}
+
+struct Circle {
+  double r;
+};
+double area(Circle const& c) { return M_PI * c.r * c.r; };
+
+struct Rect {
+  double w_, h_;
+};
+double area(Rect const& r) { return r.w_ * r.h_; };
+
+TEST_CASE("talk_23_1 external static concept") {
+  print_area(Circle{5.0}, Rect{3.0, 4.0});
+}
+
+}  // namespace External_Polymorphism_Static
 
 struct Circle {
   double radius = 0.0;
