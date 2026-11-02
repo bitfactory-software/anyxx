@@ -84,7 +84,8 @@ struct deleteable {
     using default_proxy_t = anyxx::unique;
 };
     template <typename Self = declaration>
-    struct copy_deleteable : deleteable<Self> {
+    struct cloneable : deleteable<Self> {
+        using model_size [[= v_table_data]] = anyxx::model_size;
         using copy_constructor [[= v_table_data]] = anyxx::copy_constructor;
     };
 
