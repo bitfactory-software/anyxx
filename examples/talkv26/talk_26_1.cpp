@@ -98,7 +98,7 @@ struct Circle {
 };
 
 any_<unique, Shape> inflate_shape(any_<cref, Shape> const& s, double factor) {
-  auto result = *clone_to<any_<unique, Shape>>(s);
+  auto result = clone_to<any_<unique, Shape>>(s);
   result.inflate(factor);
   return result;
 }
