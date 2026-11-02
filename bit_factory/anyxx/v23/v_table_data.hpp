@@ -72,7 +72,7 @@ TRAIT_EX(dynamic_castable, typed_observeable, , , ,
 TRAIT_EX(dynamic_deletable, dynamic_castable, , , , (ANY_HAS_DELETE),
          (using default_proxy_t = shared;));
 
-TRAIT_EX(dynamic_smart_ptr, dynamic_deletable, , , ,
+TRAIT_EX(dynamic_cloneable, dynamic_deletable, , , ,
          (ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR), ());
 
 TRAIT_EX(dynamic_moveable, dynamic_castable, , , ,

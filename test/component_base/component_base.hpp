@@ -31,7 +31,7 @@ namespace test::component_base {
 
 TRAIT(to_string_i, anyxx::dynamic_deletable,
       (FN(std::string, to_string, (), const)))
-TRAIT(get_value_i, anyxx::dynamic_smart_ptr, (FN(double, get_value, (), const)))
+TRAIT(get_value_i, anyxx::dynamic_cloneable, (FN(double, get_value, (), const)))
 TRAIT(set_value_i, get_value_i, (FN(void, set_value, (double), )))
 
 COMPONENT_BASE_EXPORT

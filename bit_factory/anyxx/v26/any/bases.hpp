@@ -126,7 +126,7 @@ struct typed_observeable {
             using default_proxy_t = anyxx::shared;
         };
             template <typename Self = declaration>
-            struct dynamic_smart_ptr : dynamic_deletable<Self> {
+            struct dynamic_cloneable : dynamic_deletable<Self> {
                 using model_size [[= v_table_data]] = anyxx::model_size;
                 using move_constructor [[= v_table_data]] = anyxx::move_constructor;
             };

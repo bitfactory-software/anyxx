@@ -11,8 +11,7 @@ namespace anyxx {
 /// \brief Clone via runtime information.
 /// \ingroup casts
 template <is_any ToAny, is_any FromAny>
-  requires is_copy_constructor_v_table<typename FromAny::v_table_t>
-std::expected<ToAny, cast_error> clone_to(FromAny const& from) {
+auto clone_to(FromAny const& from) {
   using vv_to_t = typename ToAny::proxy_t;
   auto from_v_table = get_v_table(from);
   static_assert(is_proxy<vv_to_t>);
