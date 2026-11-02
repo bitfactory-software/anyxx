@@ -47,7 +47,7 @@ using namespace anyxx;
 
 template <typename S>
 struct Shape :  copyable<S>{
-    double, area() const;
+    double area() const;
     void inflate(double);
 };
 
@@ -77,7 +77,7 @@ using namespace anyxx;
 
 template <typename S>
 struct Shape :  copyable<S>{
-    double, area() const;
+    double area() const;
     void inflate(double);
 };
 
@@ -101,5 +101,7 @@ TEST_CASE("talk_26_1 external dynamic memory val 2") {
 
 }
 
+}
 
 }  // namespace
+
