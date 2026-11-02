@@ -9,24 +9,58 @@
 
 namespace {
 
-struct Circle {
-  double radius;
+namespace Internal_Polymorphism_Dynamic {
+
+struct Shape {
+  virtual ~Shape() = default;
+  virtual double area() const = 0;
+};
+struct Circle : Shape {
+  double r_;
+  Circle(double r) : r_(r) {}
+  double area() const override { return M_PI * r_ * r_; }
 };
 
-using namespace anyxx;
-TRAIT(Shape, observeable, (FN(double, area, (), const)))
+double f(Shape const& s) { return s.area(); }
 
-void print_area(const any<Shape>& shape) {
-  std::println("Area: {}", shape.area());
+TEST_CASE("talk_23_1 internal dynamic memory ref") {
+  Circle c{5.0};
+  CHECK(f(c) == M_PI * 5.0 * 5.0);
 }
 
-TRAIT_MAP(Circle, Shape) {
-  double area(const Circle& self) { return M_PI * self.radius * self.radius; };
+}
+
+namespace External_Polymorphism_Dynamic {
+using namespace anyxx;
+
+TRAIT(Shape, observeable, 
+    (FN(double, area, (), const)))
+
+struct Circle {
+  double r_;
+  double area() const { return M_PI * r_ * r_; }
 };
 
-TEST_CASE("talk_2310_ShapesAny++23 cref") {
-  Circle circle{5.0};
-  print_area(circle);
+namespace _1 {
+double f(any_<cref, Shape> const& s) { return s.area(); }
+
+TEST_CASE("talk_23_1 external dynamic memory cref 1") {
+  Circle c{5.0};
+  CHECK(f(c) == M_PI * 5.0 * 5.0);
+}
+}
+
+namespace _2 {
+
+double f(any<Shape> const& s) { return s.area(); }
+
+TEST_CASE("talk_23_1 external dynamic memory cref 2") {
+  Circle c{5.0};
+  CHECK(f(c) == M_PI * 5.0 * 5.0);
+}
+
+}
+
 }
 
 }  // namespace
