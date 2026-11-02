@@ -83,6 +83,10 @@ struct deleteable {
     using delete_ [[= v_table_data]] = anyxx::delete_;
     using default_proxy_t = anyxx::unique;
 };
+    template <typename Self = declaration>
+    struct copy_deleteable : deleteable<Self> {
+        using copy_constructor [[= v_table_data]] = anyxx::copy_constructor;
+    };
 
 template <typename Self = declaration>
 struct moveable {

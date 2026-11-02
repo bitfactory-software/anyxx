@@ -50,6 +50,7 @@ TRAIT_EX(const_referenceable, observeable, , , , ,
 TRAIT_EX(mutable_referenceable, observeable, , , , ,
          (using default_proxy_t = mutref;));
 TRAIT_EX(deleteable, observeable, , , , (ANY_HAS_DELETE), (using default_proxy_t = unique;));
+TRAIT_EX(cloneable, deleteable, , , , (ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR), ());
 
 TRAIT_EX(moveable, observeable, , , ,
          (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),

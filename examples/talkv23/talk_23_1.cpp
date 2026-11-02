@@ -113,7 +113,8 @@ std::unique_ptr<Shape> inflate_shape(Shape const& s, double factor) {
 }
 
 TEST_CASE("talk_23_1 internal dynamic memory 2") {
-  std::shared_ptr<Shape const> origin = std::make_shared<Circle const>(Circle{5.0});
+  std::shared_ptr<Shape const> origin =
+      std::make_shared<Circle const>(Circle{5.0});
   auto modified = inflate_shape(*origin, 2.0);
   CHECK(modified->area() == M_PI * 10.0 * 10.0);
 }
@@ -286,5 +287,31 @@ TEST_CASE("talk_23_1_ simplified") {
     std::println("Area: {}", shape.area());
   }
 }
+
+namespace External_Polymorphism_Dynamic_Memory_1 {
+
+TRAIT(Shape, cloneable, 
+    (FN(double, area, (), const), 
+    FN(void, inflate, (double), )))
+
+struct Circle {
+  double r_;
+  double area() const { return M_PI * r_ * r_; }
+  void inflate(double factor) { r_ *= factor; }
+};
+
+any_<unique, Shape> inflate_shape(any_<cref, Shape> const& s, double factor) {
+  auto result = *clone_to<any_<unique, Shape>>(s);
+  result.inflate(factor);
+  return result;
+}
+
+TEST_CASE("talk_23_1 external dynamic memory 1") {
+  any_<shared, Shape> origin{std::in_place_type<Circle>, 5.0};
+  auto modified = inflate_shape(origin, 2.0);
+  CHECK(modified.area() == M_PI * 10.0 * 10.0);
+}
+
+}  // namespace External_Polymorphism_Dynamic_Memory_1
 
 }  // namespace
