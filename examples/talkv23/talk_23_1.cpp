@@ -43,9 +43,9 @@ TEST_CASE("talk_23_1 internal dynamic") {
 
 using shape_factory = shape_ptr (*)(std::istream&);
 std::map<std::string, shape_factory> shape_factories;
-shapes load_shapes(std::istream& shapes_archive);
+shapes_vec load_shapes(std::istream& shapes_archive);
 
-TEST_CASE("talk_23_2 internal dynamic ioc") {
+TEST_CASE("talk_23_1 internal dynamic ioc") {
   std::stringstream is("Circle 5.0\nRect 3.0 4.0\n");
   print_area(load_shapes(is));
 }
@@ -78,7 +78,47 @@ shapes_vec load_shapes(std::istream& shapes_archive) {
   return result;
 }
 
+double f(Shape const& s) { return s.area(); }
+
+TEST_CASE("talk_23_1 internal dynamic memory 1") {
+  Circle c{5.0};
+  CHECK(f(c) == M_PI * 5.0 * 5.0);
+}
+
 }  // namespace Internal_Polymorphism_Dynamic
+
+namespace Internal_Polymorphism_Dynamic_Memory {
+
+struct Shape {
+  virtual ~Shape() = default;
+  virtual Shape* clone() const = 0;
+  virtual double area() const = 0;
+  virtual void inflate(double) = 0;
+};
+struct Circle : Shape {
+  double r_;
+  Circle(double r) : r_(r) {}
+  Shape* clone() const override { return new Circle(*this); }
+  double area() const override { return M_PI * r_ * r_; }
+  void inflate(double factor) override { r_ *= factor; }
+};
+
+std::unique_ptr<Shape> clone_shape(Shape const* s) {
+  return std::unique_ptr<Shape>(s->clone());
+}
+std::unique_ptr<Shape> inflate_shape(Shape const& s, double factor) {
+  auto result = clone_shape(&s);
+  result->inflate(factor);
+  return result;
+}
+
+TEST_CASE("talk_23_1 internal dynamic memory 2") {
+  std::shared_ptr<Shape const> origin = std::make_shared<Circle const>(Circle{5.0});
+  auto modified = inflate_shape(*origin, 2.0);
+  CHECK(modified->area() == M_PI * 10.0 * 10.0);
+}
+
+}  // namespace Internal_Polymorphism_Dynamic_Memory
 
 namespace External_Polymorphism_Static {
 
