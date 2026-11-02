@@ -19,8 +19,8 @@ struct Shape {
   virtual double area() const = 0;
 };
 using shape_ptr = std::shared_ptr<Shape const>;
-using shapes = std::vector<shape_ptr>;
-void print_area(shapes const& shapes) {
+using shapes_vec = std::vector<shape_ptr>;
+void print_area(shapes_vec const& shapes) {
   std::println("Area: {}", std::ranges::fold_left(
                                shapes, 0.0, [](auto sum, shape_ptr const& s) {
                                  return sum + s->area();
@@ -70,8 +70,8 @@ shape_ptr load_shape(std::istream& shape_archive) {
   }
   return nullptr;
 }
-shapes load_shapes(std::istream& shapes_archive) {
-  shapes result;
+shapes_vec load_shapes(std::istream& shapes_archive) {
+  shapes_vec result;
   while (auto s = load_shape(shapes_archive)) {
     result.push_back(s);
   }
