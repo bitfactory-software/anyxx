@@ -31,7 +31,7 @@ std::polymorphic<Shape> inflate_shape(std::polymorphic<Shape> const& s,
   return result;
 }
 
-TEST_CASE("talk_23_1 internal dynamic memory polymorphic") {
+TEST_CASE("talk_26_1 internal dynamic memory polymorphic") {
   std::polymorphic<Shape> origin{std::in_place_type<Circle>, 5.0};
   auto modified = inflate_shape(origin, 2.0);
   CHECK(modified->area() == M_PI * 10.0 * 10.0);
@@ -101,7 +101,5 @@ TEST_CASE("talk_26_1 external dynamic memory val 2") {
 
 }
 
-}
 
 }  // namespace
-
