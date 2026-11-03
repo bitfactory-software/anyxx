@@ -24,11 +24,9 @@ struct Circle : Shape {
   void inflate(double factor) override { r_ *= factor; }
 };
 
-std::polymorphic<Shape> inflate_shape(std::polymorphic<Shape> const& s,
-                                      double factor) {
-  auto result = s;
-  result->inflate(factor);
-  return result;
+std::polymorphic<Shape> inflate_shape(std::polymorphic<Shape> s, double f) {
+  s->inflate(f);
+  return s;
 }
 
 TEST_CASE("talk_23_1 internal dynamic memory polymorphic") {
@@ -37,7 +35,7 @@ TEST_CASE("talk_23_1 internal dynamic memory polymorphic") {
   CHECK(modified->area() == M_PI * 10.0 * 10.0);
 }
 
-}
+}  // namespace Internal_Polymorphism_Dynamic
 
 namespace External_Polymorphism_Dynamic {
 
@@ -46,9 +44,9 @@ namespace _1 {
 using namespace anyxx;
 
 template <typename S>
-struct Shape :  copyable<S>{
-    double area() const;
-    void inflate(double);
+struct Shape : copyable<S> {
+  double area() const;
+  void inflate(double);
 };
 
 struct Circle {
@@ -57,10 +55,9 @@ struct Circle {
   void inflate(double factor) { r_ *= factor; }
 };
 
-any_<val<>, Shape> inflate_shape(any_<val<>, Shape> const& s, double factor) {
-  auto result = s;
-  result.inflate(factor);
-  return result;
+any_<val<>, Shape> inflate_shape(any_<val<>, Shape> s, double f) {
+  s.inflate(f);
+  return s;
 }
 
 TEST_CASE("talk_26_1 external dynamic memory val 1") {
@@ -69,16 +66,16 @@ TEST_CASE("talk_26_1 external dynamic memory val 1") {
   CHECK(modified.area() == M_PI * 10.0 * 10.0);
 }
 
-}
+}  // namespace _1
 
 namespace _2 {
 
 using namespace anyxx;
 
 template <typename S>
-struct Shape :  copyable<S>{
-    double area() const;
-    void inflate(double);
+struct Shape : copyable<S> {
+  double area() const;
+  void inflate(double);
 };
 
 struct Circle {
@@ -87,10 +84,9 @@ struct Circle {
   void inflate(double factor) { r_ *= factor; }
 };
 
-any<Shape> inflate_shape(any<Shape> const& s, double factor) {
-  auto result = s;
-  result.inflate(factor);
-  return result;
+any<Shape> inflate_shape(any<Shape> s, double f) {
+  s.inflate(f);
+  return s;
 }
 
 TEST_CASE("talk_26_1 external dynamic memory val 2") {
@@ -99,9 +95,8 @@ TEST_CASE("talk_26_1 external dynamic memory val 2") {
   CHECK(modified.area() == M_PI * 10.0 * 10.0);
 }
 
-}
+}  // namespace _2
 
-}
+}  // namespace External_Polymorphism_Dynamic
 
 }  // namespace
-
