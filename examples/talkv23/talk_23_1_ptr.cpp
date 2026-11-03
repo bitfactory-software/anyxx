@@ -35,10 +35,10 @@ std::unique_ptr<Shape> inflate_shape(Shape const& s, double factor) {
 }
 
 TEST_CASE("talk_23_1 internal dynamic memory ptr") {
-  std::shared_ptr<Shape const> origin =
+  std::shared_ptr<Shape const> shape =
       std::make_shared<Circle const>(Circle{5.0});
-  auto modified = inflate_shape(*origin, 2.0);
-  CHECK(modified->area() == M_PI * 10.0 * 10.0);
+  shape = inflate_shape(*shape, 2.0);
+  CHECK(shape->area() == M_PI * 10.0 * 10.0);
 }
 
 }
@@ -65,9 +65,9 @@ any_<unique, Shape> inflate_shape(any_<cref, Shape> const& s, double factor) {
 }
 
 TEST_CASE("talk_23_1 external dynamic memory ptr") {
-  any_<shared, Shape> origin{std::in_place_type<Circle>, 5.0};
-  auto modified = inflate_shape(origin, 2.0);
-  CHECK(modified.area() == M_PI * 10.0 * 10.0);
+  any_<shared, Shape> shape{std::in_place_type<Circle>, 5.0};
+  shape = inflate_shape(shape, 2.0);
+  CHECK(shape.area() == M_PI * 10.0 * 10.0);
 }
 
 }  // namespace External_Polymorphism_Dynamic_Memory_1

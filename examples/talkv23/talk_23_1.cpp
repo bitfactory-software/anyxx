@@ -22,9 +22,8 @@ using shape_ptr = std::shared_ptr<Shape const>;
 using shapes_vec = std::vector<shape_ptr>;
 void print_area(shapes_vec const& shapes) {
   std::println("Area: {}", std::ranges::fold_left(
-                               shapes, 0.0, [](auto sum, shape_ptr const& s) {
-                                 return sum + s->area();
-                               }));
+                               shapes | std::views::transform(&Shape::area),
+                               0.0, std::plus{}));
 }
 struct Circle : Shape {
   double r_;
@@ -86,7 +85,7 @@ template <typename S>
 concept Shape = requires(S s) {
   { area(s) } -> std::convertible_to<double>;
 };
-template <typename... Shapes>
+template <Shape... Shapes>
 void print_area(Shapes const&... shapes) {
   std::println("Area: {}", (area(shapes) + ...));
 }
@@ -95,11 +94,12 @@ struct Circle {
   double r;
 };
 double area(Circle const& c) { return M_PI * c.r * c.r; };
-
+static_assert(Shape<Circle>);
 struct Rect {
   double w, h;
 };
 double area(Rect const& r) { return r.w * r.h; };
+static_assert(Shape<Rect>);
 
 TEST_CASE("talk_23_1 external static concept") {
   print_area(Circle{5.0}, Rect{3.0, 4.0});
@@ -178,10 +178,9 @@ class Shape {
   double area() const { return area_(data_); }
 };
 void print_area_dynamic(std::vector<Shape> const& shapes) {
-  std::println("Area: {}",
-               std::ranges::fold_left(shapes, 0.0, [](auto l, Shape const& s) {
-                 return l + s.area();
-               }));
+  std::println("Area: {}", std::ranges::fold_left(
+                               shapes | std::views::transform(&Shape::area),
+                               0.0, std::plus{}));
 };
 
 TEST_CASE("talk_23_1 dynamic external polymorphism1") {
@@ -211,10 +210,9 @@ class Shape {
   double area() const { return v_table_->area_(data_); }
 };
 void print_area_dynamic(std::vector<Shape> const& shapes) {
-  std::println("Area: {}",
-               std::ranges::fold_left(shapes, 0.0, [](auto l, Shape const& s) {
-                 return l + s.area();
-               }));
+  std::println("Area: {}", std::ranges::fold_left(
+                               shapes | std::views::transform(&Shape::area),
+                               0.0, std::plus{}));
 };
 
 TEST_CASE("talk_23_1 dynamic external polymorphism2") {
@@ -224,6 +222,5 @@ TEST_CASE("talk_23_1 dynamic external polymorphism2") {
 }  // namespace intro_v_table
 
 }  // namespace intro
-
 
 }  // namespace
