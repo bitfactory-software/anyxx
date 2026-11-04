@@ -92,7 +92,7 @@ struct times {
   }
 };
 
-TRAIT_MAP(value, node) {
+TRAIT_MAP(node, value) {
   value evaluate(value const& self) { return self; };
 };
 
@@ -143,10 +143,10 @@ TEST_CASE("talk_2312_vany_open_dispatch core") {
 
 namespace {
 namespace sample_12 {
-TRAIT_MAP(std::string, node) {
+TRAIT_MAP(node, std::string) {
   value evaluate(std::string const& self) { return self; };
 };
-TRAIT_MAP(std::string, evaluable) {
+TRAIT_MAP(evaluable, std::string) {
   std::string as_string(std::string const& self) { return self; };
   bool to_bool(auto const& self) { return !self.empty(); };
   int to_int(auto const& self) { return std::atoi(self.c_str()); };

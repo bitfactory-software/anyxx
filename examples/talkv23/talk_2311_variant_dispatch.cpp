@@ -65,7 +65,7 @@ void draw_vany(std::stringstream& os,
     for(auto const& f : figures) os << f.draw() << "\n";
 }
 
-TRAIT_MAP(std::string, drawable) {
+TRAIT_MAP(drawable, std::string) {
   std::string draw(std::string const& s) { return s; };
 };
 

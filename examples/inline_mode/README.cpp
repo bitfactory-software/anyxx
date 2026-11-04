@@ -182,11 +182,11 @@ struct square {
 
 TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), const)))
 
-TRAIT_MAP(circle, drawable) {
+TRAIT_MAP(drawable, circle ) {
   static std::string draw(circle const&) { return "Silent greetings"; };
 };
 
-TRAIT_MAP(square, drawable) {
+TRAIT_MAP(drawable, square) {
   static std::string draw(square const& self) { return self.edgy_salute(); };
 };
 
@@ -403,7 +403,7 @@ ayx::factory<ayx::any<serializable>, std::string, std::istream&> deserialize;
   return ayx::move_to<ayx::any<figure>>(deserialize(type, archive));
 }
 
-TRAIT_MAP(circle, serializable) {
+TRAIT_MAP(serializable, circle) {
   static void serialize(circle const& self, std::ostream& os) {
     os << "circle " << self.radius << " ";
   };
@@ -416,7 +416,7 @@ auto __ = deserialize.register_("circle", [](std::istream& archive) -> circle {
 anyxx::castable_to<circle, figure> __;
 anyxx::castable_to<circle, serializable> __;
 
-TRAIT_MAP(square, serializable) {
+TRAIT_MAP(serializable, square) {
   static void serialize(square const& self, std::ostream& os) {
     os << "square " << self.edge_length << " ";
   };
@@ -555,7 +555,7 @@ void draw_vany(std::stringstream& os,
     for(auto const& f : figures) os << f.draw() << "\n";
 }
 
-TRAIT_MAP(std::string, figure) {
+TRAIT_MAP(figure, std::string) {
   std::string draw(std::string const& s) { return s; };
 };
 

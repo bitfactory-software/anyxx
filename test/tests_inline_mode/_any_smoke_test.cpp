@@ -84,7 +84,7 @@ struct regular_polygon {
   }
 };
 
-TRAIT_MAP(circle, drawable) {
+TRAIT_MAP(drawable, circle ) {
   auto draw([[maybe_unused]] circle const& x, position p) const {
     std::cout << " A Circle Is Recorded VIA circle_any_drawable_trait_map At "
               << p.x << " " << p.y << "\n";

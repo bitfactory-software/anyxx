@@ -39,10 +39,10 @@ TRAIT_TEMPLATE(((KEY)), map_to_string, anyxx::dynamic_copyable, (),
                (FN((anyxx::any_<anyxx::cref, stringable>), at, (KEY const&),
                    const)))
 
-TRAIT_MAP(int, stringable) {
+TRAIT_MAP(stringable, int) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
 };
-TRAIT_MAP(double, stringable) {
+TRAIT_MAP(stringable, double) {
   auto to_string(double const& x) -> std::string { return std::to_string(x); };
 };
 

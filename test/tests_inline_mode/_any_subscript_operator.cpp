@@ -31,16 +31,16 @@ TRAIT(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
 
 using namespace subscript_operator_test;
 
-TRAIT_MAP(subscript_operator_test::map_t,
-          subscript_operator_test::map_i_to_string_const_and_mutable) {
+TRAIT_MAP(subscript_operator_test::map_i_to_string_const_and_mutable,
+          subscript_operator_test::map_t) {
   static std::string const& subscript(map_t const& self,
                                       std::size_t const key) {  // NOLINT
     return self.at(key);
   };
 };
 
-TRAIT_MAP(subscript_operator_test::vector_t,
-          subscript_operator_test::map_i_to_string_const_and_mutable) {
+TRAIT_MAP(subscript_operator_test::map_i_to_string_const_and_mutable,
+          subscript_operator_test::vector_t) {
   static std::string const& subscript(vector_t const& self,
                                       std::size_t const key) {  // NOLINT
     return self.at(key);

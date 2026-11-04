@@ -1114,5 +1114,5 @@
 ///
 /// Must be placed in global namespace, and reachable for the instantiation of
 /// the associated v-table.
-#define TRAIT_MAP(model_, trait_) __ANY_MODEL_MAP(trait_, (ANY_UNPAREN(model_)))
+#define TRAIT_MAP(trait_, model_) __ANY_MODEL_MAP(trait_, (ANY_UNPAREN(model_)))
 /// @}

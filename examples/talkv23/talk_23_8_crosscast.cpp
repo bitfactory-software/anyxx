@@ -22,7 +22,7 @@ TRAIT(greeting, dynamic_castable,
   (FN(std::string, greet, (), const))
 )
 
-TRAIT_MAP(data, greeting) {
+TRAIT_MAP(greeting, data) {
   std::string greet(const data&) { return "Hello"; };
 };
 

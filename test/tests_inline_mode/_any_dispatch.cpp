@@ -26,12 +26,12 @@ struct x_t {
 using test_base_i_co = any_test_base_i<cref>;
 using test_derived_i_mo = any_test_derived_i<mutref>;
 
-TRAIT_MAP(x_t, test_base_i){
+TRAIT_MAP(test_base_i, x_t){
     static auto to_string(x_t const& self){return self.s_;
 }  // namespace
 }
 ;
-TRAIT_MAP(x_t, test_derived_i){
+TRAIT_MAP(test_derived_i, x_t){
     static void from_string(x_t & self, std::string_view s){self.s_ = s;
 }
 }

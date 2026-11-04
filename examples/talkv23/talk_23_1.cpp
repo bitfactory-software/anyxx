@@ -124,13 +124,13 @@ void print_(trait_as<Args, Shape> const&... shapes) {
 struct Circle {
   double r = 0.0;
 };
-TRAIT_MAP(Circle, Shape) {
+TRAIT_MAP(Shape, Circle) {
   double area(const Circle& self) { return M_PI * self.r * self.r; };
 };
 struct Rect {
   double w, h;
 };
-TRAIT_MAP(Rect, Shape) {
+TRAIT_MAP(Shape, Rect) {
   double area(const Rect& self) { return self.w * self.h; };
 };
 

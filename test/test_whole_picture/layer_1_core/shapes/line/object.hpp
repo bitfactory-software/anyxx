@@ -16,7 +16,7 @@ struct line {
 META_CLASS_FWD(CORE_EXPORT, whole_picture::core::shapes::line)
 ANY_DISPATCH_FOR_FWD(CORE_EXPORT, whole_picture::core::shapes::line, whole_picture::architecture, shape)
 
-TRAIT_MAP(whole_picture::core::shapes::line, whole_picture::architecture::shape) {
+TRAIT_MAP(whole_picture::architecture::shape, whole_picture::core::shapes::line) {
     void draw(whole_picture::core::shapes::line const& self,
         architecture::mutable_observed_surface const& surface) const {
         architecture::draw::line(surface, self.p1, self.p2);
