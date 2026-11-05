@@ -6,7 +6,7 @@ namespace anyxx {
 
 inline static constexpr std::size_t iterator_val_proxy_size =
     small_object_size * 2u;
-using iterator_val = nullable_val<iterator_val_proxy_size>;
+using iterator_val = optional_val<iterator_val_proxy_size>;
 
 struct input_iterator_is_nullable {};
 struct input_iterator_val_size {

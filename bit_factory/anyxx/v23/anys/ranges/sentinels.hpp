@@ -30,7 +30,7 @@ TRAIT_TEMPLATE_EX(
         (auto const it) {
           return self.value == any_cast<typename T::iterator_type>(it);
         })),
-    , , , (using default_proxy_t = nullable_val<iterator_val_proxy_size>;))
+    , , , (using default_proxy_t = optional_val<iterator_val_proxy_size>;))
 
 template <template <typename...> typename SentinelTrait,
           template <typename...> typename IteratorTrait, typename... Args>
@@ -88,7 +88,7 @@ TRAIT_TEMPLATE_EX(
          (auto const it) {
            return any_cast<typename T::iterator_type>(it) - self.value;
          })),
-    , , , (using default_proxy_t = nullable_val<iterator_val_proxy_size>;))
+    , , , (using default_proxy_t = optional_val<iterator_val_proxy_size>;))
 
 template <typename Value, typename Ref,
           template <typename...> typename IteratorTrait>

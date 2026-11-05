@@ -7,7 +7,7 @@ namespace anyxx {
 
 template <typename Self, typename Value, typename Ref = Value&>
 struct input_iterator : typed_copyable<Self> {
-    using default_proxy_t = anyxx::nullable_val<>;
+    using default_proxy_t = anyxx::optional_val<>;
 
     bool operator==(Self const&) const;
     bool operator!=(Self const&) const;
