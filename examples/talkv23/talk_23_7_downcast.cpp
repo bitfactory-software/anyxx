@@ -1,6 +1,5 @@
 #include <array>
 #include <bit_factory/anyxx.hpp>
-#include <bit_factory/anyxx/anys/function.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <format>
 #include <string>

@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <array>
 #include <bit_factory/anyxx.hpp>
-#include <bit_factory/anyxx/ext/factory.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <format>
