@@ -22,13 +22,13 @@ any<thing> operator<=>(any<thing> const& l, any<thing> const& r) {
   return collide(l, r);
 }
 any<thing> run(std::vector<any<thing>> things) {
-  auto winner = things.front();
-  for (auto next : things | std::views::drop(1)) {
-    std::print("{} <=> {} -> ", winner.registry(), next.registry());
-    winner = winner <=> next;
-    std::println("{}!", winner.registry());
-  }
-  return winner;
+  return *std::ranges::fold_left_first(
+      things, [](any<thing> const& winner, any<thing> const& next) {
+        std::print("{} <=> {} -> ", winner.registry(), next.registry());
+        auto result = winner <=> next;
+        std::println("{}!", result.registry());
+        return result;
+      });
 }
 
 struct Asteroid {

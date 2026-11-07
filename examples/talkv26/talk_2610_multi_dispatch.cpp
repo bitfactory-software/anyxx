@@ -1,4 +1,5 @@
 #define ANYXX_26
+#include <algorithm>
 #include <bit_factory/anyxx.hpp>
 #include <bit_factory/anyxx/ext/dispatch.hpp>
 #include <bit_factory/anyxx/ext/dispatch_table.hpp>
@@ -25,13 +26,13 @@ any<thing> operator<=>(any<thing> const& l, any<thing> const& r) {
   return collide(l, r);
 }
 any<thing> run(std::vector<any<thing>> things) {
-  auto winner = things.front();
-  for (auto next : things | std::views::drop(1)) {
-    std::print("{} <=> {} -> ", winner.registry(), next.registry());
-    winner = winner <=> next;
-    std::println("{}!", winner.registry());
-  }
-  return winner;
+  return *std::ranges::fold_left_first(
+      things, [](any<thing> const& winner, any<thing> const& next) {
+        std::print("{} <=> {} -> ", winner.registry(), next.registry());
+        auto result = winner <=> next;
+        std::println("{}!", result.registry());
+        return result;
+      });
 }
 
 struct Asteroid {
@@ -57,11 +58,11 @@ auto __ = collide.define<Spaceship, Asteroid>([](auto, auto r) {  //
 });
 }  // namespace
 
- TEST_CASE("talk_2610_basic_multi_dispatch") {
-   auto winner = run({Asteroid{"Chicxulub"}, Spaceship{"NCC-1701"},
-                      Spaceship{"USGS Powell"}, Asteroid{"Tunguska"}});
-   CHECK(winner.registry() == "Asteroid: Tunguska");
- }
+TEST_CASE("talk_2610_basic_multi_dispatch") {
+  auto winner = run({Asteroid{"Chicxulub"}, Spaceship{"NCC-1701"},
+                     Spaceship{"USGS Powell"}, Asteroid{"Tunguska"}});
+  CHECK(winner.registry() == "Asteroid: Tunguska");
+}
 
 namespace {
 struct DeathStar {
