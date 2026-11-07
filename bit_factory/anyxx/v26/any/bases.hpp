@@ -71,9 +71,11 @@ struct destructor {
 };
 
 // clang-format off
+template <typename Self = declaration>
 struct mutable_referenceable {
     using default_proxy_t = anyxx::mutref;
 };
+template <typename Self = declaration>
 struct const_referenceable {
     using default_proxy_t = anyxx::cref;
 };
@@ -101,7 +103,7 @@ struct moveable {
         using copy_constructor [[= v_table_data]] = anyxx::copy_constructor;
     };
 template <typename Self = declaration>
-struct typed_observeable {
+struct typed_observeable : const_referenceable<Self> {
     using type_info_ [[= v_table_data]] = anyxx::type_info_;
 };
     template <typename Self = declaration>
