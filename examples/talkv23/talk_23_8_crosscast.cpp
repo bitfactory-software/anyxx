@@ -16,8 +16,6 @@ namespace {
 
 struct data {};
 
-TRAIT(source, dynamic_castable, )
-
 TRAIT(greeting, dynamic_castable, 
   (FN(std::string, greet, (), const))
 )
@@ -32,7 +30,7 @@ castable_to<data, greeting> __;
 
 TEST_CASE("talk_23_8_crosscast") {
   auto d = data{};
-  auto s = any<source>{d};
+  auto s = any<dynamic_castable>{d};
   if (auto g = borrow_as<any<greeting>>(s)) {
     CHECK(g->greet() == "Hello");
   } else {

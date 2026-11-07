@@ -47,14 +47,10 @@ auto query_v_table(FromVTable* from)
   if constexpr (is_meta_data_v_table<FromVTable>) {
     if (auto meta_data = from->meta_data_; meta_data) {
       return meta_data->template get_v_table<v_table_t>();
-    } else {
-      return std::unexpected(
-          anyxx::cast_error{typeid(v_table_t), *from->type_info_});
     }
-  } else {
-    return std::unexpected(
-        anyxx::cast_error{typeid(v_table_t), *from->type_info_});
   }
+  return std::unexpected(
+      anyxx::cast_error{typeid(v_table_t), *from->type_info_});
 }
 
 class meta_data {
