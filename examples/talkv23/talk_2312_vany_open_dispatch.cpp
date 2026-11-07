@@ -16,53 +16,23 @@ namespace sample_12 {
 
 TRAIT_EX(evaluable, copyable, 
   (FN_IMPL(public, std::string, to_string, (), const, 
-    (){ return std::format("{}", self); }), 
-   FN(bool, to_bool, (), const),
-   FN(int, to_int, (), const),
-   FN(double, to_double, (), const)),
+    (){ return std::format("{}", self); })),
    , , (HAS_OPEN_DISPATCH), ())
 
 using value = vany<evaluable, bool, int, double>;
 
 using concrete_values = vany_type_trait<value>::concrete_variant;
-template <typename V>
-struct concrete_value_trait_map : evaluable_default_trait_map<V> {
-  bool to_bool(auto self) { return static_cast<bool>(self); };
-  int to_int(auto self) { return static_cast<int>(self); };
-  double to_double(auto self) { return static_cast<double>(self); };
-};
-template <>
-struct evaluable_trait_map<bool> : concrete_value_trait_map<bool> {};
-template <>
-struct evaluable_trait_map<int> : concrete_value_trait_map<int> {};
-template <>
-struct evaluable_trait_map<double> : concrete_value_trait_map<double> {};
-template <typename T>
-T value_to(auto const& v) {
-  if constexpr (std::same_as<bool, T>) {
-    return v.to_bool();
-  } else if constexpr (std::same_as<int, T>) {
-    return v.to_int();
-  } else if constexpr (std::same_as<double, T>) {
-    return v.to_double();
-  } else if constexpr (std::same_as<std::string, T>) {
-    return v.to_string();
-  } else {
-    static_assert(false);
-    return T{};
-  }
-}
 
 TRAIT_EX(node, anyxx::deleteable, 
     (FN(value, evaluate, (), const)) 
     , , , (HAS_OPEN_DISPATCH), ())
 
-VANY_DISPACH_DECLARE(, evaluate_plus, value,
-                     (value(virtual_<any<evaluable>>,
-                            virtual_<any<evaluable>>)),
-                     ([]<typename L, typename R>(L&& l, R&& r) -> value
-                        requires(!anyxx::is_any<L> && !anyxx::is_any<R>)
-                      { return std::forward<L>(l) + std::forward<R>(r); }));
+VANY_DISPACH_DECLARE(
+    , evaluate_plus, value,
+    (value(virtual_<any<evaluable>>, virtual_<any<evaluable>>)),
+    ([]<typename L, typename R>(L&& l, R&& r) -> value
+    requires(!anyxx::is_any<L> && !anyxx::is_any<R>)
+    { return std::forward<L>(l) + std::forward<R>(r); }));
 
 VANY_DISPACH_DECLARE(
     , evaluate_times, value,
@@ -148,27 +118,16 @@ TRAIT_MAP(node, std::string) {
 };
 TRAIT_MAP(evaluable, std::string) {
   std::string as_string(std::string const& self) { return self; };
-  bool to_bool(auto const& self) { return !self.empty(); };
-  int to_int(auto const& self) { return std::atoi(self.c_str()); };
-  double to_double(auto const& self) { return std::atof(self.c_str()); };
 };
 auto __ = evaluate_plus.define<std::string, std::string>(
     [](const auto& lhs, const auto& rhs) -> value { return lhs + rhs; });
 auto __ = evaluate_plus.define<concrete_values, std::string>(
     [](const auto& lhs, const auto& rhs) -> value {
-      return std::visit(
-          [&]<typename LHS>(LHS v) -> value {
-            return v + value_to<LHS>(as<evaluable>(rhs));
-          },
-          lhs);
+      return as<evaluable>(lhs).to_string() + rhs;
     });
 auto __ = evaluate_plus.define<std::string, concrete_values>(
     [](const auto& lhs, const auto& rhs) -> value {
-      return std::visit(
-          [&]<typename RHS>(RHS v) -> value {
-            return value_to<RHS>(as<evaluable>(lhs)) + v;
-          },
-          rhs);
+      return lhs + as<evaluable>(rhs).to_string();
     });
 }  // namespace sample_12
 }  // namespace
@@ -182,7 +141,7 @@ TEST_CASE("talk_2312_vany_open_dispatch string ext") {
                            any<node>{std::in_place_type<std::string>, "4"}}};
 
   auto v = expr.evaluate();
-  CHECK(v.to_string() == "9");
+  CHECK(v.to_string() == "234");
 
   any<node> expr1{any<node>{
       std::in_place_type<times>, any<node>{std::in_place_type<value>, 3},
