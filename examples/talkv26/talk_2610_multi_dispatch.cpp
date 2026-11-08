@@ -86,6 +86,9 @@ struct BlackHole {
 auto __ = collide.define<BlackHole, any<thing>>([](auto l, auto) {  //
   return l;
 });
+auto __ = collide.define<DeathStar, BlackHole>([](auto, auto r) {  //
+  return r;
+});
 auto __ = collide.define<any<thing>, BlackHole>([](auto, auto r) {  //
   return r;
 });
@@ -95,6 +98,13 @@ auto __ = collide.define<BlackHole, BlackHole>([](auto l, auto r) {  //
 }  // namespace
 
 TEST_CASE("talk_2610_bonus_multi_dispatch") {
+  auto w1 = Spaceship{"NCC-1701"} <=> BlackHole{"Sagittarius A*"};
+  CHECK(w1.registry() == "Black Hole Sagittarius A*");
+  auto w3 = Spaceship{"NCC-1701"} <=> DeathStar{"2"};
+  CHECK(w3.registry() == "DS2");
+  auto w2 = DeathStar{"2"} <=> BlackHole{"Sagittarius A*"};
+  CHECK(w2.registry() == "Black Hole Sagittarius A*");
+
   auto winner = run({Asteroid{"Chicxulub"}, Spaceship{"NCC-1701"},
                      Spaceship{"USGS Powell"}, DeathStar{"2"},
                      Asteroid{"Tunguska"}, DeathStar{"1"},
