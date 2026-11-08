@@ -20,8 +20,8 @@ TRAIT_EX(evaluable, copyable,
    , , (HAS_OPEN_DISPATCH), ())
 
 using value = vany<evaluable, bool, int, double>;
-using concrete_values = vany_type_trait<value>::concrete_variant;
-static_assert(std::is_same_v<concrete_values, std::variant<bool, int, double>>);  
+using bool_int_double = vany_type_trait<value>::concrete_variant;
+static_assert(std::is_same_v<bool_int_double, std::variant<bool, int, double>>);  
 
 TRAIT_EX(node, anyxx::deleteable, 
     (FN(value, evaluate, (), const)) 
@@ -94,11 +94,11 @@ TRAIT_MAP(evaluable, std::string) {
 };
 auto __ = evaluate_plus.define<std::string, std::string>(
     [](const auto& lhs, const auto& rhs) -> value { return lhs + rhs; });
-auto __ = evaluate_plus.define<concrete_values, std::string>(
+auto __ = evaluate_plus.define<bool_int_double, std::string>(
     [](const auto& lhs, const auto& rhs) -> value {
       return as<evaluable>(lhs).to_string() + rhs;
     });
-auto __ = evaluate_plus.define<std::string, concrete_values>(
+auto __ = evaluate_plus.define<std::string, bool_int_double>(
     [](const auto& lhs, const auto& rhs) -> value {
       return lhs + as<evaluable>(rhs).to_string();
     });
