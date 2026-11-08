@@ -6,7 +6,7 @@
 
 namespace anyxx {
 
-template <typename Vany, typename DynamicDispatch, auto StaticDispatch>
+template <typename DynamicDispatch, auto StaticDispatch>
 class dispatch_vany {
   DynamicDispatch dynamic_dispatch_;
   constexpr static const std::size_t dimension_count =
@@ -117,18 +117,16 @@ class dispatch_vany {
 ///        the \ref vany.
 ///
 /// See also \ref VANY_DISPACH, \ref ANY_SINGLETON_DECLARE.
-#define VANY_DISPACH_DECLARE(export_, name, vany, signature, static_dispatch) \
-  constexpr static inline auto name##_static_dispatch =                       \
-      anyxx::overloads{_detail_REMOVE_PARENS(static_dispatch)};               \
-                                                                              \
-  using name##_vany = vany;                                                   \
-  using name##_dynamic_dispatch =                                             \
-      anyxx::dispatch<_detail_REMOVE_PARENS(signature)>;                      \
-                                                                              \
-  ANY_SINGLETON_DECLARE(                                                      \
-      , name,                                                                 \
-      anyxx::dispatch_vany<name##_vany, name##_dynamic_dispatch,              \
-                           name##_static_dispatch>)
+#define VANY_DISPACH_DECLARE(export_, name, signature, static_dispatch) \
+  constexpr static inline auto name##_static_dispatch =                 \
+      anyxx::overloads{_detail_REMOVE_PARENS(static_dispatch)};         \
+                                                                        \
+  using name##_dynamic_dispatch =                                       \
+      anyxx::dispatch<_detail_REMOVE_PARENS(signature)>;                \
+                                                                        \
+  ANY_SINGLETON_DECLARE(                                                \
+      , name,                                                           \
+      anyxx::dispatch_vany<name##_dynamic_dispatch, name##_static_dispatch>)
 
 /// \brief Define a \ref vany dispatch singleton object in a source
 /// file.
@@ -138,5 +136,3 @@ class dispatch_vany {
 /// See also \ref VANY_DISPACH_DECLARE, \ref ANY_SINGLETON.
 #define VANY_DISPACH(namespace_, name) ANY_SINGLETON(namespace_, name);
 ///  @}
-
-

@@ -95,7 +95,7 @@ TEST_CASE("example 2cb static_ any_ variant") {
 namespace example_2c {
 
 VANY_DISPACH_DECLARE(
-    , vany_stream, vany_value,
+    , vany_stream,
     (void(anyxx::virtual_<any_value>, std::ostream&)),
     ([](const std::string& s,
         std::ostream& os) { os << "String: " << s << ", "; },
@@ -135,7 +135,7 @@ TEST_CASE("example 2cc static_ any_ variant single open dispatch") {
 namespace example_2c {
 
 VANY_DISPACH_DECLARE(
-    , vany_compare, vany_value,
+    , vany_compare, 
     (std::partial_ordering(anyxx::virtual_<any_value>,
                            anyxx::virtual_<any_value>)),
     ([]<typename T>(T&& t, T&& u) -> std::partial_ordering

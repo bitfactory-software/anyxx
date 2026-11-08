@@ -15,6 +15,9 @@ concept is_any_impl = is_proxy_holder_impl<I> &&
 template <typename I>
 concept is_any = is_any_impl<std::decay_t<I>>;
 
+template <typename I>
+concept no_any = (!is_any<I>);
+
 template <class E>
 concept is_typed_any = is_any<E> && requires(E e) {
     typename E::proxy_trait_t;

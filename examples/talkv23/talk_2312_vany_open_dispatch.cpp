@@ -20,41 +20,36 @@ TRAIT_EX(evaluable, copyable,
    , , (HAS_OPEN_DISPATCH), ())
 
 using value = vany<evaluable, bool, int, double>;
-
 using concrete_values = vany_type_trait<value>::concrete_variant;
+static_assert(std::is_same_v<concrete_values, std::variant<bool, int, double>>);  
 
 TRAIT_EX(node, anyxx::deleteable, 
     (FN(value, evaluate, (), const)) 
     , , , (HAS_OPEN_DISPATCH), ())
 
 VANY_DISPACH_DECLARE(
-    , evaluate_plus, value,
+    , evaluate_plus,
     (value(virtual_<any<evaluable>>, virtual_<any<evaluable>>)),
-    ([]<typename L, typename R>(L&& l, R&& r) -> value
-    requires(!anyxx::is_any<L> && !anyxx::is_any<R>)
+    ([]<no_any L, no_any R>(L&& l, R&& r) -> value
     { return std::forward<L>(l) + std::forward<R>(r); }));
-
-VANY_DISPACH_DECLARE(
-    , evaluate_times, value,
-    (value(virtual_<any<evaluable>>, virtual_<any<evaluable>>)),
-    ([]<typename L, typename R>(L&& l, R&& r) -> value
-       requires(!anyxx::is_any<L> && !anyxx::is_any<R>)
-     { return std::forward<L>(l) * std::forward<R>(r); },
-     []<typename R>(bool l, R&& r) -> value
-       requires(!anyxx::is_any<R>)
-     { return static_cast<int>(l) * std::forward<R>(r); },
-     []<typename L>(L&& l, bool r) -> value
-       requires(!anyxx::is_any<L>)
-     { return std::forward<L>(l) * static_cast<int>(r); },
-     [](bool l, bool r) -> value 
-     { return l && r; }));
-
 struct plus {
   any<node> left_, right_;
   value evaluate() const {
     return evaluate_plus(left_.evaluate(), right_.evaluate());
   }
 };
+
+VANY_DISPACH_DECLARE(
+    , evaluate_times,
+    (value(virtual_<any<evaluable>>, virtual_<any<evaluable>>)),
+    ([]<no_any L, no_any R>(L&& l, R&& r) -> value
+    { return std::forward<L>(l) * std::forward<R>(r); },
+     []<no_any R>(bool l, R&& r) -> value
+     { return static_cast<int>(l) * std::forward<R>(r); },
+     []<no_any L>(L&& l, bool r) -> value
+     { return std::forward<L>(l) * static_cast<int>(r); },
+     [](bool l, bool r) -> value 
+     { return l && r; }));
 struct times {
   any<node> left_, right_;
   value evaluate() const {
@@ -62,8 +57,9 @@ struct times {
   }
 };
 
-TRAIT_MAP(node, value) {
-  value evaluate(value const& self) { return self; };
+struct leave {
+  value v_;
+  value evaluate() const { return v_; }
 };
 
 }  // namespace sample_12
@@ -74,48 +70,25 @@ VANY_DISPACH(sample_12, evaluate_times)
 
 TEST_CASE("talk_2312_vany_open_dispatch core") {
   using namespace sample_12;
-  any<node> expr{std::in_place_type<times>,
-                 any<node>{std::in_place_type<value>, 2},
-                 any<node>{std::in_place_type<plus>,
-                           any<node>{std::in_place_type<value>, 3},
-                           any<node>{std::in_place_type<value>, 4}}};
-
+  any<node> expr{times{leave{2}, plus{leave{3}, leave{4}}}};
   auto v = expr.evaluate();
   CHECK(v.to_string() == "14");
 
-  any<node> expr1{std::in_place_type<times>,
-                  any<node>{std::in_place_type<value>, 2.1},
-                  any<node>{std::in_place_type<plus>,
-                            any<node>{std::in_place_type<value>, 3.5},
-                            any<node>{std::in_place_type<value>, 4}}};
-
+  any<node> expr1{times{leave{2.1}, plus{leave{3.5}, leave{4}}}};
   auto v1 = expr1.evaluate();
   CHECK(v1.to_string() == "15.75");
 
-  any<node> expr2{std::in_place_type<times>,
-                  any<node>{std::in_place_type<value>, false},
-                  any<node>{std::in_place_type<plus>,
-                            any<node>{std::in_place_type<value>, 3.5},
-                            any<node>{std::in_place_type<value>, 4}}};
-
+  any<node> expr2{times{leave{false}, plus{leave{3.5}, leave{4}}}};
   auto v2 = expr2.evaluate();
   CHECK(v2.to_string() == "0");
 
-  any<node> expr3{std::in_place_type<times>,
-                  any<node>{std::in_place_type<value>, true},
-                  any<node>{std::in_place_type<plus>,
-                            any<node>{std::in_place_type<value>, 3.5},
-                            any<node>{std::in_place_type<value>, 4}}};
-
+  any<node> expr3{times{leave{true}, plus{leave{3.5}, leave{4}}}};
   auto v3 = expr3.evaluate();
   CHECK(v3.to_string() == "7.5");
 }
 
 namespace {
 namespace sample_12 {
-TRAIT_MAP(node, std::string) {
-  value evaluate(std::string const& self) { return self; };
-};
 TRAIT_MAP(evaluable, std::string) {
   std::string as_string(std::string const& self) { return self; };
 };
@@ -134,24 +107,15 @@ auto __ = evaluate_plus.define<std::string, concrete_values>(
 
 TEST_CASE("talk_2312_vany_open_dispatch string ext") {
   using namespace sample_12;
-  any<node> expr{std::in_place_type<plus>,
-                 any<node>{std::in_place_type<value>, 2},
-                 any<node>{std::in_place_type<plus>,
-                           any<node>{std::in_place_type<value>, 3},
-                           any<node>{std::in_place_type<std::string>, "4"}}};
+  any<node> expr{plus{leave{2}, plus{leave{3}, leave{"4"s}}}};
 
   auto v = expr.evaluate();
   CHECK(v.to_string() == "234");
 
-  any<node> expr1{any<node>{
-      std::in_place_type<times>, any<node>{std::in_place_type<value>, 3},
-      any<node>{std::in_place_type<std::string>, std::string{"4"}}}};
+  any<node> expr1{times{leave{3}, leave{"4"s}}};
   CHECK_THROWS_AS(expr1.evaluate(), no_default_function_error);
 
-  any<node> expr2{any<node>{
-      std::in_place_type<plus>,
-      any<node>{std::in_place_type<std::string>, std::string{"Hello, "}},
-      any<node>{std::in_place_type<std::string>, std::string{"world"}}}};
+  any<node> expr2{plus{leave{"Hello, "s}, leave{"world"s}}};
   auto v2 = expr2.evaluate();
-  CHECK(v2.to_string() == "Hello, world");
+  CHECK(v2.to_string() == "Hello, world"s);
 }
