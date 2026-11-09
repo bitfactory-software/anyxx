@@ -82,6 +82,7 @@ struct BlackHole {
 auto __ = collide.define<BlackHole, any<thing>>([](auto l, auto) {  //
   return l;
 });
+// resolve ambiguity by defining BlackHole vs DeathStar
 auto __ = collide.define<DeathStar, BlackHole>([](auto, auto r) {  //
   return r;
 });
