@@ -83,10 +83,12 @@ auto __ = collide.define<BlackHole, any<thing>>([](auto l, auto) {  //
   return l;
 });
 // resolve ambiguity by defining BlackHole vs DeathStar
+// if this is not defined, the dispatch will fail at startup because next rule
+// would be ambiguous
 auto __ = collide.define<DeathStar, BlackHole>([](auto, auto r) {  //
   return r;
 });
-auto __ = collide.define<any<thing>, BlackHole>([](auto, auto r) {  //
+ auto __ = collide.define<any<thing>, BlackHole>([](auto, auto r) {  //
   return r;
 });
 auto __ = collide.define<BlackHole, BlackHole>([](auto l, auto r) {  //

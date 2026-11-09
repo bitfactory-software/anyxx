@@ -1,13 +1,15 @@
 #pragma once
 
+#include <algorithm>
 #include <bit_factory/anyxx/any_access.hpp>
 #include <bit_factory/anyxx/any_concept.hpp>
 #include <bit_factory/anyxx/errors/error.hpp>
 #include <bit_factory/anyxx/ext/hook.hpp>
-#include <vector>
-#include <algorithm>
 #include <cassert>
+#include <ranges>
+#include <stack>
 #include <typeinfo>
+#include <vector>
 
 namespace anyxx {
 
@@ -265,8 +267,8 @@ class dispatch;
 /// Each trait of the \ref any_ tagged as virtual must have open
 /// dispatch enabled. To enable open dispatch, declare a struct named
 /// 'trait_name'_has_open_dispatch.
-/// 
-/// 
+///
+///
 /// open dispatch evaluate, returns int, dispatched via an
 /// any<node>:
 /// \code
@@ -293,13 +295,15 @@ class dispatch<R(Args...)> {
   default_::function_t::connection default_connection_ =
       dispatch_default_hook_.insert(default_::function());
 
+  using dispatch_path = std::deque<std::size_t>;
+
   enum class kind { single, multiple };
   template <kind Kind, std::size_t Dimension, typename... DispatchArgs>
   struct dispatch_access;
 
   template <typename... DispatchArgs>
   struct dispatch_access<kind::multiple, dimension_count, DispatchArgs...> {
-    auto define(auto fp, auto& matrix) {
+    auto define(dispatch_path const&, auto fp, auto& matrix) {
       matrix = reinterpret_cast<erased_function_t>(fp);
       return fp;
     }
@@ -342,11 +346,56 @@ class dispatch<R(Args...)> {
       }
     }
 
+    template <typename Matrix>
+    bool has_conflicts(dispatch_path path, Matrix const& matrix) {
+      auto top = path.front();
+      if constexpr (std::same_as<Matrix, std::vector<erased_function_t>>) {
+        if (matrix.size() <= top || !matrix[top]) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        path.pop_front();
+        if (top == 0) {
+          for (auto i : std::views::iota(1u, matrix.size())) {
+            if (i == path.front()) continue;
+            if (matrix[i].empty()) continue;
+            if (!matrix[i][0]) continue;
+            if (matrix[i].size() < path.front()) {
+              return true;
+            }
+            if (has_conflicts(path, matrix[i])) {
+              return true;
+            }
+          }
+        } else {
+          if (matrix.size() > top) return has_conflicts(path, matrix[top]);
+        }
+        return false;
+      }
+    }
+
     template <typename Class, typename... Classes>
-    auto define(auto fp, auto& matrix) {
+    auto define(dispatch_path& path, auto fp, auto& matrix) {
       auto dispatch_index = get_dispatch_index<Class>();
+      path.push_back(dispatch_index);
       if (matrix.size() <= dispatch_index) matrix.resize(dispatch_index + 1);
-      return next_t::template define<Classes...>(fp, matrix[dispatch_index]);
+      return next_t::template define<Classes...>(path, fp,
+                                                 matrix[dispatch_index]);
+    }
+    template <typename... Classes>
+    [[nodiscard]] bool define_(auto fp, auto& matrix) {
+      dispatch_path path;
+      [[maybe_unused]] auto d = this->define<Classes...>(path, fp, matrix);
+      return !has_conflicts(path, matrix);
+    }
+    template <typename... Classes>
+    [[nodiscard]] bool define(auto fp, auto& matrix,
+                              const std::source_location location) {
+      if (this->define_<Classes...>(fp, matrix)) return true;
+      assert(!"has_conflicts");
+      throw anyxx::error{"Has defined multi dispatch conflict!", location};
     }
 
     template <typename DispatchMatrix, typename ArgsTuple,
@@ -381,7 +430,7 @@ class dispatch<R(Args...)> {
     std::size_t index_ = dispatchs_count<v_table_t>()++;
 
     template <typename CLASS>
-    auto define(auto fp, auto&) {
+    auto define(auto fp, auto&, auto const&) {
       auto v_table = dispatch_table_instance<v_table_t, CLASS>();
       insert_function(v_table, index_, fp);
       return fp;
@@ -413,11 +462,20 @@ class dispatch<R(Args...)> {
   /// \return Dummy value, useful for initializing an auto unnamed
   /// variable at (static) namespace scope.
   template <typename... Classes>
-  auto define(auto f) {
+  auto define(auto f, const std::source_location location =
+                          std::source_location::current()) {
     auto fp = ensure_function_ptr_from_functor_t<
         R, Classes...>::template instance<Args...>(f);
-    return dispatch_access_.template define<Classes...>(fp, dispatch_matrix_);
+    return dispatch_access_.template define<Classes...>(fp, dispatch_matrix_,
+                                                        location);
   };
+  template <typename... Classes>
+  auto define_(auto f) {
+    auto fp = ensure_function_ptr_from_functor_t<
+        R, Classes...>::template instance<Args...>(f);
+    return dispatch_access_.template define_<Classes...>(fp, dispatch_matrix_);
+  };
+
   /// \brief Invoke the dispatch.
   /// \tparam ActualArgs The deduced argument types for the dispatch
   /// call.
@@ -464,17 +522,17 @@ auto make_tuple_from_elements_at(Tuple&& tuple) {
 #ifdef ANY_DLL_MODE
 
 #define ANY_DISPATCH_COUNT_FWD(export_, ns_, any)             \
-  namespace ns_ {}                                             \
-  namespace anyxx {                                            \
-  template <>                                                  \
+  namespace ns_ {}                                            \
+  namespace anyxx {                                           \
+  template <>                                                 \
   export_ std::size_t& dispatchs_count<ns_::any##_v_table>(); \
   }
 
 #define ANY_DISPATCH_COUNT(ns_, any)                          \
-  template <>                                                  \
+  template <>                                                 \
   std::size_t& anyxx::dispatchs_count<ns_::any##_v_table>() { \
-    static std::size_t count = 0;                              \
-    return count;                                              \
+    static std::size_t count = 0;                             \
+    return count;                                             \
   }
 
 #define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_, \

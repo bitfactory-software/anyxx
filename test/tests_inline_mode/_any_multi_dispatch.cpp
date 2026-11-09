@@ -117,10 +117,21 @@ TEST_CASE("multi_dispatch 3") {
       []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
         return l.name() + "->" + r.name();
       });
-  collide.define<any_thing<cref>, Spaceship>(
+  auto has_conflicts = !collide.define_<any_thing<cref>, Spaceship>(
       []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
         return l.name() + "*->S:" + r.name();
       });
+  CHECK(has_conflicts);
+  auto has_conflicts1 = collide.define_<Asteroid, Spaceship>(
+      []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
+        return "Asteroid->Spaceship";
+      });
+  CHECK(has_conflicts1);
+  auto has_conflicts2 = !collide.define_<any_thing<cref>, Spaceship>(
+      []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
+        return l.name() + "*->S:" + r.name();
+      });
+  CHECK(!has_conflicts2);
   collide.define<any_thing<cref>, Asteroid>(
       []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
         return l.name() + "*->A:" + r.name();
@@ -131,7 +142,7 @@ TEST_CASE("multi_dispatch 3") {
 
   any_thing<cref> thing_asteroid{asteroid}, thing_spaceship{spaceship};
 
-  CHECK(collide(thing_asteroid, thing_spaceship) == "Asteroid:A->*Spaceship");
+  CHECK(collide(thing_asteroid, thing_spaceship) == "Asteroid->Spaceship");
   CHECK(collide(thing_asteroid, thing_asteroid) == "Asteroid->Asteroid");
   CHECK(collide(thing_spaceship, thing_spaceship) == "Spaceship*->S:Spaceship");
   CHECK(collide(thing_spaceship, thing_asteroid) == "Spaceship*->A:Asteroid");
@@ -162,6 +173,61 @@ TEST_CASE("multi_dispatch 4") {
   CHECK(collide(thing_spaceship, thing_spaceship).contains("Spaceship"));
   CHECK(collide(thing_spaceship, thing_asteroid) == "any_->a");
 }
+
+namespace {
+struct BlackHole {
+  static std::string name() { return "BlackHole"; }
+};
+}  // namespace
+
+//TEST_CASE("multi_dispatch 5 ambiguous") {
+//  dispatch<std::string(virtual_<any_thing<cref>>, virtual_<any_thing<cref>>)>
+//      collide;
+//
+//  // collide.define<Spaceship, any_thing<cref>>([](auto const&, auto const&
+//  // any_) {
+//  //   return "s->"s + any_.name();
+//  // });
+//  //  rule #1
+//  collide.define<Asteroid, any_thing<cref>>([](auto const&, auto const& any_) {
+//    return "a->"s + "*->"s + any_.name();
+//  });
+//  // rule #2
+//  collide.define<any_thing<cref>, Spaceship>([](auto const& any_, auto const&) {
+//    return "*->"s + any_.name() + "->s"s;
+//  });
+//  // rule #3
+//  collide.define<any_thing<cref>, Asteroid>([](auto const& any_, auto const&) {
+//    return "*->"s + any_.name() + "->a"s;
+//  });
+//  // rule #4
+//  collide.define<any_thing<cref>, BlackHole>([](auto const& any_, auto const&) {
+//    return "*->"s + any_.name() + "->bh"s;
+//  });
+//
+//  Asteroid asteroid;
+//  Spaceship spaceship;
+//  BlackHole blackhole;
+//
+//  any_thing<cref> thing_asteroid{asteroid}, thing_spaceship{spaceship},
+//      thing_blackhole{blackhole};
+//
+//  // conflict
+//  CHECK(collide(thing_asteroid, thing_spaceship) == "a->*->Spaceship");  // #1
+//  CHECK(collide(thing_asteroid, thing_spaceship) == "*->Asteroid->s");   // #2
+//
+//  CHECK(collide(thing_spaceship, thing_spaceship) == "*->Spaceship->s");  // #2
+//
+//  // conflict
+//  CHECK(collide(thing_asteroid, thing_asteroid) == "a->*->Asteroid");  // #1
+//  CHECK(collide(thing_asteroid, thing_asteroid) == "*->Asteroid->a");  // #3
+//
+//  CHECK(collide(thing_spaceship, thing_asteroid) == "*->Spaceship->a");  // #3
+//
+//  // conflict:
+//  CHECK(collide(thing_asteroid, thing_blackhole) == "a->*->BlackHole");  // #1
+//  CHECK(collide(thing_asteroid, thing_blackhole) == "*->Asteroid->bh");  // #4
+//}
 
 }  // namespace
 
