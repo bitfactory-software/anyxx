@@ -98,9 +98,9 @@ TEST_CASE("30a_Animals variant visit") {
   CHECK(encounter(creatures[2], creatures[2]) ==
         encounter_result{&typeid(man), encounter_action::shakes_hands_with,
                          &typeid(man)});
-#ifndef _DEBUG
+#ifdef ANYXX_RUN_BENCHMARKS
   BENCHMARK("30a_Animals variant visit") {
     return apply_encounters(creatures);
   };
-#endif  // !_DEBUG
+#endif  // ANYXX_RUN_BENCHMARKS
 }

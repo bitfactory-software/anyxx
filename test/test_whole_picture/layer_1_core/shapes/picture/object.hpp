@@ -1,11 +1,11 @@
 #pragma once
 
+#include <bit_factory/anyxx/ext/members.hpp>
 #include <bit_factory/anyxx.hpp>
 #include <test/test_whole_picture/layer_0_architecture/draw/picture.hpp>
 #include <test/test_whole_picture/layer_1_core/core.hpp>
 #include <test/test_whole_picture/layer_1_core/surface/object.hpp>
 
-ANY_MEMBERS_COUNT_FWD(CORE_EXPORT, whole_picture::core::shapes, picture)
 
 namespace whole_picture::core::shapes {
 
@@ -18,16 +18,17 @@ struct picture : anyxx::members<picture> {
 
 }  // namespace whole_picture::core::shapes
 
-ANY_META_CLASS_FWD(CORE_EXPORT, whole_picture::core::shapes::picture)
+ANY_MEMBERS_COUNT_FWD(CORE_EXPORT, whole_picture::core::shapes, picture)
+META_CLASS_FWD(CORE_EXPORT, whole_picture::core::shapes::picture)
 ANY_DISPATCH_FOR_FWD(CORE_EXPORT, whole_picture::core::shapes::picture,
                      whole_picture::architecture, shape)
-ANY_MODEL_MAP((whole_picture::core::shapes::picture),
-              whole_picture::architecture::surface) {
+TRAIT_MAP(whole_picture::architecture::surface,
+              whole_picture::core::shapes::picture) {
   void write(auto& self, point p, char ch) { self.content.write(p, ch); };
 };
 
-ANY_MODEL_MAP((whole_picture::core::shapes::picture),
-              whole_picture::architecture::shape) {
+TRAIT_MAP(whole_picture::architecture::shape,
+              whole_picture::core::shapes::picture) {
   using picture = whole_picture::core::shapes::picture;
   void draw(picture const& self,
             architecture::mutable_observed_surface const& surface) const {

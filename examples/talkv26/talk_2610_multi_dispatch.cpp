@@ -1,0 +1,113 @@
+#define ANYXX_26
+#include <algorithm>
+#include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ext/dispatch.hpp>
+#include <bit_factory/anyxx/ext/dispatch_table.hpp>
+#include <catch2/benchmark/catch_benchmark.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <iostream>
+#include <print>
+#include <ranges>
+#include <string>
+#include <vector>
+
+using namespace anyxx;
+
+namespace {
+
+template <typename Self>
+struct thing : copyable<Self> {
+  std::string registry() const;
+  using dispatch_table[[= anyxx::v_table_data]] = anyxx::dispatch_table;
+};
+
+dispatch<any<thing>(virtual_<any<thing>>, virtual_<any<thing>>)> collide;
+any<thing> operator<=>(any<thing> const& l, any<thing> const& r) {
+  return collide(l, r);
+}
+any<thing> run(std::vector<any<thing>> things) {
+  return *std::ranges::fold_left_first(
+      things, [](any<thing> const& winner, any<thing> const& next) {
+        std::print("{} <=> {} -> ", winner.registry(), next.registry());
+        auto result = winner <=> next;
+        std::println("{}!", result.registry());
+        return result;
+      });
+}
+
+struct Asteroid {
+  std::string name_;
+  auto registry() const { return "Asteroid: " + name_; }
+};
+struct Spaceship {
+  std::string name_;
+  auto registry() const { return "Spaceship - " + name_; }
+};
+
+auto __ = collide.define<Asteroid, Spaceship>([](auto l, auto) {  //
+  return l;
+});
+auto __ = collide.define<Asteroid, Asteroid>([](auto l, auto r) {  //
+  return l.registry() > r.registry() ? l : r;
+});
+auto __ = collide.define<Spaceship, Spaceship>([](auto l, auto r) {  //
+  return l.registry() < r.registry() ? l : r;
+});
+auto __ = collide.define<Spaceship, Asteroid>([](auto, auto r) {  //
+  return r;
+});
+}  // namespace
+
+TEST_CASE("talk_2610_basic_multi_dispatch") {
+  auto winner = run({Asteroid{"Chicxulub"}, Spaceship{"NCC-1701"},
+                     Spaceship{"USGS Powell"}, Asteroid{"Tunguska"}});
+  CHECK(winner.registry() == "Asteroid: Tunguska");
+}
+
+namespace {
+struct DeathStar {
+  std::string n_;
+  auto registry() const { return "DS" + n_; }
+};
+auto __ = collide.define<DeathStar, any<thing>>([](auto l, auto) {  //
+  return l;
+});
+auto __ = collide.define<any<thing>, DeathStar>([](auto, auto r) {  //
+  return r;
+});
+auto __ = collide.define<DeathStar, DeathStar>([](auto l, auto r) {  //
+  return Asteroid{l.n_ + "&" + r.n_};
+});
+
+struct BlackHole {
+  std::string n_;
+  auto registry() const { return "Black Hole " + n_; }
+};
+auto __ = collide.define<BlackHole, any<thing>>([](auto l, auto) {  //
+  return l;
+});
+auto __ = collide.define<DeathStar, BlackHole>([](auto, auto r) {  //
+  return r;
+});
+auto __ = collide.define<any<thing>, BlackHole>([](auto, auto r) {  //
+  return r;
+});
+auto __ = collide.define<BlackHole, BlackHole>([](auto l, auto r) {  //
+  return BlackHole{l.n_ + " | " + r.n_};
+});
+}  // namespace
+
+TEST_CASE("talk_2610_bonus_multi_dispatch") {
+  auto w1 = Spaceship{"NCC-1701"} <=> BlackHole{"Sagittarius A*"};
+  CHECK(w1.registry() == "Black Hole Sagittarius A*");
+  auto w3 = Spaceship{"NCC-1701"} <=> DeathStar{"2"};
+  CHECK(w3.registry() == "DS2");
+  auto w2 = DeathStar{"2"} <=> BlackHole{"Sagittarius A*"};
+  CHECK(w2.registry() == "Black Hole Sagittarius A*");
+
+  auto winner = run({Asteroid{"Chicxulub"}, Spaceship{"NCC-1701"},
+                     Spaceship{"USGS Powell"}, DeathStar{"2"},
+                     Asteroid{"Tunguska"}, DeathStar{"1"},
+                     BlackHole{"Sagittarius A*"}, BlackHole{"Cygnus X-1"}});
+  CHECK(winner.registry() == "Black Hole Sagittarius A* | Cygnus X-1");
+}

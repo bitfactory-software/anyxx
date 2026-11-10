@@ -9,8 +9,10 @@ using namespace whole_picture::core::shapes;
 
 using namespace anyxx;
 
-ANY_META_CLASS(circle)
-ANY_REGISTER_MODEL(circle, whole_picture::architecture::shape);
+META_CLASS(circle)
+namespace{
+castable_to<circle, whole_picture::architecture::shape> __;
+}
 ANY_DISPATCH_FOR(circle, whole_picture::architecture, shape)
 
 shape shapes::make_circle(architecture::point center, int radius) {

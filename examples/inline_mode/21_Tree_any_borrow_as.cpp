@@ -1,6 +1,8 @@
 ﻿// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ANY_SINGLETON.hpp>
+#include <bit_factory/anyxx/ext/factory.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
 #include <print>
@@ -12,25 +14,27 @@ using namespace anyxx;
 
 namespace _21_Tree_any_borrow_as {
 
-ANY_(node, dynamic_deletable, (ANY_FN(int, value, (), const)), )
-ANY_(serializeable, dynamic_deletable, (ANY_FN(void, serialize, (std::ostream&), const)), )
+TRAIT(node, dynamic_deletable, (FN(int, value, (), const)))
+TRAIT(serializeable, dynamic_deletable,
+      (FN(void, serialize, (std::ostream&), const)))
 
 template <is_proxy Proxy>
 std::ostream& operator<<(std::ostream& s,
-                         any_serializeable<Proxy> const& any) {
-  any.serialize(s);
+                         any_<Proxy, serializeable> const& any_) {
+  any_.serialize(s);
   return s;
 }
-ANY_SINGLETON_DECLARE(, deserialize_factory,
-                      factory<any_serializeable, unique, std::string, std::istream&>);
+ANY_SINGLETON_DECLARE(
+    , deserialize_factory,
+    factory<any_<unique, serializeable>, std::string, std::istream&>);
 
-any_serializeable<unique> deserialize(std::istream& archive) {
+any_<unique, serializeable> deserialize(std::istream& archive) {
   std::string type;
   archive >> type;
-  return deserialize_factory.construct(type, archive);
+  return deserialize_factory(type, archive);
 }
-any_node<unique> deserialize_any_node(std::istream& archive) {
-  return move_to<any_node<unique>>(deserialize(archive));
+any_<unique, node> deserialize_any_node(std::istream& archive) {
+  return move_to<any_<unique, node>>(deserialize(archive));
 }
 template <typename T>
 auto register_deserialize_binary(std::string const& key) {
@@ -41,9 +45,8 @@ auto register_deserialize_binary(std::string const& key) {
 
 void serialize_binary(auto const& self, std::string_view key,
                       std::ostream& archive) {
-  archive << key << " "
-          << *borrow_as<any_serializeable<cref>>(self.left)
-          << *borrow_as<any_serializeable<cref>>(self.right);
+  archive << key << " " << *borrow_as<any_<cref, serializeable>>(self.left)
+          << *borrow_as<any_<cref, serializeable>>(self.right);
 }
 
 struct Plus {
@@ -51,7 +54,7 @@ struct Plus {
   void serialize(std::ostream& archive) const {
     serialize_binary(*this, "Plus ", archive);
   }
-  any_node<unique> left, right;
+  any_<unique, node> left, right;
 };
 auto __ = register_deserialize_binary<Plus>("Plus");
 
@@ -60,7 +63,7 @@ struct Times {
   void serialize(std::ostream& archive) const {
     serialize_binary(*this, "Times ", archive);
   }
-  any_node<unique> left, right;
+  any_<unique, node> left, right;
 };
 auto __ = register_deserialize_binary<Times>("Times");
 
@@ -83,12 +86,14 @@ using namespace _21_Tree_any_borrow_as;
 
 ANY_SINGLETON(_21_Tree_any_borrow_as, deserialize_factory)
 
-ANY_REGISTER_MODEL(Plus, node);
-ANY_REGISTER_MODEL(Plus, serializeable);
-ANY_REGISTER_MODEL(Times, node);
-ANY_REGISTER_MODEL(Times, serializeable);
-ANY_REGISTER_MODEL(Integer, node);
-ANY_REGISTER_MODEL(Integer, serializeable);
+namespace {
+castable_to<Plus, node> __;
+castable_to<Plus, serializeable> __;
+castable_to<Times, node> __;
+castable_to<Times, serializeable> __;
+castable_to<Integer, node> __;
+castable_to<Integer, serializeable> __;
+}
 
 TEST_CASE("_21_Tree_any_borrow_as") {
   using namespace anyxx;
@@ -96,11 +101,11 @@ TEST_CASE("_21_Tree_any_borrow_as") {
 
   std::stringstream archive{
       "Plus Integer 1 Plus Times Integer 2 Integer 3 Integer 4 "};
-  auto expr = move_to<any_node<unique>>(deserialize(archive));
+  auto expr = move_to<any_<unique, node>>(deserialize(archive));
   CHECK(expr.value() == 11);
   std::stringstream serialized;
-  borrow_as<any_serializeable<cref>>(expr)->serialize(serialized);
+  borrow_as<any_<cref, serializeable>>(expr)->serialize(serialized);
   std::println("{}", serialized.str());
-  auto expr2 = move_to<any_node<unique>>(deserialize(serialized));
+  auto expr2 = move_to<any_<unique, node>>(deserialize(serialized));
   CHECK(expr2.value() == 11);
 }

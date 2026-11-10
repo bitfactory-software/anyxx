@@ -1,0 +1,107 @@
+#include <bit_factory/anyxx.hpp>
+
+#include <algorithm>
+#include <bit_factory/anyxx/v26/anys/ranges/iterators.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <iostream>
+#include <list>
+#include <vector>
+#include <print>
+#include <debugging>
+
+// iterator adapter like boost::iterator_adaptor based implemented with anyxx::forward_iterator
+namespace{
+
+struct node_base {
+  node_base() : m_next(0) {}
+  // Each node manages all of its tail nodes
+  virtual ~node_base() { delete m_next; }
+  // Access the rest of the list
+  node_base* next() const { return m_next; }
+  // print to the stream
+  virtual void print(std::ostream& s) const = 0;
+  // double the value
+  virtual void double_me() = 0;
+  void append(node_base* p) {
+    if (m_next)
+      m_next->append(p);
+    else
+      m_next = p;
+  }
+
+ private:
+  node_base* m_next;
+};
+inline std::ostream& operator<<(std::ostream& s, node_base const& n) {
+  n.print(s);
+  return s;
+}
+
+template <class T>
+struct node : node_base {
+  node(T x) : m_value(x) {}
+  void print(std::ostream& s) const override { 
+      s << this->m_value; 
+  }
+  void double_me() override { m_value += m_value; }
+
+ private:
+  T m_value;
+};
+}  // namespace
+
+namespace anyxx {
+template <typename ValueType, typename Reference>
+struct input_iterator<node_base*, ValueType, Reference> {
+    static node_base*& op_plus_plus(node_base*& x) {
+        return x = x->next(); 
+    }
+};
+template <typename ValueType, typename Reference>
+struct input_iterator<node_base const*, ValueType, Reference> {
+    static node_base const*& op_plus_plus(node_base const*& x) {
+        return x = x->next();
+    }
+};
+
+}  // namespace anyxx
+namespace {
+
+using node_iterator = anyxx::trait_as<node_base*, anyxx::forward_iterator, node_base>;
+using node_const_iterator = anyxx::trait_as<node_base const*, anyxx::forward_iterator, node_base const>;
+static_assert(std::forward_iterator<node_iterator>);
+static_assert(std::forward_iterator<node_const_iterator>);
+
+struct node_range : public std::ranges::subrange<node_iterator> {
+  node_range(node_base* node)
+      : std::ranges::subrange<node_iterator>(node_iterator(node),
+                                             node_iterator()) {}
+};
+struct node_const_range : public std::ranges::subrange<node_const_iterator> {
+    node_const_range(node_base const* node)
+        : std::ranges::subrange<node_const_iterator>(node_const_iterator(node),
+            node_const_iterator()) {
+    }
+};
+static_assert(std::ranges::input_range<std::ranges::subrange<node_iterator>>);
+static_assert(std::ranges::input_range<std::ranges::subrange<node_const_iterator>>);
+
+}  // namespace
+//
+TEST_CASE("example 3 iterator adaptor") {
+  std::unique_ptr<node<int>> nodes(new node<int>(42));
+  nodes->append(new node<std::string>("is greater than:"));
+  nodes->append(new node<int>(13));
+
+  auto r = node_range(nodes.get());
+  std::stringstream out1;
+  std::ranges::copy(r, std::ostream_iterator<node_base>(out1, " "));
+  CHECK(out1.str() == "42 is greater than: 13 ");
+  std::for_each(node_iterator(nodes.get()), node_iterator(),
+      [](auto& node) { node.double_me(); });
+
+  auto cr = node_const_range(nodes.get());
+  std::stringstream out2;
+  std::ranges::copy(cr, std::ostream_iterator<node_base>(out2, "/"));
+  CHECK(out2.str() == "84/is greater than:is greater than:/26/");
+}

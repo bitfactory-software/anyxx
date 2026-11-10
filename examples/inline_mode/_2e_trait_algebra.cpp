@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <bit_factory/anyxx.hpp>
-#include <bit_factory/anyxx_range.hpp>
+#include <bit_factory/anyxx/v23/anys/ranges.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <print>
 #include <string>
@@ -8,39 +8,38 @@
 
 namespace algebra {
 
-TRAIT(equal_comparable,
-      (ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const),
-       ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
-                  [&x](auto const& r) {
-                    return !(trait_as<equal_comparable>(x) ==
-                             trait_as<equal_comparable>(r));
-                  })))
+TRAIT(equal_comparable, anyxx::dynamic_copyable,
+      (OP_FREE(bool, ==, eq, (anyxx::self const&), const),
+       OP_IMPL(public, bool, !=, ne, (anyxx::self const&), const,
+               (auto const& r) {
+                 return !(as<equal_comparable>(self) ==
+                          as<equal_comparable>(r));
+               })))
 
-TRAIT_(semigroup, equal_comparable,
-       (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const)))
+TRAIT(semigroup, equal_comparable,
+      (FN_PURE(anyxx::self, op, (anyxx::self const&), const)))
 
-TRAIT_EX_(
-    monoid, semigroup, ,
-    (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
-                       []<typename M>(auto class_) {
-                         return get_proxy_value(
-                             class_.concat(std::ranges::empty_view<M>{}));
-                       }),
-     ANY_FN_STATIC_DEF((), anyxx::self, concat,
-                       ((anyxx::any_self_forward_range const&)),
-                       []<typename M>(auto class_, const auto& r) {
-                         auto id = class_.identity();
-                         return get_proxy_value(std::ranges::fold_left(
-                             r, id, [&](M const& m1, M const& m2) {
-                               return m1.op(m2);
-                             }));
-                       })),
-    , , ())
+TRAIT_EX(monoid, semigroup, ,
+         (FN_STATIC_DEF((), anyxx::self, identity, (),
+                        []<typename M>(auto class_) {
+                          return get_proxy_value(
+                              class_.concat(std::ranges::empty_view<M>{}));
+                        }),
+          FN_STATIC_DEF((), anyxx::self, concat,
+                        ((anyxx::any_self_forward_range const&)),
+                        []<typename M>(auto class_, const auto& r) {
+                          auto id = class_.identity();
+                          return get_proxy_value(std::ranges::fold_left(
+                              r, id, [&](M const& m1, M const& m2) {
+                                return m1.op(m2);
+                              }));
+                        })),
+         , , ())
 
-TRAIT_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)))
+TRAIT(group, monoid, (FN_PURE(anyxx::self, inverse, (), const)))
 
 template <typename V>
-struct semigroup_plus_model_map : semigroup_default_model_map<V> {
+struct semigroup_plus_trait_map : semigroup_default_trait_map<V> {
   static auto op(V self, V r) {
     std::println("op {}", typeid(V).name());
     return self + r;
@@ -48,29 +47,29 @@ struct semigroup_plus_model_map : semigroup_default_model_map<V> {
 };
 
 template <>
-struct semigroup_model_map<int> : semigroup_plus_model_map<int> {};
+struct semigroup_trait_map<int> : semigroup_plus_trait_map<int> {};
 template <>
-struct monoid_model_map<int> : monoid_default_model_map<int> {
+struct monoid_trait_map<int> : monoid_default_trait_map<int> {
   static auto concat(auto, auto const& r) {
     using namespace anyxx;
     std::println("concat {}", typeid(int).name());
     return get_proxy_value(std::ranges::fold_left(
-        r, trait_as<monoid>(0),
-        [&](use_as<int, monoid> const& m1, use_as<int, monoid> const& m2) {
+        r, as<monoid>(0),
+        [&](trait_as<int, monoid> const& m1, trait_as<int, monoid> const& m2) {
           return m1.op(m2);
         }));
   };
 };
 template <>
-struct group_model_map<int> : monoid_model_map<int> {
+struct group_trait_map<int> : monoid_trait_map<int> {
   static auto inverse(int self) { return -self; };
 };
 
 template <>
-struct semigroup_model_map<std::string>
-    : semigroup_plus_model_map<std::string> {};
+struct semigroup_trait_map<std::string>
+    : semigroup_plus_trait_map<std::string> {};
 template <>
-struct monoid_model_map<std::string> : monoid_default_model_map<std::string> {
+struct monoid_trait_map<std::string> : monoid_default_trait_map<std::string> {
   static auto identity(auto) {
     std::println("identy {}", typeid(std::string).name());
     return std::string{};
@@ -112,17 +111,24 @@ void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
   using namespace anyxx;
   static_assert(is_semigroup_model<P1>);
   static_assert(is_monoid_model<P1>);
-  any<monoid, using_<P1>> m{p1};
+  any_<using_<P1>, monoid> m{p1};
   test_monoid(m, r);
 }
 
 template <class C>
-concept can_call_op = requires(anyxx::any_trait_class<C, monoid> class_,
-                               anyxx::using_<C>::template as<monoid> object_) {
-  { class_.op(object_) };
-};
-
-static_assert(!can_call_op<int>);
+concept can_call_op_on_class =
+    requires(anyxx::any_trait_class<C, monoid<>> class_,
+             anyxx::any_<anyxx::using_<C>, monoid> object_) {
+      { class_.op(object_) };
+    };
+template <class C>
+concept can_call_op_on_object =
+    requires(anyxx::any_<anyxx::using_<C>, monoid> a,
+             anyxx::any_<anyxx::using_<C>, monoid> b) {
+      { a.op(b) };
+    };
+static_assert(!can_call_op_on_class<int>);
+static_assert(can_call_op_on_object<int>);
 
 }  // namespace algebra_test
 //
@@ -132,38 +138,39 @@ TEST_CASE("algebra basics") {
   using namespace algebra;
   using namespace std::string_literals;
 
-  using_<int>::as<monoid> x{2};
-  using_<int>::as<monoid> y{x};
-  using_<int>::as<monoid> z = y;
+  using int_monoid = any_<using_<int>, monoid>;
+  int_monoid x{2};
+  int_monoid y{x};
+  int_monoid z = y;
   CHECK(get_proxy_value(z) == 2);
-  using_<int>::as<monoid> a{std::move(x)};
+  int_monoid a{std::move(x)};
   CHECK(get_proxy_value(a) == 2);
   static_assert(anyxx::is_proxy<decltype(x)::proxy_t>);
   static_assert(anyxx::is_any<decltype(x)>);
   static_assert(
       anyxx::moveable_from<decltype(x)::proxy_t, decltype(y)::proxy_t>);
   static_assert(
-      !anyxx::proxy_borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t,
-                                    observeable_v_table>);
+      !anyxx::borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t,
+                              observeable_v_table>);
 
   {
-    using_<int>::as<monoid> im{999};
+    any_<using_<int>, monoid> im{999};
     static_assert(is_proxy<trait_class<int>>);
-    static_assert(is_any<any<monoid, trait_class<int>>>);
-    bool eq0 = im.identity() == trait_as<monoid>(0);
+    static_assert(is_any<any_<trait_class<int>, monoid>>);
+    bool eq0 = im.identity() == as<monoid>(0);
     CHECK(eq0);
-    auto x1 = im.concat(std::vector{trait_as<monoid>(1), trait_as<monoid>(2)});
-    auto y2 = trait_as<monoid>(3);
+    auto x1 = im.concat(std::vector{as<monoid>(1), as<monoid>(2)});
+    auto y2 = as<monoid>(3);
     CHECK(x1 == y2);
   }
   {
-    using_<std::string>::as<monoid> sm{"XXX"};
+    any_<using_<std::string>, monoid> sm{"XXX"};
     auto i = sm.identity();
 
-    CHECK(sm.identity() == trait_as<monoid>(""s));
+    CHECK(sm.identity() == as<monoid>(""s));
     auto x1 =
-        sm.concat(std::vector{trait_as<monoid>("A"s), trait_as<monoid>("B"s)});
-    auto y2 = trait_as<monoid>("AB"s);
+        sm.concat(std::vector{as<monoid>("A"s), as<monoid>("B"s)});
+    auto y2 = as<monoid>("AB"s);
     CHECK(x1 == y2);
   }
 }
@@ -175,15 +182,15 @@ TEST_CASE("algebra monoid") {
   using namespace anyxx;
 
   test_monoid((1), std::vector{2, 3});
-  test_monoid<any<monoid, using_<int>>>(
-      trait_as<monoid>(1), std::vector<any<monoid, using_<int>>>{{2}, {3}});
-  test_monoid((1), std::vector<any<monoid, using_<int>>>{{2}, {3}});
-  test_monoid<any<monoid, using_<int>>>(trait_as<monoid>(1), std::vector{2, 3});
+  test_monoid<any_<using_<int>, monoid>>(
+      as<monoid>(1), std::vector<any_<using_<int>, monoid>>{{2}, {3}});
+  test_monoid((1), std::vector<any_<using_<int>, monoid>>{{2}, {3}});
+  test_monoid<any_<using_<int>, monoid>>(as<monoid>(1), std::vector{2, 3});
 
   test_monoid(("1"s), std::vector{"2"s, "3"s});
-  test_monoid<any<monoid, using_<std::string>>>(
-      trait_as<monoid>("1"s),
-      std::vector<any<monoid, using_<std::string>>>{{"2"s}, {"3"s}});
+  test_monoid<any_<using_<std::string>, monoid>>(
+      as<monoid>("1"s),
+      std::vector<any_<using_<std::string>, monoid>>{{"2"s}, {"3"s}});
 
   //  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
 }
@@ -198,7 +205,7 @@ template <typename P1>
   requires(!anyxx::is_any<P1>)
 void test_group(P1 const& p1, std::ranges::forward_range auto const& r) {
   static_assert(is_group_model<P1>);
-  using any_group = typename anyxx::using_<P1>::template as<group>;
+  using any_group = anyxx::any_<anyxx::using_<P1>, group>;
   test_group_traited<any_group>(any_group{p1}, r);
 }
 template <anyxx::is_any Group>
@@ -226,7 +233,7 @@ void test_group_traited(
   CHECK(c1);
   auto g_concat = g.concat(r);
   static_assert(
-      std::same_as<decltype(g_concat), anyxx::any<group, anyxx::using_<int>>>);
+      std::same_as<decltype(g_concat), anyxx::any_<anyxx::using_<int>, group>>);
   auto c2 =
       g_concat == std::ranges::fold_left(
                       r, g.identity(),
@@ -248,18 +255,18 @@ TEST_CASE("algebra group") {
   using namespace anyxx;
   using namespace algebra_test;
 
-  auto g = trait_class_<int, group>.identity();
-  static_assert(std::same_as<decltype(g), any<group, using_<int>>>);
+  auto g = trait_class_<int, group<>>.identity();
+  static_assert(std::same_as<decltype(g), any_<using_<int>, group, void>>);
 
   {
-    anyxx::any<monoid, using_<int>> m1{0};
-    anyxx::any<monoid, using_<int>> m2{std::move(m1)};
-    anyxx::any<group, using_<int>> g1{0};
-    anyxx::any<group, using_<int>> g2{std::move(g1)};
+    anyxx::any_<using_<int>, monoid> m1{0};
+    anyxx::any_<using_<int>, monoid> m2{std::move(m1)};
+    anyxx::any_<using_<int>, group> g1{0};
+    anyxx::any_<using_<int>, group> g2{std::move(g1)};
   }
   test_group((1), std::vector{2, 3});
-  test_group<any<group, using_<int>>>(
-      trait_as<group>(1), std::vector<any<group, using_<int>>>{{2}, {3}});
+  test_group<any_<using_<int>, group>>(
+      as<group>(1), std::vector<any_<using_<int>, group>>{{2}, {3}});
 }
 
 namespace algebra_test {
@@ -269,8 +276,8 @@ struct int_mul {
 };
 }  // namespace algebra_test
 template <>
-struct algebra::semigroup_model_map<algebra_test::int_mul>
-    : algebra::semigroup_default_model_map<algebra_test::int_mul> {
+struct algebra::semigroup_trait_map<algebra_test::int_mul>
+    : algebra::semigroup_default_trait_map<algebra_test::int_mul> {
   static auto op(algebra_test::int_mul self, algebra_test::int_mul r) {
     using namespace anyxx;
     std::println("op {}", typeid(algebra_test::int_mul).name());
@@ -278,8 +285,8 @@ struct algebra::semigroup_model_map<algebra_test::int_mul>
   };
 };
 template <>
-struct algebra::monoid_model_map<algebra_test::int_mul>
-    : algebra::monoid_default_model_map<algebra_test::int_mul> {
+struct algebra::monoid_trait_map<algebra_test::int_mul>
+    : algebra::monoid_default_trait_map<algebra_test::int_mul> {
   static auto identity(auto) {
     std::println("identy {}", typeid(algebra_test::int_mul).name());
     return algebra_test::int_mul{1};
@@ -291,8 +298,8 @@ TEST_CASE("algebra int_mul monoid") {
   using namespace anyxx;
   using namespace algebra_test;
 
-  auto id = trait_class_<int_mul, monoid>.identity();
-  static_assert(std::same_as<decltype(id), any<monoid, using_<int_mul>>>);
+  auto id = trait_class_<int_mul, monoid<>>.identity();
+  static_assert(std::same_as<decltype(id), any_<using_<int_mul>, monoid, void>>);
   static_assert(!is_group_model<int_mul>);
   // trait_class_<int_mul, monoid>.op(id); // should not compile, because
   // trait_class_ is not an object.

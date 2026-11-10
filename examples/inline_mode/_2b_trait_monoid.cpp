@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <bit_factory/anyxx.hpp>
-#include <bit_factory/anyxx_range.hpp>
+#include <bit_factory/anyxx/v23/anys/ranges.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <list>
 #include <print>
@@ -14,38 +14,38 @@ namespace anyxx {
 
 namespace example_2b {
 
-TRAIT_EX_(monoid, anyxx::dynamic_copyable,
-          (ANY_FN_DEF(public, anyxx::self, id, (), const, []() { return T{}; }),
-           ANY_FN_DEF(public, anyxx::self, op, (anyxx::self const&), const,
-                      [&x](auto const& r) {
-                        std::println("op-default {}", typeid(T).name());
-                        auto self = anyxx::trait_as<monoid>(x);
-                        return get_proxy(self.concat(std::vector{
-                            anyxx::trait_as<monoid>(r)}));  // NOLINT
-                      }),
-           ANY_FN_DEF(public, anyxx::self, concat,
-                      (anyxx::any_self_forward_range const&), const,
-                      [&x](const auto& r) {
-                        std::println("concat-default {}", typeid(T).name());
-                        auto self = anyxx::trait_as<monoid>(x);
-                        return get_proxy(std::ranges::fold_left(
-                            r | std::views::transform([](auto const& y) {
-                              return anyxx::trait_as<monoid>(y);
-                            }),
-                            self, [&](auto const& m1, auto const& m2) {
-                              return m1.op(m2);
-                            }));
-                      }),
-           ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
-                      ([&x](auto const& r) { return x == r; }))),
-          , , , ())
+TRAIT_EX(monoid, anyxx::dynamic_copyable,
+         (FN_IMPL(public, anyxx::self, id, (), const, () { std::ignore = self; return T{}; }),
+          FN_IMPL(public, anyxx::self, op, (anyxx::self const&), const,
+                  (auto const& r) {
+                    std::println("op-default {}", typeid(T).name());
+                    auto self_ = as<monoid>(self);
+                    return get_proxy(self_.concat(
+                        std::vector{as<monoid>(r)}));  // NOLINT
+                  }),
+          FN_IMPL(public, anyxx::self, concat,
+                  (anyxx::any_self_forward_range const&), const,
+                  (const auto& r) {
+                    std::println("concat-default {}", typeid(T).name());
+                    auto self_ = as<monoid>(self);
+                    return get_proxy(std::ranges::fold_left(
+                        r | std::views::transform([](auto const& y) {
+                          return as<monoid>(y);
+                        }),
+                        self_, [&](auto const& m1, auto const& m2) {
+                          return m1.op(m2);
+                        }));
+                  }),
+          OP_IMPL(public, bool, ==, eq, (anyxx::self const&), const,
+                  (auto const& r) { return self == r; })),
+         , , , ())
 
 template <typename Proxy = anyxx::val<>>
-using any_monoid = anyxx::any<monoid, Proxy>;
+using any_monoid = anyxx::any_<Proxy, monoid>;
 
 }  // namespace example_2b
 
-ANY_MODEL_MAP((int), example_2b::monoid) {
+TRAIT_MAP(example_2b::monoid, int) {
   static int concat(int self, auto const& r) {
     std::println("concat {}", typeid(int).name());
     return std::ranges::fold_left(r, self,
@@ -53,7 +53,7 @@ ANY_MODEL_MAP((int), example_2b::monoid) {
   };
 };
 
-ANY_MODEL_MAP((std::string), example_2b::monoid) {
+TRAIT_MAP(example_2b::monoid, std::string) {
   static std::string op(std::string const& self, std::string const& r) {
     std::println("op {}", typeid(std::string).name());
     return self + r;
@@ -68,7 +68,7 @@ void test_monoid_traited(
 template <typename P1>
   requires(!anyxx::is_any<P1>)
 void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
-  using any_monoid = typename anyxx::using_<P1>::template as<monoid>;
+  using any_monoid = anyxx::any_<anyxx::using_<P1>, monoid>;
   test_monoid_traited<any_monoid>(any_monoid{p1}, r);
 }
 template <anyxx::is_any Monoid>
@@ -121,8 +121,8 @@ TEST_CASE("example 2b monoid simple") {
   static_assert(
       anyxx::moveable_from<decltype(x)::proxy_t, decltype(y)::proxy_t>);
   static_assert(
-      !anyxx::proxy_borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t,
-                                    decltype(y)::v_table_t>);
+      !anyxx::borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t,
+                              decltype(y)::v_table_t>);
 }
 
 TEST_CASE("example 2b monoid a") {
@@ -131,8 +131,8 @@ TEST_CASE("example 2b monoid a") {
   using namespace anyxx;
 
   test_monoid((1), std::vector{2, 3});
-  test_monoid<any<monoid, using_<int>>>(
-      trait_as<monoid>(1), std::vector<any<monoid, using_<int>>>{{2}, {3}});
+  test_monoid<any_<using_<int>, monoid>>(
+      as<monoid>(1), std::vector<any_<using_<int>, monoid>>{{2}, {3}});
 
   //  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
 }
@@ -142,9 +142,9 @@ TEST_CASE("example 2b monoid b") {
   using namespace anyxx;
 
   test_monoid("1"s, std::vector{"2"s, "3"s});
-  test_monoid<using_<std::string>::as<monoid>>(
-      trait_as<monoid>("1"s),
-      std::vector<using_<std::string>::as<monoid>>{{"2"s}, {"3"s}});
+  test_monoid<any_<using_<std::string>, monoid>>(
+      as<monoid>("1"s),
+      std::vector<any_<using_<std::string>, monoid>>{{"2"s}, {"3"s}});
 }
 TEST_CASE("example 2b monoid c") {
   using namespace example_2b;

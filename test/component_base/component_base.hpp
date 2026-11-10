@@ -29,18 +29,20 @@ struct X;
 
 namespace test::component_base {
 
-ANY_(to_string_i, anyxx::dynamic_deletable,
-     (ANY_FN(std::string, to_string, (), const)), )
-ANY_(get_value_i, anyxx::dynamic_smart_ptr, (ANY_FN(double, get_value, (), const)), )
-ANY_(set_value_i, get_value_i, (ANY_FN(void, set_value, (double), )), )
+TRAIT(to_string_i, anyxx::dynamic_deletable,
+      (FN(std::string, to_string, (), const)))
+TRAIT(get_value_i, anyxx::dynamic_cloneable, (FN(double, get_value, (), const)))
+TRAIT(set_value_i, get_value_i, (FN(void, set_value, (double), )))
 
 COMPONENT_BASE_EXPORT
-any_to_string_i<anyxx::cref> get_to_string_i_co();
-COMPONENT_BASE_EXPORT any_to_string_i<anyxx::shared> get_to_string_i_sc(
+anyxx::any_<anyxx::cref, to_string_i> get_to_string_i_co();
+COMPONENT_BASE_EXPORT anyxx::any_<anyxx::shared, to_string_i> get_to_string_i_sc(
     double v);
-COMPONENT_BASE_EXPORT any_to_string_i<anyxx::unique> get_to_string_i_u(
+COMPONENT_BASE_EXPORT anyxx::any_<anyxx::unique, to_string_i> get_to_string_i_u(
     double v);
-COMPONENT_BASE_EXPORT anyxx::any<anyxx::dynamic_deletable, anyxx::shared> sc_X(double v);
-COMPONENT_BASE_EXPORT anyxx::any<anyxx::dynamic_deletable, anyxx::unique> u_X(double v);
+COMPONENT_BASE_EXPORT anyxx::any_<anyxx::shared, anyxx::dynamic_deletable> sc_X(
+    double v);
+COMPONENT_BASE_EXPORT anyxx::any_<anyxx::unique, anyxx::dynamic_deletable> u_X(
+    double v);
 
 }  // namespace test::component_base

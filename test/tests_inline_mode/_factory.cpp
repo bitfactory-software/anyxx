@@ -1,4 +1,6 @@
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ANY_SINGLETON.hpp>
+#include <bit_factory/anyxx/ext/factory.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <format>
 #include <print>
@@ -10,13 +12,14 @@ using namespace std::literals;
 namespace {
 namespace example {
 
-ANY_(thing, dynamic_deletable, , )
+TRAIT(thing, dynamic_deletable, )
 
 class asteroid {};
 
 class spaceship {};
 
-ANY_SINGLETON_DECLARE(, thing_factory, factory<any_thing, unique, std::string>);
+ANY_SINGLETON_DECLARE(, thing_factory,
+                      factory<any_<unique, thing>, std::string>);
 
 auto __ = thing_factory.register_("asteroid", []() { return asteroid{}; });
 auto __ = thing_factory.register_("spaceship", []() { return spaceship{}; });
@@ -27,37 +30,38 @@ namespace {
 namespace example {
 
 TEST_CASE("factory1") {
-  auto asteroid_thing = thing_factory.construct("asteroid");
-  CHECK(unerase_cast<asteroid>(asteroid_thing) != nullptr);
-  CHECK(get_type_info(asteroid_thing) == typeid(asteroid));
-  auto spaceship_thing = thing_factory.construct("spaceship");
-  CHECK(unerase_cast<spaceship>(spaceship_thing) != nullptr);
-  CHECK(get_type_info(spaceship_thing) == typeid(spaceship));
+  auto asteroid_thing = thing_factory("asteroid");
+  CHECK(any_cast_if<asteroid>(asteroid_thing) != nullptr);
+  CHECK(type_of(asteroid_thing) == typeid(asteroid));
+  auto spaceship_thing = thing_factory("spaceship");
+  CHECK(any_cast_if<spaceship>(spaceship_thing) != nullptr);
+  CHECK(type_of(spaceship_thing) == typeid(spaceship));
 }
 
 TEST_CASE("factory2") {
-  std::vector<any_thing<unique>> things;
+  std::vector<any_<unique, thing>> things;
   std::stringstream archive{"asteroid spaceship"};
   while (archive) {
     std::string key;
     archive >> key;
-    if (!key.empty()) things.emplace_back(thing_factory.construct(key));
+    if (!key.empty()) things.emplace_back(thing_factory(key));
   }
-  CHECK(get_type_info(things[0]) == typeid(asteroid));
-  CHECK(get_type_info(things[1]) == typeid(spaceship));
+  CHECK(type_of(things[0]) == typeid(asteroid));
+  CHECK(type_of(things[1]) == typeid(spaceship));
 }
 
-ANY_(stringable, dynamic_deletable,
-     (ANY_FN_DEF(public, std::string, to_string, (), const,
-                 [&x]() { return std::format("{}", x); })), )
+TRAIT(stringable, dynamic_deletable,
+      (FN_IMPL(
+          public, std::string, to_string, (), const,
+          () { return std::format("{}", self); })))
 
 ANY_SINGLETON_DECLARE(, any_stringable_factory,
-                      factory<any_stringable, unique, std::string>);
+                      factory<any_<unique, stringable>, std::string>);
 
 auto __ = any_stringable_factory.register_("int", []() { return 42; });
 
-static_assert(
-    std::is_constructible_v<any_stringable<shared>, any_stringable<unique>&&>);
+static_assert(std::is_constructible_v<any_<shared, stringable>,
+                                      any_<unique, stringable>&&>);
 }  // namespace example
 }  // namespace
 
@@ -74,12 +78,12 @@ ANY_SINGLETON_DECLARE(, factory_test_key, factory_test_key_kind)
 ANY_SINGLETON_DECLARE(, factory_test_negative_key, factory_test_key_kind)
 
 TEST_CASE("factory3") {
-  factory<any_stringable, unique, factory_test_key_kind> f;
+  factory<any_<unique, stringable>, factory_test_key_kind> f;
   f.register_(factory_test_key, []() { return 42; });
-  auto a1 = f.construct(factory_test_key);
+  auto a1 = f(factory_test_key);
   CHECK(a1.to_string() == "42");
-  CHECK_THROWS_AS(f.construct(factory_test_negative_key),
-                  unkonwn_factory_key_error);
+  CHECK_THROWS_AS(f(factory_test_negative_key),
+                  unknown_factory_key_error);
 }
 
 }  // namespace example

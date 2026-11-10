@@ -22,14 +22,14 @@ struct X {
   [[nodiscard]] std::string operator()() const { return s_; }
 };
 
-ANY_(stringable, dynamic_deletable, (ANY_OP(std::string, (), (), const)), )
-TRAIT_(slick_stringable, observeable, (ANY_OP(std::string, (), (), const)))
+TRAIT(stringable, dynamic_deletable, (OP_(std::string, (), (), const)))
+TRAIT(slick_stringable, observeable, (OP_(std::string, (), (), const)))
 
 struct Y {
-  any<slick_stringable, mutref> xxx;
+  any_<mutref, slick_stringable> xxx;
 };
 
-std::string func(any<slick_stringable, cref> x) { return x(); }
+std::string func(any_<cref, slick_stringable> x) { return x(); }
 
 }  // namespace
 
@@ -48,24 +48,25 @@ TEST_CASE("slick_stringable observeable_v_table") {
     auto eq = a() == func(e);
     a = e;
     CHECK(eq);
-    auto x = unchecked_unerase_cast<X>(a);
-    CHECK((*x)() == f());
+    decltype(auto) x = unchecked_any_cast<X>(a);
+    CHECK(x() == f());
+    CHECK(X::tracker_ == 1);
   }
   {
     X f("hallo");
-    const any<slick_stringable, mutref> a{f};
+    const any_<mutref, slick_stringable> a{f};
     // bool derived = is_derived_from(typeid(slick_stringable), a);
     // CHECK(!derived);
     CHECK(a() == f());
   }
   {
     X f("hallo");
-    Y y{.xxx = any<slick_stringable, mutref>{f}};
+    Y y{.xxx = any_<mutref, slick_stringable>{f}};
   }
 }
 
-TEST_CASE("any lifetime cast") {
-  const any_stringable<shared> sc{std::make_shared<X>("hallo")};
+TEST_CASE("any_ lifetime cast") {
+  const any_<shared, stringable> sc{std::make_shared<X>("hallo")};
   REQUIRE(sc() == "hallo");
   REQUIRE(is_derived_from<any<dynamic_deletable>>(sc));
 
@@ -77,37 +78,37 @@ TEST_CASE("any lifetime cast") {
 
   try {
     auto o1 = get_proxy(sc);
-    [[maybe_unused]] const auto x = unerase_cast<X>(sc);
+    [[maybe_unused]] decltype(auto) x = any_cast<X>(sc);
     [[maybe_unused]] const auto x1 = static_cast<X const*>(get_proxy_ptr(sc));
-    REQUIRE(x->s_ == "hallo");
+    REQUIRE(x.s_ == "hallo");
   } catch (anyxx::type_mismatch_error&) {
     CHECK(false);
   }
 
-  static_assert(std::same_as<any_stringable<cref>::v_table_t,
-                             any_stringable<shared>::v_table_t>);
-  static_assert(std::derived_from<any_stringable<shared>::v_table_t,
-                                  any_stringable<cref>::v_table_t>);
-  any_stringable<cref> co{sc};  // NOLINT
+  static_assert(std::same_as<any_<cref, stringable>::v_table_t,
+                             any_<shared, stringable>::v_table_t>);
+  static_assert(std::derived_from<any_<shared, stringable>::v_table_t,
+                                  any_<cref, stringable>::v_table_t>);
+  any_<cref, stringable> co{sc};  // NOLINT
   REQUIRE(co() == "hallo");
-  static_assert(std::same_as<any_stringable<cref>::v_table_t,
-                             any_stringable<shared>::v_table_t>);
-  REQUIRE(is_derived_from<any<dynamic_deletable, cref>>(co));
+  static_assert(std::same_as<any_<cref, stringable>::v_table_t,
+                             any_<shared, stringable>::v_table_t>);
+  REQUIRE(is_derived_from<any_<cref, dynamic_deletable>>(co));
 
-  any_stringable<unique> u{std::make_unique<X>("hallo")};  // NOLINT
+  any_<unique, stringable> u{std::make_unique<X>("hallo")};  // NOLINT
   REQUIRE(u() == "hallo");
-  static_assert(!is_typed_any<any_stringable<unique>>);
-  static_assert(is_any<any_stringable<unique>>);
+  static_assert(!is_typed_any<any_<unique, stringable>>);
+  static_assert(is_any<any_<unique, stringable>>);
   static_assert(
-      !constructibile_for<any_stringable<unique>,
-                          any_stringable<mutref>::proxy_t, stringable>);
-  static_assert(std::derived_from<any_stringable<mutref>::v_table_t,
-                                  any_stringable<unique>::v_table_t>);
-  any_stringable<mutref> mo{u};
+      !constructibile_for<any_<unique, stringable>,
+                          any_<mutref, stringable>::proxy_t, stringable<>>);
+  static_assert(std::derived_from<any_<mutref, stringable>::v_table_t,
+                                  any_<unique, stringable>::v_table_t>);
+  any_<mutref, stringable> mo{u};
   REQUIRE(mo() == "hallo");
 
-  any_stringable<unique> u1{std::make_unique<X>("hallo")};
+  any_<unique, stringable> u1{std::make_unique<X>("hallo")};
   REQUIRE(u1() == "hallo");
-  any_stringable<cref> co_from_u{u1};
+  any_<cref, stringable> co_from_u{u1};
   REQUIRE(co_from_u() == "hallo");
 }

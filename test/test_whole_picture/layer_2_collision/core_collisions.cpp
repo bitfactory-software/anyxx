@@ -12,6 +12,7 @@ using line = core::shapes::line;
 using circle = core::shapes::circle;
 using picture = core::shapes::picture;
 
+namespace {
 auto __ = collision::happened
               .define<architecture::any_shape<anyxx::cref>,
                       architecture::any_shape<anyxx::cref>>(
@@ -26,4 +27,4 @@ auto __ = collision::happened.define<picture, picture>(
     [](auto const& lhs, auto const& rhs) {
       return collision::pictures::intersect(lhs, rhs);
     });
-
+}

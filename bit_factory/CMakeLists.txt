@@ -1,6 +1,9 @@
 include(GenerateExportHeader)
 
-add_library(anyxx INTERFACE anyxx.hpp anyxx_range.hpp anyxx_function.hpp)
+file(GLOB_RECURSE hpp_files "*.hpp")
+file(GLOB_RECURSE cpp_files "*.cpp")
+
+add_library(anyxx INTERFACE ${hpp_files} ${cpp_files})
 add_library(bit_factory::anyxx ALIAS anyxx)
 
 if (MSVC)

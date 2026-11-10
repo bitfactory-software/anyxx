@@ -1,5 +1,5 @@
 #include <bit_factory/anyxx.hpp>
-#include <bit_factory/anyxx_function.hpp>
+#include <bit_factory/anyxx/v23/anys/function.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <concepts>
 #include <print>
@@ -12,14 +12,14 @@
 using namespace anyxx;
 
 namespace {
-ANY_(string_to_string, anyxx::dynamic_copyable,
-     (ANY_OP(std::string, (), (std::string const&), const)), )
-ANY_(string_to_string_mutable, anyxx::dynamic_copyable,
-     (ANY_OP(std::string, (), (), const),
-      ANY_OP(std::string, (), (std::string const&), )), )
-ANY_(string_to_string_deletable, anyxx::dynamic_deletable,
-     (ANY_OP(std::string, (), (), const),
-      ANY_OP(std::string, (), (std::string const&), )), )
+TRAIT(string_to_string, anyxx::dynamic_copyable,
+      (OP_(std::string, (), (std::string const&), const)))
+TRAIT(string_to_string_mutable, anyxx::dynamic_copyable,
+      (OP_(std::string, (), (), const),
+       OP_(std::string, (), (std::string const&), )))
+TRAIT(string_to_string_deletable, anyxx::dynamic_deletable,
+      (OP_(std::string, (), (), const),
+       OP_(std::string, (), (std::string const&), )))
 
 }  // namespace
 
@@ -64,35 +64,35 @@ struct pure_functor_with_context {
 TEST_CASE("std emulated function") {
   {
     auto functor = std::make_shared<pure_functor_with_context>("hallo");
-    any_string_to_string<shared> f{functor};
+    any_<shared, string_to_string> f{functor};
     REQUIRE(f(" world") == "hallo world");
   }
   {
-    any_string_to_string<val<>> f{pure_functor_with_context("hallo")};
+    any_<val<>, string_to_string> f{pure_functor_with_context("hallo")};
     REQUIRE(f(" world") == "hallo world");
   }
   {
-    any_string_to_string<shared> f{std::make_shared<pure_functor_t>()};
+    any_<shared, string_to_string> f{std::make_shared<pure_functor_t>()};
     REQUIRE(f("hello world") == "hello world");
   }
   {
-    any_string_to_string<val<>> f{pure_functor_t{}};
+    any_<val<>, string_to_string> f{pure_functor_t{}};
     REQUIRE(f("hello world") == "hello world");
   }
   {
     functor_t functor{"hallo"};
-    any_string_to_string_mutable<mutref> f{functor};
-    REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hallo");
+    any_<mutref, string_to_string_mutable> f{functor};
+    REQUIRE(unchecked_any_cast<functor_t>(f).s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo world");
     REQUIRE(f() == "hallo world");
-    REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hallo world");
+    REQUIRE(unchecked_any_cast<functor_t>(f).s_ == "hallo world");
 
-    any_string_to_string_mutable<cref> fc{f};
+    any_<cref, string_to_string_mutable> fc{f};
     REQUIRE(fc() == "hallo world");
 
     functor_t fx{"hallo world"};
-    any_string_to_string_mutable<cref> fc1{fx};
+    any_<cref, string_to_string_mutable> fc1{fx};
     REQUIRE(fc1() == "hallo world");
 
     // does not work, because functor lives only during construction of
@@ -101,75 +101,71 @@ TEST_CASE("std emulated function") {
     // world"}}; CHECK(fc2() == "hallo world"); // access of member is invalid
   }
   {
-    any_string_to_string_mutable<val<>> fc2{functor_t{"hallo world"}};
+    any_<val<>, string_to_string_mutable> fc2{functor_t{"hallo world"}};
     CHECK(fc2() == "hallo world");
   }
   {
     pure_functor_t pf{};
-    ;
-    any_string_to_string<mutref> f{pf};
+    any_<mutref, string_to_string> f{pf};
     REQUIRE(f("hello world") == "hello world");
   }
   {
     pure_functor_t pf{};
-    any_string_to_string<cref> f{pf};  // works, because 'pure'
+    any_<cref, string_to_string> f{pf};  // works, because 'pure'
     REQUIRE(f("hello world") == "hello world");
   }
   {
     functor_t::tracker_ = 0;
     {
       {
-        any_string_to_string_deletable<unique> f{std::make_unique<functor_t>()};
+        any_<unique, string_to_string_deletable> f{
+            std::make_unique<functor_t>()};
         REQUIRE(functor_t::tracker_ == 1);
         REQUIRE(f("hello") == "");
-        REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hello");
+        REQUIRE(unchecked_any_cast<functor_t>(f).s_ == "hello");
       }
       REQUIRE(functor_t::tracker_ == 0);
     }
-    any_string_to_string_deletable<unique> f{
+    any_<unique, string_to_string_deletable> f{
         std::make_unique<functor_t>("hello")};
     REQUIRE(f(" world") == "hello");
-    REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hello world");
+    REQUIRE(unchecked_any_cast<functor_t>(f).s_ == "hello world");
     static_assert(
-        !std::assignable_from<any_string_to_string_deletable<unique>,
-                              any_string_to_string_deletable<unique>>);
-    any_string_to_string_deletable<unique> f2{std::move(f)};
+        !std::assignable_from<any_<unique, string_to_string_deletable>,
+                              any_<unique, string_to_string_deletable>>);
+    any_<unique, string_to_string_deletable> f2{std::move(f)};
     REQUIRE(!get_proxy_ptr(f));  // NOLINT
     REQUIRE(f2(", bye") == "hello world");
-    REQUIRE(unchecked_unerase_cast<functor_t>(f2)->s_ == "hello world, bye");
+    REQUIRE(unchecked_any_cast<functor_t>(f2).s_ == "hello world, bye");
   }
 
   {
     auto f = [](std::string const& in) { return in + " world!"; };
-    any_string_to_string<cref> sts{f};  // works, because pure
+    any_<cref, string_to_string> sts{f};  // works, because pure
     auto hello_world = sts("hello");
     static_assert(std::is_same_v<decltype(hello_world), std::string>);
     CHECK(hello_world == "hello world!");
 
-    any<function<std::string(std::string const&), const_, observeable>>
-        any_f_cref{f};
+    any<function_ref, std::string(std::string const&) const> any_f_cref{f};
     CHECK(any_f_cref("C++") == "C++ world!");
-    any<function<std::string(std::string const&), mutable_, observeable>>
-        any_f_mref{f};
+    any<function_ref, std::string(std::string const&)> any_f_mref{f};
     CHECK(any_f_mref("C++") == "C++ world!");
 
     auto const f_const = [](std::string const& in) {
       return in + " const world!";
     };
-    any<function<std::string(std::string const&), const_, observeable>>
-        any_f_cref_const{f_const};
+    any<function_ref, std::string(std::string const&) const> any_f_cref_const{
+        f_const};
     CHECK(any_f_cref_const("C++") == "C++ const world!");
-    static_assert(
-        std::is_constructible_v<
-            any<function<std::string(std::string const&), const_, observeable>>,
-            decltype(f_const)>);
-    static_assert(
-        !std::is_constructible_v<any<function<std::string(std::string const&),
-                                              mutable_, observeable>>,
-                                 decltype(f_const)>);
+    static_assert(std::is_constructible_v<
+                  any<function_ref, std::string(std::string const&) const>,
+                  decltype(f_const)>);
+    static_assert(!std::is_constructible_v<
+                  any<function_ref, std::string(std::string const&)>,
+                  decltype(f_const)>);
   }
   {
-    any<function<std::string(std::string const&), mutable_, moveable>> f{
+    any<move_only_function, std::string(std::string const&)> f{
         [](std::string const& in) { return in + " world!"; }};
     auto result = f("hello");
     CHECK(result == "hello world!");
@@ -183,7 +179,7 @@ TEST_CASE("std emulated function") {
     // auto f3 = f2; // does not compile as expected, because f2 is move-only
   }
   {
-    any<function<std::string(std::string const&), const_, moveable>> f{
+    any<move_only_function, std::string(std::string const&) const> f{
         [](std::string const& in) { return in + " world!"; }};
     auto result = f("hello");
     CHECK(result == "hello world!");
@@ -198,14 +194,14 @@ TEST_CASE("std emulated function") {
   }
 }
 
-TEST_CASE("std emulated any") {
-  using any = anyxx::any<anyxx::save_copyable>;
+TEST_CASE("std emulated any_") {
+  using any_ = anyxx::any<anyxx::typed_copyable>;
   {
-    auto a1 = any(std::string{"hallo"});
-    CHECK(*unerase_cast<std::string>(a1) == "hallo");
+    auto a1 = any_(std::string{"hallo"});
+    CHECK(any_cast<std::string>(a1) == "hallo");
     a1 = 3;
-    CHECK(*unerase_cast<int>(a1) == 3);
-    CHECK(unerase_cast_if<std::string>(a1) == nullptr);
-    CHECK(get_type_info(a1) == typeid(int));
+    CHECK(any_cast<int>(a1) == 3);
+    CHECK(any_cast_if<std::string>(a1) == nullptr);
+    CHECK(type_of(a1) == typeid(int));
   }
 }

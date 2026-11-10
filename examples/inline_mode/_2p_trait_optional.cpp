@@ -4,51 +4,55 @@
 
 namespace _2p_lib {
 
-TRAIT(equal_comparable,
-      (ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const),
-       ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
-                  [&x](auto const& r) {
-                    return !(trait_as<equal_comparable>(x) ==
-                             trait_as<equal_comparable>(r));
-                  })))
+TRAIT(equal_comparable, anyxx::dynamic_copyable,
+      (OP_FREE(bool, ==, eq, (anyxx::self const&), const),
+       OP_IMPL(
+           public, bool, !=, ne, (anyxx::self const&), const, (auto const& r) {
+             return !(as<equal_comparable>(self) ==
+                      as<equal_comparable>(r));
+           })))
 
 // An optional as a customizable trait.
 // It is default represented as a variant of the value type and a
 // monostate. When there is a class template called 'trait-name'_default_rep,
 // this type is used as the representation;
 // This type must be constructible from the type 'T' being modeled.
-// If 'trait-name'_default_rep is default constructible, then the any using this
-// trait  is default constructible.
-// In our case is this effect used to model the 'no value' state.
-// 'has_value' and 'get_value' are implemented in terms of the variant.
-// Operator * and -> are implemented in terms if the (eventually derived)
-// _object_map.
+// If 'trait-name'_default_rep is default constructible, then the any_ using
+// this trait  is default constructible. In our case is this effect used to
+// model the 'no value' state. 'has_value' and 'get_value' are implemented in
+// terms of the variant. Operator * and -> are implemented in terms if the
+// (eventually derived) _object_map.
 template <typename T>
 struct nullable_default_rep : std::variant<std::monostate, T> {
   using std::variant<std::monostate, T>::variant;
-  friend bool operator==(nullable_default_rep const& x,
+  friend bool operator==(nullable_default_rep const& self,
                          nullable_default_rep const& r) = default;
 };
 
-TRAIT(nullable,
-      (ANY_FN_DEF(public, bool, has_value, (), const,
-                  [x]() { return std::holds_alternative<T>(x); }),
-       ANY_FN_DEF_EXACT(public, T const&, get_value, (), const,
-                        [&x]() -> T const& { return std::get<T>(x); }),
-       ANY_FN_DEF_EXACT(public, T&, get_value, (), ,
-                        [&x]() -> T& { return std::get<T>(x); }),
-       ANY_OP_DEF_EXACT(public, T const&, ->, arrow_const, (), const,
-                        [&x]() -> T const& { return Map{}.get_value(x); }),
-       ANY_OP_DEF_EXACT(public, T&, ->, arrow, (), ,
-                        [&x]() -> T& { return Map{}.get_value(x); }),
-       ANY_OP_DEF_EXACT(public, T const&, *, deref_const, (), const,
-                        [&x]() -> T const& { return Map{}.get_value(x); }),
-       ANY_OP_DEF_EXACT(public, T&, *, deref, (), ,
-                        [&x]() -> T& { return Map{}.get_value(x); }),
-       ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const)))
+TRAIT(
+    nullable, anyxx::dynamic_copyable,
+    (FN_IMPL(
+         public, bool, has_value, (), const,
+         () -> bool { return std::holds_alternative<T>(self); }),
+     FN_IMPL_EXACT(
+         public, T const&, get_value, (), const,
+         ()->T const& { return std::get<T>(self); }),
+     FN_IMPL_EXACT(
+         public, T&, get_value, (), , ()->T& { return std::get<T>(self); }),
+     ANY_OP_DEF_EXACT(
+         public, T const&, ->, arrow_const, (), const,
+         ()->T const& { return Map{}.get_value(self); }),
+     ANY_OP_DEF_EXACT(
+         public, T&, ->, arrow, (), , ()->T& { return Map{}.get_value(self); }),
+     ANY_OP_DEF_EXACT(
+         public, T const&, *, deref_const, (), const,
+         ()->T const& { return Map{}.get_value(self); }),
+     ANY_OP_DEF_EXACT(
+         public, T&, *, deref, (), , ()->T& { return Map{}.get_value(self); }),
+     OP_FREE(bool, ==, eq, (anyxx::self const&), const)))
 
 template <typename T>
-using optional = anyxx::using_<T>::template as<nullable>;
+using optional = anyxx::any_<anyxx::using_<T>, nullable>;
 
 template <typename T>
 struct reference_wrapper {
@@ -63,7 +67,7 @@ struct reference_wrapper {
 };
 
 template <typename T>
-struct nullable_model_map<T&> : nullable_default_model_map<T const&> {
+struct nullable_trait_map<T&> : nullable_default_trait_map<T const&> {
   using rep_type = reference_wrapper<T>;
   bool has_value(rep_type const& x) { return x.get() != nullptr; };
   auto& get_value(auto&& x) { return *(std::forward<decltype(x)>(x)).get(); };
@@ -102,28 +106,28 @@ class foo {
   foo() = default;
   std::shared_ptr<voo> v_;
   friend struct anyxx::using_<foo>;
-  friend struct _2p_lib::nullable_model_map<foo>;
+  friend struct _2p_lib::nullable_trait_map<foo>;
 };
 }  // namespace _2p_app
 // class foo has an internal state for 'no value'(v_ == nullptr), so we can
 // directly use it as the representation of the nullable trait. This is done be
 // seting 'rep_type' to 'foo' and providing the 'has_value' and 'get_value'
 // functions accordingly.
-ANY_MODEL_MAP((_2p_app::foo), _2p_lib::nullable) {
+TRAIT_MAP(_2p_lib::nullable, _2p_app::foo) {
   using rep_type = _2p_app::foo;
-  bool has_value(_2p_app::foo const& x) { return x.v_ != nullptr; };
-  auto& get_value(auto&& x) { return std::forward<decltype(x)>(x); };
+  bool has_value(_2p_app::foo const& self) { return self.v_ != nullptr; };
+  auto& get_value(auto&& self) { return std::forward<decltype(self)>(self); };
 };
 
 namespace {
 template <typename T>
-bool fun(anyxx::any<_2p_lib::equal_comparable, anyxx::using_<T>> const& l,
-         anyxx::any<_2p_lib::equal_comparable, anyxx::using_<T>> const& r) {
+bool fun(anyxx::any_<anyxx::using_<T>, _2p_lib::equal_comparable> const& l,
+         anyxx::any_<anyxx::using_<T>, _2p_lib::equal_comparable> const& r) {
   return r == l;
 }
 static_assert(
     _2p_lib::is_equal_comparable_model<
-        anyxx::any<_2p_lib::equal_comparable, anyxx::using_<_2p_app::foo>>>);
+        anyxx::any_<anyxx::using_<_2p_app::foo>, _2p_lib::equal_comparable>>);
 }  // namespace
 
 TEST_CASE("_2p test optional 2") {
@@ -133,6 +137,10 @@ TEST_CASE("_2p test optional 2") {
 
   optional<foo> a1{foo{42}};
   //+++ the point of this example: no overhead for 'empty' indicator!
+  static_assert(std::same_as<optional<foo>::rep_type, foo>);
+  static_assert(std::same_as<using_<foo>, optional<foo>::proxy_t>);
+  static_assert(sizeof(a1) <= 16);
+  static_assert(sizeof(foo) == 16);
   static_assert(sizeof(a1) == sizeof(foo));
   //---
   CHECK(a1.has_value());

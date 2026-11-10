@@ -1,6 +1,7 @@
 ﻿// virtual_void variant of this yomm2 example via c++RTTI
 // https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
+#include <bit_factory/anyxx/config.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
 #include <iostream>
@@ -87,8 +88,8 @@ TEST_CASE("20_Tree virtual function") {
   out << expr->as_forth() << " = " << expr->as_lisp() << " = " << expr->value();
   REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
   std::cout << out.str() << "\n";
-#ifndef _DEBUG
+#ifdef ANYXX_RUN_BENCHMARKS
   BENCHMARK("20_Tree virtual function value") { return expr->value(); };
   BENCHMARK("20_Tree virtual function as_lisp") { return expr->as_lisp(); };
-#endif  // !_DEBUG
+#endif  // ANYXX_RUN_BENCHMARKS
 }

@@ -1,6 +1,9 @@
 #pragma once
 
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ext/dispatch.hpp>
+#include <bit_factory/anyxx/ext/dispatch_table.hpp>
+#include <cmath>
 
 #ifndef ARCHITECTURE_EXPORT
 #define ARCHITECTURE_EXPORT
@@ -54,17 +57,17 @@ inline point max(point lhs, point rhs) {
   return {.x = std::max(lhs.x, rhs.x), .y = std::max(lhs.y, rhs.y)};
 }
 
-ANY(surface, (ANY_FN(void, write, (point, char), )), )
-using mutable_observed_surface = any_surface<anyxx::mutref>;
-using unique_surface = any_surface<anyxx::unique>;
+TRAIT(surface, anyxx::dynamic_copyable, (FN(void, write, (point, char), )))
+using mutable_observed_surface = anyxx::any_<anyxx::mutref, surface>;
+using unique_surface = anyxx::any_<anyxx::unique, surface>;
 
-TRAIT_EX(shape,
-         (ANY_FN(void, draw, (mutable_observed_surface), const),
-          ANY_FN(architecture::point, top_left, (), const),
-          ANY_FN(architecture::size, size, (), const)),
-         , , (ANY_OPEN_DISPATCH), ())
+TRAIT_EX(shape, anyxx::dynamic_copyable,
+         (FN(void, draw, (mutable_observed_surface), const),
+          FN(architecture::point, top_left, (), const),
+          FN(architecture::size, size, (), const)),
+         , , (HAS_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::shared>
-using any_shape = anyxx::any<shape, Proxy>;
+using any_shape = anyxx::any_<Proxy, shape>;
 
 }  // namespace whole_picture::architecture
 

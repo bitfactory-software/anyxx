@@ -3,7 +3,7 @@
 //
 // Copyright (c) 2026 Bit Factory Software GmbH
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
+// Permission is hereby granted, free of charge, to any_ person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,12 +37,12 @@
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
 [![Static Badge](https://img.shields.io/badge/dos-Any%2B%2B-blue)](https://www.alexweb.io/anyxx/)
 
-#Any++ : How to ``trait`` ``any`` ``virtual``, ``static`` or ``variant``?
+#Any++ : How to ``trait`` ``any_`` ``virtual``, ``static`` or ``variant``?
 
 <img width="908" height="760" alt="Any++logo-small" src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" />
 
 
-**Any++** enhances the well-known *boost::any* and *std::any* with:
+**Any++** enhances the well-known *boost::any_* and *std::any_* with:
 
 - **Flexible choice of underlying storage mechanisms**
   - Type-erased
@@ -84,10 +84,10 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-TRAIT_(drawable, anyxx::dynamic_copyable, (ANY_FN(std::string, draw, (), const)))
+TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), const)))
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any<drawable, anyxx::val<>>> const& drawables) {
+          std::vector<anyxx::any<drawable>> const& drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
 
@@ -106,7 +106,7 @@ polymorphism in C++. It defines two simple types, `circle` and `square`, each wi
 returning a string. Using the `Any++` macro system, a `drawable` trait is declared, 
 specifying the required interface (`draw() const -> std::string`).
 
-The draw function takes a vector of type-erased any objects that conform to the `drawable` trait.
+The draw function takes a vector of type-erased any_ objects that conform to the `drawable` trait.
 It shows how to create and use a heterogeneous collection of unrelated objects (`circle` and `square`).
 
 [Compiler Explorer](https://godbolt.org/z/nGjjs9xva)
@@ -148,11 +148,11 @@ git clone - c core.symlinks = true https://github.com/bitfactory-software/anyxx
 |:------------------------------|----------------------------------------------------------------------------------:|---------------------------------------------------------------------------:|-------:| ----------------------------------------------------------------------:|-----------------------:|
 | **Single dispatch**           | --- | --- | --- | --- | --- |
 | virtual function (**reference**) |                                                                              1 |                                                                          1 |        1 | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/20_Tree_virtual_function.cpp) | ``BENCHMARK("20_Tree virtual function value") { return expr->value(); };`` |
-| any++ interface |  x **1** | x **1** | x **1** | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any.cpp) | ``BENCHMARK("21_Tree any value") { return expr->value(); };`` |
-| any++ open method ``dispatch``| x **1.5** | x **1.5** | x **1.5** | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any_dispatch.cpp.cpp) | ``BENCHMARK("21_Tree any dispatch value") { return expr->value(); };`` |
+| any_++ interface |  x **1** | x **1** | x **1** | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any.cpp) | ``BENCHMARK("21_Tree any_ value") { return expr->value(); };`` |
+| any_++ open method ``dispatch``| x **1.5** | x **1.5** | x **1.5** | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any_dispatch.cpp.cpp) | ``BENCHMARK("21_Tree any_ dispatch value") { return expr->value(); };`` |
 | **Double dispatch**                          | --- | --- | --- | --- | --- |
 | hand rolled w. virtual function (**reference**) | 1 | 1 | 1 | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/30b_Animals_virtual_functions.cpp) | ``BENCHMARK("30b_Animals virtual functions")`` |
-| any++ open method ``dispatch`` | x **1** | x **1** | x **1** | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/31_Animals_any_dispatch.cpp) | ``BENCHMARK("31_Animals any dispatch")`` |
+| any_++ open method ``dispatch`` | x **1** | x **1** | x **1** | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/31_Animals_any_dispatch.cpp) | ``BENCHMARK("31_Animals any_ dispatch")`` |
 | ``std::variant`` + ``std::visit``| x 0.8 | x 0.65 | x 0.35 | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/30a_Animals_variant_visit.cpp) | ``BENCHMARK("30a_Animals variant visit")`` |
 
 
@@ -169,28 +169,29 @@ git clone - c core.symlinks = true https://github.com/bitfactory-software/anyxx
 // <!--
 #endif
 // -->
-namespace showcase2 {
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
+
+namespace showcase2 {
 
 struct circle {};
 struct square {
   [[nodiscard]] std::string edgy_salute() const { return "edgy World"; }
 };
 
-TRAIT_(drawable, anyxx::dynamic_copyable, (ANY_FN(std::string, draw, (), const)))
+TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), const)))
 
-ANY_MODEL_MAP((circle), drawable) {
+TRAIT_MAP(drawable, circle ) {
   static std::string draw(circle const&) { return "Silent greetings"; };
 };
 
-ANY_MODEL_MAP((square), drawable) {
+TRAIT_MAP(drawable, square) {
   static std::string draw(square const& self) { return self.edgy_salute(); };
 };
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any<drawable, anyxx::val<>>> const& drawables) {
+          std::vector<anyxx::any<drawable>> const& drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
 
@@ -215,13 +216,16 @@ to provide custom behavior for unrelated types using traits.
 // <!--
 #endif
 // -->
-namespace showcase3 {
-#include <bit_factory/anyxx.hpp>
-#include <catch2/catch_test_macros.hpp>
-#include <compare>
-#include <string>
 
-namespace ayx = anyxx;
+#include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ext/dispatch.hpp>
+#include <bit_factory/anyxx/ext/dispatch_table.hpp>
+#include <compare>
+#include <sstream>
+#include <string>
+#include <vector>
+
+namespace showcase3 {
 
 struct circle {
   [[nodiscard]] std::string name() const { return "circle"; }
@@ -230,18 +234,15 @@ struct square {
   [[nodiscard]] std::string name() const { return "square"; }
 };
 
-TRAIT_EX_(figure, anyxx::dynamic_copyable,
-          (ANY_FN(std::string, name, (), const)), , ,
-          (ANY_OPEN_DISPATCH), ())
-template <typename Proxy = anyxx::val<>>
-using any_figure = anyxx::any<figure, Proxy>;
+TRAIT_EX(figure, anyxx::dynamic_copyable, (FN(std::string, name, (), const)), ,
+         , (HAS_OPEN_DISPATCH), ())
 
-ayx::dispatch<std::partial_ordering(ayx::virtual_<any_figure<>>,
-                                    ayx::virtual_<any_figure<>>)>
+anyxx::dispatch<std::partial_ordering(anyxx::virtual_<anyxx::any<figure>>,
+                                      anyxx::virtual_<anyxx::any<figure>>)>
     compare_edges;
 
-[[nodiscard]] std::partial_ordering operator<=>(any_figure<> const& l,
-                                                any_figure<> const& r) {
+[[nodiscard]] std::partial_ordering operator<=>(anyxx::any<figure> const& l,
+                                                anyxx::any<figure> const& r) {
   return compare_edges(l, r);
 }
 
@@ -255,7 +256,7 @@ auto __ = compare_edges.define<square, circle>(
     [](auto const&, auto const&) { return std::partial_ordering::greater; });
 
 void compare_each(std::stringstream& os,
-                  std::vector<ayx::any<figure, ayx::val<>>> const& figures) {
+                  std::vector<anyxx::any<figure>> const& figures) {
   std::string sep;
   for (auto const& l : figures)
     for (auto const& r : figures) {
@@ -287,7 +288,7 @@ Showcase 3 demonstrates how to use the Any++ library to implement open multi-dis
 - Two types, `circle` and `square`, are defined, each with a `name()` method.
 - A `figure` trait is declared using the `Any++` macro system, specifying a `name()` function.
 - The `ANY` macro is an extension of the `TRAIT` macro. It defines the requested behavior (trait interface) and additionally creates a typedef for an `any` 
-  type, named `any_<first parameter of macro>`, that uses this trait. The generated trait itself has a template parameter for the Proxy type, 
+  type, named `any<first parameter of macro>`, that uses this trait. The generated trait itself has a template parameter for the Proxy type, 
   which is defaulted to the last parameter of the `ANY` macro.
 - The `dispatch<R(Args...)>` mechanism is used to define a type-erased, runtime-resolved binary operator (`operator<=>`) for comparing two `any_figure<>` objects.
 - The dispatch table is populated with custom comparison logic for each pair of types (`circle` vs `circle`, `circle` vs `square`, etc.) at static initialization time.
@@ -304,10 +305,15 @@ That trick initializes a static variable with automatic name at each usage site 
 // <!--
 #endif
 // -->
-namespace showcase4 {
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ext/dispatch.hpp>
+#include <bit_factory/anyxx/ext/dispatch_table.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <sstream>
 #include <string>
+#include <vector>
+
+namespace showcase4 {
 
 namespace ayx = anyxx;
 
@@ -318,21 +324,18 @@ struct square {
   [[nodiscard]] std::string name() const { return "square"; }
 };
 
-TRAIT_EX_(figure, anyxx::dynamic_copyable,
-          (ANY_FN(std::string, name, (), const)), , ,
-          (ANY_OPEN_DISPATCH), ())
-template <typename Proxy = anyxx::val<>>
-using any_figure = anyxx::any<figure, Proxy>;
+TRAIT_EX(figure, anyxx::dynamic_copyable, (FN(std::string, name, (), const)), ,
+         , (HAS_OPEN_DISPATCH), ())
+using any_figure = anyxx::any<figure>;
 
-ayx::dispatch<std::string(ayx::virtual_<any_figure<>>)> latin, italian;
+ayx::dispatch<std::string(ayx::virtual_<any_figure>)> latin, italian;
 
 auto __ = latin.define<circle>([](auto const&) { return "orbis"; });
 auto __ = latin.define<square>([](auto const&) { return "quadratum"; });
 auto __ = italian.define<circle>([](auto const&) { return "cerchio"; });
 auto __ = italian.define<square>([](auto const&) { return "quadrato"; });
 
-void translate(std::stringstream& os,
-               std::vector<ayx::any<figure, ayx::val<>>> const& figures) {
+void translate(std::stringstream& os, std::vector<any_figure> const& figures) {
   std::string sep;
   for (auto const& f : figures)
     os << std::exchange(sep, "; ") << f.name() << ": latin = " << latin(f)
@@ -367,10 +370,12 @@ This is the so-called "Open Visitor Pattern" implemented via open dispatch O(1) 
 // <!--
 #endif
 // -->
-namespace showcase5 {
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ext/factory.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
+
+namespace showcase5 {
 
 namespace ayx = anyxx;
 
@@ -383,21 +388,22 @@ struct square {
   double edge_length = 0.0;
 };
 
-struct figure_has_open_dispatch {};
-ANY_(figure, ayx::dynamic_copyable, (ANY_FN(double, area, (), const)), ayx::val<>)
-ANY_(serializable, ayx::dynamic_copyable,
-    (ANY_FN(void, serialize, (std::ostream&), const)), ayx::cref)
+TRAIT(figure, ayx::dynamic_copyable, 
+  (FN(double, area, (), const))
+)
+TRAIT(serializable, ayx::dynamic_copyable,
+  (FN(void, serialize, (std::ostream&), const))
+)
 
-ayx::factory<any_serializable, ayx::val<>, std::string, std::istream&>
-    deserialize;
+ayx::factory<ayx::any<serializable>, std::string, std::istream&> deserialize;
 
-[[nodiscard]] any_figure<> deserialize_any_figure(std::istream& archive) {
+[[nodiscard]] ayx::any<figure> deserialize_any_figure(std::istream& archive) {
   std::string type;
   archive >> type;
-  return ayx::move_to<any_figure<>>(deserialize.construct(type, archive));
+  return ayx::move_to<ayx::any<figure>>(deserialize(type, archive));
 }
 
-ANY_MODEL_MAP((circle), serializable) {
+TRAIT_MAP(serializable, circle) {
   static void serialize(circle const& self, std::ostream& os) {
     os << "circle " << self.radius << " ";
   };
@@ -407,10 +413,10 @@ auto __ = deserialize.register_("circle", [](std::istream& archive) -> circle {
   archive >> c.radius;
   return c;
 });
-ANY_REGISTER_MODEL(circle, figure);
-ANY_REGISTER_MODEL(circle, serializable);
+anyxx::castable_to<circle, figure> __;
+anyxx::castable_to<circle, serializable> __;
 
-ANY_MODEL_MAP((square), serializable) {
+TRAIT_MAP(serializable, square) {
   static void serialize(square const& self, std::ostream& os) {
     os << "square " << self.edge_length << " ";
   };
@@ -420,18 +426,18 @@ auto __ = deserialize.register_("square", [](std::istream& archive) {
   archive >> s.edge_length;
   return s;
 });
-ANY_REGISTER_MODEL(square, figure);
-ANY_REGISTER_MODEL(square, serializable);
+anyxx::castable_to<square, figure> __;
+anyxx::castable_to<square, serializable> __;
 
 void areas(std::stringstream& os,
-           std::vector<ayx::any<figure, ayx::val<>>> const& figures) {
+           std::vector<ayx::any<figure>> const& figures) {
   std::string sep;
   for (auto const& f : figures) os << std::exchange(sep, ", ") << f.area();
 }
 
 TEST_CASE("Showcase5") {
   std::stringstream archive{": circle 1 : square 2 : circle 3 : circle 4 end"};
-  std::vector<any_figure<>> figures;
+  std::vector<ayx::any<figure>> figures;
   std::string more;
   for (archive >> more; more != "end"; archive >> more)
     figures.push_back(deserialize_any_figure(archive));
@@ -443,7 +449,7 @@ TEST_CASE("Showcase5") {
   std::stringstream serialized;
   for (auto const& f : figures) {
     serialized << ": ";
-    ayx::borrow_as<any_serializable<ayx::cref>>(f)->serialize(serialized);
+    ayx::borrow_as<ayx::any_<ayx::cref, serializable>>(f)->serialize(serialized);
   }
   serialized << "end";
 
@@ -486,12 +492,12 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-TRAIT(drawable, (ANY_FN(std::string, draw, (), const)))
+TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), const)))
 
 using known_shapes = std::variant<circle, square>;
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any<drawable, anyxx::using_<known_shapes>>> const&
+          std::vector<anyxx::any_<anyxx::using_<known_shapes>, drawable>> const&
               drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
@@ -510,7 +516,7 @@ Showcase 6 demonstrates how to use `Any++` with `std::variant` to enable type-er
 - Two types, `circle` and `square`, are defined, each with a `draw()` method returning a string.
 - A `drawable` trait is declared, specifying the required interface (`draw() const -> std::string`).
 - A `known_shapes` type alias is defined as `std::variant<circle, square>`, representing a closed set of possible shapes.
-- The function `draw` takes a vector of type-erased objects (`anyxx::any<anyxx::using_<known_shapes>, drawable>`) and calls `draw()` on each, writing the results to a stringstream.
+- The function `draw` takes a vector of type-erased objects (`anyxx::any_<anyxx::using_<known_shapes>, drawable>`) and calls `draw()` on each, writing the results to a stringstream.
 - The Catch2 test verifies that drawing a `circle` and a `square` produces the expected output.
 This example shows how `Any++` can be combined with `std::variant` to provide type-erased, trait-based polymorphism for a known set of types, allowing heterogeneous collections and uniform interface access without inheritance or virtual functions.
 Because the set of types is fixed, this approach can offer better performance than fully dynamic type erasure while still providing flexibility and extensibility through traits.
@@ -523,12 +529,12 @@ Because the set of types is fixed, this approach can offer better performance th
 // <!--
 #endif
 // -->
-#include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ext/vany.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
 namespace showcase7 {
-namespace ayx = anyxx;
+using namespace anyxx;
 using namespace std::string_literals;
 
 struct circle {
@@ -538,27 +544,24 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-ANY_(figure, ayx::dynamic_copyable, (ANY_FN(std::string, draw, (), const)),
-     ayx::val<>)
+TRAIT(figure, dynamic_copyable, (FN(std::string, draw, (), const)))
 
-using known_and_unknown_shapes =
-    ayx::make_vany<any_figure, ayx::val<>, circle, square>;
-static_assert(
-    std::same_as<known_and_unknown_shapes,
-                 any_figure<ayx::using_<  // see the Any++ logo at the top
-                     std::variant<any_figure<ayx::val<>>, circle, square>>>>);
-ANY_MODEL_MAP((std::string), figure) {
-  static std::string draw(std::string const& s) { return s; };
-};
-
-void draw(std::stringstream& os,
-          std::vector<known_and_unknown_shapes> const& figures) {
-  for (auto const& f : figures) os << f.draw() << "\n";
+using known_and_unknown_shapes = vany<figure, circle, square>;
+static_assert(std::same_as<
+              known_and_unknown_shapes,
+              any_<using_<std::variant<any<figure>, circle, square>>, figure>>);
+void draw_vany(std::stringstream& os,
+    std::vector<known_and_unknown_shapes> const& figures) {
+    for(auto const& f : figures) os << f.draw() << "\n";
 }
+
+TRAIT_MAP(figure, std::string) {
+  std::string draw(std::string const& s) { return s; };
+};
 
 TEST_CASE("Showcase7") {
   std::stringstream ss;
-  draw(ss, {circle{}, square{}, any_figure<>{"The big unknown..."s}});
+  draw_vany(ss, {circle{}, square{}, any<figure>{"The big unknown..."s}});
   CHECK(ss.str() == "Hello\nWorld\nThe big unknown...\n");
 }
 }  // namespace showcase7
@@ -567,10 +570,10 @@ TEST_CASE("Showcase7") {
 // -->
 ```
 Showcase 7 demonstrates how to use `Any++` to combine open type erasure with `std::variant` for extensible,
-heterogeneous collections. Let us call them "vany" (variant-any).
+heterogeneous collections. Let us call them "vany" (variant-any_).
 - Two types, `circle` and `square`, are defined, each with a `draw()` method returning a string.
 - A `figure` trait is declared, specifying the required interface (`draw() const -> std::string`).
-- The type alias `known_and_unknown_shapes` is created using `anyxx::make_vany`, which produces a type-erased wrapper over a `std::variant` containing:
+- The type alias `known_and_unknown_shapes` is created using `anyxx::vany`, which produces a type-erased wrapper over a `std::variant` containing:
   - All known types (`circle`, `square`)
   - An open-ended type-erased fallback (`any_figure<ayx::val<>>`)
 - A model map is provided for `std::string`, allowing strings to be handled as figures.

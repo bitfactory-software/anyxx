@@ -8,8 +8,8 @@ struct hitpad_picture_t {
   bool hit = false;
 };
 }  // namespace
-
-ANY_MODEL_MAP((hitpad_picture_t), architecture::surface) {
+META_CLASS_STATIC(hitpad_picture_t)
+TRAIT_MAP(architecture::surface, hitpad_picture_t) {
   void write(hitpad_picture_t & self, architecture::point p,
              [[maybe_unused]] char ch) {
     if (collision::pictures::intersect_point(
@@ -26,7 +26,7 @@ bool collision::pictures::intersect(
     core::shapes::picture const& lhs,
     architecture::any_shape<anyxx::cref> const& rhs) {
   hitpad_picture_t hitpad_picture{.picture = lhs, .hit = false};
-  architecture::any_surface<anyxx::mutref> hitpad{
+  anyxx::any_<anyxx::mutref, architecture::surface> hitpad{
       hitpad_picture};
   rhs.draw(hitpad);
   return hitpad_picture.hit;

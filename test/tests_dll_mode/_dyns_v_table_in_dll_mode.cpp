@@ -1,4 +1,5 @@
 ﻿#include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ext/factory.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
 
@@ -15,18 +16,20 @@ static_assert(anyxx::is_in_dll_mode);
 
 namespace {
 
-ANY(test, (ANY_FN(int, fun, (), const)), cref)
+TRAIT(test, anyxx::dynamic_copyable, (FN(int, fun, (), const)))
 
 struct test_class {
   [[nodiscard]] int fun() const { return 42; }
 };
 
-anyxx::factory<any_test, shared, std::string> make_any_test;
+anyxx::factory<any_<shared, test>, std::string> make_any_test;
 auto ___ = make_any_test.register_("test_class", []() { return test_class{}; });
 
 }  // namespace
 
+META_CLASS_STATIC(test_class)
+
 TEST_CASE("_dyns_v_table_in_dll_mode") {
-  auto a = make_any_test.construct("test_class");
+  auto a = make_any_test("test_class");
   CHECK(a.fun() == 42);
 }

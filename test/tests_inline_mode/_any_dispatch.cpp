@@ -1,4 +1,6 @@
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx/ext/dispatch.hpp>
+#include <bit_factory/anyxx/ext/dispatch_table.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
@@ -6,16 +8,16 @@ using namespace anyxx;
 
 namespace {
 
-TRAIT_EX(test_base_i, (ANY_FN(std::string, to_string, (), const)), , ,
-         (ANY_OPEN_DISPATCH), ())
+TRAIT_EX(test_base_i, anyxx::dynamic_copyable,
+         (FN(std::string, to_string, (), const)), , , (HAS_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::shared>
-using any_test_base_i = anyxx::any<test_base_i, Proxy>;
+using any_test_base_i = anyxx::any_<Proxy, test_base_i>;
 
-TRAIT_EX_(test_derived_i, test_base_i,
-          (ANY_FN(void, from_string, (std::string const&), )), , ,
-          (ANY_OPEN_DISPATCH), ())
+TRAIT_EX(test_derived_i, test_base_i,
+         (FN(void, from_string, (std::string const&), )), , ,
+         (HAS_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::shared>
-using any_test_derived_i = anyxx::any<test_derived_i, Proxy>;
+using any_test_derived_i = anyxx::any_<Proxy, test_derived_i>;
 
 struct x_t {
   std::string s_;
@@ -24,12 +26,12 @@ struct x_t {
 using test_base_i_co = any_test_base_i<cref>;
 using test_derived_i_mo = any_test_derived_i<mutref>;
 
-ANY_MODEL_MAP((x_t), test_base_i){
+TRAIT_MAP(test_base_i, x_t){
     static auto to_string(x_t const& self){return self.s_;
 }  // namespace
 }
 ;
-ANY_MODEL_MAP((x_t), test_derived_i){
+TRAIT_MAP(test_derived_i, x_t){
     static void from_string(x_t & self, std::string_view s){self.s_ = s;
 }
 }
