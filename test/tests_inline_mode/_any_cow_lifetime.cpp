@@ -20,7 +20,7 @@ struct XX {
   static inline int move_constructed_ = 0;
   static inline int copy_assigned_ = 0;
   static inline int move_assigned_ = 0;
-  XX(T s = "") : s_(std::move(s)) {
+  XX(T s = T{}) : s_(std::move(s)) {
     interior_ptr_ = &s_;
     std::println("X({})", s_);
     ++tracker_;
@@ -51,6 +51,7 @@ struct XX {
     s_ = x.s_;
     std::println("X =(X const& {})", s_);
     ++copy_assigned_;
+    std::println("X::copy_assigned_ {})", copy_assigned_);
     std::println("X::tracker_ {})", tracker_);
     return *this;
   }
@@ -59,6 +60,7 @@ struct XX {
     x.moved_ = true;
     s_ = std::move(x.s_);
     ++move_assigned_;
+    std::println("X::move_assigned_ {})", move_assigned_);
     std::println("X::tracker_ {})", tracker_);
     return *this;
   }
@@ -74,11 +76,11 @@ struct XX {
 };
 using X = XX<>;
 
-TRAIT_(getset, anyxx::dynamic_copyable,
-       (ANY_FN(std::string const&, get, (), const),
-        ANY_FN(void, set, (std::string const&), )))
+TRAIT(getset, anyxx::dynamic_copyable,
+      (FN(std::string const&, get, (), const),
+       FN(void, set, (std::string const&), )))
 
-using any_getset = any<getset, cow>;
+using any_getset = any_<cow, getset>;
 
 }  // namespace
 
@@ -146,17 +148,17 @@ TEST_CASE("cow lifetime") {
       CHECK(X::tracker_ == 1);
       auto v2 = clone_to<any_getset>(v);
       CHECK(X::tracker_ == 1);
-      CHECK(get_proxy(*v2).holder_ == get_proxy(v).holder_);
+      CHECK(get_proxy(v2).holder_ == get_proxy(v).holder_);
       CHECK(v.get() == "hallo");
-      CHECK(v2->get() == "hallo");
-      CHECK(get_proxy(*v2).holder_ == get_proxy(v).holder_);
+      CHECK(v2.get() == "hallo");
+      CHECK(get_proxy(v2).holder_ == get_proxy(v).holder_);
       CHECK(get_proxy(v).holder_->count_ == 2);
       static_assert(is_copy_constructor_v_table<any_getset::v_table_t>);
-      v2->set("hallo world");
+      v2.set("hallo world");
       CHECK(v.get() == "hallo");
-      CHECK(v2->get() == "hallo world");
-      CHECK(get_proxy(*v2).holder_ != get_proxy(v).holder_);
-      CHECK(get_proxy(*v2).unique());
+      CHECK(v2.get() == "hallo world");
+      CHECK(get_proxy(v2).holder_ != get_proxy(v).holder_);
+      CHECK(get_proxy(v2).unique());
       CHECK(get_proxy(v).unique());
     }
     CHECK(X::tracker_ == 0);

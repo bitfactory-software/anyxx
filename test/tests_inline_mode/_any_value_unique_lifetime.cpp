@@ -18,7 +18,7 @@ struct XX {
   static inline int move_constructed_ = 0;
   static inline int copy_assigned_ = 0;
   static inline int move_assigned_ = 0;
-  XX(T s = "") : s_(std::move(s)) {
+  XX(T s = T{}) : s_(std::move(s)) {
     interior_ptr_ = &s_;
     std::println("X({})", s_);
     ++tracker_;
@@ -49,6 +49,7 @@ struct XX {
     s_ = x.s_;
     std::println("X =(X const& {})", s_);
     ++copy_assigned_;
+    std::println("X::copy_assigned_ {})", copy_assigned_);
     std::println("X::tracker_ {})", tracker_);
     return *this;
   }
@@ -57,6 +58,7 @@ struct XX {
     x.moved_ = true;
     s_ = std::move(x.s_);
     ++move_assigned_;
+    std::println("X::move_assigned_ {})", move_assigned_);
     std::println("X::tracker_ {})", tracker_);
     return *this;
   }
@@ -83,9 +85,9 @@ static_assert(!std::is_trivially_copy_constructible_v<Y>);
 static_assert(!std::is_trivially_copy_assignable_v<Y>);
 static_assert(sizeof(int) <= anyxx::small_object_size);
 
-TRAIT_(getset, anyxx::dynamic_copyable,
-       (ANY_FN(std::string const&, get, (), const),
-        ANY_FN(void, set, (std::string const&), )))
+TRAIT(getset, anyxx::dynamic_copyable,
+      (FN(std::string const&, get, (), const),
+       FN(void, set, (std::string const&), )))
 
 }  // namespace
 
@@ -94,7 +96,7 @@ TEST_CASE("val<> lifetime") {
     CHECK(X::tracker_ == 0);
     {
       any<dynamic_copyable> u{std::in_place_type<X>, "hallo"};
-      CHECK((*unerase_cast<X>(u))() == "hallo");
+      CHECK((any_cast<X>(u))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
     CHECK(X::tracker_ == 0);
@@ -103,22 +105,22 @@ TEST_CASE("val<> lifetime") {
     CHECK(X::tracker_ == 0);
     {
       any<dynamic_copyable> u{std::in_place_type<X>, "hallo"};
-      CHECK((*unerase_cast<X>(u))() == "hallo");
+      CHECK((any_cast<X>(u))() == "hallo");
       CHECK(X::tracker_ == 1);
       any<dynamic_copyable> u2{std::in_place_type<X>, "world"};
-      CHECK((*unerase_cast<X>(u2))() == "world");
+      CHECK((any_cast<X>(u2))() == "world");
       CHECK(X::tracker_ == 2);
       u2 = std::move(u);
       CHECK(get_proxy_ptr_const(u) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<X>(u2))() == "hallo");
+      CHECK((any_cast<X>(u2))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u3 = std::move(u2);
       CHECK(get_proxy_ptr_const(u2) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<X>(u3))() == "hallo");
+      CHECK((any_cast<X>(u3))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u4 = move_to<any<dynamic_copyable>>(std::move(u3));
       CHECK(get_proxy_ptr_const(u3) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<X>(u4))() == "hallo");
+      CHECK((any_cast<X>(u4))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
     CHECK(X::tracker_ == 0);
@@ -127,18 +129,18 @@ TEST_CASE("val<> lifetime") {
     CHECK(X::tracker_ == 0);
     {
       any<dynamic_copyable> v{std::in_place_type<X>, "hallo"};
-      CHECK((*unerase_cast<X>(v))() == "hallo");
+      CHECK((any_cast<X>(v))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto v2 = v;
       CHECK(X::tracker_ == 1);
       CHECK(get_proxy_ptr_const(v2) == get_proxy_ptr_const(v));
-      CHECK((*unerase_cast<X>(v))() == "hallo");
-      CHECK((*unerase_cast<X>(v2))() == "hallo");
+      CHECK((any_cast<X>(v))() == "hallo");
+      CHECK((any_cast<X>(v2))() == "hallo");
       v2 = X{"world!"};
       CHECK(X::tracker_ == 2);
       CHECK(get_proxy_ptr_const(v2) != get_proxy_ptr_const(v));
-      CHECK((*unerase_cast<X>(v))() == "hallo");
-      CHECK((*unerase_cast<X>(v2))() == "world!");
+      CHECK((any_cast<X>(v))() == "hallo");
+      CHECK((any_cast<X>(v2))() == "world!");
     }
     CHECK(X::tracker_ == 0);
   }
@@ -146,13 +148,13 @@ TEST_CASE("val<> lifetime") {
     CHECK(X::tracker_ == 0);
     {
       any<dynamic_copyable> v{std::in_place_type<X>, "hallo"};
-      CHECK((*unerase_cast<X>(v))() == "hallo");
+      CHECK((any_cast<X>(v))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto v2 = clone_to<any<dynamic_copyable>>(v);
       CHECK(X::tracker_ == 1);
-      CHECK(get_proxy_ptr_const(*v2) == get_proxy_ptr_const(v));
-      CHECK((*unerase_cast<X>(v))() == "hallo");
-      CHECK((*unerase_cast<X>(*v2))() == "hallo");
+      CHECK(get_proxy_ptr_const(v2) == get_proxy_ptr_const(v));
+      CHECK((any_cast<X>(v))() == "hallo");
+      CHECK((any_cast<X>(v2))() == "hallo");
     }
     CHECK(X::tracker_ == 0);
     X::tracker_ = 0;
@@ -164,7 +166,7 @@ TEST_CASE("val<> lifetime small object") {
     CHECK(Y::tracker_ == 0);
     {
       any<dynamic_copyable> u{std::in_place_type<Y>, 42};
-      CHECK((*unerase_cast<Y>(u))() == 42);
+      CHECK((any_cast<Y>(u))() == 42);
       CHECK(Y::tracker_ == 1);
     }
     CHECK(Y::tracker_ == 0);
@@ -173,22 +175,22 @@ TEST_CASE("val<> lifetime small object") {
     CHECK(Y::tracker_ == 0);
     {
       any<dynamic_copyable> u{std::in_place_type<Y>, 42};
-      CHECK((*unerase_cast<Y>(u))() == 42);
+      CHECK((any_cast<Y>(u))() == 42);
       CHECK(Y::tracker_ == 1);
       any<dynamic_copyable> u2{std::in_place_type<Y>, 100};
-      CHECK((*unerase_cast<Y>(u2))() == 100);
+      CHECK((any_cast<Y>(u2))() == 100);
       CHECK(Y::tracker_ == 2);
       u2 = std::move(u);
       CHECK(get_v_table(u) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<Y>(u2))() == 42);
+      CHECK((any_cast<Y>(u2))() == 42);
       CHECK(Y::tracker_ == 1);
       auto u3 = std::move(u2);
       CHECK(get_v_table(u2) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<Y>(u3))() == 42);
+      CHECK((any_cast<Y>(u3))() == 42);
       CHECK(Y::tracker_ == 1);
       auto u4 = move_to<any<dynamic_copyable>>(std::move(u3));
       CHECK(get_v_table(u3) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<Y>(u4))() == 42);
+      CHECK((any_cast<Y>(u4))() == 42);
       CHECK(Y::tracker_ == 1);
     }
     CHECK(Y::tracker_ == 0);
@@ -198,18 +200,18 @@ TEST_CASE("val<> lifetime small object") {
     CHECK(Y::tracker_ == 0);
     {
       any<dynamic_copyable> v{std::in_place_type<Y>, 42};
-      CHECK((*unerase_cast<Y>(v))() == 42);
+      CHECK((any_cast<Y>(v))() == 42);
       CHECK(Y::tracker_ == 1);
       auto v2 = v;
       CHECK(Y::tracker_ == 2);
       CHECK(get_proxy_ptr_const(v2) != get_proxy_ptr_const(v));
-      CHECK((*unerase_cast<Y>(v))() == 42);
-      CHECK((*unerase_cast<Y>(v2))() == 42);
+      CHECK(any_cast<Y>(v)() == 42);
+      CHECK(any_cast<Y>(v2)() == 42);
       v2 = Y{100};
       CHECK(Y::tracker_ == 2);
       CHECK(get_proxy_ptr_const(v2) != get_proxy_ptr_const(v));
-      CHECK((*unerase_cast<Y>(v))() == 42);
-      CHECK((*unerase_cast<Y>(v2))() == 100);
+      CHECK(any_cast<Y>(v)() == 42);
+      CHECK(any_cast<Y>(v2)() == 100);
     }
     CHECK(Y::tracker_ == 0);
   }
@@ -217,13 +219,13 @@ TEST_CASE("val<> lifetime small object") {
     CHECK(Y::tracker_ == 0);
     {
       any<dynamic_copyable> v{std::in_place_type<Y>, 42};
-      CHECK((*unerase_cast<Y>(v))() == 42);
+      CHECK(any_cast<Y>(v)() == 42);
       CHECK(Y::tracker_ == 1);
       auto v2 = clone_to<any<dynamic_copyable>>(v);
       CHECK(Y::tracker_ == 2);
-      CHECK(get_proxy_ptr_const(*v2) != get_proxy_ptr_const(v));
-      CHECK((*unerase_cast<Y>(v))() == 42);
-      CHECK((*unerase_cast<Y>(*v2))() == 42);
+      CHECK(get_proxy_ptr_const(v2) != get_proxy_ptr_const(v));
+      CHECK(any_cast<Y>(v)() == 42);
+      CHECK(any_cast<Y>(v2)() == 42);
     }
     CHECK(Y::tracker_ == 0);
     Y::tracker_ = 0;
@@ -234,47 +236,47 @@ TEST_CASE("value lifetime trivial object") {
   {
     {
       any<dynamic_copyable> u{std::in_place_type<int>, 42};
-      CHECK((*unerase_cast<int>(u)) == 42);
+      CHECK((any_cast<int>(u)) == 42);
     }
   }
   {
     {
       any<dynamic_copyable> u{std::in_place_type<int>, 42};
-      CHECK((*unerase_cast<int>(u)) == 42);
+      CHECK((any_cast<int>(u)) == 42);
       any<dynamic_copyable> u2{std::in_place_type<int>, 100};
-      CHECK((*unerase_cast<int>(u2)) == 100);
+      CHECK((any_cast<int>(u2)) == 100);
       u2 = std::move(u);
       CHECK(get_v_table(u) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<int>(u2)) == 42);
+      CHECK((any_cast<int>(u2)) == 42);
       auto u3 = std::move(u2);
       CHECK(get_v_table(u2) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<int>(u3)) == 42);
+      CHECK((any_cast<int>(u3)) == 42);
       auto u4 = move_to<any<dynamic_copyable>>(std::move(u3));
       CHECK(get_v_table(u3) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<int>(u4)) == 42);
+      CHECK((any_cast<int>(u4)) == 42);
     }
   }
   {
     {
       any<dynamic_copyable> v{std::in_place_type<int>, 42};
-      CHECK((*unerase_cast<int>(v)) == 42);
+      CHECK((any_cast<int>(v)) == 42);
       auto v2 = v;
       CHECK(get_proxy_ptr_const(v2) != get_proxy_ptr_const(v));
-      CHECK((*unerase_cast<int>(v)) == 42);
-      CHECK((*unerase_cast<int>(v2)) == 42);
+      CHECK((any_cast<int>(v)) == 42);
+      CHECK((any_cast<int>(v2)) == 42);
       v2 = int{100};
       CHECK(get_proxy_ptr_const(v2) != get_proxy_ptr_const(v));
-      CHECK((*unerase_cast<int>(v)) == 42);
-      CHECK((*unerase_cast<int>(v2)) == 100);
+      CHECK((any_cast<int>(v)) == 42);
+      CHECK((any_cast<int>(v2)) == 100);
     }
   }
   {
     {
       any<dynamic_copyable> v{std::in_place_type<int>, 42};
-      CHECK((*unerase_cast<int>(v)) == 42);
+      CHECK((any_cast<int>(v)) == 42);
       auto v2 = clone_to<any<dynamic_copyable>>(v);
-      CHECK((*unerase_cast<int>(v)) == 42);
-      CHECK((*unerase_cast<int>(*v2)) == 42);
+      CHECK((any_cast<int>(v)) == 42);
+      CHECK((any_cast<int>(v2)) == 42);
     }
   }
 }
@@ -284,8 +286,8 @@ TEST_CASE("unique lifetime") {
     CHECK(X::tracker_ == 0);
     {
       auto c = std::make_unique<X>("hallo");
-      any<dynamic_deletable, unique> u{std::move(c)};
-      CHECK((*unerase_cast<X>(u))() == "hallo");
+      any_<unique, dynamic_deletable> u{std::move(c)};
+      CHECK((any_cast<X>(u))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
     CHECK(X::tracker_ == 0);
@@ -293,8 +295,8 @@ TEST_CASE("unique lifetime") {
   {
     CHECK(X::tracker_ == 0);
     {
-      any<dynamic_deletable, unique> u{std::make_unique<X>("hallo")};
-      CHECK((*unerase_cast<X>(u))() == "hallo");
+      any_<unique, dynamic_deletable> u{std::make_unique<X>("hallo")};
+      CHECK((any_cast<X>(u))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
     CHECK(X::tracker_ == 0);
@@ -302,23 +304,23 @@ TEST_CASE("unique lifetime") {
   {
     CHECK(X::tracker_ == 0);
     {
-      any<dynamic_deletable, unique> u{std::make_unique<X>("hallo")};
-      CHECK((*unerase_cast<X>(u))() == "hallo");
+      any_<unique, dynamic_deletable> u{std::make_unique<X>("hallo")};
+      CHECK((any_cast<X>(u))() == "hallo");
       CHECK(X::tracker_ == 1);
-      any<dynamic_deletable, unique> u2{std::make_unique<X>("world")};
-      CHECK((*unerase_cast<X>(u2))() == "world");
+      any_<unique, dynamic_deletable> u2{std::make_unique<X>("world")};
+      CHECK((any_cast<X>(u2))() == "world");
       CHECK(X::tracker_ == 2);
       u2 = std::move(u);
       CHECK(get_proxy_ptr_const(u) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<X>(u2))() == "hallo");
+      CHECK((any_cast<X>(u2))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u3 = std::move(u2);
       CHECK(get_proxy_ptr_const(u2) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<X>(u3))() == "hallo");
+      CHECK((any_cast<X>(u3))() == "hallo");
       CHECK(X::tracker_ == 1);
-      auto u4 = move_to<any<dynamic_deletable, unique>>(std::move(u3));
+      auto u4 = move_to<any_<unique, dynamic_deletable>>(std::move(u3));
       CHECK(get_proxy_ptr_const(u3) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<X>(u4))() == "hallo");
+      CHECK((any_cast<X>(u4))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
     CHECK(X::tracker_ == 0);
@@ -433,7 +435,7 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
     CHECK(X::tracker_ == 0);
     {
       any<dynamic_copyable> v1{std::in_place_type<Y>, 42};
-      CHECK((*unerase_cast<Y>(v1))() == 42);
+      CHECK(any_cast<Y>(v1)() == 42);
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 0);
     }
@@ -445,16 +447,16 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
     CHECK(X::tracker_ == 0);
     {
       any<dynamic_copyable> v1{std::in_place_type<Y>, 42};
-      CHECK((*unerase_cast<Y>(v1))() == 42);
+      CHECK(any_cast<Y>(v1)() == 42);
       CHECK(Y::tracker_ == 1);
       any<dynamic_copyable> v2{std::in_place_type<X>, "hello"};
-      CHECK((*unerase_cast<X>(v2))() == "hello");
+      CHECK(any_cast<X>(v2)() == "hello");
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 1);
       v1 = v2;
       CHECK(get_v_table(v1) != nullptr);  // NOLINT
       CHECK(get_v_table(v2) != nullptr);  // NOLINT
-      CHECK((*unerase_cast<X>(v1))() == "hello");
+      CHECK(any_cast<X>(v1)() == "hello");
       CHECK(Y::tracker_ == 0);
       CHECK(X::tracker_ == 1);
       any<dynamic_copyable> v3{std::in_place_type<int>, 42};
@@ -463,8 +465,8 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
       CHECK(X::tracker_ == 1);
       CHECK(get_v_table(v1) != nullptr);  // NOLINT
       CHECK(get_v_table(v3) != nullptr);  // NOLINT
-      CHECK((*unerase_cast<int>(v1)) == 42);
-      CHECK((*unerase_cast<int>(v3)) == 42);
+      CHECK(any_cast<int>(v1) == 42);
+      CHECK(any_cast<int>(v3) == 42);
     }
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
@@ -474,16 +476,16 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
     CHECK(X::tracker_ == 0);
     {
       any<dynamic_copyable> v1{std::in_place_type<Y>, 42};
-      CHECK((*unerase_cast<Y>(v1))() == 42);
+      CHECK(any_cast<Y>(v1)() == 42);
       CHECK(Y::tracker_ == 1);
       any<dynamic_copyable> v2{std::in_place_type<X>, "hello"};
-      CHECK((*unerase_cast<X>(v2))() == "hello");
+      CHECK(any_cast<X>(v2)() == "hello");
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 1);
       v2 = v1;
       CHECK(get_v_table(v1) != nullptr);  // NOLINT
       CHECK(get_v_table(v2) != nullptr);  // NOLINT
-      CHECK((*unerase_cast<Y>(v2))() == 42);
+      CHECK(any_cast<Y>(v2)() == 42);
       CHECK(Y::tracker_ == 2);
       CHECK(X::tracker_ == 0);
       any<dynamic_copyable> v3{std::in_place_type<int>, 41};
@@ -492,8 +494,8 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
       CHECK(X::tracker_ == 0);
       CHECK(get_v_table(v2) != nullptr);  // NOLINT
       CHECK(get_v_table(v3) != nullptr);  // NOLINT
-      CHECK((*unerase_cast<int>(v2)) == 41);
-      CHECK((*unerase_cast<int>(v3)) == 41);
+      CHECK(any_cast<int>(v2) == 41);
+      CHECK(any_cast<int>(v3) == 41);
     }
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
@@ -503,15 +505,15 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
     CHECK(X::tracker_ == 0);
     {
       any<dynamic_copyable> v1{std::in_place_type<Y>, 42};
-      CHECK((*unerase_cast<Y>(v1))() == 42);
+      CHECK(any_cast<Y>(v1)() == 42);
       CHECK(Y::tracker_ == 1);
       any<dynamic_copyable> v2{std::in_place_type<X>, "hello"};
-      CHECK((*unerase_cast<X>(v2))() == "hello");
+      CHECK(any_cast<X>(v2)() == "hello");
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 1);
       v1 = std::move(v2);
       CHECK(get_v_table(v2) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<X>(v1))() == "hello");
+      CHECK(any_cast<X>(v1)() == "hello");
       CHECK(Y::tracker_ == 0);
       CHECK(X::tracker_ == 1);
       any<dynamic_copyable> v3{std::in_place_type<int>, 42};
@@ -520,7 +522,7 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
       CHECK(X::tracker_ == 0);
       CHECK(get_v_table(v1) != nullptr);  // NOLINT
       CHECK(get_v_table(v3) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<int>(v1)) == 42);
+      CHECK(any_cast<int>(v1) == 42);
     }
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
@@ -530,15 +532,15 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
     CHECK(X::tracker_ == 0);
     {
       any<dynamic_copyable> v1{std::in_place_type<Y>, 42};
-      CHECK((*unerase_cast<Y>(v1))() == 42);
+      CHECK(any_cast<Y>(v1)() == 42);
       CHECK(Y::tracker_ == 1);
       any<dynamic_copyable> v2{std::in_place_type<X>, "hello"};
-      CHECK((*unerase_cast<X>(v2))() == "hello");
+      CHECK(any_cast<X>(v2)() == "hello");
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 1);
       v2 = std::move(v1);
       CHECK(get_v_table(v1) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<Y>(v2))() == 42);
+      CHECK(any_cast<Y>(v2)() == 42);
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 0);
       any<dynamic_copyable> v3{std::in_place_type<int>, 42};
@@ -547,7 +549,7 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
       CHECK(X::tracker_ == 0);
       CHECK(get_v_table(v2) != nullptr);  // NOLINT
       CHECK(get_v_table(v3) == nullptr);  // NOLINT
-      CHECK((*unerase_cast<int>(v2)) == 42);
+      CHECK(any_cast<int>(v2) == 42);
     }
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
@@ -556,16 +558,16 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
   CHECK(X::tracker_ == 0);
   {
     any<dynamic_copyable> v1{std::in_place_type<int>, 41};
-    CHECK((*unerase_cast<int>(v1)) == 41);
+    CHECK(any_cast<int>(v1) == 41);
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
     any<dynamic_copyable> v2{std::in_place_type<X>, "hello"};
-    CHECK((*unerase_cast<X>(v2))() == "hello");
+    CHECK(any_cast<X>(v2)() == "hello");
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 1);
     v1 = std::move(v2);
     CHECK(get_v_table(v2) == nullptr);  // NOLINT
-    CHECK((*unerase_cast<X>(v1))() == "hello");
+    CHECK(any_cast<X>(v1)() == "hello");
     CHECK(get_v_table(v1) != nullptr);  // NOLINT
     CHECK(get_v_table(v2) == nullptr);  // NOLINT
     CHECK(Y::tracker_ == 0);
@@ -575,16 +577,16 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
   CHECK(X::tracker_ == 0);
   {
     any<dynamic_copyable> v1{std::in_place_type<int>, 41};
-    CHECK((*unerase_cast<int>(v1)) == 41);
+    CHECK(any_cast<int>(v1) == 41);
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
     any<dynamic_copyable> v2{std::in_place_type<Y>, 42};
-    CHECK((*unerase_cast<Y>(v2))() == 42);
+    CHECK(any_cast<Y>(v2)() == 42);
     CHECK(Y::tracker_ == 1);
     CHECK(X::tracker_ == 0);
     v1 = std::move(v2);
     CHECK(get_v_table(v2) == nullptr);  // NOLINT
-    CHECK((*unerase_cast<Y>(v1))() == 42);
+    CHECK(any_cast<Y>(v1)() == 42);
     CHECK(get_v_table(v1) != nullptr);  // NOLINT
     CHECK(get_v_table(v2) == nullptr);  // NOLINT
     CHECK(Y::tracker_ == 1);
@@ -594,16 +596,16 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
   CHECK(X::tracker_ == 0);
   {
     any<dynamic_copyable> v1{std::in_place_type<int>, 41};
-    CHECK((*unerase_cast<int>(v1)) == 41);
+    CHECK(any_cast<int>(v1) == 41);
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
     any<dynamic_copyable> v2{std::in_place_type<X>, "hello"};
-    CHECK((*unerase_cast<X>(v2))() == "hello");
+    CHECK(any_cast<X>(v2)() == "hello");
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 1);
     v1 = v2;
-    CHECK((*unerase_cast<X>(v1))() == "hello");
-    CHECK((*unerase_cast<X>(v2))() == "hello");
+    CHECK(any_cast<X>(v1)() == "hello");
+    CHECK(any_cast<X>(v2)() == "hello");
     CHECK(get_v_table(v1) != nullptr);
     CHECK(get_v_table(v2) != nullptr);
     CHECK(Y::tracker_ == 0);
@@ -613,16 +615,16 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
   CHECK(X::tracker_ == 0);
   {
     any<dynamic_copyable> v1{std::in_place_type<int>, 41};
-    CHECK((*unerase_cast<int>(v1)) == 41);
+    CHECK(any_cast<int>(v1) == 41);
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
     any<dynamic_copyable> v2{std::in_place_type<Y>, 42};
-    CHECK((*unerase_cast<Y>(v2))() == 42);
+    CHECK(any_cast<Y>(v2)() == 42);
     CHECK(Y::tracker_ == 1);
     CHECK(X::tracker_ == 0);
     v1 = v2;
-    CHECK((*unerase_cast<Y>(v1))() == 42);
-    CHECK((*unerase_cast<Y>(v2))() == 42);
+    CHECK(any_cast<Y>(v1)() == 42);
+    CHECK(any_cast<Y>(v2)() == 42);
     CHECK(get_v_table(v1) != nullptr);
     CHECK(get_v_table(v2) != nullptr);
     CHECK(Y::tracker_ == 2);
@@ -650,11 +652,11 @@ TEST_CASE("val<> lifetime get/set cow") {
 
 TEST_CASE("val<> lifetime moveable") {
   any<dynamic_moveable> v2{std::in_place_type<X>, "hello"};
-  CHECK(unerase_cast<X>(v2)->s_ == "hello");
+  CHECK(any_cast<X>(v2)() == "hello");
   CHECK(X::tracker_ == 1);
   static_assert(std::is_move_assignable_v<decltype(v2)>);
   static_assert(!std::is_copy_assignable_v<decltype(v2)>);
   // auto v3 = v2; does not compile, as expected
   auto v1 = std::move(v2);
-  CHECK(unerase_cast<X>(v1)->s_ == "hello");
+  CHECK(any_cast<X>(v1)() == "hello");
 }

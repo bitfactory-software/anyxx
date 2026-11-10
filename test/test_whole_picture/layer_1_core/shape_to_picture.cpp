@@ -10,12 +10,13 @@ struct shape_surface_adapter {
   }
 };
 }  // namespace
+META_CLASS_STATIC(shape_surface_adapter)
 
 core::shapes::picture core::shape_to_picture(
     architecture::any_shape<anyxx::cref> const& shape) {
   core::shapes::picture picture{shape.top_left(), core::surface{shape.size()}};
   shape_surface_adapter adapter{picture};
-  architecture::any_surface<anyxx::mutref> surface{adapter};
+  anyxx::any_<anyxx::mutref, architecture::surface> surface{adapter};
   shape.draw(surface);
   return picture;
 }

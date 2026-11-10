@@ -6,26 +6,26 @@ struct x_t {
   std::string s_;
   [[maybe_unused]][[nodiscard]] std::string get() const { return s_; }
 };
-ANY(has_meta_data, , )
+TRAIT(has_meta_data, anyxx::dynamic_copyable, )
 }  // namespace
 
 TEST_CASE("unerase_cast") {
   using namespace anyxx;
 
-  using value_with_meta_data = any_has_meta_data<shared>;
+  using value_with_meta_data = any_<shared, has_meta_data>;
 
   {
     auto e = erased<shared>(std::make_shared<x_t>("hallo"));
-    REQUIRE(unchecked_unerase_cast<x_t>(e, (observeable_v_table*)nullptr)->s_ == "hallo");
+    REQUIRE(unchecked_proxy_cast<x_t>(e, (observeable_v_table*)nullptr).s_ == "hallo");
   }
   {
     value_with_meta_data v(std::make_shared<x_t>("hallo"));
     try {
-      auto x = unerase_cast<x_t>(v)->s_;
+      decltype(auto) x = any_cast<x_t>(v).s_;    
       CHECK(x == "hallo");
     } catch (anyxx::type_mismatch_error&) {
       CHECK(false);
     }
-    CHECK_THROWS_AS(unerase_cast<std::string>(v), type_mismatch_error);
+    CHECK_THROWS_AS(any_cast<std::string>(v), type_mismatch_error);
   }
 }

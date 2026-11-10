@@ -19,7 +19,7 @@ struct function_v_table : Lifetime::v_table_t {
   function_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
       : Lifetime::v_table_t(concrete) {
     f_ = +[](typename Constness::type self_ptr, Args... args) -> R {
-      return std::invoke(*unchecked_unerase_cast<Concrete>(self_ptr),
+      return std::invoke(unchecked_unerase_cast<Concrete>(self_ptr),
                          std::forward<Args>(args)...);
     };
   }
@@ -30,18 +30,16 @@ struct function_proxy_for_lifetime {
   using type = val<>;
 };
 template <>
-struct function_proxy_for_lifetime<observeable, const_> {
+struct function_proxy_for_lifetime<observeable<>, const_> {
   using type = cref;
 };
 template <>
-struct function_proxy_for_lifetime<observeable, mutable_> {
+struct function_proxy_for_lifetime<observeable<>, mutable_> {
   using type = mutref;
 };
 
 template <typename Constness, typename Lifetime, typename R, typename... Args>
-struct function;
-template <typename Constness, typename Lifetime, typename R, typename... Args>
-struct function<R(Args...), Constness, Lifetime> : Lifetime {
+struct function_impl : Lifetime {
   using v_table_t = function_v_table<Constness, Lifetime, R, Args...>;
   template <typename Self>
   auto operator()(this Self&& self, Args... args) -> R
@@ -51,7 +49,7 @@ struct function<R(Args...), Constness, Lifetime> : Lifetime {
              false /*exact const*/>)
   {
     using self_t = std::decay_t<Self>;
-    if constexpr (self_t::dyn) {
+    if constexpr (self_t::is_dyn) {
       return get_v_table(self)->f_(get_proxy_ptr(self),
                                    std::forward<Args>(args)...);
     } else {
@@ -65,25 +63,33 @@ struct function<R(Args...), Constness, Lifetime> : Lifetime {
       typename function_proxy_for_lifetime<Lifetime, Constness>::type;
 };
 
-namespace self_test {
-struct functor {
-  int operator()(double) const;
+template <typename T0, typename... Ts>
+struct function;
+template <typename R, typename... Args>
+struct function<R(Args...)> : function_impl<mutable_, copyable<>, R, Args...> {
 };
-using f_cref = any<function<int(double), const_, observeable>>;
-static_assert(std::invocable<f_cref, double>);
-using f_mutref = any<function<int(double), mutable_, observeable>>;
-static_assert(std::invocable<f_mutref, double>);
+template <typename R, typename... Args>
+struct function<R(Args...) const>
+    : function_impl<const_, copyable<>, R, Args...> {};
 
-using f_movable_const_val = any<function<int(double), const_, moveable>>;
-static_assert(std::invocable<f_movable_const_val, double>);
-using f_movable_mutable_val = any<function<int(double), mutable_, moveable>>;
-static_assert(std::invocable<f_movable_mutable_val, double>);
+template <typename T0, typename... Ts>
+struct move_only_function;
+template <typename R, typename... Args>
+struct move_only_function<R(Args...)>
+    : function_impl<mutable_, moveable<>, R, Args...> {};
+template <typename R, typename... Args>
+struct move_only_function<R(Args...) const>
+    : function_impl<const_, moveable<>, R, Args...> {};
 
-using f_const_val = any<function<int(double), const_, copyable>>;
-static_assert(std::invocable<f_const_val, double>);
-using f_mutable_val = any<function<int(double), mutable_, copyable>>;
-static_assert(std::invocable<f_mutable_val, double>);
-
-}  // namespace self_test
+template <typename T0, typename... Ts>
+struct function_ref;
+template <typename R, typename... Args>
+struct function_ref<R(Args...)>
+    : function_impl<mutable_, observeable<>, R, Args...> {
+  using default_proxy_t = mutref;
+};
+template <typename R, typename... Args>
+struct function_ref<R(Args...) const>
+    : function_impl<const_, observeable<>, R, Args...> {};
 
 }  // namespace anyxx

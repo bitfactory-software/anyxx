@@ -4,12 +4,13 @@
 
 namespace example_2d {
 
-TRAIT_TEMPLATE_(((Base)), has_equal, Base, (),
-                (ANY_FN_DEF(public, bool, is_equal, (anyxx::self const&), const,
-                            [&x](T const& y) { return x == y; })))
+TRAIT(has_equal, anyxx::dynamic_copyable,
+      (FN_IMPL(
+          public, bool, is_equal, (anyxx::self const&), const,
+          (T const& y) { return self == y; })))
 
-template <typename Proxy = anyxx::val<>, typename Base = anyxx::dynamic_copyable>
-using any_has_equal = anyxx::any<has_equal<Base>, Proxy>;
+template <typename Proxy = anyxx::val<>>
+using any_has_equal = anyxx::any_<Proxy, has_equal>;
 
 }  // namespace example_2d
 
@@ -25,8 +26,8 @@ TEST_CASE("example 2da any_has_equal") {
     CHECK(!b.is_equal(a));
   }
   {
-    auto a = trait_as<has_equal<dynamic_copyable>>("a"s);
-    auto b = trait_as<has_equal<dynamic_copyable>>("b"s);
+    auto a = as<has_equal>("a"s);
+    auto b = as<has_equal>("b"s);
     CHECK(a.is_equal(a));
     CHECK(!b.is_equal(a));
   }
@@ -34,17 +35,19 @@ TEST_CASE("example 2da any_has_equal") {
 
 namespace example_2d {
 
-TRAIT_(has_plus, has_equal<anyxx::dynamic_copyable>,
-       (ANY_FN_DEF(public, anyxx::self, plus, (anyxx::self const&), const,
-                   ([&x](T const& y) {
-                     return get_proxy_value(trait_as<has_plus>(x) +
-                                            trait_as<has_plus>(y));
-                   })),
-        ANY_OP_DEF(public, anyxx::self, +, plus_op, (anyxx::self const&), const,
-                   ([&x](T const& y) { return x + y; }))))
+TRAIT(has_plus, has_equal,
+      (FN_IMPL(
+           public, anyxx::self, plus, (anyxx::self const&), const,
+           (T const& y) {
+             return get_proxy_value(as<has_plus>(self) +
+                                    as<has_plus>(y));
+           }),
+       OP_IMPL(public, anyxx::self, +, plus_op, (anyxx::self const&), const,
+           (T const& y) { 
+             return self + y; })))
 
 template <typename Proxy = anyxx::val<>>
-using any_has_plus = anyxx::any<has_plus, Proxy>;
+using any_has_plus = anyxx::any_<Proxy, has_plus>;
 
 }  // namespace example_2d
 
@@ -66,10 +69,10 @@ TEST_CASE("example 2db any_has_plus static") {
   using namespace anyxx;
   using namespace std::string_literals;
   {
-    auto a = trait_as<has_plus>("a"s);
-    auto b = trait_as<has_plus>("b"s);
-    auto aa = trait_as<has_plus>("aa"s);
-    auto bb = trait_as<has_plus>("ab"s);
+    auto a = as<has_plus>("a"s);
+    auto b = as<has_plus>("b"s);
+    auto aa = as<has_plus>("aa"s);
+    auto bb = as<has_plus>("ab"s);
     CHECK((a + a).is_equal(aa));
     CHECK((a + b).is_equal(bb));
     CHECK((a.plus(a)).is_equal(aa));
