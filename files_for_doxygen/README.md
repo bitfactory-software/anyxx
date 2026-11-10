@@ -35,7 +35,7 @@
 
 [![MIT Licence](http://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/license/mit)
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
-[![Static Badge](https://img.shields.io/badge/dos-Any%2B%2B-blue)](https://www.alexweb.io/anyxx/)
+[![Static Badge](https://img.shields.io/badge/docs-Any%2B%2B-blue)](https://www.alexweb.io/anyxx/)
 
 #Any++ : How to ``trait`` ``any_`` ``virtual``, ``static`` or ``variant``?
 
