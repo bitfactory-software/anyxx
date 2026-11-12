@@ -22,13 +22,13 @@ any<thing> operator<=>(any<thing> const& l, any<thing> const& r) {
   return collide(l, r);
 }
 any<thing> run(std::vector<any<thing>> things) {
-  auto winner = things.front();
-  for (auto next : things | std::views::drop(1)) {
-    std::print("{} <=> {} -> ", winner.registry(), next.registry());
-    winner = winner <=> next;
-    std::println("{}!", winner.registry());
-  }
-  return winner;
+  return *std::ranges::fold_left_first(
+      things, [](any<thing> const& winner, any<thing> const& next) {
+        std::print("{} <=> {} -> ", winner.registry(), next.registry());
+        auto result = winner <=> next;
+        std::println("{}!", result.registry());
+        return result;
+      });
 }
 
 struct Asteroid {
@@ -49,8 +49,8 @@ auto __ = collide.define<Asteroid, Asteroid>([](auto l, auto r) {  //
 auto __ = collide.define<Spaceship, Spaceship>([](auto l, auto r) {  //
   return l.registry() < r.registry() ? l : r;
 });
-auto __ = collide.define<Spaceship, Asteroid>([](auto l, auto) {  //
-  return l;
+auto __ = collide.define<Spaceship, Asteroid>([](auto, auto r) {  //
+  return r;
 });
 }  // namespace
 
@@ -82,7 +82,13 @@ struct BlackHole {
 auto __ = collide.define<BlackHole, any<thing>>([](auto l, auto) {  //
   return l;
 });
-auto __ = collide.define<any<thing>, BlackHole>([](auto, auto r) {  //
+// resolve ambiguity by defining BlackHole vs DeathStar
+// if this is not defined, the dispatch will fail at startup because next rule
+// would be ambiguous
+auto __ = collide.define<DeathStar, BlackHole>([](auto, auto r) {  //
+  return r;
+});
+ auto __ = collide.define<any<thing>, BlackHole>([](auto, auto r) {  //
   return r;
 });
 auto __ = collide.define<BlackHole, BlackHole>([](auto l, auto r) {  //
@@ -91,6 +97,13 @@ auto __ = collide.define<BlackHole, BlackHole>([](auto l, auto r) {  //
 }  // namespace
 
 TEST_CASE("talk_2310_bonus_multi_dispatch") {
+  auto w1 = Spaceship{"NCC-1701"} <=> BlackHole{"Sagittarius A*"};
+  CHECK(w1.registry() == "Black Hole Sagittarius A*");
+  auto w3 = Spaceship{"NCC-1701"} <=> DeathStar{"2"};
+  CHECK(w3.registry() == "DS2");
+  auto w2 = DeathStar{"2"} <=> BlackHole{"Sagittarius A*"};
+  CHECK(w2.registry() == "Black Hole Sagittarius A*");
+
   auto winner = run({Asteroid{"Chicxulub"}, Spaceship{"NCC-1701"},
                      Spaceship{"USGS Powell"}, DeathStar{"2"},
                      Asteroid{"Tunguska"}, DeathStar{"1"},

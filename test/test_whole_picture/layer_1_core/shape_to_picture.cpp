@@ -10,6 +10,7 @@ struct shape_surface_adapter {
   }
 };
 }  // namespace
+META_CLASS_STATIC(shape_surface_adapter)
 
 core::shapes::picture core::shape_to_picture(
     architecture::any_shape<anyxx::cref> const& shape) {

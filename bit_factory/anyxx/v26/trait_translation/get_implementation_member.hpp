@@ -58,14 +58,14 @@ consteval std::meta::info get_implementation_member(auto fitting_parameter_type,
 }
 
 consteval std::meta::info find_function_impl(auto fitting_parameter_type, std::meta::info interface_function, std::meta::info trait_template, std::meta::info mapped_type, auto args) {
-    if(auto found_in_impl = get_implementation_member(fitting_parameter_type, trait_for(trait_template, ^^model_map, mapped_type, args), interface_function); found_in_impl != std::meta::info{}) {
+    if(auto found_in_impl = get_implementation_member(fitting_parameter_type, trait_for(trait_template, mapped_type, args), interface_function); found_in_impl != std::meta::info{}) {
         return found_in_impl;
     }
     if (auto found_in_base = get_implementation_member(fitting_parameter_type, trait_declaration(trait_template, args), interface_function); found_in_base != std::meta::info{}) {
         return found_in_base;
     } else {
         throw std::meta::exception("Function " + std::string(display_string_of(interface_function)) + " not found in impl trait "
-            + std::string(display_string_of(trait_model_map(trait_template, mapped_type, args)))
+            + std::string(display_string_of(trait_trait_map(trait_template, mapped_type, args)))
             + " or base trait " + std::string(display_string_of(trait_declaration(trait_template, args))), interface_function);
     }
 }

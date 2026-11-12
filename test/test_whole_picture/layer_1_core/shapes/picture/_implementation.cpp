@@ -7,10 +7,9 @@ using namespace whole_picture::core::shapes;
 
 using namespace anyxx;
 
-ANY_META_CLASS(shapes::picture)
+META_CLASS(shapes::picture)
 ANY_MEMBERS_COUNT_IMPL(whole_picture::core::shapes, picture)
-register_trait<shapes::picture, whole_picture::architecture::shape> __;
-//ANY_MODEL(shapes::picture, whole_picture::architecture, surface);
+castable_to<shapes::picture, whole_picture::architecture::shape> __;
 ANY_DISPATCH_FOR(shapes::picture, whole_picture::architecture, shape)
 
 shape shapes::make_picture(architecture::point top_left,

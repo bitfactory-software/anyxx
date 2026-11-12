@@ -52,13 +52,13 @@ struct node : node_base {
 
 namespace anyxx {
 template <typename ValueType, typename Reference>
-struct input_iterator<model_map, node_base*, ValueType, Reference> {
+struct input_iterator<node_base*, ValueType, Reference> {
     static node_base*& op_plus_plus(node_base*& x) {
         return x = x->next(); 
     }
 };
 template <typename ValueType, typename Reference>
-struct input_iterator<model_map, node_base const*, ValueType, Reference> {
+struct input_iterator<node_base const*, ValueType, Reference> {
     static node_base const*& op_plus_plus(node_base const*& x) {
         return x = x->next();
     }

@@ -21,17 +21,17 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-template <is_trait Trait, typename Self>
-struct drawable : copyable<Trait, Self> {
+template <typename Self>
+struct drawable : copyable<Self> {
   std::string draw() const;
 };
 
  template <typename... Vs>
- struct drawable<model_map, std::variant<Vs...>> {
+ struct drawable<std::variant<Vs...>> {
    static std::string draw(std::variant<Vs...> const& v) {
      return std::visit(
-         []<typename T>(T const& x) {
-           return trait_as<T, drawable>(x).draw();
+         [](auto const& x) {
+           return trait_as<decltype(x), drawable>(x).draw();
          },
          v);
    }
@@ -62,7 +62,7 @@ TEST_CASE("talk_2611_variant_dispatch") {
 }
 
 // namespace {
-// using known_and_unknown_shapes = make_vany<drawable, circle, square>;
+// using known_and_unknown_shapes = vany<drawable, circle, square>;
 // static_assert(std::same_as<
 //               known_and_unknown_shapes,
 //               trait_as<std::variant<any<drawable>, circle, square>,
@@ -73,7 +73,7 @@ TEST_CASE("talk_2611_variant_dispatch") {
 //     for(auto const& f : figures) os << f.draw() << "\n";
 // }
 //
-// MODEL_MAP(std::string, drawable) {
+// TRAIT_MAP(drawable, std::string) {
 //   std::string draw(std::string const& s) { return s; };
 // };
 //

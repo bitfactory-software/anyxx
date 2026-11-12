@@ -3,18 +3,18 @@
 #include <map>  // NOLINT
 #include <string>
 
-ANY_META_CLASS(std::map<int, double>)
-ANY_META_CLASS(std::map<std::string, int>)
-ANY_META_CLASS(std::map<std::string, double>)
+META_CLASS(std::map<int, double>)
+META_CLASS(std::map<std::string, int>)
+META_CLASS(std::map<std::string, double>)
 
-namespace{
-anyxx::register_trait<std::map<std::string, int>,
+namespace {
+anyxx::castable_to<std::map<std::string, int>,
                       test::component_base::mutable_map, std::string, int>
     __;
-anyxx::register_trait<std::map<int, double>, test::component_base::map, int,
+anyxx::castable_to<std::map<int, double>, test::component_base::map, int,
                       double>
     __;
-anyxx::register_trait<std::map<int, double>, test::component_base::mutable_map,
+anyxx::castable_to<std::map<int, double>, test::component_base::mutable_map,
                       int, double>
     __;
-}
+}  // namespace

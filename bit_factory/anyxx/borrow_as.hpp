@@ -4,6 +4,7 @@
 #include <bit_factory/anyxx/any_concept.hpp>
 #include <bit_factory/anyxx/crosscast_runtime.hpp>
 #include <bit_factory/anyxx/proxies/dyn/borrowable_from.hpp>
+#include <bit_factory/anyxx/v_table_data.hpp>
 #include <expected>
 
 namespace anyxx {
@@ -22,14 +23,11 @@ std::expected<ToAny, cast_error> borrow_as(FromProxy const& from,
 /// changing the ownership.
 /// \ingroup casts
 template <is_any ToAny, is_any FromAny>
-  requires borrowable_from<typename ToAny::proxy_t,
-                                 typename FromAny::proxy_t,
-                                 typename FromAny::v_table_t>
+  requires borrowable_from<typename ToAny::proxy_t, typename FromAny::proxy_t,
+                           typename FromAny::v_table_t>
 std::expected<ToAny, cast_error> borrow_as(FromAny const& from) {
   if constexpr (is_any_derived_from<FromAny, ToAny>) {
     return {ToAny{from}};
-  } else if constexpr (is_any_derived_from<ToAny, FromAny>) {
-    return *downcast_to<ToAny>(from);
   } else {
     return borrow_as<ToAny>(get_proxy(from), get_v_table(from));
   }

@@ -47,11 +47,11 @@
 #include <bit_factory/anyxx/voidness.hpp>
 #ifdef ANYXX_26
 #include <bit_factory/anyxx/v26/any.hpp>
-#include <bit_factory/anyxx/v26/any/register_trait.hpp>
+#include <bit_factory/anyxx/v26/any/castable_to.hpp>
 #include <bit_factory/anyxx/v26/trait_as.hpp>
 #else
 #include <bit_factory/anyxx/v23/any.hpp>
-#include <bit_factory/anyxx/v23/any/register_trait.hpp>
+#include <bit_factory/anyxx/v23/any/castable_to.hpp>
 #include <bit_factory/anyxx/v23/preprocessor_meta_class.hpp>
 #include <bit_factory/anyxx/v23/signature_handling.hpp>
 #include <bit_factory/anyxx/v23/v_table_data.hpp>
@@ -73,7 +73,7 @@
 
    \example _2b_trait_monoid.cpp
    A self referntial trait that models a variant of a monoid.
-   Show how to use a MODEL_MAP that acts simultanious as runtime and
+   Show how to use a TRAIT_MAP that acts simultanious as runtime and
    complitem customization point.
 
    \example _2f_trait_equal_comparable.cpp

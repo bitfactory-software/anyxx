@@ -221,7 +221,7 @@ void set_v_table_members(VTable* v_table) {
             v_table->[:v_table_entry:] = [:v_table_spec.member:]::template init<Concrete>(v_table);
         } else {
             constexpr auto trait_template = template_of(v_table_spec.declaration_trait);
-            constexpr auto args = std::define_static_array(template_arguments_of(v_table_spec.declaration_trait) | std::views::drop(2));
+            constexpr auto args = std::define_static_array(template_arguments_of(v_table_spec.declaration_trait) | std::views::drop(1));
             constexpr auto implemenation_member = find_function_impl(v_table_spec.member, trait_template, ^^Concrete, args);
             v_table->[:v_table_entry:] = [:make_vfimpl(^^Concrete, implemenation_member, dyn_self_val, dyn_self_cref, dyn_self_mutref, v_table_spec.member):];
         }

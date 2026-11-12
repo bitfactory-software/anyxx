@@ -13,7 +13,7 @@ using namespace anyxx;
 
 namespace {
 
-template <is_trait Trait, typename Self>
+template <typename Self>
 struct stringable {
     std::string as_string() const;
 };
@@ -25,12 +25,12 @@ void print(std::vector<any<stringable>> const& things) {
 }
 
 template <>
-struct stringable<anyxx::model_map, int> {
+struct stringable<int> {
     static std::string as_string(int const& self) { return std::to_string(self); }
 };
 
 template <>
-struct stringable<anyxx::model_map, std::string> {
+struct stringable<std::string> {
   static std::string as_string(std::string const& self) { return self; }
 };
 
@@ -38,7 +38,7 @@ struct foo {
   double f;
 };
 template <>
-struct stringable<anyxx::model_map, foo> {
+struct stringable<foo> {
   static std::string as_string(foo const& self) {
     return "foo: " + std::to_string(self.f);
   }
@@ -93,7 +93,7 @@ namespace{
 
 template <typename DynBase>
 consteval std::meta::info test_make_dyn_facade_call() {
-    auto v_table_specs = get_interface_specs(^^stringable<declaration, declaration>);
+    auto v_table_specs = get_interface_specs(^^stringable<declaration>);
     return make_dyn_facade_call<DynBase>(v_table_specs[0]);
 }
 
@@ -134,7 +134,7 @@ TEST_CASE("anyxx hello world") {
 }
 
 namespace {
-template <is_trait Trait, typename Self>
+template <typename Self>
 struct addable {
   [[= defaulted]] static void add(Self& self, int inc);
 };
@@ -158,13 +158,13 @@ TEST_CASE("anyxx mutable hello world") {
 }
 
 namespace {
-template <is_trait, typename>
+template <typename>
 struct base_trait {
   std::string basef() const;
 };
 
-template <is_trait Trait, typename Self>
- struct derived_trait : base_trait<Trait, Self> {
+template <typename Self>
+ struct derived_trait : base_trait<Self> {
   [[= defaulted]] static std::string derivedf(Self const& self);
 };
 
@@ -216,26 +216,26 @@ TEST_CASE("anyxx v_table_data") {
   } else{
       CHECK(false);
   }
-  [[maybe_unused]] constexpr auto member_type = ^^anyxx::typed_observeable<declaration, declaration>::type_info_::type;
+  [[maybe_unused]] constexpr auto member_type = ^^anyxx::typed_observeable<declaration>::type_info_::type;
   static_assert(std::meta::is_type(member_type));
   static_assert(std::meta::is_type_alias(member_type));
   static_assert(std::meta::is_pointer_type(member_type));
   constexpr auto ctx = std::meta::access_context::current();
-  constexpr static auto members1 = define_static_array(members_of(^^anyxx::typed_observeable<declaration, declaration>, ctx));
+  constexpr static auto members1 = define_static_array(members_of(^^anyxx::typed_observeable<declaration>, ctx));
   constexpr auto type_info_struct_meta = members1[0];
   using type = [:type_info_struct_meta:]::type;
   static_assert(std::meta::is_type(^^type));
   static_assert(std::meta::is_type_alias(^^type));
   static_assert(std::meta::is_pointer_type(^^type));
   static_assert(dealias(^^type) == ^^std::type_info const*);
-  static_assert(std::same_as<type, anyxx::typed_observeable<declaration, declaration>::type_info_::type>);
+  static_assert(std::same_as<type, anyxx::typed_observeable<declaration>::type_info_::type>);
   //constexpr auto member_type1 = ^^[:type_info_struct_meta:]::type;
 }
 
 namespace {
 
-template <is_trait Trait, typename Self>
-struct operators : typed_copyable<Trait, Self> {
+template <typename Self>
+struct operators : typed_copyable<Self> {
     int const& operator*() const;
     Self operator+(int) const;
     Self& operator++();
@@ -266,7 +266,7 @@ struct add_test {
 
 using int_ptr = int*;
 template <>
-struct operators<anyxx::model_map, int_ptr> {
+struct operators<int_ptr> {
     static bool equal(int_ptr const& self, int_ptr const& other) {
         return self == other;
     }

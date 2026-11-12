@@ -9,9 +9,9 @@ using namespace whole_picture::core::shapes;
 
 using namespace anyxx;
 
-ANY_META_CLASS(circle)
+META_CLASS(circle)
 namespace{
-register_trait<circle, whole_picture::architecture::shape> __;
+castable_to<circle, whole_picture::architecture::shape> __;
 }
 ANY_DISPATCH_FOR(circle, whole_picture::architecture, shape)
 

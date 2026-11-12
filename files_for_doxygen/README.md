@@ -35,7 +35,7 @@
 
 [![MIT Licence](http://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/license/mit)
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
-[![Static Badge](https://img.shields.io/badge/dos-Any%2B%2B-blue)](https://www.alexweb.io/anyxx/)
+[![Static Badge](https://img.shields.io/badge/docs-Any%2B%2B-blue)](https://www.alexweb.io/anyxx/)
 
 #Any++ : How to ``trait`` ``any_`` ``virtual``, ``static`` or ``variant``?
 
@@ -182,11 +182,11 @@ struct square {
 
 TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), const)))
 
-MODEL_MAP(circle, drawable) {
+TRAIT_MAP(drawable, circle ) {
   static std::string draw(circle const&) { return "Silent greetings"; };
 };
 
-MODEL_MAP(square, drawable) {
+TRAIT_MAP(drawable, square) {
   static std::string draw(square const& self) { return self.edgy_salute(); };
 };
 
@@ -388,10 +388,12 @@ struct square {
   double edge_length = 0.0;
 };
 
-struct figure_has_open_dispatch {};
-TRAIT(figure, ayx::dynamic_copyable, (FN(double, area, (), const)))
+TRAIT(figure, ayx::dynamic_copyable, 
+  (FN(double, area, (), const))
+)
 TRAIT(serializable, ayx::dynamic_copyable,
-      (FN(void, serialize, (std::ostream&), const)))
+  (FN(void, serialize, (std::ostream&), const))
+)
 
 ayx::factory<ayx::any<serializable>, std::string, std::istream&> deserialize;
 
@@ -401,7 +403,7 @@ ayx::factory<ayx::any<serializable>, std::string, std::istream&> deserialize;
   return ayx::move_to<ayx::any<figure>>(deserialize(type, archive));
 }
 
-MODEL_MAP(circle, serializable) {
+TRAIT_MAP(serializable, circle) {
   static void serialize(circle const& self, std::ostream& os) {
     os << "circle " << self.radius << " ";
   };
@@ -411,10 +413,10 @@ auto __ = deserialize.register_("circle", [](std::istream& archive) -> circle {
   archive >> c.radius;
   return c;
 });
-anyxx::register_trait<circle, figure> __;
-anyxx::register_trait<circle, serializable> __;
+anyxx::castable_to<circle, figure> __;
+anyxx::castable_to<circle, serializable> __;
 
-MODEL_MAP(square, serializable) {
+TRAIT_MAP(serializable, square) {
   static void serialize(square const& self, std::ostream& os) {
     os << "square " << self.edge_length << " ";
   };
@@ -424,8 +426,8 @@ auto __ = deserialize.register_("square", [](std::istream& archive) {
   archive >> s.edge_length;
   return s;
 });
-anyxx::register_trait<square, figure> __;
-anyxx::register_trait<square, serializable> __;
+anyxx::castable_to<square, figure> __;
+anyxx::castable_to<square, serializable> __;
 
 void areas(std::stringstream& os,
            std::vector<ayx::any<figure>> const& figures) {
@@ -544,7 +546,7 @@ struct square {
 
 TRAIT(figure, dynamic_copyable, (FN(std::string, draw, (), const)))
 
-using known_and_unknown_shapes = make_vany<figure, circle, square>;
+using known_and_unknown_shapes = vany<figure, circle, square>;
 static_assert(std::same_as<
               known_and_unknown_shapes,
               any_<using_<std::variant<any<figure>, circle, square>>, figure>>);
@@ -553,7 +555,7 @@ void draw_vany(std::stringstream& os,
     for(auto const& f : figures) os << f.draw() << "\n";
 }
 
-MODEL_MAP(std::string, figure) {
+TRAIT_MAP(figure, std::string) {
   std::string draw(std::string const& s) { return s; };
 };
 
@@ -571,7 +573,7 @@ Showcase 7 demonstrates how to use `Any++` to combine open type erasure with `st
 heterogeneous collections. Let us call them "vany" (variant-any_).
 - Two types, `circle` and `square`, are defined, each with a `draw()` method returning a string.
 - A `figure` trait is declared, specifying the required interface (`draw() const -> std::string`).
-- The type alias `known_and_unknown_shapes` is created using `anyxx::make_vany`, which produces a type-erased wrapper over a `std::variant` containing:
+- The type alias `known_and_unknown_shapes` is created using `anyxx::vany`, which produces a type-erased wrapper over a `std::variant` containing:
   - All known types (`circle`, `square`)
   - An open-ended type-erased fallback (`any_figure<ayx::val<>>`)
 - A model map is provided for `std::string`, allowing strings to be handled as figures.

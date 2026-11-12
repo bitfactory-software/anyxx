@@ -7,10 +7,10 @@
 
 namespace anyxx {
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename...> typename Trait, typename... Args>
 concept specifies_default_proxy_t = requires { typename trait_declaration_t<Trait, Args...>::default_proxy_t; };
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info compute_default_proxy_t() {
     if constexpr(specifies_default_proxy_t<Trait, Args...>) {
         return ^^typename trait_declaration_t<Trait, Args...>::default_proxy_t;
@@ -19,7 +19,7 @@ consteval std::meta::info compute_default_proxy_t() {
     }
 }
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename...> typename Trait, typename... Args>
 using default_proxy_t = [:compute_default_proxy_t<Trait, Args...>():];
 
 }

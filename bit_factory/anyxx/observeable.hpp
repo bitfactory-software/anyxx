@@ -37,13 +37,13 @@ struct observeable_v_table {
 };
 
 template <typename T = std::nullptr_t>
-struct observeable_default_model_map {
+struct observeable_default_trait_map {
   using rep_type = std::nullptr_t;
   struct deduced_type {};
 };
 
 template <typename T = std::nullptr_t>
-struct observeable_map : observeable_default_model_map<T> {};
+struct observeable_map : observeable_default_trait_map<T> {};
 
 template <typename = std::nullptr_t>
 struct observeable {
@@ -58,7 +58,7 @@ struct observeable {
   using static_dispatch_map_t = observeable_map<StaticDispatchType>;
 
   template <typename T>
-  using model_map = observeable_map<T>;
+  using trait_map = observeable_map<T>;
 
   using v_table_t = observeable_v_table;
   using val_is_nullable = typename v_table_t::val_is_nullable;

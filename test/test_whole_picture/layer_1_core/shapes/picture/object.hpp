@@ -19,16 +19,16 @@ struct picture : anyxx::members<picture> {
 }  // namespace whole_picture::core::shapes
 
 ANY_MEMBERS_COUNT_FWD(CORE_EXPORT, whole_picture::core::shapes, picture)
-ANY_META_CLASS_FWD(CORE_EXPORT, whole_picture::core::shapes::picture)
+META_CLASS_FWD(CORE_EXPORT, whole_picture::core::shapes::picture)
 ANY_DISPATCH_FOR_FWD(CORE_EXPORT, whole_picture::core::shapes::picture,
                      whole_picture::architecture, shape)
-MODEL_MAP(whole_picture::core::shapes::picture,
-              whole_picture::architecture::surface) {
+TRAIT_MAP(whole_picture::architecture::surface,
+              whole_picture::core::shapes::picture) {
   void write(auto& self, point p, char ch) { self.content.write(p, ch); };
 };
 
-MODEL_MAP(whole_picture::core::shapes::picture,
-              whole_picture::architecture::shape) {
+TRAIT_MAP(whole_picture::architecture::shape,
+              whole_picture::core::shapes::picture) {
   using picture = whole_picture::core::shapes::picture;
   void draw(picture const& self,
             architecture::mutable_observed_surface const& surface) const {

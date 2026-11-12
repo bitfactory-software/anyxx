@@ -24,6 +24,6 @@ TRAIT_TEMPLATE(((KEY), (VALUE)), mutable_recursive_map, anyxx::dynamic_copyable,
 
 }  // namespace test::component_base
 
-ANY_META_CLASS_FWD(COMPONENT_BASE_EXPORT, std::map<int, double>)
-ANY_META_CLASS_FWD(COMPONENT_BASE_EXPORT, std::map<std::string, int>)
-ANY_META_CLASS_FWD(COMPONENT_BASE_EXPORT, std::map<std::string, double>)
+META_CLASS_FWD(COMPONENT_BASE_EXPORT, std::map<int, double>)
+META_CLASS_FWD(COMPONENT_BASE_EXPORT, std::map<std::string, int>)
+META_CLASS_FWD(COMPONENT_BASE_EXPORT, std::map<std::string, double>)

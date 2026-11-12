@@ -33,7 +33,7 @@ TRAIT_EX(value, anyxx::dynamic_copyable,
          , , (HAS_OPEN_DISPATCH), ())
 using any_value = anyxx::any<value>;
 
-using vany_value = anyxx::make_vany<value, bool, int, double, std::string>;
+using vany_value = anyxx::vany<value, bool, int, double, std::string>;
 using concrete_value = anyxx::vany_type_trait<vany_value>::concrete_variant;
 using any_in_variant = anyxx::vany_type_trait<vany_value>::any_in_variant;
 
@@ -45,7 +45,7 @@ static_assert(std::same_as<any_in_variant, any_value>);
 
 }  // namespace example_2c
 
-MODEL_MAP(example_2c::custom, example_2c::value) {
+TRAIT_MAP(example_2c::value, example_2c::custom) {
   static std::string to_string(custom const& self) {
     return "{" + self.answer + "}";
   };
@@ -95,7 +95,7 @@ TEST_CASE("example 2cb static_ any_ variant") {
 namespace example_2c {
 
 VANY_DISPACH_DECLARE(
-    , vany_stream, vany_value,
+    , vany_stream,
     (void(anyxx::virtual_<any_value>, std::ostream&)),
     ([](const std::string& s,
         std::ostream& os) { os << "String: " << s << ", "; },
@@ -135,7 +135,7 @@ TEST_CASE("example 2cc static_ any_ variant single open dispatch") {
 namespace example_2c {
 
 VANY_DISPACH_DECLARE(
-    , vany_compare, vany_value,
+    , vany_compare, 
     (std::partial_ordering(anyxx::virtual_<any_value>,
                            anyxx::virtual_<any_value>)),
     ([]<typename T>(T&& t, T&& u) -> std::partial_ordering
@@ -169,16 +169,16 @@ auto __ = vany_compare.define<custom, custom>(
     });
 auto __ = vany_compare.define<concrete_value, custom>(
     [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
-      return anyxx::using_as<value>(lhs).to_string() <=> rhs.answer;
+      return anyxx::as<value>(lhs).to_string() <=> rhs.answer;
     });
 auto __ = vany_compare.define<custom, concrete_value>(
     [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
-      return lhs.answer <=> anyxx::using_as<value>(rhs).to_string();
+      return lhs.answer <=> anyxx::as<value>(rhs).to_string();
     });
 auto __ = vany_compare.define<concrete_value, concrete_value>(
     [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
-      return anyxx::using_as<value>(lhs).to_string() <=>
-             anyxx::using_as<value>(rhs).to_string();
+      return anyxx::as<value>(lhs).to_string() <=>
+             anyxx::as<value>(rhs).to_string();
     });
 
 }  // namespace example_2c

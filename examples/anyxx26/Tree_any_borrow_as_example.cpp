@@ -12,12 +12,12 @@ using namespace anyxx;
 
 namespace _21_Tree_any_borrow_as {
 
-template <anyxx::is_trait Trait, typename Self>
-struct node : anyxx::dynamic_deletable<Trait, Self> {
+template <typename Self>
+struct node : anyxx::dynamic_deletable<Self> {
   int value() const;
 };
-template <anyxx::is_trait Trait, typename Self>
-struct serializeable : anyxx::dynamic_deletable<Trait, Self> {
+template <typename Self>
+struct serializeable : anyxx::dynamic_deletable<Self> {
   void serialize(std::ostream&) const;
 };
 
@@ -88,12 +88,12 @@ auto __ = deserialize_factory.register_("Integer", [](std::istream& archive) {
 using namespace _21_Tree_any_borrow_as;
 
 namespace {
-anyxx::register_trait<Plus, node> __;
-anyxx::register_trait<Plus, serializeable> __;
-anyxx::register_trait<Times, node> __;
-anyxx::register_trait<Times, serializeable> __;
-anyxx::register_trait<Integer, node> __;
-anyxx::register_trait<Integer, serializeable> __;
+anyxx::castable_to<Plus, node> __;
+anyxx::castable_to<Plus, serializeable> __;
+anyxx::castable_to<Times, node> __;
+anyxx::castable_to<Times, serializeable> __;
+anyxx::castable_to<Integer, node> __;
+anyxx::castable_to<Integer, serializeable> __;
 };  // namespace
 
 TEST_CASE("_21_Tree_any_borrow_as") {

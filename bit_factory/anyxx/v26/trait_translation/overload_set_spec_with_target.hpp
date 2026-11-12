@@ -13,12 +13,12 @@ namespace anyxx {
 struct interface_spec_with_target : interface_spec {
     std::meta::info target;
 };
-template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <typename, typename...> typename Trait, typename... Args>
 consteval std::vector<interface_spec_with_target> make_interface_specs_with_target() {
     std::vector<interface_spec_with_target> interface_specs_with_target;
     template for(constexpr auto spec : define_static_array(get_interface_specs(^^ trait_declaration_t<Trait, Args...>))){
         if constexpr(is_function_or_operator(spec) && !is_v_table_data(spec)) {
-            auto args = std::define_static_array(template_arguments_of(spec.declaration_trait) | std::views::drop(2));
+            auto args = std::define_static_array(template_arguments_of(spec.declaration_trait) | std::views::drop(1));
             auto implementation_member = find_function_impl(spec.member, template_of(spec.declaration_trait), ^^V, args);
             if (!is_defaulted_function_spec(implementation_member)) {
                 interface_specs_with_target.push_back(interface_spec_with_target{ spec, implementation_member });
@@ -41,7 +41,7 @@ struct overload_set_spec_with_target {
 };
 using overload_sets_spec_with_target = std::vector<overload_set_spec_with_target>;
 
-template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <typename, typename...> typename Trait, typename... Args>
 consteval overload_sets_spec_with_target make_overload_sets_specs_with_target() {
     overload_sets_spec_with_target specs;
     for(auto s : make_interface_specs_with_target<V, Trait, Args...>()) {

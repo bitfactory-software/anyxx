@@ -12,8 +12,8 @@ using namespace anyxx;
 
 namespace {
 
-TRAIT_EX(node, anyxx::dynamic_copyable, , , ,
-    (HAS_OPEN_DISPATCH), (using default_proxy_t = anyxx::cow))
+TRAIT_EX(node, anyxx::deleteable, , , ,
+    (HAS_OPEN_DISPATCH), ())
 
 struct Plus {
   any<node> left_, right_;

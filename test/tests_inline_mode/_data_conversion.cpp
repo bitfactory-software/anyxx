@@ -11,61 +11,61 @@ using namespace anyxx;
 TEST_CASE("_data_conversion clone") {
   std::string s1 = "hallo";
   {
-    auto vv1 = any_<cref, dynamic_smart_ptr>(s1);
+    auto vv1 = any_<cref, dynamic_cloneable>(s1);
     static_assert(anyxx::is_any<decltype(vv1)>);
-    auto vv2 = clone_to<any<dynamic_smart_ptr>>(vv1);
-    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
+    auto vv2 = clone_to<any<dynamic_cloneable>>(vv1);
+    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(vv2));
     CHECK(unchecked_any_cast<std::string>(vv1) == s1);
-    CHECK(unchecked_any_cast<std::string>(*vv2) == s1);
+    CHECK(unchecked_any_cast<std::string>(vv2) == s1);
   }
   {
-    auto vv1 = any_<cref, dynamic_smart_ptr>(s1);
-    auto vv2 = clone_to<any<dynamic_smart_ptr>>(vv1);
-    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
+    auto vv1 = any_<cref, dynamic_cloneable>(s1);
+    auto vv2 = clone_to<any<dynamic_cloneable>>(vv1);
+    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(vv2));
     CHECK(unchecked_any_cast<std::string>(vv1) == s1);
-    CHECK(unchecked_any_cast<std::string>(*vv2) == s1);
+    CHECK(unchecked_any_cast<std::string>(vv2) == s1);
   }
   {
-    auto vv1 = any_<mutref, dynamic_smart_ptr>(s1);
-    auto vv2 = clone_to<any<dynamic_smart_ptr>>(vv1);
-    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
+    auto vv1 = any_<mutref, dynamic_cloneable>(s1);
+    auto vv2 = clone_to<any<dynamic_cloneable>>(vv1);
+    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(vv2));
     CHECK(unchecked_any_cast<std::string>(vv1) == s1);
-    CHECK(unchecked_any_cast<std::string>(*vv2) == s1);
+    CHECK(unchecked_any_cast<std::string>(vv2) == s1);
   }
   {
-    auto vv1 = any_<mutref, dynamic_smart_ptr>(s1);
-    auto vv2 = clone_to<any_<unique, dynamic_smart_ptr>>(vv1);
-    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
+    auto vv1 = any_<mutref, dynamic_cloneable>(s1);
+    auto vv2 = clone_to<any_<unique, dynamic_cloneable>>(vv1);
+    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(vv2));
     CHECK(unchecked_any_cast<std::string>(vv1) == s1);
-    CHECK(unchecked_any_cast<std::string>(*vv2) == s1);
+    CHECK(unchecked_any_cast<std::string>(vv2) == s1);
   }
   {
-    auto vv1 = any<dynamic_smart_ptr>(std::make_shared<std::string>(s1));
-    auto vv2 = clone_to<any<dynamic_smart_ptr>>(vv1);
-    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
+    auto vv1 = any<dynamic_cloneable>(std::make_shared<std::string>(s1));
+    auto vv2 = clone_to<any<dynamic_cloneable>>(vv1);
+    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(vv2));
     CHECK(unchecked_any_cast<std::string>(vv1) == s1);
-    CHECK(unchecked_any_cast<std::string>(*vv2) == s1);
+    CHECK(unchecked_any_cast<std::string>(vv2) == s1);
   }
   {
-    auto vv1 = any<dynamic_smart_ptr>(std::make_shared<std::string>(s1));
-    auto vv2 = clone_to<any_<unique, dynamic_smart_ptr>>(vv1);
-    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
+    auto vv1 = any<dynamic_cloneable>(std::make_shared<std::string>(s1));
+    auto vv2 = clone_to<any_<unique, dynamic_cloneable>>(vv1);
+    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(vv2));
     CHECK(unchecked_any_cast<std::string>(vv1) == s1);
-    CHECK(unchecked_any_cast<std::string>(*vv2) == s1);
+    CHECK(unchecked_any_cast<std::string>(vv2) == s1);
   }
   {
-    auto vv1 = any_<unique, dynamic_smart_ptr>(std::make_unique<std::string>(s1));
-    auto vv2 = clone_to<any<dynamic_smart_ptr>>(vv1);
-    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
+    auto vv1 = any_<unique, dynamic_cloneable>(std::make_unique<std::string>(s1));
+    auto vv2 = clone_to<any<dynamic_cloneable>>(vv1);
+    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(vv2));
     CHECK(unchecked_any_cast<std::string>(vv1) == s1);
-    CHECK(unchecked_any_cast<std::string>(*vv2) == s1);
+    CHECK(unchecked_any_cast<std::string>(vv2) == s1);
   }
   {
-    auto vv1 = any_<unique, dynamic_smart_ptr>(std::make_unique<std::string>(s1));
-    auto vv2 = clone_to<any_<unique, dynamic_smart_ptr>>(vv1);
-    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
+    auto vv1 = any_<unique, dynamic_cloneable>(std::make_unique<std::string>(s1));
+    auto vv2 = clone_to<any_<unique, dynamic_cloneable>>(vv1);
+    CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(vv2));
     CHECK(unchecked_any_cast<std::string>(vv1) == s1);
-    CHECK(unchecked_any_cast<std::string>(*vv2) == s1);
+    CHECK(unchecked_any_cast<std::string>(vv2) == s1);
   }
 }
 // cppcheck-suppress-begin [accessMoved]

@@ -8,8 +8,8 @@ TRAIT(equal_comparable, anyxx::dynamic_copyable,
       (OP_FREE(bool, ==, eq, (anyxx::self const&), const),
        OP_IMPL(
            public, bool, !=, ne, (anyxx::self const&), const, (auto const& r) {
-             return !(using_as<equal_comparable>(self) ==
-                      using_as<equal_comparable>(r));
+             return !(as<equal_comparable>(self) ==
+                      as<equal_comparable>(r));
            })))
 
 // An optional as a customizable trait.
@@ -67,7 +67,7 @@ struct reference_wrapper {
 };
 
 template <typename T>
-struct nullable_model_map<T&> : nullable_default_model_map<T const&> {
+struct nullable_trait_map<T&> : nullable_default_trait_map<T const&> {
   using rep_type = reference_wrapper<T>;
   bool has_value(rep_type const& x) { return x.get() != nullptr; };
   auto& get_value(auto&& x) { return *(std::forward<decltype(x)>(x)).get(); };
@@ -106,14 +106,14 @@ class foo {
   foo() = default;
   std::shared_ptr<voo> v_;
   friend struct anyxx::using_<foo>;
-  friend struct _2p_lib::nullable_model_map<foo>;
+  friend struct _2p_lib::nullable_trait_map<foo>;
 };
 }  // namespace _2p_app
 // class foo has an internal state for 'no value'(v_ == nullptr), so we can
 // directly use it as the representation of the nullable trait. This is done be
 // seting 'rep_type' to 'foo' and providing the 'has_value' and 'get_value'
 // functions accordingly.
-MODEL_MAP(_2p_app::foo, _2p_lib::nullable) {
+TRAIT_MAP(_2p_lib::nullable, _2p_app::foo) {
   using rep_type = _2p_app::foo;
   bool has_value(_2p_app::foo const& self) { return self.v_ != nullptr; };
   auto& get_value(auto&& self) { return std::forward<decltype(self)>(self); };

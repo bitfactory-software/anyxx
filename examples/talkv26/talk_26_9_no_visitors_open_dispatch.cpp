@@ -11,10 +11,9 @@ using namespace anyxx;
 
 namespace {
 
-template <anyxx::is_trait Trait, typename Self>
-struct node : anyxx::copyable<Trait, Self> {
-  using default_proxy_t = anyxx::cow;
-  using dispatch_table[[= anyxx::v_table_data]] = anyxx::dispatch_table;
+template <typename Self>
+struct node : anyxx::deleteable<Self> {
+  using dispatch_table[[= v_table_data]] = anyxx::dispatch_table;
 };
 static_assert(is_open_dispatch_v_table<any<node>::v_table_t>);
 
@@ -69,8 +68,10 @@ auto __ = as_lisp.define<Integer>(
 }  // namespace
 
 TEST_CASE("talk_26_9_no_visitors_open_dispatch") {
-  any<node> expr{Times{Integer(2), Plus{Integer{3}, Integer{4}}}};
-
+  auto expr = any<node>{std::in_place_type<Times>,
+                Integer(2),
+                any<node>{std::in_place_type<Plus>, any<node>{std::in_place_type<Integer>, 3},
+                 any<node>{std::in_place_type<Integer>, 4}}};
   auto v = evaluate(expr);
   REQUIRE(v == 14);
   std::stringstream out;

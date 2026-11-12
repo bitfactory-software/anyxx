@@ -9,7 +9,7 @@ namespace anyxx {
 /// Use this when some, at compile time, known types are dispatched in a hot
 /// path. Put these types plus an any_ (with the specific \ref trait and a
 /// dynamic proxy) in a std::variant. This variant is then used with a \ref
-/// using_ proxy and the same \ref trait as before. See \ref make_vany
+/// using_ proxy and the same \ref trait as before. See \ref vany
 /// So the dispatch for the types in the variant is done internally with a
 /// std::visit, and all other types are dispatched via their v-Table. Now you
 /// know where the Any++ logo has its origin.
@@ -19,7 +19,7 @@ using vany_variant = std::variant<any<Trait>, Types...>;
 
 /// A factory type to direct get the any_ for the vany
 template <template<typename...> typename Trait, typename... Types>
-using make_vany = any_<using_<vany_variant<Trait, Types...>>, Trait>;
+using vany = any_<using_<vany_variant<Trait, Types...>>, Trait>;
 
 template <typename VanyProxy>
 struct vany_variant_trait {

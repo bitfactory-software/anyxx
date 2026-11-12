@@ -11,47 +11,27 @@ using namespace anyxx;
 
 namespace {
 
-// base architecture layer
-template <is_trait Trait, typename Self>
-struct base : dynamic_castable<Trait, Self> {
-    static std::string as_string(Self const& self){
-        return std::format("{}", self);
-    }
-};
+struct data {};
 
-std::string process_with(std::vector<any<base>> const& things,
-                         any<function, std::string(any<base> const&)> process) {
-    std::string result;
-    for(auto const& thing : things) {
-        result += process(thing) + "\n";
-    }
-    return result;
-}
+template <typename Self>
+struct greeting : dynamic_castable<Self> {
+  std::string greet() const;
+};  
 
-// higher architecture layer
-template <is_trait Trait, typename Self>
-struct derived : base<Trait, Self> {
-    static std::string decorated(Self const& self) {
-        return  + "exact: " + any<base>{self}.as_string();
-    }
-};
-
-std::string decoration_handler(any<base> const& thing) {
-    if(auto d = anyxx::downcast_to<any<derived>>(thing)) {
-        return d->decorated();
-    } else {
-        return "possible answer: " + thing.as_string();
-    }
+template <>
+struct greeting<data> {
+  static std::string greet(const data&) { return "Hello"; };
 };
 
 }  // namespace
 
-TEST_CASE("talk_26_7_downcast") {
-
-    int i = 4711;
-    std::string s = "hello world";
-
-    auto processed =
-        process_with({ any<derived>{i}, any<derived>{s}, 42 }, decoration_handler);
-    CHECK(processed == "exact: 4711\nexact: hello world\npossible answer: 42\n");
+TEST_CASE("talk_23_7_downcast") {
+  auto d = data{};
+  auto g1 = any<greeting>{d};
+  auto a = any<dynamic_castable>{g1};
+  if (auto g = downcast_to<any<greeting>>(a)) {
+    CHECK(g->greet() == "Hello");
+  } else {
+    CHECK(!"downcast failed");
+  }
 }

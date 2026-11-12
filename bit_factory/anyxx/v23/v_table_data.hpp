@@ -19,7 +19,7 @@ namespace anyxx {
         return static_is_derived_from(from);                                 \
       })
 #define ANY_CAN_TYPE_SAVE_CROSSCAST \
-  ANY_V_TABLE_DATA(meta_data*, meta_data_, nullptr)
+  ANY_V_TABLE_DATA(meta_data*, meta_data_, &get_meta_data<Concrete>())
 #define ANY_MODEL_SIZE \
   ANY_V_TABLE_DATA(model_size_t, model_size, compute_model_size<Concrete>())
 #define ANY_COPY_CONSTRUCTOR                                              \
@@ -47,9 +47,10 @@ namespace anyxx {
 
 TRAIT_EX(const_referenceable, observeable, , , , ,
          (using default_proxy_t = cref;));
+    TRAIT_EX(deleteable, observeable, , , , (ANY_HAS_DELETE), (using default_proxy_t = unique;));
+    TRAIT_EX(cloneable, deleteable, , , , (ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR), ());
 TRAIT_EX(mutable_referenceable, observeable, , , , ,
          (using default_proxy_t = mutref;));
-TRAIT_EX(deleteable, observeable, , , , (ANY_HAS_DELETE), (using default_proxy_t = unique;));
 
 TRAIT_EX(moveable, observeable, , , ,
          (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
@@ -71,7 +72,7 @@ TRAIT_EX(dynamic_castable, typed_observeable, , , ,
 TRAIT_EX(dynamic_deletable, dynamic_castable, , , , (ANY_HAS_DELETE),
          (using default_proxy_t = shared;));
 
-TRAIT_EX(dynamic_smart_ptr, dynamic_deletable, , , ,
+TRAIT_EX(dynamic_cloneable, dynamic_deletable, , , ,
          (ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR), ());
 
 TRAIT_EX(dynamic_moveable, dynamic_castable, , , ,

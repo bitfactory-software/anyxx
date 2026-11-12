@@ -63,7 +63,7 @@ struct val {
 };
 
 template <std::size_t SmallObjectSize = small_object_size>
-using nullable_val = val<SmallObjectSize, std::true_type>;
+using optional_val = val<SmallObjectSize, std::true_type>;
 
 template <std::size_t SmallObjectSize, typename V>
 auto visit_value(auto&& visitor, V&& v, model_size_t size) -> decltype(auto) {

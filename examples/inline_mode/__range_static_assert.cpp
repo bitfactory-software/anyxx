@@ -30,11 +30,11 @@ TEST_CASE("range static assert") {
       true);
   static_assert(
       std::same_as<any_forward_iterator<self, self>::v_table_t::any_value_t,
-                   any_<nullable_val<iterator_val_proxy_size>, forward_iterator,
+                   any_<optional_val<iterator_val_proxy_size>, forward_iterator,
                        self, self>>);
   static_assert(
       std::same_as<random_access_iterator<self, self>::v_table_t::any_value_t,
-                   any_<nullable_val<iterator_val_proxy_size>,
+                   any_<optional_val<iterator_val_proxy_size>,
                        random_access_iterator, self, self>>);
   static_assert(std::forward_iterator<any_forward_iterator<self, self>>);
 

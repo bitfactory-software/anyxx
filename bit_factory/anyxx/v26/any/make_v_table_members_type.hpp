@@ -66,9 +66,9 @@ consteval std::vector<std::meta::info> collect_v_table_members() {
     return fptrs;
 };
 
-template <template <typename, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_v_table_members_type() {
-    auto fptrs = collect_v_table_members<^^Trait<declaration, declaration, Args...>, 
+    auto fptrs = collect_v_table_members<^^Trait<declaration, Args...>, 
         ^^dyn_self_val_t<Trait, Args...>, ^^dyn_self_cref_t<Trait, Args...>, ^^dyn_self_mutref_t<Trait, Args...>>();
     return meta::make_struct_with(fptrs);
 }

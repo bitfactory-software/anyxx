@@ -12,8 +12,8 @@ namespace anyxx {
 ///
 /// See also \ref casts.
 template <typename T, template <typename, typename...> typename Trait, typename... Args>
-struct register_trait {
-    constexpr register_trait() {
+struct castable_to {
+    constexpr castable_to() {
         bind_v_table_to_meta_data<typename Trait<Args...>::v_table_t, T>();
     }
 };

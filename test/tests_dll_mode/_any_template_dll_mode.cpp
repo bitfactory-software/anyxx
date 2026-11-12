@@ -39,10 +39,10 @@ TRAIT_TEMPLATE(((KEY)), map_to_string, anyxx::dynamic_copyable, (),
                (FN((anyxx::any_<anyxx::cref, stringable>), at, (KEY const&),
                    const)))
 
-MODEL_MAP(int, stringable) {
+TRAIT_MAP(stringable, int) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
 };
-MODEL_MAP(double, stringable) {
+TRAIT_MAP(stringable, double) {
   auto to_string(double const& x) -> std::string { return std::to_string(x); };
 };
 
@@ -53,11 +53,11 @@ using namespace anyxx;
 
 using namespace template_test;
 
-ANY_META_CLASS_STATIC(int)
-ANY_META_CLASS_STATIC(double)
-ANY_META_CLASS_STATIC(
+META_CLASS_STATIC(int)
+META_CLASS_STATIC(double)
+META_CLASS_STATIC(
     std::map<int, std::map<std::string, std::map<int, double>>>)
-ANY_META_CLASS_STATIC(std::map<std::string, std::map<int, double>>)
+META_CLASS_STATIC(std::map<std::string, std::map<int, double>>)
 
 TEMPLATE_MODEL_MAP((std::map<std::string, int>), template_test::map,
     ((std::string), (int))) {
@@ -67,14 +67,14 @@ TEMPLATE_MODEL_MAP((std::map<std::string, int>), template_test::map,
 };
 
 namespace{
-anyxx::register_trait<std::map<std::string, int>, template_test::map,
+anyxx::castable_to<std::map<std::string, int>, template_test::map,
                       std::string, int>
     __;
 
 using KEY1 = anyxx::any_<anyxx::cref, recursive_map, std::string,
                          anyxx::any_<anyxx::cref, mutable_map, int, double>,
                          anyxx::cref>;
-anyxx::register_trait<
+anyxx::castable_to<
     std::map<int, std::map<std::string, std::map<int, double>>>, recursive_map,
     int, KEY1>
     __;
@@ -82,7 +82,7 @@ anyxx::register_trait<
 using KEY2 =
     anyxx::any_<anyxx::cref, recursive_map, std::string,
                 anyxx::any_<anyxx::cref, map, int, double>, anyxx::cref>;
-anyxx::register_trait<
+anyxx::castable_to<
     std::map<int, std::map<std::string, std::map<int, double>>>, recursive_map,
     int, KEY2>
     __;
@@ -90,23 +90,23 @@ anyxx::register_trait<
 using KEY3 = anyxx::any_<anyxx::mutref, mutable_recursive_map, std::string,
                          anyxx::any_<anyxx::mutref, mutable_map, int, double>,
                          anyxx::mutref>;
-anyxx::register_trait<
+anyxx::castable_to<
     std::map<int, std::map<std::string, std::map<int, double>>>,
     mutable_recursive_map, int, KEY3>
     __;
 
 using KEY4 = anyxx::any_<anyxx::cref, map, int, double>;
-anyxx::register_trait<std::map<std::string, std::map<int, double>>,
+anyxx::castable_to<std::map<std::string, std::map<int, double>>,
                       test::component_base::recursive_map, std::string, KEY4>
     __;
 
 using KEY5 = anyxx::any_<anyxx::cref, mutable_map, int, double>;
-anyxx::register_trait<std::map<std::string, std::map<int, double>>,
+anyxx::castable_to<std::map<std::string, std::map<int, double>>,
                       test::component_base::recursive_map, std::string, KEY5>
     __;
 
 using KEY6 = anyxx::any_<anyxx::mutref, mutable_map, int, double>;
-anyxx::register_trait<std::map<std::string, std::map<int, double>>,
+anyxx::castable_to<std::map<std::string, std::map<int, double>>,
                       test::component_base::mutable_recursive_map, std::string,
                       KEY6>
     __;

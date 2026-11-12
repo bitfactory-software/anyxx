@@ -27,6 +27,8 @@ class container {
   }
 };
 
+static_assert(std::derived_from<any<input_iterator, int, const int&>, input_iterator<declaration, int, const int&>::typenames>);
+
 static_assert(std::ranges::bidirectional_range<any<view, bidirectional, int const>>);
 static_assert(std::ranges::view<any<view, bidirectional, int const>>);
 

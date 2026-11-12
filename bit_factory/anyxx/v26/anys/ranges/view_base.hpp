@@ -6,9 +6,9 @@
 
 namespace anyxx {
 
-template <is_trait Trait, typename Self, typename Category, typename Value, typename Ref = Value&>
-struct view_base : copyable<Trait, Self> {
-    using default_proxy_t = anyxx::nullable_val<>;
+template <typename Self, typename Category, typename Value, typename Ref = Value&>
+struct view_base : copyable<Self> {
+    using default_proxy_t = anyxx::optional_val<>;
     template <typename Any>
     using trait_facade_decorator = std::ranges::view_interface<Any>;
     template <typename ConstructedWith>

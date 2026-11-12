@@ -5,12 +5,12 @@
 namespace anyxx {
 
 template <typename Proxy, typename Trait>
-using proxy_model_map_t =
-typename Trait::template model_map<static_dispatch_t<Proxy>>;
+using proxy_trait_map_t =
+typename Trait::template trait_map<static_dispatch_t<Proxy>>;
 
 template <typename Proxy, typename Trait>
 using proxy_deduced_type_t =
-typename proxy_model_map_t<Proxy, Trait>::deduced_type;
+typename proxy_trait_map_t<Proxy, Trait>::deduced_type;
 
 template <typename Proxy, typename Trait>
   requires(!is_dyn<Proxy>)

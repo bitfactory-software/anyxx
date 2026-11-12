@@ -34,7 +34,7 @@ consteval overload_sets_spec make_overload_sets_specs(std::meta::info trait_decl
     return specs;
 }
 
-template <template <typename, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename...> typename Trait, typename... Args>
 consteval overload_sets_spec make_overload_sets_specs() {
     return make_overload_sets_specs(trait_declaration<^^Trait, ^^Args...>());
 }

@@ -17,9 +17,9 @@ constexpr bool is_in_dll_mode = false;
 /// instantiated in a single translation unit.
 ///
 /// See also \ref ANY_SINGLETON_DECLARE, \ref ANY_SINGLETON, \ref
-/// ANY_META_CLASS_FWD, \ref ANY_META_CLASS, \ref
+/// META_CLASS_FWD, \ref META_CLASS, \ref
 /// ANY_DISPATCH_COUNT_FWD, \ref ANY_DISPATCH_COUNT, \ref
 /// ANY_DISPATCH_FOR_FWD, \ref ANY_DISPATCH_FOR, \ref
-/// ANY_META_CLASS_FWD, \ref ANY_META_CLASS.
+/// META_CLASS_FWD, \ref META_CLASS.
 
 }  // namespace anyxx

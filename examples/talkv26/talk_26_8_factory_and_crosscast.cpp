@@ -21,8 +21,8 @@ concept range_of =
 
 namespace geometry {
 
-template <is_trait Trait, typename Self>
-struct shape : dynamic_castable<Trait, Self> {
+template <typename Self>
+struct shape : dynamic_castable<Self> {
   double area() const;
 };
 
@@ -36,8 +36,8 @@ double sum_area(const Shapes& shapes) {
 
 namespace db {
 
-template <is_trait Trait, typename Self>
-struct serializable : dynamic_moveable<Trait, Self> {
+template <typename Self>
+struct serializable : dynamic_moveable<Self> {
   void serialize(std::ostream&) const;
 };
 
@@ -56,38 +56,6 @@ auto deserialize_from(std::istream& archive) {
 
 }  // namespace db
 
-namespace application {
-struct circle {
-  double radius = 0.0;
-  double area() const { return radius * radius * 3.14; }
-  void serialize(std::ostream& os) const { os << "circle " << radius << " "; };
-};
-struct square {
-  double edge_length = 0.0;
-  double area() const { return edge_length * edge_length; }
-  void serialize(std::ostream& os) const {
-    os << "square " << edge_length << " ";
-  };
-};
-}  // namespace application
-
-auto __ = db::deserialize.register_("circle", [](std::istream& ar) {
-  application::circle c;
-  ar >> c.radius;
-  return c;
-});
-register_trait<application::circle, db::serializable> __;
-register_trait<application::circle, geometry::shape> __;
-
-auto __ = db::deserialize.register_("square", [](std::istream& ar) {
-  application::square s;
-  ar >> s.edge_length;
-  return s;
-});
-register_trait<application::square, db::serializable> __;
-register_trait<application::square, geometry::shape> __;
-}  // namespace
-
 TEST_CASE("talk_23_8_factory_and_crosscast") {
   using namespace anyxx;
 
@@ -102,3 +70,36 @@ TEST_CASE("talk_23_8_factory_and_crosscast") {
   CHECK_THAT(geometry::sum_area(shapes),
              Catch::Matchers::WithinAbs(85.64, 0.01));
 }
+
+namespace application {
+struct circle {
+    double radius = 0.0;
+    double area() const { return radius * radius * 3.14; }
+    void serialize(std::ostream& os) const { os << "circle " << radius << " "; };
+};
+struct square {
+    double edge_length = 0.0;
+    double area() const { return edge_length * edge_length; }
+    void serialize(std::ostream& os) const {
+        os << "square " << edge_length << " ";
+    };
+};
+}  // namespace application
+
+auto __ = db::deserialize.register_("circle", [](std::istream& ar) {
+    application::circle c;
+    ar >> c.radius;
+    return c;
+});
+castable_to<application::circle, db::serializable> __;
+castable_to<application::circle, geometry::shape> __;
+
+auto __ = db::deserialize.register_("square", [](std::istream& ar) {
+    application::square s;
+    ar >> s.edge_length;
+    return s;
+});
+castable_to<application::square, db::serializable> __;
+castable_to<application::square, geometry::shape> __;
+}  // namespace
+

@@ -148,17 +148,17 @@ TEST_CASE("cow lifetime") {
       CHECK(X::tracker_ == 1);
       auto v2 = clone_to<any_getset>(v);
       CHECK(X::tracker_ == 1);
-      CHECK(get_proxy(*v2).holder_ == get_proxy(v).holder_);
+      CHECK(get_proxy(v2).holder_ == get_proxy(v).holder_);
       CHECK(v.get() == "hallo");
-      CHECK(v2->get() == "hallo");
-      CHECK(get_proxy(*v2).holder_ == get_proxy(v).holder_);
+      CHECK(v2.get() == "hallo");
+      CHECK(get_proxy(v2).holder_ == get_proxy(v).holder_);
       CHECK(get_proxy(v).holder_->count_ == 2);
       static_assert(is_copy_constructor_v_table<any_getset::v_table_t>);
-      v2->set("hallo world");
+      v2.set("hallo world");
       CHECK(v.get() == "hallo");
-      CHECK(v2->get() == "hallo world");
-      CHECK(get_proxy(*v2).holder_ != get_proxy(v).holder_);
-      CHECK(get_proxy(*v2).unique());
+      CHECK(v2.get() == "hallo world");
+      CHECK(get_proxy(v2).holder_ != get_proxy(v).holder_);
+      CHECK(get_proxy(v2).unique());
       CHECK(get_proxy(v).unique());
     }
     CHECK(X::tracker_ == 0);

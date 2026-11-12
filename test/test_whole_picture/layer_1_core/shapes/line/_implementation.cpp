@@ -8,9 +8,9 @@ using namespace whole_picture::core::shapes;
 
 using namespace anyxx;
 
-ANY_META_CLASS(line)
+META_CLASS(line)
 namespace {
-register_trait<shapes::line, whole_picture::architecture::shape> __;
+castable_to<shapes::line, whole_picture::architecture::shape> __;
 }
 ANY_DISPATCH_FOR(line, whole_picture::architecture, shape)
 

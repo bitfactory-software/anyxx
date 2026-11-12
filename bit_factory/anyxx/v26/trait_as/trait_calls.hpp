@@ -3,16 +3,12 @@
 #include <bit_factory/anyxx/utilities.hpp>
 #include <bit_factory/anyxx/v26/any/keywords.hpp>
 #include <bit_factory/anyxx/v26/trait_translation/spec.hpp>
-#include <bit_factory/anyxx/v26/trait_translation/find_candidate_in_target.hpp>
 #include <bit_factory/anyxx/v26/trait_as/signature_translation.hpp>
-#include <vector>
-#include <ranges>
-#include <variant>  
 
 namespace anyxx {
 
 template <typename V, std::meta::info Target, std::meta::info Spec, typename TraitAs, typename... Args>
-struct const_trait_model_map_call {
+struct const_trait_trait_map_call {
   template <typename Self>
   constexpr trait_as_return_type_t<TraitAs, Spec> operator()(this Self const& self, Args... args){
       constexpr auto return_type = return_type_of(Spec);
@@ -25,7 +21,7 @@ struct const_trait_model_map_call {
   }
 };
 template <typename V, std::meta::info Target, std::meta::info Spec, typename TraitAs, typename... Args>
-struct mutable_trait_model_map_call {
+struct mutable_trait_trait_map_call {
     template <typename Self>
     constexpr trait_as_return_type_t<TraitAs, Spec> operator()(this Self&  self, Args... args) {
         constexpr auto return_type = return_type_of(Spec);
@@ -258,9 +254,9 @@ template <typename V>
 consteval std::meta::info choose_named_call(interface_spec_with_target const& spec){
     if(spec.target != std::meta::info{} && !is_defaulted_function_spec(spec.target)) {
         if(is_const_function(spec.target)) {
-            return ^^const_trait_model_map_call;
+            return ^^const_trait_trait_map_call;
         } else {
-            return ^^mutable_trait_model_map_call;
+            return ^^mutable_trait_trait_map_call;
         }
     } else if(is_class_type(^^std::remove_cvref_t<V>)){
         if(is_const_function(spec.member)) {
@@ -301,7 +297,7 @@ consteval std::meta::info choose_operator_call(interface_spec_with_target const&
 #undef __RETURN_OP
 }
 
-template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <typename, typename...> typename Trait, typename... Args>
 consteval auto make_trait_as_named_call_template_params(interface_spec_with_target const& spec) {
     auto self_t = is_const_function(spec.member) ? ^^ const V : ^^V;
     using trait_as_t = trait_as<V, Trait, Args...>;
@@ -310,7 +306,7 @@ consteval auto make_trait_as_named_call_template_params(interface_spec_with_targ
     return args;
 }
 
-template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <typename, typename...> typename Trait, typename... Args>
 consteval auto make_trait_as_op_call_template_params(interface_spec_with_target const& spec) {
     auto self_t = is_const_function(spec.member) ? ^^ const V : ^^V;
     using trait_as_t = trait_as<V, Trait, Args...>;
@@ -319,7 +315,7 @@ consteval auto make_trait_as_op_call_template_params(interface_spec_with_target 
     return args;
 }
 
-template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_static_facade_call(interface_spec_with_target const& spec){
     if constexpr(is_variant<V>) {
         if(auto named_call = choose_named_variant_call<V>(spec); named_call != std::meta::info{}){

@@ -27,16 +27,16 @@ TEST_CASE("typed_any/observer") {
   CHECK_NOTHROW([&] { CHECK(any_cast<x_t>(co).s_ == "hallo"); }());
   CHECK_THROWS_AS(any_cast<std::string>(co), type_mismatch_error);
 
-  auto co_typed = as<x_t>(co);
+  auto co_typed = as_typed<x_t>(co);
   CHECK(co_typed->s_ == "hallo");
   CHECK((*co_typed).s_ == "hallo");
-  CHECK_THROWS_AS(as<std::string>(co), type_mismatch_error);
+  CHECK_THROWS_AS(as_typed<std::string>(co), type_mismatch_error);
 
   any_<mutref, test_i> mo{s};
   CHECK(any_cast<x_t>(mo).s_ == "hallo");
   CHECK_THROWS_AS(any_cast<std::string>(mo), type_mismatch_error);
 
-  auto mo_typed = as<x_t>(mo);
+  auto mo_typed = as_typed<x_t>(mo);
   CHECK(mo_typed->s_ == "hallo");
   CHECK((*mo_typed).s_ == "hallo");
   (*mo_typed) = x_t{"world"};
@@ -47,7 +47,7 @@ TEST_CASE("typed_any/observer") {
 
 namespace typed_any_test {
 
-MODEL_MAP(x_t, test_i) {
+TRAIT_MAP(test_i, x_t) {
   static auto to_string(x_t const& x) { return x.s_; };
   static void from_string(x_t & x, std::string_view s) { x.s_ = s; };
 };
@@ -72,11 +72,11 @@ TEST_CASE("typed_any/observer/test_i") {
 
   CHECK(co.to_string() == "hallo");
 
-  auto co_typed = as<x_t>(co);
+  auto co_typed = as_typed<x_t>(co);
   CHECK(co_typed->s_ == "hallo");
   CHECK((*co_typed).s_ == "hallo");
   CHECK(co_typed.to_string() == "hallo");
-  CHECK_THROWS_AS(as<std::string>(co), type_mismatch_error);
+  CHECK_THROWS_AS(as_typed<std::string>(co), type_mismatch_error);
 
   any_<mutref, test_i> mo{s};
   CHECK((any_cast<x_t>(mo)).s_ == "hallo");
@@ -84,7 +84,7 @@ TEST_CASE("typed_any/observer/test_i") {
 
   CHECK(mo.to_string() == "hallo");
 
-  auto mo_typed = as<x_t>(mo);
+  auto mo_typed = as_typed<x_t>(mo);
   CHECK(mo_typed->s_ == "hallo");
   CHECK((*mo_typed).s_ == "hallo");
   (*mo_typed) = x_t{"world"};

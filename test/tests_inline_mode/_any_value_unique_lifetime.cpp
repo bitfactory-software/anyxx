@@ -152,9 +152,9 @@ TEST_CASE("val<> lifetime") {
       CHECK(X::tracker_ == 1);
       auto v2 = clone_to<any<dynamic_copyable>>(v);
       CHECK(X::tracker_ == 1);
-      CHECK(get_proxy_ptr_const(*v2) == get_proxy_ptr_const(v));
+      CHECK(get_proxy_ptr_const(v2) == get_proxy_ptr_const(v));
       CHECK((any_cast<X>(v))() == "hallo");
-      CHECK((any_cast<X>(*v2))() == "hallo");
+      CHECK((any_cast<X>(v2))() == "hallo");
     }
     CHECK(X::tracker_ == 0);
     X::tracker_ = 0;
@@ -223,9 +223,9 @@ TEST_CASE("val<> lifetime small object") {
       CHECK(Y::tracker_ == 1);
       auto v2 = clone_to<any<dynamic_copyable>>(v);
       CHECK(Y::tracker_ == 2);
-      CHECK(get_proxy_ptr_const(*v2) != get_proxy_ptr_const(v));
+      CHECK(get_proxy_ptr_const(v2) != get_proxy_ptr_const(v));
       CHECK(any_cast<Y>(v)() == 42);
-      CHECK(any_cast<Y>(*v2)() == 42);
+      CHECK(any_cast<Y>(v2)() == 42);
     }
     CHECK(Y::tracker_ == 0);
     Y::tracker_ = 0;
@@ -276,7 +276,7 @@ TEST_CASE("value lifetime trivial object") {
       CHECK((any_cast<int>(v)) == 42);
       auto v2 = clone_to<any<dynamic_copyable>>(v);
       CHECK((any_cast<int>(v)) == 42);
-      CHECK((any_cast<int>(*v2)) == 42);
+      CHECK((any_cast<int>(v2)) == 42);
     }
   }
 }
