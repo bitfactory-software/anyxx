@@ -61,52 +61,47 @@ struct mutable_trait_member_call {
     }
 };
 
-template <std::meta::info v, std::meta::info trait, auto args>
-consteval std::vector<std::meta::info> make_trait_as_params_for_variant() {
+consteval std::vector<std::meta::info> make_trait_as_params_for_variant(std::meta::info v, auto args) {
     std::vector<std::meta::info> types;
     types.push_back(v);
-    types.push_back(trait);
     types.append_range(args);
     return types;
 }
-template <std::meta::info v, std::meta::info trait, auto args>
-consteval std::meta::info make_trait_as_for_variant() {
-    static_assert(can_substitute(^^trait_as, make_trait_as_params_for_variant<v, trait, args>()));
-    return substitute(^^trait_as, make_trait_as_params_for_variant<v, trait, args>());
+consteval std::meta::info make_trait_as_for_variant(std::meta::info v, auto args) {
+    //static_assert(can_substitute(^^trait_as, make_trait_as_params_for_variant(v, args)));
+    return substitute(^^trait_as, make_trait_as_params_for_variant(v, args));
 }
 template <typename V, std::meta::info Target, std::meta::info Spec, typename TraitAs, typename... Args>
 struct const_trait_variant_call {
     template <typename Self>
-    constexpr trait_as_return_type_t<TraitAs, Spec> operator()(this Self const& self, Args... args) {
-        constexpr auto return_type = return_type_of(Spec);
-        constexpr auto trait = template_of(^^TraitAs);
-        constexpr auto trait_args = std::define_static_array(template_arguments_of(^^TraitAs) | std::views::drop(2));
+    constexpr trait_as_return_type_t<TraitAs, Spec> operator()([[maybe_unused]] this Self const& self, Args... args) {
+        using return_type = trait_as_return_type_t<TraitAs, Spec>;
+        constexpr auto trait_args = std::define_static_array(template_arguments_of(^^TraitAs) | std::views::drop(1));
         auto v = self_cast<V>(&self);
-        return std::visit([&]<typename T>(T const&) {
-                            //consteval { throw std::meta::exception(display_string_of(trait), trait); }
-                            using delegate_trait_as = typename[:make_trait_as_for_variant<^^T, trait, trait_args>():];
-                            //using delegate_trait_as_t = typename[:delegate_trait_as:];
-                            //constexpr auto target = find_candidate_in<delegate_trait_as_t, Spec>();
-                            //return delegate_trait_as_t{x}.[:target:](args...);
-                            return typename [:return_type:]{};
-                        }, * v);
+        return std::visit([&]<typename T>(T const& x) {
+        //                    //consteval { throw std::meta::exception(display_string_of(trait), trait); }
+                            using delegate_trait_as = typename[:make_trait_as_for_variant(^^T, trait_args):];
+                            consteval { throw std::meta::exception{
+                                    std::string{display_string_of(^^delegate_trait_as)},
+                                    ^^delegate_trait_as}; }
+                            constexpr auto target = find_candidate_in<delegate_trait_as, Spec>();
+                            return delegate_trait_as{x}.[:target:](args...);
+          //                  return return_type{};
+                        }, *v);
     }
 };
 template <typename V, std::meta::info Target, std::meta::info Spec, typename TraitAs, typename... Args>
 struct mutable_trait_variant_call {
     template <typename Self>
     constexpr decltype(auto) operator()(this Self& self, Args... args) {
-        constexpr auto return_type = return_type_of(Spec);
-        //constexpr auto trait = template_of(^^TraitAs);
-        //constexpr auto trait_args = template_arguments_of(^^TraitAs) | std::views::drop(2);
+        constexpr auto trait_args = template_arguments_of(^^TraitAs) | std::views::drop(1);
         auto v = self_cast<V>(&self);
-        return std::visit([&]<typename T>(T& ) { 
-                            //constexpr auto delegate_trait_as = make_trait_as_for_variant(^^T, trait, trait_args);
-                            //using delegate_trait_as_t = typename[:delegate_trait_as:];
-                            //constexpr auto target = find_candidate_in<delegate_trait_as_t, Spec>();
-                            //return delegate_trait_as_t{x}.[:target:](args...);
-                            return typename [:return_type:]{};
-                        }, * v);
+        return std::visit([&]<typename T>(T& x) { 
+                            using delegate_trait_as = typename[:make_trait_as_for_variant(^^T, trait_args):];
+                            constexpr auto target = find_candidate_in<delegate_trait_as, Spec>();
+                            return delegate_trait_as{x}.[:target:](args...);
+//                            return typename [:return_type:]{};
+                        }, *v);
     }
 };
 
