@@ -77,32 +77,33 @@ struct const_trait_variant_call {
     template <typename Self>
     constexpr trait_as_return_type_t<TraitAs, Spec> operator()([[maybe_unused]] this Self const& self, Args... args) {
         auto v = self_cast<TraitAs const>(&self);
-        constexpr auto delegate = overloads {
+        return std::visit(overloads{
             [&]<typename T>([[maybe_unused]] T const& x) {
                 [[maybe_unused]] constexpr auto trait_args = std::define_static_array(template_arguments_of(^^TraitAs) | std::views::drop(1));
                 using delegate_trait_as = typename[:make_trait_as_for_variant(^^T, trait_args):];
                 [[maybe_unused]] constexpr auto target = find_candidate_in<delegate_trait_as, Spec>();
                 return delegate_trait_as{x}.[:target:](args...);
-            },
-            [&]<is_any Any>(Any const& x) {
+            }, [&]<is_any Any>(Any const& x) {
                 [[maybe_unused]] constexpr auto target = find_candidate_in<Any, Spec>();
                 return x.[:target:](args...);
-            }
-        };
-        return std::visit(delegate, get_value(*v));
+            }}, get_value(*v));
     }
 };
 template <typename V, std::meta::info Target, std::meta::info Spec, typename TraitAs, typename... Args>
 struct mutable_trait_variant_call {
     template <typename Self>
-    constexpr decltype(auto) operator()(this Self& self, Args... args) {
-        constexpr auto trait_args = template_arguments_of(^^TraitAs) | std::views::drop(1);
-        auto v = self_cast<V>(&self);
-        return std::visit([&]<typename T>(T& x) { 
-                            using delegate_trait_as = typename[:make_trait_as_for_variant(^^T, trait_args):];
-                            constexpr auto target = find_candidate_in<delegate_trait_as, Spec>();
-                            return delegate_trait_as{x}.[:target:](args...);
-                        }, *v);
+    constexpr trait_as_return_type_t<TraitAs, Spec> operator()([[maybe_unused]] this Self const& self, Args... args) {
+        auto v = self_cast<TraitAs>(&self);
+        return std::visit(overloads{
+            [&] <typename T>([[maybe_unused]] T& x) {
+                [[maybe_unused]] constexpr auto trait_args = std::define_static_array(template_arguments_of(^^TraitAs) | std::views::drop(1));
+                using delegate_trait_as = typename[:make_trait_as_for_variant(^^T, trait_args):];
+                [[maybe_unused]] constexpr auto target = find_candidate_in<delegate_trait_as, Spec>();
+                return delegate_trait_as{ x }.[:target:](args...);
+            },[&]<is_any Any>(Any& x) {
+                [[maybe_unused]] constexpr auto target = find_candidate_in<Any, Spec>();
+                return x.[:target:](args...);
+            } }, get_value(*v));
     }
 };
 
