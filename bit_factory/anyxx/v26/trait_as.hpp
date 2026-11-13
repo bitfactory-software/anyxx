@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <bit_factory/anyxx/proxies/static/using_.hpp>
 #include <bit_factory/anyxx/v26/any/keywords.hpp>
 #include <bit_factory/anyxx/v26/trait_as/trait_facade.hpp>
 #include <meta>
@@ -14,8 +15,14 @@ class trait_as : public[:make_trait_facade<V, Trait, Args...>():],
     V value_{};
 
  public:
+     using value_t = V;
+     using proxy_trait_t = proxy_trait<using_<V>>;
+
      constexpr trait_as() = default;
      constexpr trait_as(V const& value) : value_(value) {}
+     template <typename U>
+        requires (!std::derived_from<std::decay_t<U>, trait_as>)
+     constexpr trait_as(U&& u) : value_(std::forward<U>(u)){}
 
     friend constexpr V const& get_value(trait_as const& self) { return self.value_; };
     friend constexpr V& get_value(trait_as& self) { return self.value_; };
