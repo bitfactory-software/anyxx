@@ -1,6 +1,7 @@
 #define ANYXX_26
 #include <bit_factory/anyxx.hpp>
 // #include <bit_factory/anyxx/ext/vany.hpp>
+#include <bit_factory/anyxx/v26/meta/print_members.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
 #include <print>
@@ -26,25 +27,23 @@ struct drawable : copyable<Self> {
   std::string draw() const;
 };
 
- template <typename... Vs>
- struct drawable<std::variant<Vs...>> {
-   static std::string draw(std::variant<Vs...> const& v) {
-     return std::visit(
-         [](auto const& x) {
-           return trait_as<decltype(x), drawable>(x).draw();
-         },
-         v);
-   }
- };
+template <typename... Vs>
+struct drawable<std::variant<Vs...>> {
+  static std::string draw(std::variant<Vs...> const& v) {
+    return std::visit(
+        [](auto const& x) { return trait_as<decltype(x), drawable>(x).draw(); },
+        v);
+  }
+};
 
 using known_shapes = std::variant<circle, square>;
 
- void draw(std::stringstream& os,
-           std::vector<trait_as<known_shapes, drawable>> const& drawables) {
-   for (auto const& drawable : drawables) {
-     os << drawable.draw() << "\n";
-   }
- }
+void draw(std::stringstream& os,
+          std::vector<trait_as<known_shapes, drawable>> const& drawables) {
+  for (auto const& drawable : drawables) {
+    os << drawable.draw() << "\n";
+  }
+}
 
 }  // namespace
 
@@ -52,9 +51,11 @@ TEST_CASE("talk_2611_variant_dispatch") {
   auto s1 = trait_as<circle, drawable>(circle{}).draw();
   CHECK(s1 == "Hello");
 
-  //using trait_t = typename [:make_trait_as_for_variant<^^circle, ^^drawable, std::array<std::meta::info, 0>{}>():];
-  //static_assert(std::same_as<trait_t, trait_as<circle, drawable>>);
+  // using trait_t = typename [:make_trait_as_for_variant<^^circle, ^^drawable,
+  // std::array<std::meta::info, 0>{}>():]; static_assert(std::same_as<trait_t,
+  // trait_as<circle, drawable>>);
 
+  //meta::print_members<trait_as<square, drawable>>();
 
   std::stringstream ss;
   draw(ss, {known_shapes{circle{}}, known_shapes{square{}}});
