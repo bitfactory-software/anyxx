@@ -13,14 +13,29 @@ consteval std::meta::info find_candidate_in_target() {
     using self_t = self_const_correct_t<Target, VoidSelf>;
     if constexpr(is_defaulted_function_spec(spec) && is_class_type(^^Target)) {
         template for(constexpr auto candidate : define_static_array(members_of(^^Target, ctx))) {
-            if constexpr(!is_static_member(candidate) && is_function(candidate)) {
-                if constexpr(meta::function_name_of(candidate) == meta::function_name_of(spec)) {
-                    if constexpr(std::is_invocable_r_v<R, decltype(&[:candidate:]), self_t, Args...>) {
-                        return candidate;
+            if constexpr(!is_static_member(candidate)) {
+                if constexpr(is_function(candidate)) {
+                    if constexpr(meta::function_name_of(candidate) == meta::function_name_of(spec)) {
+                        if constexpr(std::is_invocable_r_v<R, decltype(&[:candidate:]), self_t, Args...>) {
+                            return candidate;
+                        }
+                    }
+                }
+                else if constexpr(is_nonstatic_data_member(candidate)) {
+                    if constexpr(identifier_of(candidate) == meta::function_name_of(spec)) {
+                        //static_assert(false);
+                        if constexpr(std::is_invocable_r_v<R, decltype(Target{}.[:candidate:]), Args...>) {
+                            return candidate;
+                        }
                     }
                 }
             }
-        }   
+        }
+        template for (constexpr auto base : std::define_static_array(bases_of(^^Target, ctx))) {
+            if (auto found = find_candidate_in_target<spec, typename [:type_of(base):], R, VoidSelf, Args...>(); found != std::meta::info{}) {
+                return found;
+            }
+        }
     }
     return {};
 }

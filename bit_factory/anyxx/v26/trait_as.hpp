@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <bit_factory/anyxx/proxies/static/using_.hpp>
 #include <bit_factory/anyxx/v26/any/keywords.hpp>
 #include <bit_factory/anyxx/v26/trait_as/trait_facade.hpp>
 #include <meta>
@@ -8,17 +9,29 @@
 namespace anyxx {
 
 template <typename V, template <typename, typename...> typename Trait, typename... Args>
-class trait_as : public[:make_trait_facade<V, Trait, Args...>():], 
-    public trait_facade_decorator_t<trait_as<V, Trait, Args...>, Trait, Args...>, 
+class trait_as : public[:make_trait_facade<V, Trait, Args...>():],
+    public trait_facade_decorator_t<trait_as<V, Trait, Args...>, Trait, Args...>,
     public deduced_typenames<Trait, Args...> {
-    V value_{};
 
- public:
-     constexpr trait_as() = default;
-     constexpr trait_as(V const& value) : value_(value) {}
+public:
+    using value_t = V;
+    using proxy_t = using_<V>;
+    using proxy_trait_t = proxy_trait<using_<V>>;
 
-    friend constexpr V const& get_value(trait_as const& self) { return self.value_; };
-    friend constexpr V& get_value(trait_as& self) { return self.value_; };
+    proxy_t proxy_{};
+
+    constexpr trait_as() = default;
+    constexpr trait_as(V const& value) : proxy_(value) {}
+    template <typename U>
+        requires (!std::derived_from<std::decay_t<U>, trait_as>)
+    constexpr trait_as(U&& u) : proxy_(std::forward<U>(u)){}
+
+    friend constexpr V const& get_value(trait_as const& self) { return self.proxy_.value_; };
+    friend constexpr V& get_value(trait_as& self) { return self.proxy_.value_; };
+    friend constexpr proxy_t const& get_proxy(trait_as const& self) { return self.proxy_; };
+    friend constexpr proxy_t& get_proxy(trait_as& self) { return self.proxy_; };
+    friend constexpr V const& get_proxy_value(trait_as const& self) { return self.proxy_.value_; };
+    friend constexpr V& get_proxy_value(trait_as& self) { return self.proxy_.value_; };
 };
 
 //template <typename V>

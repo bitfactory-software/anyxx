@@ -282,7 +282,7 @@ TEST_CASE("anyxx operators") {
         static_assert(^^decltype(r1)::proxy_t == ^^decltype(ops)::proxy_t);
         CHECK((any_cast<add_test>(r1)).i == 1);
         //anyxx::meta::print_members<any_<operators>::v_table_t::fptrs_t>();
-        anyxx::meta::print_members<decltype(any_<anyxx::val<>, operators>::op_plus_plus)>();
+        //anyxx::meta::print_members<decltype(any_<anyxx::val<>, operators>::op_plus_plus)>();
         auto& r2 = ++r1;
         CHECK(&any_cast<add_test>(r1).i != &any_cast<add_test>(ops).i);
         CHECK(&any_cast<add_test>(r1).i == &any_cast<add_test>(r2).i);
