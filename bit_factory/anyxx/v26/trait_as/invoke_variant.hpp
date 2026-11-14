@@ -20,9 +20,12 @@ consteval std::vector<std::meta::info> extract_trait_as_params(std::meta::info j
     auto jacket_template_arguments = template_arguments_of(jacket);
     if (jacket_template == ^^trait_as || jacket_template == ^^any_) {
         return std::ranges::to<std::vector>(jacket_template_arguments | std::views::drop(1));
-    } else
-    {
+    } else if (jacket_template == ^^any) {
         return jacket_template_arguments;
+    } else {
+        std::vector<std::meta::info> args{jacket_template};
+        args.append_range(jacket_template_arguments);
+        return args;
     }
 }
 template <std::meta::info Spec, std::meta::info jacket, typename R, typename V, typename... Args>
