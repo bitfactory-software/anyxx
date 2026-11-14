@@ -159,9 +159,9 @@ git clone - c core.symlinks = true https://github.com/bitfactory-software/anyxx
 ### CI Matrix
 | OS \ Compiler | MSVC | Clang | GCC |
 |:-----------------:|:------:|:-------:|:-----:|
-| Windows(latest)           | 19   | 21   | - | 
-| Ubuntu(latest)           | - | 21   | 14 | 
-| MacOS(latest)           | - | 21   | 14 | 
+| Windows(latest)           | 18   | 23   | - | 
+| Ubuntu(latest)           | - | 23   | 16 | 
+| MacOS(latest)           | - | 23   | 16 | 
 
 <a name="showcase2"></a> 
 ### Showcase 2: *Any++* with Model Map
