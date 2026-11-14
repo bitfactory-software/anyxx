@@ -15,24 +15,24 @@ consteval std::vector<std::meta::info> make_trait_as_params_for_variant(std::met
 consteval std::meta::info make_trait_as_for_variant(std::meta::info v, auto args) {
     return substitute(^^trait_as, make_trait_as_params_for_variant(v, args));
 }
-consteval std::vector<std::meta::info> extract_trait_as_params(std::meta::info jacket) {
-    auto jacket_template = template_of(jacket);
-    auto jacket_template_arguments = template_arguments_of(jacket);
-    if (jacket_template == ^^trait_as || jacket_template == ^^any_) {
-        return std::ranges::to<std::vector>(jacket_template_arguments | std::views::drop(1));
-    } else if (jacket_template == ^^any) {
-        return jacket_template_arguments;
+consteval std::vector<std::meta::info> extract_trait_as_params(std::meta::info trait_info) {
+    auto template_ = template_of(trait_info);
+    auto template_arguments = template_arguments_of(trait_info);
+    if (template_ == ^^trait_as || template_ == ^^any_) {
+        return std::ranges::to<std::vector>(template_arguments | std::views::drop(1));
+    } else if (template_ == ^^any) {
+        return template_arguments;
     } else {
-        std::vector<std::meta::info> args{jacket_template};
-        args.append_range(jacket_template_arguments);
+        std::vector<std::meta::info> args{ template_ };
+        args.append_range(template_arguments);
         return args;
     }
 }
-template <std::meta::info Spec, std::meta::info jacket, typename R, typename V, typename... Args>
+template <std::meta::info Spec, std::meta::info trait_info, typename R, typename V, typename... Args>
 constexpr R invoke_variant(V&& v, Args... args){
     return std::visit(overloads{
         [&] <typename T>([[maybe_unused]] T const& x) {
-            [[maybe_unused]] constexpr auto trait_args = std::define_static_array(extract_trait_as_params(jacket));
+            [[maybe_unused]] constexpr auto trait_args = std::define_static_array(extract_trait_as_params(trait_info));
             using delegate_trait_as = typename[:make_trait_as_for_variant(^^T, trait_args):];
             [[maybe_unused]] constexpr auto target = find_candidate_in<delegate_trait_as, Spec>();
             return delegate_trait_as{ x }.[:target:](args...);
