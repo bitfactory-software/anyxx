@@ -8,8 +8,8 @@
 | ``mutref`` | Observed object must outlive call. </br> Constructed with ``[[msvc/clang::lifetimebound]]``| Not threadsafe. |
 | ``shared`` | Same as ``std::shared_ptr< const>``.| Threadsafe.  |
 | ``unique`` | Same as ``std::unique_ptr`` | Threadsafe. |
-| ``val<SOBS>`` | Same as ``std::polymorphic`` | Threadsafe.</br> ``S``mall ``O``bject ``B``uffer ``S``ize</br> Does not allow empty ``any`` |
-| ``optional_val<SOBS>`` | Same as ``std::polymorphic`` | Threadsafe.</br> ``S``mall ``O``bject ``B``uffer ``S``ize</br> ALLOWS empty ``any`` |
+| ``val<SOBS>`` | Same as ``std::polymorphic`` | Threadsafe.</br> <``S``mall ``O``bject ``B``uffer ``S``ize> </br> Does not allow empty ``any`` |
+| ``optional_val<SOBS>`` | Same as ``std::polymorphic`` | Threadsafe.</br> <``S``mall ``O``bject ``B``uffer ``S``ize> </br> ALLOWS empty ``any`` |
 
 
 ### Lifetime castability
