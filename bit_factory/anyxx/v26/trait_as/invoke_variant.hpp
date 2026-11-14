@@ -28,11 +28,11 @@ consteval std::vector<std::meta::info> extract_trait_as_params(std::meta::info t
         return args;
     }
 }
-template <std::meta::info Spec, std::meta::info trait_info, typename R, typename V, typename... Args>
-constexpr R invoke_variant(V&& v, Args... args){
+template <std::meta::info Spec, std::meta::info TraitInfo, typename R, typename V, typename... Args>
+constexpr R invoke_variant(V&& v, Args... args) {
     return std::visit(overloads{
         [&] <typename T>([[maybe_unused]] T const& x) {
-            [[maybe_unused]] constexpr auto trait_args = std::define_static_array(extract_trait_as_params(trait_info));
+            [[maybe_unused]] constexpr auto trait_args = std::define_static_array(extract_trait_as_params(TraitInfo));
             using delegate_trait_as = typename[:make_trait_as_for_variant(^^T, trait_args):];
             [[maybe_unused]] constexpr auto target = find_candidate_in<delegate_trait_as, Spec>();
             return delegate_trait_as{ x }.[:target:](args...);
@@ -41,5 +41,12 @@ constexpr R invoke_variant(V&& v, Args... args){
             return x.[:target:](args...);
         }}, std::forward<V>(v));
 }
+
+template <std::meta::info Spec, std::meta::info Any, typename V, typename R, typename VoidSelf, typename... Args>
+constexpr R invoke_variant_void(VoidSelf self, Args... args) {
+    auto typed_self = static_cast<self_const_correct_t<V, VoidSelf>*>(self);
+    return invoke_variant<Spec, Any, R>(*typed_self, args...);
+}
+
 
 }  // namespace anyxx

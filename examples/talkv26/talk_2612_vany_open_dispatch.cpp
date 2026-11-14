@@ -17,38 +17,17 @@ namespace sample_12 {
 
 template <typename Self>
 struct evaluable : copyable<Self> {
-  std::string to_string() const;
-  // static std::string to_string(Self const& self) {
-  //   return std::format("{}", self);
-  // }
+   std::string to_string() const;
   using dispatch_table[[= v_table_data]] = anyxx::dispatch_table;
 };
 
-template <>
-struct evaluable<bool> {
-  static std::string to_string(bool const& self) {
+template <typename V>
+    requires std::formattable<V, char>
+struct evaluable<V> {
+  static std::string to_string(V const& self) {
     return std::format("{}", self);
   }
 };
-template <>
-struct evaluable<int> {
-  static std::string to_string(int const& self) {
-    return std::format("{}", self);
-  }
-};
-template <>
-struct evaluable<double> {
-  static std::string to_string(double const& self) {
-    return std::format("{}", self);
-  }
-};
-template <typename... T>
-struct evaluable<std::variant<T...>> {
-    static std::string to_string(std::variant<T...> const& self) {
-        return std::visit([](auto&& arg) { return as<evaluable>(arg).to_string(); }, self);
-    }
-};
-
 
 using value = vany<evaluable, bool, int, double>;
 using bool_int_double = vany_type_trait<value>::concrete_variant;
@@ -105,16 +84,13 @@ struct leave {
 }  // namespace sample_12
 }  // namespace
 
-TEST_CASE("talk_2611_vany_dispatchXXX") {
+TEST_CASE("talk_2611_any_vany_variant") {
   using namespace sample_12;
   std::stringstream ss;
-  CHECK(evaluable<bool>::to_string(true) == "true");
-  CHECK(as<evaluable>(true).to_string() == "true");
   value v1{true};
-  any<evaluable> v2{std::in_place_type<bool_int_double>, bool_int_double{42}};
   CHECK(v1.to_string() == "true");
+  any<evaluable> v2{std::in_place_type<bool_int_double>, bool_int_double{42}};
   CHECK(v2.to_string() == "42");
-  // CHECK(ss.str() == "true\n42\n3.14\n");
 }
 
 // VANY_DISPACH(sample_12, evaluate_plus)
