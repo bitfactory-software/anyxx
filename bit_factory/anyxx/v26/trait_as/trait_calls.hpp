@@ -73,7 +73,7 @@ consteval std::meta::info make_trait_as_for_variant(std::meta::info v, auto args
     return substitute(^^trait_as, make_trait_as_params_for_variant(v, args));
 }
 template <std::meta::info Spec, typename TraitAs, typename R, typename V, typename... Args>
-constexpr R visit_variant(V&& v, Args... args){
+constexpr R invoke_variant(V&& v, Args... args){
     return std::visit(overloads{
         [&] <typename T>([[maybe_unused]] T const& x) {
             [[maybe_unused]] constexpr auto trait_args = std::define_static_array(template_arguments_of(^^TraitAs) | std::views::drop(1));
@@ -90,7 +90,7 @@ struct const_trait_variant_call {
     template <typename Self>
     constexpr trait_as_return_type_t<TraitAs, Spec> operator()([[maybe_unused]] this Self const& self, Args... args) {
         auto v = self_cast<TraitAs const>(&self);
-        return visit_variant<Spec, TraitAs, trait_as_return_type_t<TraitAs, Spec>>(get_value(*v), args...);
+        return invoke_variant<Spec, TraitAs, trait_as_return_type_t<TraitAs, Spec>>(get_value(*v), args...);
     }
 };
 template <typename V, std::meta::info Target, std::meta::info Spec, typename TraitAs, typename... Args>
@@ -98,7 +98,7 @@ struct mutable_trait_variant_call {
     template <typename Self>
     constexpr trait_as_return_type_t<TraitAs, Spec> operator()([[maybe_unused]] this Self const& self, Args... args) {
         auto v = self_cast<TraitAs>(&self);
-        return visit_variant<Spec, TraitAs, trait_as_return_type_t<TraitAs, Spec>>(get_value(*v), args...);
+        return invoke_variant<Spec, TraitAs, trait_as_return_type_t<TraitAs, Spec>>(get_value(*v), args...);
     }
 };
 
