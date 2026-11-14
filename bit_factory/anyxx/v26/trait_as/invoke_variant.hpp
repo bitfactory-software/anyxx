@@ -25,11 +25,11 @@ consteval std::vector<std::meta::info> extract_trait_as_params(std::meta::info j
         return jacket_template_arguments;
     }
 }
-template <std::meta::info Spec, typename TraitAs, typename R, typename V, typename... Args>
+template <std::meta::info Spec, std::meta::info jacket, typename R, typename V, typename... Args>
 constexpr R invoke_variant(V&& v, Args... args){
     return std::visit(overloads{
         [&] <typename T>([[maybe_unused]] T const& x) {
-            [[maybe_unused]] constexpr auto trait_args = std::define_static_array(extract_trait_as_params(^^TraitAs));
+            [[maybe_unused]] constexpr auto trait_args = std::define_static_array(extract_trait_as_params(jacket));
             using delegate_trait_as = typename[:make_trait_as_for_variant(^^T, trait_args):];
             [[maybe_unused]] constexpr auto target = find_candidate_in<delegate_trait_as, Spec>();
             return delegate_trait_as{ x }.[:target:](args...);

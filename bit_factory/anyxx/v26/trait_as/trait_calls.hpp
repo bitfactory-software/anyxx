@@ -68,7 +68,7 @@ struct const_trait_variant_call {
     template <typename Self>
     constexpr trait_as_return_type_t<TraitAs, Spec> operator()([[maybe_unused]] this Self const& self, Args... args) {
         auto v = self_cast<TraitAs const>(&self);
-        return invoke_variant<Spec, TraitAs, trait_as_return_type_t<TraitAs, Spec>>(get_value(*v), args...);
+        return invoke_variant<Spec, ^^TraitAs, trait_as_return_type_t<TraitAs, Spec>>(get_value(*v), args...);
     }
 };
 template <typename V, std::meta::info Target, std::meta::info Spec, typename TraitAs, typename... Args>
@@ -76,7 +76,7 @@ struct mutable_trait_variant_call {
     template <typename Self>
     constexpr trait_as_return_type_t<TraitAs, Spec> operator()([[maybe_unused]] this Self const& self, Args... args) {
         auto v = self_cast<TraitAs>(&self);
-        return invoke_variant<Spec, TraitAs, trait_as_return_type_t<TraitAs, Spec>>(get_value(*v), args...);
+        return invoke_variant<Spec, ^^TraitAs, trait_as_return_type_t<TraitAs, Spec>>(get_value(*v), args...);
     }
 };
 
