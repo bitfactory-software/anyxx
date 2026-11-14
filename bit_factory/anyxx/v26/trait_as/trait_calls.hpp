@@ -98,16 +98,7 @@ struct mutable_trait_variant_call {
     template <typename Self>
     constexpr trait_as_return_type_t<TraitAs, Spec> operator()([[maybe_unused]] this Self const& self, Args... args) {
         auto v = self_cast<TraitAs>(&self);
-        return std::visit(overloads{
-            [&] <typename T>([[maybe_unused]] T& x) {
-                [[maybe_unused]] constexpr auto trait_args = std::define_static_array(template_arguments_of(^^TraitAs) | std::views::drop(1));
-                using delegate_trait_as = typename[:make_trait_as_for_variant(^^T, trait_args):];
-                [[maybe_unused]] constexpr auto target = find_candidate_in<delegate_trait_as, Spec>();
-                return delegate_trait_as{ x }.[:target:](args...);
-            },[&]<is_any Any>(Any& x) {
-                [[maybe_unused]] constexpr auto target = find_candidate_in<Any, Spec>();
-                return x.[:target:](args...);
-            } }, get_value(*v));
+        return visit_variant<Spec, TraitAs, trait_as_return_type_t<TraitAs, Spec>>(get_value(*v), args...);
     }
 };
 
