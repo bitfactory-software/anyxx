@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bit_factory/anyxx/ANY_SINGLETON.hpp>
+#include <bit_factory/anyxx/ANY_UNPAREN.hpp>
 #include <bit_factory/anyxx/ext/dispatch.hpp>
 #include <bit_factory/anyxx/ext/vany.hpp>
 
@@ -26,7 +27,7 @@ class dispatch_vany {
         get_proxy_value(std::forward<Vany1>(vany)));
   }
 
-  template <is_any Vany1, is_any Vany2, typename... Args>
+  template <typename Vany1, typename Vany2, typename... Args>
   auto invoke2(Vany1&& vany1, Vany2&& vany2, Args&&... args) const {
     using vany1_t = std::decay_t<Vany1>;
     using vany2_t = std::decay_t<Vany2>;
@@ -47,14 +48,14 @@ class dispatch_vany {
         requires std::constructible_from<cv2_t, A2>
       {
         return dynamic_dispatch_(std::forward<A1>(a1),
-                                 any_v2{std::in_place, cv2_t{std::move(a2)}},
+                                 any_v2{std::in_place_type<cv2_t>, cv2_t{std::move(a2)}},
                                  std::forward<VAs>(vas)...);
       };
       auto dyn_case3 = [&]<typename A1, is_any A2, typename... VAs>(
                            A1 a1, A2&& a2, VAs&&... vas)
         requires std::constructible_from<cv1_t, A1>
       {
-        return dynamic_dispatch_(any_v1{std::in_place, cv1_t{std::move(a1)}},
+        return dynamic_dispatch_(any_v1{std::in_place_type<cv1_t>, cv1_t{std::move(a1)}},
                                  std::forward<A2>(a2),
                                  std::forward<VAs>(vas)...);
       };
@@ -63,8 +64,8 @@ class dispatch_vany {
         requires(std::constructible_from<cv1_t, A1> &&
                  std::constructible_from<cv2_t, A2>)
       {
-        return dynamic_dispatch_(any_v1{std::in_place, cv1_t{std::move(a1)}},
-                                 any_v2{std::in_place, cv2_t{std::move(a2)}},
+        return dynamic_dispatch_(any_v1{std::in_place_type<cv1_t>, cv1_t{std::move(a1)}},
+                                 any_v2{std::in_place_type<cv2_t>, cv2_t{std::move(a2)}},
                                  std::forward<VAs>(vas)...);
       };
       return overloads{StaticDispatch, dyn_case1, dyn_case2, dyn_case3,
@@ -117,15 +118,14 @@ class dispatch_vany {
 ///        the \ref vany.
 ///
 /// See also \ref VANY_DISPACH, \ref ANY_SINGLETON_DECLARE.
-#define VANY_DISPACH_DECLARE(export_, name, signature, static_dispatch) \
-  constexpr static inline auto name##_static_dispatch =                 \
-      anyxx::overloads{_detail_REMOVE_PARENS(static_dispatch)};         \
-                                                                        \
-  using name##_dynamic_dispatch =                                       \
-      anyxx::dispatch<_detail_REMOVE_PARENS(signature)>;                \
-                                                                        \
-  ANY_SINGLETON_DECLARE(                                                \
-      , name,                                                           \
+#define VANY_DISPACH_DECLARE(export_, name, signature, static_dispatch)    \
+  constexpr static inline auto name##_static_dispatch =                    \
+      anyxx::overloads{ANY_UNPAREN(static_dispatch)};                      \
+                                                                           \
+  using name##_dynamic_dispatch = anyxx::dispatch<ANY_UNPAREN(signature)>; \
+                                                                           \
+  ANY_SINGLETON_DECLARE(                                                   \
+      , name,                                                              \
       anyxx::dispatch_vany<name##_dynamic_dispatch, name##_static_dispatch>)
 
 /// \brief Define a \ref vany dispatch singleton object in a source

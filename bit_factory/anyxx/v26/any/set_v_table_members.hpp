@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <bit_factory/anyxx/utilities.hpp>
 #include <bit_factory/anyxx/v26/any/facade.hpp>
 #include <bit_factory/anyxx/v26/any/keywords.hpp>
 #include <bit_factory/anyxx/v26/any/signature_translation.hpp>
@@ -8,6 +9,7 @@
 #include <bit_factory/anyxx/v26/trait_translation/get_implementation_member.hpp>
 #include <bit_factory/anyxx/v26/trait_translation/is_defaulted_function_spec.hpp>
 #include <bit_factory/anyxx/v26/trait_translation/find_candidate_in_target.hpp>
+#include <bit_factory/anyxx/v26/trait_as/invoke_variant.hpp>
 #include <bit_factory/anyxx/v26/meta/utilities.hpp>
 #include <meta>
 #include <utility>
@@ -116,31 +118,35 @@ constexpr R invoke_op_minus_equals(VoidSelf self, Arg arg) {
 template <typename R, typename VoidSelf, typename... Args>
 using invoke_function_t = R (*)(VoidSelf, Args...);
 
-template <std::meta::info spec, typename V, typename R, typename VoidSelf, typename... Args>
+template <std::meta::info Spec, std::meta::info AnyVal, typename V, typename R, typename VoidSelf, typename... Args>
 consteval invoke_function_t<impl_return_type<R, V>, VoidSelf, Args...> default_impl() {
     using return_t = impl_return_type<R, V>;
     using self_t = self_const_correct_t<V, VoidSelf>;
     if constexpr(is_class_type(^^V)) {
-        if constexpr(constexpr auto candidate = find_candidate_in_target<spec, V, return_t, VoidSelf, Args...>(); candidate != std::meta::info{}) {
-            return invoke_member<candidate, self_t, return_t, VoidSelf, Args...>;
+        if constexpr(is_variant<V>) {
+            return invoke_variant_void<Spec, AnyVal, V, return_t, VoidSelf,Args...>;
+        } else {
+            if constexpr(constexpr auto candidate = find_candidate_in_target<Spec, V, return_t, VoidSelf, Args...>(); candidate != std::meta::info{}) {
+                return invoke_member<candidate, self_t, return_t, VoidSelf, Args...>;
+            }
         }
     } 
-    if constexpr(meta::is_op_parentheses_spec(spec)) {
+    if constexpr(meta::is_op_parentheses_spec(Spec)) {
         if constexpr(std::is_invocable_r_v<return_t, self_t, Args...>) {
             return invoke_op_parentheses<self_t, return_t, VoidSelf, Args...>;
         } else {
             std::string msg{display_string_of(^^V)};
-            msg += " has no implementation for " + std::string{display_string_of(spec)};
+            msg += " has no implementation for " + std::string{display_string_of(Spec)};
             throw std::meta::exception(msg, ^^V);
         }
     } else {
-        if constexpr(!is_operator_function(spec)) {
+        if constexpr(!is_operator_function(Spec)) {
             std::string msg{ display_string_of(^^V) };
-            msg += " has no member function " + std::string{display_string_of(spec)};
+            msg += " has no member function " + std::string{display_string_of(Spec)};
             throw std::meta::exception(msg, ^^V);
         } else {
 #define __RETURN_OP(op_name) \
-			if constexpr(meta::is_op_spec(spec, std::meta::op_##op_name)) { \
+			if constexpr(meta::is_op_spec(Spec, std::meta::op_##op_name)) { \
                 return invoke_op_##op_name<self_t, return_t, VoidSelf, Args...>; \
             }
 
@@ -162,9 +168,9 @@ consteval invoke_function_t<impl_return_type<R, V>, VoidSelf, Args...> default_i
 
 #undef __RETURN_OP
             else {
-                std::string msg{ display_string_of(spec) };
-                msg += " not yet implemeted in anyxx " + std::string{ display_string_of(spec) };
-                throw std::meta::exception(msg, spec);
+                std::string msg{ display_string_of(Spec) };
+                msg += " not yet implemeted in anyxx " + std::string{ display_string_of(Spec) };
+                throw std::meta::exception(msg, Spec);
             }
         }
     }
@@ -175,7 +181,7 @@ template <bool default_, std::meta::info m, std::meta::info dyn_self_val, std::m
 constexpr [:translate_v_table_return_type<dyn_self_val>(^^R):] vfimpl(VoidSelf void_self, translate_v_table_fptr_param_type_t<dyn_self_cref, dyn_self_mutref, Args>... args) {
   using return_t = [:translate_v_table_return_type<dyn_self_val>(^^R):];
   if constexpr (default_) {
-    constexpr auto fptr = default_impl<m, V, R, VoidSelf, impl_fptr_param_t<V, Args>...>();
+    constexpr auto fptr = default_impl<m, dyn_self_val, V, R, VoidSelf, impl_fptr_param_t<V, Args>...>();
     if constexpr(std::same_as<return_t, void>) {
         fptr(void_self, forward_v_table_fptr_param<V, Args>(args)...);
         return;

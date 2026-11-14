@@ -17,6 +17,10 @@ struct v_table;
 
 template <template <typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct any_base;
+template <typename Proxy, template <typename, typename...> typename Trait, typename... Args>
+struct any_;
+template <template <typename, typename...> typename Trait, typename... Args>
+struct any;
 
 template <typename V, template <typename, typename...> typename Trait, typename... Args>
 class trait_as;
