@@ -72,21 +72,25 @@ consteval std::meta::info make_trait_as_for_variant(std::meta::info v, auto args
     //static_assert(can_substitute(^^trait_as, make_trait_as_params_for_variant(v, args)));
     return substitute(^^trait_as, make_trait_as_params_for_variant(v, args));
 }
+template <std::meta::info Spec, typename TraitAs, typename R, typename V, typename... Args>
+constexpr R visit_variant(V&& v, Args... args){
+    return std::visit(overloads{
+        [&] <typename T>([[maybe_unused]] T const& x) {
+            [[maybe_unused]] constexpr auto trait_args = std::define_static_array(template_arguments_of(^^TraitAs) | std::views::drop(1));
+            using delegate_trait_as = typename[:make_trait_as_for_variant(^^T, trait_args):];
+            [[maybe_unused]] constexpr auto target = find_candidate_in<delegate_trait_as, Spec>();
+            return delegate_trait_as{ x }.[:target:](args...);
+        },[&]<is_any Any>(Any const& x) {
+            [[maybe_unused]] constexpr auto target = find_candidate_in<Any, Spec>();
+            return x.[:target:](args...);
+        }}, std::forward<V>(v));
+}
 template <typename V, std::meta::info Target, std::meta::info Spec, typename TraitAs, typename... Args>
 struct const_trait_variant_call {
     template <typename Self>
     constexpr trait_as_return_type_t<TraitAs, Spec> operator()([[maybe_unused]] this Self const& self, Args... args) {
         auto v = self_cast<TraitAs const>(&self);
-        return std::visit(overloads{
-            [&]<typename T>([[maybe_unused]] T const& x) {
-                [[maybe_unused]] constexpr auto trait_args = std::define_static_array(template_arguments_of(^^TraitAs) | std::views::drop(1));
-                using delegate_trait_as = typename[:make_trait_as_for_variant(^^T, trait_args):];
-                [[maybe_unused]] constexpr auto target = find_candidate_in<delegate_trait_as, Spec>();
-                return delegate_trait_as{x}.[:target:](args...);
-            }, [&]<is_any Any>(Any const& x) {
-                [[maybe_unused]] constexpr auto target = find_candidate_in<Any, Spec>();
-                return x.[:target:](args...);
-            }}, get_value(*v));
+        return visit_variant<Spec, TraitAs, trait_as_return_type_t<TraitAs, Spec>>(get_value(*v), args...);
     }
 };
 template <typename V, std::meta::info Target, std::meta::info Spec, typename TraitAs, typename... Args>
