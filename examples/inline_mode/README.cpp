@@ -133,7 +133,7 @@ target_link_libraries(main PRIVATE bit_factory::anyxx)
 FetchContent_Declare(
     bit_factory::anyxx
     GIT_REPOSITORY https://github.com/bitfactory-software/anyxx
-    GIT_TAG 0.5.0
+    GIT_TAG 0.8.0
 )
 FetchContent_MakeAvailable(anyxx)
 ```
