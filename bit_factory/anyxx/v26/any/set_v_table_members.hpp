@@ -116,31 +116,31 @@ constexpr R invoke_op_minus_equals(VoidSelf self, Arg arg) {
 template <typename R, typename VoidSelf, typename... Args>
 using invoke_function_t = R (*)(VoidSelf, Args...);
 
-template <std::meta::info spec, typename V, typename R, typename VoidSelf, typename... Args>
+template <std::meta::info Spec, typename V, typename R, typename VoidSelf, typename... Args>
 consteval invoke_function_t<impl_return_type<R, V>, VoidSelf, Args...> default_impl() {
     using return_t = impl_return_type<R, V>;
     using self_t = self_const_correct_t<V, VoidSelf>;
     if constexpr(is_class_type(^^V)) {
-        if constexpr(constexpr auto candidate = find_candidate_in_target<spec, V, return_t, VoidSelf, Args...>(); candidate != std::meta::info{}) {
+        if constexpr(constexpr auto candidate = find_candidate_in_target<Spec, V, return_t, VoidSelf, Args...>(); candidate != std::meta::info{}) {
             return invoke_member<candidate, self_t, return_t, VoidSelf, Args...>;
         }
     } 
-    if constexpr(meta::is_op_parentheses_spec(spec)) {
+    if constexpr(meta::is_op_parentheses_spec(Spec)) {
         if constexpr(std::is_invocable_r_v<return_t, self_t, Args...>) {
             return invoke_op_parentheses<self_t, return_t, VoidSelf, Args...>;
         } else {
             std::string msg{display_string_of(^^V)};
-            msg += " has no implementation for " + std::string{display_string_of(spec)};
+            msg += " has no implementation for " + std::string{display_string_of(Spec)};
             throw std::meta::exception(msg, ^^V);
         }
     } else {
-        if constexpr(!is_operator_function(spec)) {
+        if constexpr(!is_operator_function(Spec)) {
             std::string msg{ display_string_of(^^V) };
-            msg += " has no member function " + std::string{display_string_of(spec)};
+            msg += " has no member function " + std::string{display_string_of(Spec)};
             throw std::meta::exception(msg, ^^V);
         } else {
 #define __RETURN_OP(op_name) \
-			if constexpr(meta::is_op_spec(spec, std::meta::op_##op_name)) { \
+			if constexpr(meta::is_op_spec(Spec, std::meta::op_##op_name)) { \
                 return invoke_op_##op_name<self_t, return_t, VoidSelf, Args...>; \
             }
 
@@ -162,9 +162,9 @@ consteval invoke_function_t<impl_return_type<R, V>, VoidSelf, Args...> default_i
 
 #undef __RETURN_OP
             else {
-                std::string msg{ display_string_of(spec) };
-                msg += " not yet implemeted in anyxx " + std::string{ display_string_of(spec) };
-                throw std::meta::exception(msg, spec);
+                std::string msg{ display_string_of(Spec) };
+                msg += " not yet implemeted in anyxx " + std::string{ display_string_of(Spec) };
+                throw std::meta::exception(msg, Spec);
             }
         }
     }
