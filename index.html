@@ -93,9 +93,9 @@ $(function(){initNavTree('index.html','',''); });
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_files__for__doxygen_2README"></a> //                              <a class="el" href="#showcase1" title="showcase1">Hello World!</a> / <a class="el" href="#showcase2" title="showcase2">Model Map</a> / <a class="el" href="#showcase3" title="showcase3">Type Erased Spaceship</a> / <a class="el" href="#showcase4" title="showcase4">Open Dispatch As Visitor</a> / <a class="el" href="#showcase5" title="showcase5">Crosscast + Factory = Serialization</a> / <a class="el" href="#showcase6" title="showcase6">Basic *Any++* std::variant usage</a> / <a class="el" href="#showcase7" title="showcase7">Basic *Any++* open std::variant usage: 'vany'</a></p>
 <p><a href="https://opensource.org/license/mit"><img src="http://img.shields.io/badge/license-MIT-blue.svg" alt="MIT Licence" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml"><img src="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg" alt="CI" style="pointer-events: none;" class="inline"/></a> <a href="https://www.alexweb.io/anyxx/"><img src="https://img.shields.io/badge/docs-Any%2B%2B-blue" alt="Static Badge" class="inline"/></a></p>
-<p>#Any++ : How to <span class="tt">trait</span> <span class="tt">any_</span> <span class="tt">virtual</span>, <span class="tt">static</span> or <span class="tt">variant</span>?</p>
+<p>#Any++ : How to <span class="tt">trait</span> <span class="tt">any</span> <span class="tt">virtual</span>, <span class="tt">static</span> or <span class="tt">variant</span>?</p>
 <p><img src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" alt="Any++logo-small" width="908" height="760" class="inline"/></p>
-<p><b>Any++</b> enhances the well-known <em>boost::any_</em> and <em>std::any_</em> with:</p>
+<p><b>Any++</b> enhances the well-known <em>boost::any</em> and <em>std::any</em> with:</p>
 <ul>
 <li><b>Flexible choice of underlying storage mechanisms</b><ul>
 <li>Type-erased</li>
@@ -157,7 +157,7 @@ Showcase 1: Basic <em>Any++</em> usage</h3>
 <div class="line"><span class="comment">// --&gt;</span></div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
 </div><!-- fragment --><p> Showcase 1 demonstrates the most basic usage of <span class="tt">Any++</span> for type-erased polymorphism in C++. It defines two simple types, <span class="tt">circle</span> and <span class="tt">square</span>, each with a <span class="tt">draw()</span> method returning a string. Using the <span class="tt">Any++</span> macro system, a <span class="tt">drawable</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</p>
-<p>The draw function takes a vector of type-erased any_ objects that conform to the <span class="tt">drawable</span> trait. It shows how to create and use a heterogeneous collection of unrelated objects (<span class="tt">circle</span> and <span class="tt">square</span>).</p>
+<p>The draw function takes a vector of type-erased any objects that conform to the <span class="tt">drawable</span> trait. It shows how to create and use a heterogeneous collection of unrelated objects (<span class="tt">circle</span> and <span class="tt">square</span>).</p>
 <p><a href="https://godbolt.org/z/nGjjs9xva">Compiler Explorer</a></p>
 <p><a class="el" href="#showcase2" title="showcase2">Here to more Showcases ...</a></p>
 <p><a href="https://www.alexweb.io/anyxx/">Here to Docs ...</a></p>
@@ -171,7 +171,7 @@ Useage in CMakeLists.txt:</h3>
 <div class="fragment"><div class="line">FetchContent_Declare(</div>
 <div class="line">    bit_factory::anyxx</div>
 <div class="line">    GIT_REPOSITORY https://github.com/bitfactory-software/anyxx</div>
-<div class="line">    GIT_TAG 0.5.0</div>
+<div class="line">    GIT_TAG 0.8.0</div>
 <div class="line">)</div>
 <div class="line">FetchContent_MakeAvailable(anyxx)</div>
 </div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
@@ -193,15 +193,15 @@ clang-cl /O2 /Ob2  </th><th class="markdownTableHeadRight">Source  </th><th clas
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft">virtual function (<b>reference</b>)  </td><td class="markdownTableBodyRight">1  </td><td class="markdownTableBodyRight">1  </td><td class="markdownTableBodyRight">1  </td><td class="markdownTableBodyRight"><a href="https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/20_Tree_virtual_function.cpp">Source</a>  </td><td class="markdownTableBodyRight"><span class="tt">BENCHMARK("20_Tree virtual function value") { return expr-&gt;value(); };</span>  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft">any_++ interface  </td><td class="markdownTableBodyRight">x <b>1</b>  </td><td class="markdownTableBodyRight">x <b>1</b>  </td><td class="markdownTableBodyRight">x <b>1</b>  </td><td class="markdownTableBodyRight"><a href="https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any.cpp">Source</a>  </td><td class="markdownTableBodyRight"><span class="tt">BENCHMARK("21_Tree any_ value") { return expr-&gt;value(); };</span>  </td></tr>
+<td class="markdownTableBodyLeft">any++ interface  </td><td class="markdownTableBodyRight">x <b>1</b>  </td><td class="markdownTableBodyRight">x <b>1</b>  </td><td class="markdownTableBodyRight">x <b>1</b>  </td><td class="markdownTableBodyRight"><a href="https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any.cpp">Source</a>  </td><td class="markdownTableBodyRight"><span class="tt">BENCHMARK("21_Tree any value") { return expr-&gt;value(); };</span>  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyLeft">any_++ open method <span class="tt">dispatch</span>  </td><td class="markdownTableBodyRight">x <b>1.5</b>  </td><td class="markdownTableBodyRight">x <b>1.5</b>  </td><td class="markdownTableBodyRight">x <b>1.5</b>  </td><td class="markdownTableBodyRight"><a href="https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any_dispatch.cpp.cpp">Source</a>  </td><td class="markdownTableBodyRight"><span class="tt">BENCHMARK("21_Tree any_ dispatch value") { return expr-&gt;value(); };</span>  </td></tr>
+<td class="markdownTableBodyLeft">any++ open method <span class="tt">dispatch</span>  </td><td class="markdownTableBodyRight">x <b>1.5</b>  </td><td class="markdownTableBodyRight">x <b>1.5</b>  </td><td class="markdownTableBodyRight">x <b>1.5</b>  </td><td class="markdownTableBodyRight"><a href="https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any_dispatch.cpp.cpp">Source</a>  </td><td class="markdownTableBodyRight"><span class="tt">BENCHMARK("21_Tree any dispatch value") { return expr-&gt;value(); };</span>  </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft"><b>Double dispatch</b>  </td><td class="markdownTableBodyRight">&mdash;  </td><td class="markdownTableBodyRight">&mdash;  </td><td class="markdownTableBodyRight">&mdash;  </td><td class="markdownTableBodyRight">&mdash;  </td><td class="markdownTableBodyRight">&mdash;  </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft">hand rolled w. virtual function (<b>reference</b>)  </td><td class="markdownTableBodyRight">1  </td><td class="markdownTableBodyRight">1  </td><td class="markdownTableBodyRight">1  </td><td class="markdownTableBodyRight"><a href="https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/30b_Animals_virtual_functions.cpp">Source</a>  </td><td class="markdownTableBodyRight"><span class="tt">BENCHMARK("30b_Animals virtual functions")</span>  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft">any_++ open method <span class="tt">dispatch</span>  </td><td class="markdownTableBodyRight">x <b>1</b>  </td><td class="markdownTableBodyRight">x <b>1</b>  </td><td class="markdownTableBodyRight">x <b>1</b>  </td><td class="markdownTableBodyRight"><a href="https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/31_Animals_any_dispatch.cpp">Source</a>  </td><td class="markdownTableBodyRight"><span class="tt">BENCHMARK("31_Animals any_ dispatch")</span>  </td></tr>
+<td class="markdownTableBodyLeft">any++ open method <span class="tt">dispatch</span>  </td><td class="markdownTableBodyRight">x <b>1</b>  </td><td class="markdownTableBodyRight">x <b>1</b>  </td><td class="markdownTableBodyRight">x <b>1</b>  </td><td class="markdownTableBodyRight"><a href="https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/31_Animals_any_dispatch.cpp">Source</a>  </td><td class="markdownTableBodyRight"><span class="tt">BENCHMARK("31_Animals any dispatch")</span>  </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft"><span class="tt">std::variant</span> + <span class="tt">std::visit</span>  </td><td class="markdownTableBodyRight">x 0.8  </td><td class="markdownTableBodyRight">x 0.65  </td><td class="markdownTableBodyRight">x 0.35  </td><td class="markdownTableBodyRight"><a href="https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/30a_Animals_variant_visit.cpp">Source</a>  </td><td class="markdownTableBodyRight"><span class="tt">BENCHMARK("30a_Animals variant visit")</span>  </td></tr>
 </table>
@@ -533,7 +533,7 @@ Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 <div class="line">using known_shapes = std::variant&lt;circle, square&gt;;</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> draw(std::stringstream&amp; os,</div>
-<div class="line">          std::vector&lt;anyxx::any_&lt;anyxx::using_&lt;known_shapes&gt;, drawable&gt;&gt; const&amp;</div>
+<div class="line">          std::vector&lt;anyxx::trait_as&lt;known_shapes, drawable&gt;&gt; const&amp;</div>
 <div class="line">              drawables) {</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
@@ -551,7 +551,7 @@ Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 <li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with a <span class="tt">draw()</span> method returning a string.</li>
 <li>A <span class="tt">drawable</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</li>
 <li>A <span class="tt">known_shapes</span> type alias is defined as <span class="tt">std::variant&lt;circle, square&gt;</span>, representing a closed set of possible shapes.</li>
-<li>The function <span class="tt">draw</span> takes a vector of type-erased objects (<span class="tt">anyxx::any_&lt;anyxx::using_&lt;known_shapes&gt;, drawable&gt;</span>) and calls <span class="tt">draw()</span> on each, writing the results to a stringstream.</li>
+<li>The function <span class="tt">draw</span> takes a vector of objects, type-erased via std::variant (<span class="tt">anyxx::trait_as&lt;known_shapes, drawable&gt;</span>), and calls <span class="tt">draw()</span> on each, writing the results to a stringstream.</li>
 <li>The Catch2 test verifies that drawing a <span class="tt">circle</span> and a <span class="tt">square</span> produces the expected output. This example shows how <span class="tt">Any++</span> can be combined with <span class="tt">std::variant</span> to provide type-erased, trait-based polymorphism for a known set of types, allowing heterogeneous collections and uniform interface access without inheritance or virtual functions. Because the set of types is fixed, this approach can offer better performance than fully dynamic type erasure while still providing flexibility and extensibility through traits.</li>
 </ul>
 <p><a href="https://godbolt.org/z/hTT64bv79">Compiler Explorer</a></p>
@@ -581,7 +581,7 @@ Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 <div class="line">using known_and_unknown_shapes = vany&lt;figure, circle, square&gt;;</div>
 <div class="line">static_assert(std::same_as&lt;</div>
 <div class="line">              known_and_unknown_shapes,</div>
-<div class="line">              any_&lt;using_&lt;std::variant&lt;any&lt;figure&gt;, circle, square&gt;&gt;, figure&gt;&gt;);</div>
+<div class="line">              trait_as&lt;std::variant&lt;any&lt;figure&gt;, circle, square&gt;, figure&gt;&gt;);</div>
 <div class="line"><span class="keywordtype">void</span> draw_vany(std::stringstream&amp; os,</div>
 <div class="line">    std::vector&lt;known_and_unknown_shapes&gt; const&amp; figures) {</div>
 <div class="line">    <span class="keywordflow">for</span>(<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures) os &lt;&lt; f.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
@@ -600,7 +600,7 @@ Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-</div><!-- fragment --><p> Showcase 7 demonstrates how to use <span class="tt">Any++</span> to combine open type erasure with <span class="tt">std::variant</span> for extensible, heterogeneous collections. Let us call them "vany" (variant-any_).</p><ul>
+</div><!-- fragment --><p> Showcase 7 demonstrates how to use <span class="tt">Any++</span> to combine open type erasure with <span class="tt">std::variant</span> for extensible, heterogeneous collections. Let us call them "vany" (variant-any).</p><ul>
 <li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with a <span class="tt">draw()</span> method returning a string.</li>
 <li>A <span class="tt">figure</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</li>
 <li>The type alias <span class="tt">known_and_unknown_shapes</span> is created using <span class="tt">anyxx::vany</span>, which produces a type-erased wrapper over a <span class="tt">std::variant</span> containing:<ul>
