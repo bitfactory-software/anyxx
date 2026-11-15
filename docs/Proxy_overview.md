@@ -8,7 +8,8 @@
 | ``mutref`` | Observed object must outlive call. </br> Constructed with ``[[msvc/clang::lifetimebound]]``| Not threadsafe. |
 | ``shared`` | Same as ``std::shared_ptr< const>``.| Threadsafe.  |
 | ``unique`` | Same as ``std::unique_ptr`` | Threadsafe. |
-| ``value`` | Same as ``std::any`` | Threadsafe. |
+| ``val<SOBS>`` | Same as ``std::polymorphic`` | Threadsafe.</br> <``S``mall ``O``bject ``B``uffer ``S``ize> </br> Does not allow empty ``any`` |
+| ``optional_val<SOBS>`` | Same as ``std::polymorphic`` | Threadsafe.</br> <``S``mall ``O``bject ``B``uffer ``S``ize> </br> ALLOWS empty ``any`` |
 
 
 ### Lifetime castability
@@ -27,18 +28,18 @@
 
 | v-to\from->| cref     | mutref    | shared    | unique     | val       | 
 |:-----------|:--------:|:---------:|:----------|:----------:|:---------:|
-| ``cref``   | yes      | yes       | no        | no         | no	     |
+| ``cref``   | yes      | yes       | no        | no         | no	      |
 | ``mutref`` | no       | yes       | no        | no         | yes	     |
 | ``shared`` | no       | no        | yes       | yes        | yes	     |
-| ``unique`` | no       | no        | no        | no         | no	     |
-| ``value``  | no       | no        | TODO      | TODO       | yes	     |
+| ``unique`` | no       | no        | no        | no         | no	       |
+| ``value``  | no       | no        | no        | no         | yes	     |
 
 #### clone_from
 
 | v-to\from->| cref     | mutref    | shared    | unique     | val       | 
 |:-----------|:--------:|:---------:|:----------|:----------:|:---------:|
-| ``cref``   | no       | no        | no        | no         | no	     |
-| ``mutref`` | no       | no        | no        | no         | no	     |
+| ``cref``   | no       | no        | no        | no         | no	       |
+| ``mutref`` | no       | no        | no        | no         | no	       |
 | ``shared`` | yes      | yes       | yes       | yes        | yes	     |
 | ``unique`` | yes      | yes       | yes       | yes        | yes	     |
 | ``value``  | yes      | yes       | yes       | yes        | yes	     |

@@ -3,7 +3,7 @@
 //
 // Copyright (c) 2026 Bit Factory Software GmbH
 //
-// Permission is hereby granted, free of charge, to any_ person obtaining a copy
+// Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -37,12 +37,12 @@
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
 [![Static Badge](https://img.shields.io/badge/docs-Any%2B%2B-blue)](https://www.alexweb.io/anyxx/)
 
-#Any++ : How to ``trait`` ``any_`` ``virtual``, ``static`` or ``variant``?
+#Any++ : How to ``trait`` ``any`` ``virtual``, ``static`` or ``variant``?
 
 <img width="908" height="760" alt="Any++logo-small" src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" />
 
 
-**Any++** enhances the well-known *boost::any_* and *std::any_* with:
+**Any++** enhances the well-known *boost::any* and *std::any* with:
 
 - **Flexible choice of underlying storage mechanisms**
   - Type-erased
@@ -106,7 +106,7 @@ polymorphism in C++. It defines two simple types, `circle` and `square`, each wi
 returning a string. Using the `Any++` macro system, a `drawable` trait is declared, 
 specifying the required interface (`draw() const -> std::string`).
 
-The draw function takes a vector of type-erased any_ objects that conform to the `drawable` trait.
+The draw function takes a vector of type-erased any objects that conform to the `drawable` trait.
 It shows how to create and use a heterogeneous collection of unrelated objects (`circle` and `square`).
 
 [Compiler Explorer](https://godbolt.org/z/nGjjs9xva)
@@ -133,7 +133,7 @@ target_link_libraries(main PRIVATE bit_factory::anyxx)
 FetchContent_Declare(
     bit_factory::anyxx
     GIT_REPOSITORY https://github.com/bitfactory-software/anyxx
-    GIT_TAG 0.5.0
+    GIT_TAG 0.8.0
 )
 FetchContent_MakeAvailable(anyxx)
 ```
@@ -148,20 +148,20 @@ git clone - c core.symlinks = true https://github.com/bitfactory-software/anyxx
 |:------------------------------|----------------------------------------------------------------------------------:|---------------------------------------------------------------------------:|-------:| ----------------------------------------------------------------------:|-----------------------:|
 | **Single dispatch**           | --- | --- | --- | --- | --- |
 | virtual function (**reference**) |                                                                              1 |                                                                          1 |        1 | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/20_Tree_virtual_function.cpp) | ``BENCHMARK("20_Tree virtual function value") { return expr->value(); };`` |
-| any_++ interface |  x **1** | x **1** | x **1** | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any.cpp) | ``BENCHMARK("21_Tree any_ value") { return expr->value(); };`` |
-| any_++ open method ``dispatch``| x **1.5** | x **1.5** | x **1.5** | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any_dispatch.cpp.cpp) | ``BENCHMARK("21_Tree any_ dispatch value") { return expr->value(); };`` |
+| any++ interface |  x **1** | x **1** | x **1** | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any.cpp) | ``BENCHMARK("21_Tree any value") { return expr->value(); };`` |
+| any++ open method ``dispatch``| x **1.5** | x **1.5** | x **1.5** | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any_dispatch.cpp.cpp) | ``BENCHMARK("21_Tree any dispatch value") { return expr->value(); };`` |
 | **Double dispatch**                          | --- | --- | --- | --- | --- |
 | hand rolled w. virtual function (**reference**) | 1 | 1 | 1 | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/30b_Animals_virtual_functions.cpp) | ``BENCHMARK("30b_Animals virtual functions")`` |
-| any_++ open method ``dispatch`` | x **1** | x **1** | x **1** | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/31_Animals_any_dispatch.cpp) | ``BENCHMARK("31_Animals any_ dispatch")`` |
+| any++ open method ``dispatch`` | x **1** | x **1** | x **1** | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/31_Animals_any_dispatch.cpp) | ``BENCHMARK("31_Animals any dispatch")`` |
 | ``std::variant`` + ``std::visit``| x 0.8 | x 0.65 | x 0.35 | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/30a_Animals_variant_visit.cpp) | ``BENCHMARK("30a_Animals variant visit")`` |
 
 
 ### CI Matrix
 | OS \ Compiler | MSVC | Clang | GCC |
 |:-----------------:|:------:|:-------:|:-----:|
-| Windows(latest)           | 19   | 21   | - | 
-| Ubuntu(latest)           | - | 21   | 14 | 
-| MacOS(latest)           | - | 21   | 14 | 
+| Windows(latest)           | 18   | 23   | - | 
+| Ubuntu(latest)           | - | 23   | 16 | 
+| MacOS(latest)           | - | 23   | 16 | 
 
 <a name="showcase2"></a> 
 ### Showcase 2: *Any++* with Model Map
@@ -497,7 +497,7 @@ TRAIT(drawable, anyxx::dynamic_copyable, (FN(std::string, draw, (), const)))
 using known_shapes = std::variant<circle, square>;
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any_<anyxx::using_<known_shapes>, drawable>> const&
+          std::vector<anyxx::trait_as<known_shapes, drawable>> const&
               drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
@@ -516,7 +516,7 @@ Showcase 6 demonstrates how to use `Any++` with `std::variant` to enable type-er
 - Two types, `circle` and `square`, are defined, each with a `draw()` method returning a string.
 - A `drawable` trait is declared, specifying the required interface (`draw() const -> std::string`).
 - A `known_shapes` type alias is defined as `std::variant<circle, square>`, representing a closed set of possible shapes.
-- The function `draw` takes a vector of type-erased objects (`anyxx::any_<anyxx::using_<known_shapes>, drawable>`) and calls `draw()` on each, writing the results to a stringstream.
+- The function `draw` takes a vector of objects, type-erased via std::variant (`anyxx::trait_as<known_shapes, drawable>`), and calls `draw()` on each, writing the results to a stringstream.
 - The Catch2 test verifies that drawing a `circle` and a `square` produces the expected output.
 This example shows how `Any++` can be combined with `std::variant` to provide type-erased, trait-based polymorphism for a known set of types, allowing heterogeneous collections and uniform interface access without inheritance or virtual functions.
 Because the set of types is fixed, this approach can offer better performance than fully dynamic type erasure while still providing flexibility and extensibility through traits.
@@ -549,7 +549,7 @@ TRAIT(figure, dynamic_copyable, (FN(std::string, draw, (), const)))
 using known_and_unknown_shapes = vany<figure, circle, square>;
 static_assert(std::same_as<
               known_and_unknown_shapes,
-              any_<using_<std::variant<any<figure>, circle, square>>, figure>>);
+              trait_as<std::variant<any<figure>, circle, square>, figure>>);
 void draw_vany(std::stringstream& os,
     std::vector<known_and_unknown_shapes> const& figures) {
     for(auto const& f : figures) os << f.draw() << "\n";
@@ -570,7 +570,7 @@ TEST_CASE("Showcase7") {
 // -->
 ```
 Showcase 7 demonstrates how to use `Any++` to combine open type erasure with `std::variant` for extensible,
-heterogeneous collections. Let us call them "vany" (variant-any_).
+heterogeneous collections. Let us call them "vany" (variant-any).
 - Two types, `circle` and `square`, are defined, each with a `draw()` method returning a string.
 - A `figure` trait is declared, specifying the required interface (`draw() const -> std::string`).
 - The type alias `known_and_unknown_shapes` is created using `anyxx::vany`, which produces a type-erased wrapper over a `std::variant` containing:
