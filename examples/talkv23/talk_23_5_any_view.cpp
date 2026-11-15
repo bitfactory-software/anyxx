@@ -18,9 +18,9 @@ class container {
   any<view, bidirectional, int const, int const&> get_view(
       [[maybe_unused]] int i) {
     if (i == 0) {
-      return std::views::all(v);
+      return v;
     } else if (i == 1) {
-      return std::views::all(l);
+      return l;
     } else {
       return std::views::single(s);
     }
