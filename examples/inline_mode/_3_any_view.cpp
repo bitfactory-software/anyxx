@@ -26,9 +26,9 @@ anyxx::any<anyxx::view, anyxx::forward, int const, int const&> a_view(int use) {
   static std::list<int> l = {4, 5, 6};
   static int s = 7;
   if (use == 0) {
-    return std::views::all(v);
+    return v;
   } else if (use == 1) {
-    return std::views::all(l);
+    return l;
   } else {
     return std::views::single(s);
   }
@@ -56,9 +56,9 @@ a_bidirectional_view([[maybe_unused]] bool use_map) {
   static std::vector<std::pair<int, int>> v = {{1, 1}, {2, 2}, {3, 3}};
   static std::map<int, int> m = {{4, 4}, {5, 5}, {6, 6}};
   if (use_map)
-    return std::views::all(m);
+    return m;
   else
-    return std::views::all(v);
+    return v;
 }
 }  // namespace example_3_view
 TEST_CASE("example3 a_bidirectional_view") {
@@ -77,7 +77,7 @@ anyxx::any<anyxx::sized_view, anyxx::random_access, std::pair<int, int>,
            std::pair<int, int>&>
 a_sized_view() {
   static std::vector<std::pair<int, int>> v = {{1, 1}, {2, 2}, {3, 3}};
-  return std::views::all(v);
+  return v;
 }
 }  // namespace example_3_view
 TEST_CASE("example3 a_sized_view") {

@@ -13,27 +13,13 @@
 #include <bit_factory/anyxx/v26/any/keywords.hpp>
 #include <bit_factory/anyxx/v26/any/v_table.hpp>
 #include <bit_factory/anyxx/v26/trait_translation/deduced_typenames.hpp>
+#include <bit_factory/anyxx/v26/trait_translation/preprocess_constructed_with.hpp>
 #include <bit_factory/anyxx/v26/trait_translation/trait_facade_decorator.hpp>
 #include <meta>
 #include <utility>
 #include <vector>
 
 namespace anyxx {
-
-template <template <typename, typename...> typename Trait, typename... Args>
-constexpr decltype(auto) preprocess_constructed_with(auto&& constructed_with) {
-    using ConstructedWith = decltype(constructed_with);
-    using trait_declaration_t = anyxx::trait_declaration_t<Trait, Args...>;
-    if constexpr (requires (ConstructedWith constructed_with){ { trait_declaration_t::preprocess_constructed_with(constructed_with) }; }) {
-        return trait_declaration_t::preprocess_constructed_with(std::forward<ConstructedWith>(constructed_with));
-    } else {
-        return constructed_with;
-    }
-}
-
-template <typename ConstructedWith, template <typename, typename...> typename Trait, typename... Args>
-using preprocess_constructed_with_t =
-    std::decay_t<decltype(preprocess_constructed_with<Trait, Args...>(std::declval<ConstructedWith>()))>;
 
 template <template <typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct any_base : deduced_typenames<Trait, Args...> {
