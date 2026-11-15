@@ -4,7 +4,7 @@
 
 namespace anyxx {
 
-template <template <typename, typename...> typename Trait, typename... Args>
+template <template <typename...> typename Trait, typename... Args>
 constexpr decltype(auto) preprocess_constructed_with(auto&& constructed_with) {
   using ConstructedWith = decltype(constructed_with);
   using trait_declaration_t = Trait<Args...>;
@@ -21,8 +21,8 @@ constexpr decltype(auto) preprocess_constructed_with(auto&& constructed_with) {
   }
 }
 
-template <typename ConstructedWith,
-          template <typename, typename...> typename Trait, typename... Args>
+template <typename ConstructedWith, template <typename...> typename Trait,
+          typename... Args>
 using preprocess_constructed_with_t =
     std::decay_t<decltype(preprocess_constructed_with<Trait, Args...>(
         std::declval<ConstructedWith>()))>;
