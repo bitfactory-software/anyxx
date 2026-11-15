@@ -8,6 +8,7 @@
 #include <bit_factory/anyxx/proxies/static/trait_class.hpp>
 #include <bit_factory/anyxx/proxies/static/using_.hpp>
 #include <bit_factory/anyxx/proxies/static/using_cref.hpp>
+#include <bit_factory/anyxx/v23/preprocess_constructed_with.hpp>
 #include <bit_factory/anyxx/v23/trait_facade_decorator.hpp>
 #include <bit_factory/anyxx/v23/v_table_holder/v_table_holder_forward.hpp>
 #include <bit_factory/anyxx/voidness.hpp>
@@ -74,9 +75,11 @@ class ANYXX_USE_EBO any_ : public v_table_holder<Proxy, Trait<Args...>>,
     requires constructibile_for<ConstructedWith, proxy_impl_t, any_> &&
              (!std::same_as<any_, std::decay_t<ConstructedWith>>) &&
              (!is_lifetime_bound<proxy_impl_t>)
-      : proxy_(
-            erased<proxy_t>(std::forward<ConstructedWith>(constructed_with))) {
-    v_table_holder_t::template init_v_table<Proxy, ConstructedWith>();
+      : proxy_(erased<proxy_t>(preprocess_constructed_with<Trait, Args...>(
+            std::forward<ConstructedWith>(constructed_with)))) {
+    v_table_holder_t::template init_v_table<
+        Proxy, std::decay_t<preprocess_constructed_with_t<ConstructedWith,
+                                                          Trait, Args...>>>();
   }
   /// Type-erasing constructor for borrowing proxies. The concrete behavior is
   /// controlled by the proxy via its corresponding \ref proxy_trait. See \ref
@@ -87,9 +90,11 @@ class ANYXX_USE_EBO any_ : public v_table_holder<Proxy, Trait<Args...>>,
     requires constructibile_for<ConstructedWith, proxy_impl_t, any_> &&
              (!std::same_as<any_, std::decay_t<ConstructedWith>>) &&
              (is_lifetime_bound<proxy_impl_t>)
-      : proxy_(
-            erased<proxy_t>(std::forward<ConstructedWith>(constructed_with))) {
-    v_table_holder_t::template init_v_table<proxy_impl_t, ConstructedWith>();
+      : proxy_(erased<proxy_t>(preprocess_constructed_with<Trait, Args...>(
+            std::forward<ConstructedWith>(constructed_with)))) {
+    v_table_holder_t::template init_v_table<
+        proxy_impl_t, std::decay_t<preprocess_constructed_with_t<
+                          ConstructedWith, Trait, Args...>>>();
   }
   // cppcheck-suppress-end noExplicitConstructor
   /// Type-erasing constructor. The concrete behavior is controlled by the
