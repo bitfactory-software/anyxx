@@ -5,9 +5,6 @@
 
 namespace anyxx {
 
-// --------------------------------------------------------------------------------
-// any_ customization traits
-
 template <is_proxy Proxy = val<>>
 struct default_proxy {
   using type = Proxy;

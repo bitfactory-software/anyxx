@@ -6,9 +6,15 @@
 
 namespace anyxx {
 
-TRAIT_TEMPLATE(((Category), (Value), (Ref)), view_base, dynamic_copyable, (),
-               (FN_IMPL(public, (any<Category::template iterator, Value, Ref>), begin, (), const,
-                        () { return std::ranges::begin(self); })))
+TRAIT_TEMPLATE_EX(((Category), (Value), (Ref))
+    , view_base
+      , dynamic_copyable, (),
+      (FN_IMPL(public, (any<Category::template iterator, Value, Ref>), begin, (), const,
+        () { return std::ranges::begin(self); })),
+      ,,,
+      (template <typename Any>
+        using trait_facade_decorator = std::ranges::view_interface<Any>;)
+    )
 
 }  // namespace anyxx
 

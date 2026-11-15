@@ -11,9 +11,3 @@ TRAIT_TEMPLATE(((Category), (Value), (Ref)), sized_view, view_base,
                         const, () { return sentinel_for(self); })))
 
 }  // namespace anyxx
-
-namespace std::ranges {
-template <typename Category, typename Value, typename Ref>
-constexpr bool enable_view<anyxx::any<anyxx::sized_view, Category, Value, Ref>> =
-true;
-}  // namespace std::ranges

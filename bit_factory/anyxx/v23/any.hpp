@@ -2,18 +2,19 @@
 
 #include <bit_factory/anyxx/any_concept.hpp>
 #include <bit_factory/anyxx/any_constructibile_for.hpp>
-#include <bit_factory/anyxx/proxies/proxy_concept.hpp>
 #include <bit_factory/anyxx/proxies/dyn/borrowable_from.hpp>
 #include <bit_factory/anyxx/proxies/dyn/moveable_from.hpp>
+#include <bit_factory/anyxx/proxies/proxy_concept.hpp>
 #include <bit_factory/anyxx/proxies/static/trait_class.hpp>
-#include <bit_factory/anyxx/proxies/static/using_cref.hpp>
 #include <bit_factory/anyxx/proxies/static/using_.hpp>
-#include <bit_factory/anyxx/voidness.hpp>
+#include <bit_factory/anyxx/proxies/static/using_cref.hpp>
+#include <bit_factory/anyxx/v23/trait_facade_decorator.hpp>
 #include <bit_factory/anyxx/v23/v_table_holder/v_table_holder_forward.hpp>
+#include <bit_factory/anyxx/voidness.hpp>
 
 namespace anyxx {
 
-/// \brief The core class template to control dispatch for external
+/// \brief The jacket to control dispatch for external
 /// polymorphism
 ///
 /// To control the behavior, `any_` provides two template parameters: \ref
@@ -37,8 +38,11 @@ namespace anyxx {
 /// for examples. If the proxy is dynamic (i.e., type erased), the Trait must
 /// conform to the \ref has_v_table concept (that means: must provide a
 /// v-Table).
-template <is_proxy Proxy, template <typename...> typename Trait, typename... Args>
-class ANYXX_USE_EBO any_ : public v_table_holder<Proxy, Trait<Args...>>, public Trait<Args...> {
+template <is_proxy Proxy, template <typename...> typename Trait,
+          typename... Args>
+class ANYXX_USE_EBO any_ : public v_table_holder<Proxy, Trait<Args...>>,
+                           public Trait<Args...>,
+                           public trait_facade_decorator<Trait<Args...>> {
  public:
   using proxy_t = Proxy;
   using trait_t = Trait<Args...>;
@@ -143,14 +147,14 @@ class ANYXX_USE_EBO any_ : public v_table_holder<Proxy, Trait<Args...>>, public 
   template <is_any Other>
   explicit(false) any_(const Other& other)  // NOLINT(noExplicitConstructor)
     requires(borrowable_from<proxy_t, typename Other::proxy_t,
-                                   typename Other::v_table_t> &&
+                             typename Other::v_table_t> &&
              (!anyxx::is_dyn<Proxy> || is_any_derived_from<Other, any_>))
       : v_table_holder_t(other.get_v_table_ptr()),
         proxy_(borrow_proxy_as<Proxy>(other.proxy_, other.get_v_table_ptr())) {}
   template <is_any Other>
   any_& operator=(Other const& other)
     requires(borrowable_from<proxy_t, typename Other::proxy_t,
-                                   typename Other::v_table_t> &&
+                             typename Other::v_table_t> &&
              (!anyxx::is_dyn<Proxy> || is_any_derived_from<Other, any_>))
   {
     v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
@@ -195,7 +199,8 @@ class ANYXX_USE_EBO any_ : public v_table_holder<Proxy, Trait<Args...>>, public 
   template <is_any Friend>
   friend inline auto get_proxy_ptr(Friend&& any_);
 
-  template <is_proxy ProxyFriend, template <typename...> typename TraitFriend, typename... FriendArgs>
+  template <is_proxy ProxyFriend, template <typename...> typename TraitFriend,
+            typename... FriendArgs>
   friend class any_;
 
   template <typename Friend>
@@ -207,7 +212,7 @@ class ANYXX_USE_EBO any_ : public v_table_holder<Proxy, Trait<Args...>>, public 
     requires(is_any_derived_from<To, From>);
 
   friend inline auto release_v_table(any_& from) {
-      return from.release_v_table();
+    return from.release_v_table();
   }
 
   explicit operator bool() const
@@ -280,10 +285,10 @@ class ANYXX_USE_EBO any_ : public v_table_holder<Proxy, Trait<Args...>>, public 
 };
 
 template <template <typename...> typename Trait, typename... Args>
-class ANYXX_USE_EBO any : public any_<typename Trait<Args...>::default_proxy_t, Trait, Args...>{
+class ANYXX_USE_EBO any
+    : public any_<typename Trait<Args...>::default_proxy_t, Trait, Args...> {
   using any_<typename Trait<Args...>::default_proxy_t, Trait, Args...>::any_;
 };
-
 
 /// A template to get an \ref any_ trait for a type
 /// See also \ref using_::as.
@@ -294,7 +299,7 @@ template <typename Type, typename Trait>
 struct make_trait_as_impl;
 template <typename Type, template <typename...> typename Trait, typename... Ts>
 struct make_trait_as_impl<Type, Trait<Ts...>> {
-    using type = trait_as<Type, Trait, Ts...>;
+  using type = trait_as<Type, Trait, Ts...>;
 };
 template <typename Type, typename Trait>
 using make_trait_as = typename make_trait_as_impl<Type, Trait>::type;
@@ -309,22 +314,23 @@ using trait_as_cref = any_<using_cref<Type>, Trait, Ts...>;
 /// See also \ref using_::as.
 template <template <typename...> typename Trait, typename... Ts>
 auto as(auto&& v) {
-    return any_<using_<std::decay_t<decltype(v)>>, Trait, Ts...>{std::forward<decltype(v)>(v)};
+  return any_<using_<std::decay_t<decltype(v)>>, Trait, Ts...>{
+      std::forward<decltype(v)>(v)};
 }
-        
+
 /// A factory function to bind a const& as a model to an \ref any_ with a \ref
 /// trait.
 /// See also \ref using_cref::as.
 template <template <typename...> typename Trait, typename... Ts>
 auto as_cref(auto const& v) {
-    return any_<using_cref<std::decay_t<decltype(v)>>, Trait, Ts...>{v};
+  return any_<using_cref<std::decay_t<decltype(v)>>, Trait, Ts...>{v};
 }
 
 template <typename Type, typename Trait>
 struct make_trait_class;
 template <typename Type, template <typename...> typename Trait, typename... Ts>
 struct make_trait_class<Type, Trait<Ts...>> {
-    using type = any_<trait_class<Type>, Trait, Ts...>;
+  using type = any_<trait_class<Type>, Trait, Ts...>;
 };
 
 /// Helper type alias template to get a \ref trait_class for a type
