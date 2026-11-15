@@ -16,7 +16,7 @@ struct data {};
 template <typename Self>
 struct greeting : dynamic_castable<Self> {
   std::string greet() const;
-};  
+};
 
 template <>
 struct greeting<data> {
@@ -32,6 +32,6 @@ TEST_CASE("talk_23_7_downcast") {
   if (auto g = downcast_to<any<greeting>>(a)) {
     CHECK(g->greet() == "Hello");
   } else {
-    CHECK(!"downcast failed");
+    FAIL("downcast failed");
   }
 }

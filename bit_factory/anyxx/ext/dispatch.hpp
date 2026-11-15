@@ -394,7 +394,7 @@ class dispatch<R(Args...)> {
     [[nodiscard]] bool define(auto fp, auto& matrix,
                               const std::source_location location) {
       if (this->define_<Classes...>(fp, matrix)) return true;
-      assert(!"has_conflicts");
+      assert(false);
       throw anyxx::error{"Has defined multi dispatch conflict!", location};
     }
 

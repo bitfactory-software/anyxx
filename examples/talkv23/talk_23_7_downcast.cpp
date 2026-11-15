@@ -28,6 +28,6 @@ TEST_CASE("talk_23_7_downcast") {
   if (auto g = downcast_to<any<greeting>>(a)) {
     CHECK(g->greet() == "Hello");
   } else {
-    CHECK(!"downcast failed");
+    FAIL("downcast failed");
   }
 }

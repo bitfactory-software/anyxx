@@ -17,7 +17,7 @@ constexpr decltype(auto) preprocess_constructed_with(auto&& constructed_with) {
     return trait_declaration_t::preprocess_constructed_with(
         std::forward<ConstructedWith>(constructed_with));
   } else {
-    return constructed_with;
+    return std::forward<ConstructedWith>(constructed_with);
   }
 }
 
