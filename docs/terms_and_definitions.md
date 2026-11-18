@@ -36,8 +36,7 @@ An object derived from `v_table`, with no additional members, and where all memb
 These functions are implemented via a templated constructor. The template parameter is called the **unerased** type.  
 In these functions, the `self` parameter is a cast back to a pointer to the unerased type, and the correct function for the unerased type will be called. By default, the called function is a member function with the same name and signature as the `v_table` function. This behavior can be customized in a **model_map** for the unerased type. [Tutorial](/tutorials/tutorial__30.md)
 
-## v_table data
-
+### v_table data
 **v_table data** contains meta data for the model. That can be 
 - pointer to type erased lifetime functions as
   - copy/move constructors,
