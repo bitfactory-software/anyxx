@@ -19,4 +19,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           config_file: Doxyfile.in
           folder: doxygen/html
-          doxygen_version: 1.16.1
+          doxygen_version: 1.19.0
