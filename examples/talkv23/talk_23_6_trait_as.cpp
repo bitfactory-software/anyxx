@@ -4,6 +4,7 @@
 #include <format>
 #include <string>
 
+// [slide]
 using namespace anyxx;
 
 namespace {
@@ -40,3 +41,4 @@ TEST_CASE("talk_23_6_trait_as") {
   CHECK(print(3.14) == "  3.14\n");
   CHECK(print(42) == "42\n");
 }
+// [slide]

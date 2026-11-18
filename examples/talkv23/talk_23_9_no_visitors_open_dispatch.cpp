@@ -8,9 +8,10 @@
 #include <iostream>
 #include <string>
 
-using namespace anyxx;
-
 namespace {
+
+// [slide]
+using namespace anyxx;
 
 TRAIT_EX(node, anyxx::deleteable, , , ,
     (HAS_OPEN_DISPATCH), ())
@@ -51,6 +52,7 @@ auto __ = as_forth.define<Times>([](auto const& expr) {
 auto __ = as_forth.define<Integer>(
     [](auto const& expr) { return std::to_string(expr.i); });
 //
+// [slide]
 //-----------------------------------------------------------------------------
 // render as Lisp
 dispatch<std::string(virtual_<any<node>>)> as_lisp;
@@ -63,10 +65,9 @@ auto __ = as_lisp.define<Times>([](auto const& expr) {
 auto __ = as_lisp.define<Integer>(
     [](auto const& expr) { return std::to_string(expr.i); });
 //-----------------------------------------------------------------------------
-}  // namespace
 
 TEST_CASE("talk_23_9_no_visitors_open_dispatch") {
-
+  // [slide2]
   any<node> expr{Times{Integer(2), Plus{Integer{3}, Integer{4}}}};
 
   auto v = evaluate(expr);
@@ -75,9 +76,11 @@ TEST_CASE("talk_23_9_no_visitors_open_dispatch") {
   out << as_forth(expr) << " = " << as_lisp(expr) << " = " << evaluate(expr);
   std::cout << out.str() << "\n";
   CHECK(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
+  // [slide2]
 
 #ifdef ANYXX_RUN_BENCHMARKS
   BENCHMARK("23_Tree any_++ open method evaluate") { return evaluate(expr); };
   BENCHMARK("23_Tree any_++ open method as_lisp") { return as_lisp(expr); };
 #endif  // ANYXX_RUN_BENCHMARKS
 }
+}  // namespace

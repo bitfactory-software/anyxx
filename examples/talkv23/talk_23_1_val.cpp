@@ -40,7 +40,7 @@ TEST_CASE("talk_23_1 external dynamic memory val 1") {
 }
 
 namespace _2 {
-
+// [slide]
 using namespace anyxx;
 
 TRAIT(Shape, copyable, 
@@ -64,6 +64,7 @@ TEST_CASE("talk_23_1 external dynamic memory val 2") {
   auto modified = inflate_shape(origin, 2.0);
   CHECK(modified.area() == M_PI * 10.0 * 10.0);
 }
+// [slide]
 
 }
 

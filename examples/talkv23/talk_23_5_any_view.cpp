@@ -9,6 +9,7 @@ namespace {
 
 using namespace anyxx;
 
+// [slide]
 class container {
   std::vector<int> v{1, 2, 3, 4, 5};
   std::list<int> l{1, 2, 3, 4, 5};
@@ -26,6 +27,7 @@ class container {
     }
   };
 };
+// [slide]
 
 static_assert(std::ranges::bidirectional_range<
               any<view, bidirectional, int const, int const&>>);

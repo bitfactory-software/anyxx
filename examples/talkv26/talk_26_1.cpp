@@ -40,7 +40,7 @@ TEST_CASE("talk_2610_ShapesAny++26") {
 }  // namespace intro
 
 namespace External_Polymorphism_Static_Dynamic {
-
+// [slide]
 using namespace anyxx;
 
 template <typename Self>
@@ -79,7 +79,7 @@ TEST_CASE("talk_26_1 external static & dynamic") {
   print_area_dyn({Circle{5.0}, Rect{3.0, 4.0}});
   print_area_static(as<Shape>(Circle{5.0}), as<Shape>(Rect{3.0, 4.0}));
 }
-
+// [slide]
 }  // namespace External_Polymorphism_Static_Dynamic
 
 }  // namespace

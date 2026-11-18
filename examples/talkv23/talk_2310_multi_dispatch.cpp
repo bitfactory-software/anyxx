@@ -13,6 +13,7 @@ using namespace anyxx;
 
 namespace {
 
+// [slide]
 TRAIT_EX(thing, anyxx::dynamic_copyable, 
     (FN(std::string, registry, (), const)), , , 
     (HAS_OPEN_DISPATCH), ())
@@ -30,6 +31,7 @@ any<thing> run(std::vector<any<thing>> things) {
         return result;
       });
 }
+// [slide]
 
 struct Asteroid {
   std::string name_;
@@ -104,9 +106,11 @@ TEST_CASE("talk_2310_bonus_multi_dispatch") {
   auto w2 = DeathStar{"2"} <=> BlackHole{"Sagittarius A*"};
   CHECK(w2.registry() == "Black Hole Sagittarius A*");
 
+  // [slide2]
   auto winner = run({Asteroid{"Chicxulub"}, Spaceship{"NCC-1701"},
                      Spaceship{"USGS Powell"}, DeathStar{"2"},
                      Asteroid{"Tunguska"}, DeathStar{"1"},
                      BlackHole{"Sagittarius A*"}, BlackHole{"Cygnus X-1"}});
   CHECK(winner.registry() == "Black Hole Sagittarius A* | Cygnus X-1");
+  // [slide2]
 }

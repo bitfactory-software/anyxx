@@ -5,9 +5,10 @@
 #include <string>
 #include <vector>
 
-using namespace anyxx;
-
 namespace {
+
+// [slide]
+using namespace anyxx;
 
 struct data {};
 
@@ -19,8 +20,6 @@ TRAIT_MAP(greeting, data) {
   std::string greet(const data&) { return "Hello"; };
 };
 
-}  // namespace
-
 TEST_CASE("talk_23_7_downcast") {
   auto d = data{};
   auto g1 = any<greeting>{d};
@@ -31,3 +30,6 @@ TEST_CASE("talk_23_7_downcast") {
     FAIL("downcast failed");
   }
 }
+// [slide]
+
+}  // namespace

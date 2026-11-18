@@ -29,7 +29,7 @@ any<widget> load_widget([[maybe_unused]] int id) {
     return {std::in_place_type<widget_2>};
   }
 }
-
+// [slide]
 static std::map<int, any_<weak, widget>> cache;  // out of function for CHECK
 static std::mutex cache_mutex;
 any<widget> make_widget(int id) {
@@ -38,6 +38,7 @@ any<widget> make_widget(int id) {
   if(!found) cache[id] = *(found = load_widget(id));
   return *found;
 }
+// [slide]
 
 TEST_CASE("talk_26_2_shared_weak sutters favorite 10 cpp lines") {
   // https://youtu.be/JfmTagWcqoE?si=sKPgf2sU-3q6p0TU&t=2027

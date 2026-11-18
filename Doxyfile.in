@@ -12,5 +12,5 @@ GENERATE_LATEX = NO
 WARN_IF_UNDOCUMENTED = NO
 OUTPUT_DIRECTORY = ./doxygen/
 INPUT = bit_factory/ docs/ ./files_for_doxygen/
-EXAMPLE_PATH = examples/inline_mode/
+EXAMPLE_PATH = examples/inline_mode/ examples/talkv23 examples/talkv26
 

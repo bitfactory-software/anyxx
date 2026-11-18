@@ -15,6 +15,7 @@ using namespace std::string_literals;
 namespace {
 namespace sample_12 {
 
+// [slide]
 template <typename Self>
 struct evaluable : copyable<Self> {
   std::string to_string() const;
@@ -51,6 +52,7 @@ struct plus {
     return evaluate_plus(left_.evaluate(), right_.evaluate());
   }
 };
+// [slide]
 
 VANY_DISPACH_DECLARE(
      , evaluate_times,
@@ -117,6 +119,7 @@ TEST_CASE("talk_2612_vany_open_dispatch core") {
 
 namespace {
 namespace sample_12 {
+// [slide2]
 template <>
 struct evaluable<std::string> {
   static std::string to_string(std::string const& self) { return self; };
@@ -131,11 +134,13 @@ auto __ = evaluate_plus.define<std::string, bool_int_double>(
     [](const auto& lhs, const auto& rhs) -> value {
       return lhs + as<evaluable>(rhs).to_string();
     });
+// [slide2]
 }  // namespace sample_12
 }  // namespace
 
 TEST_CASE("talk_2612_vany_open_dispatch string ext") {
   using namespace sample_12;
+  // [slide3]
   any<node> expr{plus{leave{2}, plus{leave{3}, leave{"4"s}}}};
 
   auto v = expr.evaluate();
@@ -147,4 +152,5 @@ TEST_CASE("talk_2612_vany_open_dispatch string ext") {
   any<node> expr2{plus{leave{"Hello, "s}, leave{"world"s}}};
   auto v2 = expr2.evaluate();
   CHECK(v2.to_string() == "Hello, world"s);
+  // [slide3]
 }

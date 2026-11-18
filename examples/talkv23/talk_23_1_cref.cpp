@@ -31,6 +31,7 @@ TEST_CASE("talk_23_1 internal dynamic memory ref") {
 }
 
 namespace External_Polymorphism_Dynamic {
+// [slide]
 using namespace anyxx;
 
 TRAIT(Shape, observeable, 
@@ -49,6 +50,7 @@ TEST_CASE("talk_23_1 external dynamic memory cref 1") {
   CHECK(f(c) == M_PI * 5.0 * 5.0);
 }
 }
+// [slide]
 
 namespace _2 {
 

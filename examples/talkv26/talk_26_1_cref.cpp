@@ -9,7 +9,7 @@
 #include <vector>
 
 namespace {
-
+// [slide]
 struct Circle {
   double radius;
 };
@@ -36,5 +36,5 @@ TEST_CASE("talk_2610_ShapesAny++26 cref") {
   Circle circle{5.0};
   print_area(circle);
 }
-
+// [slide]
 }  // namespace

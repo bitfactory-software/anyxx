@@ -5,9 +5,10 @@
 #include <format>
 #include <string>
 
-using namespace anyxx;
-
 namespace {
+
+using namespace anyxx;
+// [slide]
 
 template <typename Self>
 struct stringable {
@@ -38,11 +39,11 @@ auto print(V s) {
   return print(trait_as<V, stringable>(std::move(s)));
 }
 
-}  // namespace
-
 TEST_CASE("talk_26_6_trait_as") {
   CHECK(print("Hello world!") == "Hello world!\n");
   CHECK(print(true) == "wahr\n");
   CHECK(print(3.14) == "  3.14\n");
   CHECK(print(42) == "42\n");
 }
+
+}  // namespace

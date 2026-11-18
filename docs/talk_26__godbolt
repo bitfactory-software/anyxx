@@ -1,0 +1,30 @@
+{
+  "sessions": [
+    {
+      "id": 1,
+      "language": "c++",
+      "source": "$$godbolt$$",
+      "compilers": [],
+      "executors": [
+        {
+          "compilerVisible": true,
+          "compilerOutputVisible": true,
+          "compiler": {
+            "id": "gsnapshot",
+            "options": "-lCatch2Main -std=c++26 -freflection",
+            "libs": [
+              {
+                "name": "anyxx",
+                "ver": "develop"
+              },
+              {
+                "name": "catch2",
+                "ver": "300-preview2"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

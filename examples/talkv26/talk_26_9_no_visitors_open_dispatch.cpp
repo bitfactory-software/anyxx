@@ -7,9 +7,10 @@
 #include <iostream>
 #include <string>
 
-using namespace anyxx;
-
 namespace {
+
+// [slide]
+using namespace anyxx;
 
 template <typename Self>
 struct node : anyxx::deleteable<Self> {
@@ -53,6 +54,7 @@ auto __ = as_forth.define<Times>([](auto const& expr) {
 auto __ = as_forth.define<Integer>(
     [](auto const& expr) { return std::to_string(expr.i); });
 //
+// [slide]
 //-----------------------------------------------------------------------------
 // render as Lisp
 dispatch<std::string(virtual_<any<node>>)> as_lisp;
@@ -65,22 +67,25 @@ auto __ = as_lisp.define<Times>([](auto const& expr) {
 auto __ = as_lisp.define<Integer>(
     [](auto const& expr) { return std::to_string(expr.i); });
 //-----------------------------------------------------------------------------
-}  // namespace
 
 TEST_CASE("talk_26_9_no_visitors_open_dispatch") {
-  auto expr = any<node>{std::in_place_type<Times>,
-                Integer(2),
-                any<node>{std::in_place_type<Plus>, any<node>{std::in_place_type<Integer>, 3},
-                 any<node>{std::in_place_type<Integer>, 4}}};
+  // [slide2]
+  auto expr = any<node>{std::in_place_type<Times>, Integer(2),
+                        any<node>{std::in_place_type<Plus>,
+                                  any<node>{std::in_place_type<Integer>, 3},
+                                  any<node>{std::in_place_type<Integer>, 4}}};
   auto v = evaluate(expr);
   REQUIRE(v == 14);
   std::stringstream out;
   out << as_forth(expr) << " = " << as_lisp(expr) << " = " << evaluate(expr);
   std::cout << out.str() << "\n";
   REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
+  // [slide2]
 
 #ifdef ANYXX_RUN_BENCHMARKS
   BENCHMARK("26_Tree any_++ open method evaluate") { return evaluate(expr); };
   BENCHMARK("26_Tree any_++ open method as_lisp") { return as_lisp(expr); };
 #endif  // ANYXX_RUN_BENCHMARKS
 }
+
+}  // namespace

@@ -19,6 +19,7 @@ TEST_CASE("talk_23_3_any_pure") {
     CHECK(*any_cast<int>(&a2) == 42);
   }
   {
+    // [slide]
     using namespace anyxx;
     auto a1 = any<typed_copyable>{42};
     CHECK(any_cast<int>(a1) == 42);
@@ -29,6 +30,7 @@ TEST_CASE("talk_23_3_any_pure") {
     a1 = std::string{"hello"};
     CHECK(any_cast<std::string>(a1) == "hello");
     CHECK(any_cast<int>(a2) == 42);
+    // [slide]
   }
   {
     using namespace anyxx;

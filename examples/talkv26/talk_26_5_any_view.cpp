@@ -7,7 +7,7 @@
 #include <vector>
 
 namespace {
-
+// [slide]
 using namespace anyxx;
 
 class container {
@@ -26,6 +26,7 @@ class container {
     }
   }
 };
+// [slide]
 
 static_assert(std::derived_from<any<input_iterator, int, const int&>, input_iterator<declaration, int, const int&>::typenames>);
 

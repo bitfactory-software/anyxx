@@ -44,6 +44,7 @@ TEST_CASE("talk_2611_variant_dispatch") {
   CHECK(ss.str() == "circle\nsquare\n");
 }
 
+// [slide]
 namespace {
 using known_and_unknown_shapes = vany<drawable, circle, square>;
 static_assert(std::same_as<
@@ -61,6 +62,7 @@ template <>
 struct drawable<std::string> {
   static std::string draw(std::string const& s) { return s; };
 };
+// [slide]
 
 }  // namespace
 

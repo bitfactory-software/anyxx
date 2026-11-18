@@ -34,18 +34,22 @@ TEST_CASE("talk_23_4_any_function") {
     */
   }
   {
+    // [slide]
     using namespace anyxx;
     auto f = [](int x) { return x + 2; };
 
-    any<function, int(int) const>             const_copyable_function{f};
-    any<function, int(int)>                   mutable_copyable_function{f};
-    any<move_only_function, int(int) const>   const_moveable_function{[](int x) { return x + 2; }};
-    any<move_only_function, int(int)>         mutable_moveable_function{[](int x) { return x + 2; }};
-    any<function_ref, int(int) const>         const_function_ref{f};
-    any<function_ref, int(int)>               mutable_function_ref{f};
+    any<function, int(int) const> const_copyable_function{f};
+    any<function, int(int)> mutable_copyable_function{f};
+    any<move_only_function, int(int) const> const_moveable_function{
+        [](int x) { return x + 2; }};
+    any<move_only_function, int(int)> mutable_moveable_function{
+        [](int x) { return x + 2; }};
+    any<function_ref, int(int) const> const_function_ref{f};
+    any<function_ref, int(int)> mutable_function_ref{f};
+    // [slide]
   }
   {
-    any<function, int(int) const> f{ [](int x) { return x + 2; }};
+    any<function, int(int) const> f{[](int x) { return x + 2; }};
     CHECK(f(40) == 42);
   }
   {
@@ -53,14 +57,15 @@ TEST_CASE("talk_23_4_any_function") {
     CHECK(f(40) == 42);
   }
   {
-    any<function, int(int)> f{[y = 1](int x) mutable{ return x + ++y + 2; }};
+    any<function, int(int)> f{[y = 1](int x) mutable { return x + ++y + 2; }};
     CHECK(f(40) == 44);
     CHECK(f(40) == 45);
   }
   {
-      // +++ this code does not compile, as expected
-      //any<function, int(int) const> f{[y = 1](int x) mutable{ return x + ++y + 2; }};
-      // -- this code does not compile, as expected
+    // +++ this code does not compile, as expected
+    // any<function, int(int) const> f{[y = 1](int x) mutable{ return x + ++y +
+    // 2; }};
+    // -- this code does not compile, as expected
   }
   {
     auto lambda = +[](int x) { return x + 2; };

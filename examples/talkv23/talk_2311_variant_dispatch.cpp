@@ -55,6 +55,7 @@ TEST_CASE("talk_2311_trait_as_variant") {
 }
 
 namespace {
+// [slide]
 using known_and_unknown_shapes = vany<drawable, circle, square>;
 static_assert(std::same_as<
               known_and_unknown_shapes,
@@ -64,6 +65,7 @@ void draw_vany(std::stringstream& os,
     std::vector<known_and_unknown_shapes> const& figures) {
     for(auto const& f : figures) os << f.draw() << "\n";
 }
+// [slide]
 
 TRAIT_MAP(drawable, std::string) {
   std::string draw(std::string const& s) { return s; };

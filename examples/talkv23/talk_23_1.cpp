@@ -107,8 +107,9 @@ TEST_CASE("talk_23_1 external static concept") {
 
 }  // namespace External_Polymorphism_Static
 
-namespace External_Polymorphism_Static_Dynamic {
 
+namespace External_Polymorphism_Static_Dynamic {
+// [slide]
 using namespace anyxx;
 TRAIT(Shape, observeable, (FN(double, area, (), const)))
 void print(std::vector<any_<shared, Shape>> const& shapes) {
@@ -138,6 +139,7 @@ TEST_CASE("talk_236_1 external static & dynamic") {
   print({Circle{5.0}, Rect{3.0, 4.0}});
   print_(as<Shape>(Circle{5.0}), as<Shape>(Rect{3.0, 4.0}));
 }
+// [slide]
 }  // namespace External_Polymorphism_Static_Dynamic
 
 }  // namespace

@@ -44,6 +44,7 @@ TEST_CASE("talk_23_1 internal dynamic memory ptr") {
 }
 
 namespace External_Polymorphism_Dynamic {
+// [slide]
 using namespace anyxx;
 
 namespace External_Polymorphism_Dynamic_Memory_1 {
@@ -69,6 +70,7 @@ TEST_CASE("talk_23_1 external dynamic memory ptr") {
   shape = inflate_shape(shape, 2.0);
   CHECK(shape.area() == M_PI * 10.0 * 10.0);
 }
+// [slide]
 
 }  // namespace External_Polymorphism_Dynamic_Memory_1
 
