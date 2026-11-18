@@ -10,8 +10,9 @@ var searchData=
   ['showcase_205_3a_20any_20crosscast_20factory_20serialization_7',['Showcase 5: &lt;em&gt;Any++&lt;/em&gt; Crosscast + Factory = Serialization',['../index.html#autotoc_md35',1,'']]],
   ['showcase_206_3a_20basic_20any_20std_3a_3avariant_20usage_8',['Showcase 6: Basic &lt;em&gt;Any++&lt;/em&gt; std::variant usage',['../index.html#autotoc_md36',1,'']]],
   ['showcase_207_3a_20basic_20any_20open_20std_3a_3avariant_20usage_3a_20vany_9',['Showcase 7: Basic &lt;em&gt;Any++&lt;/em&gt; open std::variant usage: &apos;vany&apos;',['../index.html#autotoc_md37',1,'']]],
-  ['static_20cast_20vs_20dynamic_20cast_10',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md19',1,'']]],
-  ['std_3a_3avariant_20usage_11',['Showcase 6: Basic &lt;em&gt;Any++&lt;/em&gt; std::variant usage',['../index.html#autotoc_md36',1,'']]],
-  ['std_3a_3avariant_20usage_3a_20vany_12',['Showcase 7: Basic &lt;em&gt;Any++&lt;/em&gt; open std::variant usage: &apos;vany&apos;',['../index.html#autotoc_md37',1,'']]],
-  ['steve_20downey_13',['Chapter 3: Concept Maps using C++23 Library Tech, Steve Downey',['../subpage3.html',1,'main']]]
+  ['static_20and_20dynamic_20polymorphism_20in_20c_2023_20and_20beyond_10',['Talk at Meeting C++ 2026: Static and Dynamic Polymorphism in C++23 and beyond',['../talk_meeting_cpp26.html',1,'']]],
+  ['static_20cast_20vs_20dynamic_20cast_11',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md19',1,'']]],
+  ['std_3a_3avariant_20usage_12',['Showcase 6: Basic &lt;em&gt;Any++&lt;/em&gt; std::variant usage',['../index.html#autotoc_md36',1,'']]],
+  ['std_3a_3avariant_20usage_3a_20vany_13',['Showcase 7: Basic &lt;em&gt;Any++&lt;/em&gt; open std::variant usage: &apos;vany&apos;',['../index.html#autotoc_md37',1,'']]],
+  ['steve_20downey_14',['Chapter 3: Concept Maps using C++23 Library Tech, Steve Downey',['../subpage3.html',1,'main']]]
 ];

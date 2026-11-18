@@ -11,5 +11,6 @@ var searchData=
   ['dispatch_5ftable_20instance_20multi_20dispatch_20matrix_8',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md16',1,'']]],
   ['downcast_9',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md20',1,'']]],
   ['downey_10',['Chapter 3: Concept Maps using C++23 Library Tech, Steve Downey',['../subpage3.html',1,'main']]],
-  ['dynamic_20cast_11',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md19',1,'']]]
+  ['dynamic_20cast_11',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md19',1,'']]],
+  ['dynamic_20polymorphism_20in_20c_2023_20and_20beyond_12',['Talk at Meeting C++ 2026: Static and Dynamic Polymorphism in C++23 and beyond',['../talk_meeting_cpp26.html',1,'']]]
 ];
