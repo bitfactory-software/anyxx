@@ -131,8 +131,8 @@ v_table instance</h2>
 <p>An object derived from <span class="tt">v_table</span>, with no additional members, and where all members point to valid functions.</p>
 <p>These functions are implemented via a templated constructor. The template parameter is called the <b>unerased</b> type. <br  />
  In these functions, the <span class="tt">self</span> parameter is a cast back to a pointer to the unerased type, and the correct function for the unerased type will be called. By default, the called function is a member function with the same name and signature as the <span class="tt">v_table</span> function. This behavior can be customized in a <b>model_map</b> for the unerased type. Tutorial</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
-v_table data</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
+v_table data</h2>
 <p><b>v_table data</b> contains meta data for the model. That can be</p><ul>
 <li>pointer to type erased lifetime functions as<ul>
 <li>copy/move constructors,</li>

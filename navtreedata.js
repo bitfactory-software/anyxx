@@ -25,30 +25,11 @@
 var NAVTREE =
 [
   [ "Any++", "index.html", [
-    [ "Any++, C++0x Concepts, Rust Traits, Haskell Type Classes", "main.html", "main" ],
     [ "Handling <span class=\"tt\">const</span> in <span class=\"tt\">Any++</span>", "md_docs_2Constness.html", null ],
     [ "<span class=\"tt\">Any++</span> Type Erased <span class=\"tt\">Proxy</span>*s", "md_docs_2Proxy__overview.html", null ],
     [ "External Polymorphism in C++26", "md_docs_2scetch_01c_09_0926_01reflection.html", null ],
     [ "Talk at Meeting C++ 2026: Static and Dynamic Polymorphism in C++23 and beyond", "talk_meeting_cpp26.html", "talk_meeting_cpp26" ],
-    [ "Terms and Definitions in Context of <span class=\"tt\">Any++</span>", "md_docs_2terms__and__definitions.html", [
-      [ "v_table data", "md_docs_2terms__and__definitions.html#autotoc_md15", [
-        [ "Trait", "md_docs_2terms__and__definitions.html#autotoc_md9", null ],
-        [ "Trait jacket", "md_docs_2terms__and__definitions.html#autotoc_md10", null ],
-        [ "Model", "md_docs_2terms__and__definitions.html#autotoc_md11", null ],
-        [ "Model map", "md_docs_2terms__and__definitions.html#autotoc_md12", null ],
-        [ "v_table", "md_docs_2terms__and__definitions.html#autotoc_md13", null ],
-        [ "v_table instance", "md_docs_2terms__and__definitions.html#autotoc_md14", null ],
-        [ "open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix", "md_docs_2terms__and__definitions.html#autotoc_md16", null ],
-        [ "Proxy", "md_docs_2terms__and__definitions.html#autotoc_md17", null ],
-        [ "'any' Versus 'typed_any'", "md_docs_2terms__and__definitions.html#autotoc_md18", null ],
-        [ "Static Cast vs Dynamic Cast", "md_docs_2terms__and__definitions.html#autotoc_md19", null ],
-        [ "'Upcast' vs 'Downcast'", "md_docs_2terms__and__definitions.html#autotoc_md20", null ],
-        [ "Lifetime Cast", "md_docs_2terms__and__definitions.html#autotoc_md21", null ],
-        [ "Crosscast", "md_docs_2terms__and__definitions.html#autotoc_md22", null ],
-        [ "Extension Members", "md_docs_2terms__and__definitions.html#autotoc_md23", null ]
-      ] ]
-    ] ],
-    [ "The Inner Working Of <span class=\"tt\">Traits</span> In <span class=\"tt\">Any++</span>", "md_docs_2Traits__inner__working.html", null ],
+    [ "Terms and Definitions in Context of <span class=\"tt\">Any++</span>", "md_docs_2terms__and__definitions.html", null ],
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ]
     ] ],

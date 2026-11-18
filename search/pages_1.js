@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['1_3a_20basic_20any_20usage_0',['Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage',['../index.html#autotoc_md26',1,'']]],
-  ['1_3a_20c_200x_20concepts_20haskell_20type_20classes_20rust_20traits_20a_20short_20introduction_1',['Chapter 1: C++0x Concepts, Haskell type classes, Rust traits, a short introduction',['../subpage1.html',1,'main']]]
+  ['2026_3a_20static_20and_20dynamic_20polymorphism_20in_20c_2023_20and_20beyond_0',['Talk at Meeting C++ 2026: Static and Dynamic Polymorphism in C++23 and beyond',['../talk_meeting_cpp26.html',1,'']]],
+  ['23_1',['Examples for C++23',['../talk_meeting_cpp26_samples_v23.html',1,'talk_meeting_cpp26']]],
+  ['23_20and_20beyond_2',['Talk at Meeting C++ 2026: Static and Dynamic Polymorphism in C++23 and beyond',['../talk_meeting_cpp26.html',1,'']]],
+  ['26_3',['26',['../talk_meeting_cpp26_samples_v26.html',1,'Examples for C++26'],['../md_docs_2scetch_01c_09_0926_01reflection.html',1,'External Polymorphism in C++26']]],
+  ['2_3a_20any_20with_20model_20map_4',['Showcase 2: &lt;em&gt;Any++&lt;/em&gt; with Model Map',['../index.html#autotoc_md30',1,'']]]
 ];
