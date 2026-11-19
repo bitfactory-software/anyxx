@@ -3,7 +3,7 @@
 
  The MIT License (MIT)
 
- Copyright (C) 1997-2020 by Dimitri van Heesch
+ Copyright (C) 1997-2026 by Dimitri van Heesch
 
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  and associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -42,6 +42,6 @@ var NAVTREEINDEX =
 "21_Tree_any_8cpp-example.html"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronization';
-var SYNCOFFMSG = 'click to enable panel synchronization';
-var LISTOFALLMEMBERS = 'List of all members';
+const SYNCONMSG = 'click to disable panel synchronization';
+const SYNCOFFMSG = 'click to enable panel synchronization';
+const LISTOFALLMEMBERS = 'List of all members';

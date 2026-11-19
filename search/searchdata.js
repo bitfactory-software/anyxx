@@ -8,14 +8,14 @@ var indexSectionsWithContent =
 var indexSectionNames =
 {
   0: "all",
-  1: "files",
-  2: "pages"
+  1: "namespaces",
+  2: "groups"
 };
 
 var indexSectionLabels =
 {
   0: "All",
-  1: "Files",
-  2: "Pages"
+  1: "Namespaces",
+  2: "Modules"
 };
 
