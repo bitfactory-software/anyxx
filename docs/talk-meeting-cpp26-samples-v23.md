@@ -140,6 +140,6 @@
 @tab{C++23}
 \snippet{talk_23__godbolt} talk_2312_vany_open_dispatch.cpp slide3
 @tab{C++26}
-@endtab
 \snippet{talk_26__godbolt} talk_2612_vany_open_dispatch.cpp slide3
+@endtab
 @endtabs
