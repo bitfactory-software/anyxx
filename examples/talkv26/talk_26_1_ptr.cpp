@@ -52,7 +52,7 @@ namespace External_Polymorphism_Dynamic_Memory_1 {
 
 template <typename Self>
 struct Shape : cloneable<Self> {
-  double area(), const;
+  double area() const;
   void inflate(double);
 };
 
