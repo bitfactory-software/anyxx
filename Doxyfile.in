@@ -12,5 +12,19 @@ GENERATE_LATEX = NO
 WARN_IF_UNDOCUMENTED = NO
 OUTPUT_DIRECTORY = ./doxygen/
 INPUT = bit_factory/ docs/ ./files_for_doxygen/
+RECURSIVE = YES
 EXAMPLE_PATH = examples/inline_mode/ examples/talkv23 examples/talkv26
+EXCLUDE = ./docs/doxygen-awesome/
+	
+HTML_EXTRA_STYLESHEET  = ./docs/doxygen-awesome/doxygen-awesome.css ./docs/custom.css
+HTML_EXTRA_FILES       = ./docs/doxygen-awesome/doxygen-awesome-tabs.js
+HTML_HEADER            = ./docs/header.html
+HTML_COLORSTYLE        = LIGHT
+GENERATE_TREEVIEW      = YES
+DISABLE_INDEX          = NO
+FULL_SIDEBAR           = NO
 
+ALIASES += "tabs=\htmlonly<div class=\"tabbed\"><ul>\endhtmlonly"
+ALIASES += "tab{1}=\htmlonly<li><b class=\"tab-title\">\1</b>\endhtmlonly"
+ALIASES += "endtab=\htmlonly</li>\endhtmlonly"
+ALIASES += "endtabs=\htmlonly</ul></div>\endhtmlonly"

@@ -1,0 +1,16 @@
+﻿/* Keep inactive tabs at full width so Compiler Explorer iframes initialize properly */
+.tabbed > ul > li:not(.selected) {
+    display: block !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Give Compiler Explorer iframes a guaranteed full-width, fixed-height box */
+.tabbed iframe {
+    width: 100% !important;
+    min-height: 500px !important;
+    border: none;
+}
