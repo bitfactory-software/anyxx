@@ -4,7 +4,9 @@ on:
   release:
     types: [published]
   push:
-    tags:
+    paths-ignore:
+      - 'docs/**'
+      - '.github/**'
     branches:
       - master
       - develop
