@@ -1,0 +1,7 @@
+docs/html
+_readthedocs
+.DS_Store
+.idea
+
+node_modules
+*.tgz
