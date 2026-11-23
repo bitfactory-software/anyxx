@@ -28,7 +28,6 @@ var NAVTREE =
     [ "Handling <span class=\"tt\">const</span> in <span class=\"tt\">Any++</span>", "md_docs_2Constness.html", null ],
     [ "<span class=\"tt\">Any++</span> Type Erased <span class=\"tt\">Proxy</span>*s", "md_docs_2Proxy__overview.html", null ],
     [ "External Polymorphism in C++26", "md_docs_2scetch_01c_09_0926_01reflection.html", null ],
-    [ "Case Study: factory and crosscast", "talk_meeting_cpp26_sample_08_factory_and_crosscast.html", null ],
     [ "Talk at Meeting C++ 2026: Static and Dynamic Polymorphism in C++23 and beyond", "talk_meeting_cpp26.html", "talk_meeting_cpp26" ],
     [ "Terms and Definitions in Context of <span class=\"tt\">Any++</span>", "md_docs_2terms__and__definitions.html", null ],
     [ "Topics", "topics.html", "topics" ],
@@ -52,7 +51,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "21_Tree_any_8cpp-example.html",
-"v26_2any_2default__proxy_8hpp_source.html"
+"v26_2any_8hpp_source.html"
 ];
 
 const SYNCONMSG = 'click to disable panel synchronization';

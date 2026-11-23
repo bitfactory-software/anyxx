@@ -1,17 +1,10 @@
 var searchData=
 [
-  ['map_0',['Showcase 2: &lt;em&gt;Any++&lt;/em&gt; with Model Map',['../index.html#autotoc_md30',1,'']]],
-  ['map_1',['Model map',['../md_docs_2terms__and__definitions.html#autotoc_md12',1,'']]],
-  ['matrix_2',['CI Matrix',['../index.html#autotoc_md29',1,'']]],
-  ['matrix_3',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md16',1,'']]],
-  ['meeting_20c_202026_3a_20static_20and_20dynamic_20polymorphism_20in_20c_2023_20and_20beyond_4',['Talk at Meeting C++ 2026: Static and Dynamic Polymorphism in C++23 and beyond',['../talk_meeting_cpp26.html',1,'']]],
-  ['members_5',['Extension Members',['../md_docs_2terms__and__definitions.html#autotoc_md23',1,'']]],
-  ['model_6',['Model',['../md_docs_2terms__and__definitions.html#autotoc_md11',1,'']]],
-  ['model_20map_7',['Showcase 2: &lt;em&gt;Any++&lt;/em&gt; with Model Map',['../index.html#autotoc_md30',1,'']]],
-  ['model_20map_8',['Model map',['../md_docs_2terms__and__definitions.html#autotoc_md12',1,'']]],
-  ['move_5fto_9',['move_to',['../md_docs_2Proxy__overview.html#autotoc_md5',1,'']]],
-  ['multi_20dispatch_20for_20spaceship_20operator_10',['Open Multi Dispatch for Spaceship Operator',['../talk_meeting_cpp26_sample_10_spaceship.html',1,'talk_meeting_cpp26']]],
-  ['multi_20dispatch_20matrix_11',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md16',1,'']]],
-  ['multi_20dispatch_20type_20erased_20binary_20operator_12',['Showcase 3: &lt;em&gt;Any++&lt;/em&gt; Open Multi Dispatch, (Type Erased Binary Operator)',['../index.html#autotoc_md31',1,'']]],
-  ['multi_20dispatch_3a_20fancy_20expression_20tree_13',['Vany Multi Dispatch: Fancy Expression Tree',['../talk_meeting_cpp26_sample_12_fancy_expression_tree.html',1,'talk_meeting_cpp26']]]
+  ['upcast_20vs_20downcast_0',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md25',1,'']]],
+  ['useage_20in_20cmakelists_20txt_3a_1',['Useage in CMakeLists.txt:',['../index.html#autotoc_md2',1,'']]],
+  ['using_20any_20pure_2',['Using &quot;any&quot; Pure',['../talk_meeting_cpp26_sample_03_any.html',1,'talk_meeting_cpp26']]],
+  ['using_20cref_3a_3',['Using cref:',['../talk_meeting_cpp26_sample_01_ref.html',1,'talk_meeting_cpp26']]],
+  ['using_20shared_4',['Using shared',['../talk_meeting_cpp26_sample_01_ptr.html',1,'talk_meeting_cpp26']]],
+  ['using_20shared_20and_20weak_5',['Using shared and weak',['../talk_meeting_cpp26_sample_02_shared_weak.html',1,'talk_meeting_cpp26']]],
+  ['using_20val_3a_6',['Using val:',['../talk_meeting_cpp26_sample_01_val.html',1,'talk_meeting_cpp26']]]
 ];

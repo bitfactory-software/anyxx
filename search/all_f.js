@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['jacket_0',['Trait jacket',['../md_docs_2terms__and__definitions.html#autotoc_md10',1,'']]]
+  ['repo_3a_0',['Clone the repo:',['../index.html#autotoc_md3',1,'']]],
+  ['runtime_20performance_20compared_1',['Runtime Performance compared',['../index.html#autotoc_md4',1,'']]]
 ];

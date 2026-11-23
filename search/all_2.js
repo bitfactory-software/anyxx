@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['3_3a_20any_20open_20multi_20dispatch_20type_20erased_20binary_20operator_0',['Showcase 3: &lt;em&gt;Any++&lt;/em&gt; Open Multi Dispatch, (Type Erased Binary Operator)',['../index.html#autotoc_md31',1,'']]]
+  ['beyond_0',['Talk at Meeting C++ 2026: Static and Dynamic Polymorphism in C++23 and beyond',['../talk_meeting_cpp26.html',1,'']]],
+  ['borrow_5fas_1',['borrow_as',['../group__casts.html#ga2acf66cdd59d300ef75d4e020b95b267',1,'anyxx::borrow_as()'],['../md_docs_2Proxy__overview.html#autotoc_md9',1,'borrow_as']]]
 ];

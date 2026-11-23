@@ -11,6 +11,7 @@ var talk_meeting_cpp26 =
     [ "trait_as:", "talk_meeting_cpp26_sample_06_trait_as.html", null ],
     [ "downcast", "talk_meeting_cpp26_sample_07_downcast.html", null ],
     [ "crosscast", "talk_meeting_cpp26_sample_08_crosscast.html", null ],
+    [ "Case Study: factory and crosscast", "talk_meeting_cpp26_sample_08_factory_and_crosscast.html", null ],
     [ "Visitors! Open Dispatch", "talk_meeting_cpp26_sample_09_no_visitors.html", null ],
     [ "Open Multi Dispatch for Spaceship Operator", "talk_meeting_cpp26_sample_10_spaceship.html", null ],
     [ "Open Variant Dispatch: vany", "talk_meeting_cpp26_sample_11_vany.html", null ],

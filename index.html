@@ -121,10 +121,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('index.html',''
   <div class="headertitle"><div class="title">Any++ </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_files__for__doxygen_2README"></a> //                              <a class="el" href="#showcase1" title="showcase1">Hello World!</a> / <a class="el" href="#showcase2" title="showcase2">Model Map</a> / <a class="el" href="#showcase3" title="showcase3">Type Erased Spaceship</a> / <a class="el" href="#showcase4" title="showcase4">Open Dispatch As Visitor</a> / <a class="el" href="#showcase5" title="showcase5">Crosscast + Factory = Serialization</a> / <a class="el" href="#showcase6" title="showcase6">Basic *Any++* std::variant usage</a> / <a class="el" href="#showcase7" title="showcase7">Basic *Any++* open std::variant usage: 'vany'</a></p>
-<p><a href="https://opensource.org/license/mit"><img src="http://img.shields.io/badge/license-MIT-blue.svg" alt="MIT Licence" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml"><img src="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg" alt="CI" style="pointer-events: none;" class="inline"/></a> <a href="https://www.alexweb.io/anyxx/"><img src="https://img.shields.io/badge/docs-Any%2B%2B-blue" alt="Static Badge" class="inline"/></a></p>
-<p>#Any++ : How to <span class="tt">trait</span> <span class="tt">any</span> <span class="tt">virtual</span>, <span class="tt">static</span> or <span class="tt">variant</span>?</p>
-<p><img src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" alt="Any++logo-small" width="908" height="760" class="inline"/></p>
+<div class="textblock"><p><a class="anchor" id="md_docs_2MAINPAGE"></a>                        <a href="https://opensource.org/license/mit"><img src="http://img.shields.io/badge/license-MIT-blue.svg" alt="MIT Licence" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml"><img src="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg" alt="CI" style="pointer-events: none;" class="inline"/></a> <a href="https://www.alexweb.io/anyxx/"><img src="https://img.shields.io/badge/docs-Any%2B%2B-blue" alt="Static Badge" class="inline"/></a></p>
 <p><b>Any++</b> enhances the well-known <em>boost::any</em> and <em>std::any</em> with:</p>
 <ul>
 <li><b>Flexible choice of underlying storage mechanisms</b><ul>
@@ -134,7 +131,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('index.html',''
 </ul>
 </li>
 <li><b>Extensibility</b><ul>
-<li>Ability to add functions and operators using Rust-like <b>traits</b> (including templates)</li>
+<li>Ability to add functions and operators using Rust-like <b>traits</b></li>
 <li>Support for <b>open (multi-)dispatch</b></li>
 <li>Runtime support for <b>downcasts and cross-casts</b></li>
 </ul>
@@ -151,54 +148,69 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('index.html',''
 <li>C++0x-like concept maps for static and dynamic customization points and default behavior.</li>
 </ul>
 <p><b>Special thanks go to <a href="https://github.com/AlexCodesApps">Alex</a> for his lightweight and manageable preprocessor vocabulary shown in <a href="https://github.com/AlexCodesApps/dynamic_interface#example">dynamic_interface</a>.</b></p>
-<p><a class="anchor" id="showcase1"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
-Showcase 1: Basic <em>Any++</em> usage</h3>
-<div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
-<div class="line"><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">namespace </span>showcase1 {</div>
-<div class="line"><span class="keyword">struct </span>circle {</div>
-<div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hello&quot;</span>; }</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">struct </span>square {</div>
-<div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
-<div class="line">};</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gaf5624cf0eece4d4b6d59dd56e3f19529">TRAIT</a>(drawable, anyxx::dynamic_copyable, (<a class="code hl_define" href="group__fn__macros.html#ga9ad7f2ddb5429c1461365f875141e5af">FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
-<div class="line"> </div>
-<div class="line">void draw(std::stringstream&amp; os,</div>
-<div class="line">          std::vector&lt;anyxx::any&lt;drawable&gt;&gt; const&amp; drawables) {</div>
-<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line">TEST_CASE(<span class="stringliteral">&quot;Showcase1&quot;</span>) {</div>
-<div class="line">  std::stringstream ss;</div>
-<div class="line">  draw(ss, {circle{}, square{}});</div>
-<div class="line">  CHECK(ss.str() == <span class="stringliteral">&quot;Hello\nWorld\n&quot;</span>);</div>
-<div class="line">}</div>
-<div class="line">}  <span class="comment">// namespace showcase1</span></div>
-<div class="line"><span class="comment">// &lt;!--</span></div>
-<div class="line"><span class="preprocessor">#if 0</span></div>
-<div class="line"><span class="comment">// --&gt;</span></div>
-<div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="agroup__fn__macros_html_ga9ad7f2ddb5429c1461365f875141e5af"><div class="ttname"><a href="group__fn__macros.html#ga9ad7f2ddb5429c1461365f875141e5af">FN</a></div><div class="ttdeci">#define FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> preprocessor_meta_class.hpp:917</div></div>
-<div class="ttc" id="agroup__trait__macros_html_gaf5624cf0eece4d4b6d59dd56e3f19529"><div class="ttname"><a href="group__trait__macros.html#gaf5624cf0eece4d4b6d59dd56e3f19529">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, BASE, l)</div><div class="ttdoc">Macro to define the functional behavior for an any_.</div><div class="ttdef"><b>Definition</b> preprocessor_meta_class.hpp:787</div></div>
-</div><!-- fragment --><p> Showcase 1 demonstrates the most basic usage of <span class="tt">Any++</span> for type-erased polymorphism in C++. It defines two simple types, <span class="tt">circle</span> and <span class="tt">square</span>, each with a <span class="tt">draw()</span> method returning a string. Using the <span class="tt">Any++</span> macro system, a <span class="tt">drawable</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</p>
+<p> <div class="tabbed"><ul></p>
+<p> <li><b class="tab-title">Basic</b>  <div class="tabbed"><ul>  <li><b class="tab-title">C++23</b> </p><iframe width="100%" height="350px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,id:1,lang:'c%2B%2B',source:'//%20%5Bslide%5D%0A%23include%20%3Cbit_factory/anyxx.hpp%3E%0A%23include%20%3Ccatch2/catch_test_macros.hpp%3E%0A%23include%20%3Cstring%3E%0A%0Anamespace%20%7B%0Astruct%20circle%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20draw()%20const%20%7B%20return%20%22Hello%22%3B%20%7D%0A%7D%3B%0Astruct%20square%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20draw()%20const%20%7B%20return%20%22World%22%3B%20%7D%0A%7D%3B%0A%0ATRAIT(drawable,%20anyxx::dynamic_copyable,%20(FN(std::string,%20draw,%20(),%20const)))%0A%0Avoid%20draw(std::stringstream%26%20os,%0A%20%20%20%20%20%20%20%20%20%20std::vector%3Canyxx::any%3Cdrawable%3E%3E%20const%26%20drawables)%20%7B%0A%20%20for%20(auto%20const%26%20drawable%20:%20drawables)%20os%20%3C%3C%20drawable.draw()%20%3C%3C%20%22%5Cn%22%3B%0A%7D%0A%0ATEST_CASE(%22Showcase1%22)%20%7B%0A%20%20std::stringstream%20ss%3B%0A%20%20draw(ss,%20%7Bcircle%7B%7D,%20square%7B%7D%7D)%3B%0A%20%20CHECK(ss.str()%20%3D%3D%20%22Hello%5CnWorld%5Cn%22)%3B%0A%7D%0A%7D%20%20//%20namespace%0A//%20%5Bslide%5D%0A'),l:'5',n:'0',o:'C%2B%2B%20source%20%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:executor,i:(argsPanelShown:!f,compilationPanelShown:!f,compiler:gsnapshot,compilerOutShown:!f,execArgs:'',execStdin:'',fontScale:14,lang:'c%2B%2B',libs:!((name:anyxx,ver:develop),(name:catch2,ver:'300-preview2')),options:'-lCatch2Main%20-std%3Dc%2B%2B23',overrides:!(),runtimeTools:!(),source:1,stdinPanelShown:!f,wrap:!f),l:'5',n:'0',o:'Executor%20gsnapshot',t:'0')),k:50,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),hideEditorToolbars:!t,version:4"></iframe><p>  <li><b class="tab-title">C++26</b> </p><iframe width="100%" height="350px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,id:1,lang:'c%2B%2B',source:'%23define%20ANYXX_26%0A%23include%20%3Cbit_factory/anyxx.hpp%3E%0A%23include%20%3Ccatch2/catch_test_macros.hpp%3E%0A%23include%20%3Cstring%3E%0A%0Anamespace%20%7B%0A//%20%5Bslide%5D%0Astruct%20circle%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20draw()%20const%20%7B%20return%20%22Hello%22%3B%20%7D%0A%7D%3B%0Astruct%20square%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20draw()%20const%20%7B%20return%20%22World%22%3B%20%7D%0A%7D%3B%0A%0Atemplate%20%3Ctypename%20Self%3E%0Astruct%20drawable%20:%20anyxx::dynamic_copyable%3CSelf%3E%20%7B%0A%20%20std::string%20draw()%20const%3B%0A%7D%3B%0A%0Avoid%20draw(std::stringstream%26%20os,%0A%20%20%20%20%20%20%20%20%20%20std::vector%3Canyxx::any%3Cdrawable%3E%3E%20const%26%20drawables)%20%7B%0A%20%20for%20(auto%20const%26%20drawable%20:%20drawables)%20os%20%3C%3C%20drawable.draw()%20%3C%3C%20%22%5Cn%22%3B%0A%7D%0A%0ATEST_CASE(%22Showcase1%22)%20%7B%0A%20%20std::stringstream%20ss%3B%0A%20%20draw(ss,%20%7Bcircle%7B%7D,%20square%7B%7D%7D)%3B%0A%20%20CHECK(ss.str()%20%3D%3D%20%22Hello%5CnWorld%5Cn%22)%3B%0A%7D%0A//%20%5Bslide%5D%0A%7D%20%20//%20namespace%0A'),l:'5',n:'0',o:'C%2B%2B%20source%20%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:executor,i:(argsPanelShown:!f,compilationPanelShown:!f,compiler:gsnapshot,compilerOutShown:!f,execArgs:'',execStdin:'',fontScale:14,lang:'c%2B%2B',libs:!((name:anyxx,ver:develop),(name:catch2,ver:'300-preview2')),options:'-lCatch2Main%20-std%3Dc%2B%2B26%20-freflection',overrides:!(),runtimeTools:!(),source:1,stdinPanelShown:!f,wrap:!f),l:'5',n:'0',o:'Executor%20gsnapshot',t:'0')),k:50,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),hideEditorToolbars:!t,version:4"></iframe><p>  </li>  </ul></div></p>
+<p>Showcase 1 demonstrates the most basic usage of <span class="tt">Any++</span> for type-erased polymorphism in C++. It defines two simple types, <span class="tt">circle</span> and <span class="tt">square</span>, each with a <span class="tt">draw()</span> method returning a string. Using the <span class="tt">Any++</span> macro system, a <span class="tt">drawable</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</p>
 <p>The draw function takes a vector of type-erased any objects that conform to the <span class="tt">drawable</span> trait. It shows how to create and use a heterogeneous collection of unrelated objects (<span class="tt">circle</span> and <span class="tt">square</span>).</p>
-<p><a href="https://godbolt.org/z/nGjjs9xva">Compiler Explorer</a></p>
-<p><a class="el" href="#showcase2" title="showcase2">Here to more Showcases ...</a></p>
-<p><a href="https://www.alexweb.io/anyxx/">Here to Docs ...</a></p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
+<p><img src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" alt="Any++logo-small" width="454" height="355" class="inline"/>  </li></p>
+<p> <li><b class="tab-title">Trait Map</b>  <div class="tabbed"><ul>  <li><b class="tab-title">C++23</b> </p><iframe width="100%" height="350px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,id:1,lang:'c%2B%2B',source:'%23include%20%3Cbit_factory/anyxx.hpp%3E%0A%23include%20%3Ccatch2/catch_test_macros.hpp%3E%0A%23include%20%3Cstring%3E%0A%0Anamespace%20%7B%0A//%20%5Bslide%5D%0Astruct%20circle%20%7B%7D%3B%0Astruct%20square%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20edgy_salute()%20const%20%7B%20return%20%22edgy%20World%22%3B%20%7D%0A%7D%3B%0A%0ATRAIT(drawable,%20anyxx::dynamic_copyable,%20(FN(std::string,%20draw,%20(),%20const)))%0A%0ATRAIT_MAP(drawable,%20circle%20)%20%7B%0A%20%20static%20std::string%20draw(circle%20const%26)%20%7B%20return%20%22Silent%20greetings%22%3B%20%7D%3B%0A%7D%3B%0A%0ATRAIT_MAP(drawable,%20square)%20%7B%0A%20%20static%20std::string%20draw(square%20const%26%20self)%20%7B%20return%20self.edgy_salute()%3B%20%7D%3B%0A%7D%3B%0A%0Avoid%20draw(std::stringstream%26%20os,%0A%20%20%20%20%20%20%20%20%20%20std::vector%3Canyxx::any%3Cdrawable%3E%3E%20const%26%20drawables)%20%7B%0A%20%20for%20(auto%20const%26%20drawable%20:%20drawables)%20os%20%3C%3C%20drawable.draw()%20%3C%3C%20%22%5Cn%22%3B%0A%7D%0A%0ATEST_CASE(%22Showcase2%22)%20%7B%0A%20%20std::stringstream%20ss%3B%0A%20%20draw(ss,%20%7Bcircle%7B%7D,%20square%7B%7D%7D)%3B%0A%20%20CHECK(ss.str()%20%3D%3D%20%22Silent%20greetings%5Cnedgy%20World%5Cn%22)%3B%0A%7D%0A//%20%5Bslide%5D%0A%7D%3B%20%20//%20namespace%20showcase2%0A'),l:'5',n:'0',o:'C%2B%2B%20source%20%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:executor,i:(argsPanelShown:!f,compilationPanelShown:!f,compiler:gsnapshot,compilerOutShown:!f,execArgs:'',execStdin:'',fontScale:14,lang:'c%2B%2B',libs:!((name:anyxx,ver:develop),(name:catch2,ver:'300-preview2')),options:'-lCatch2Main%20-std%3Dc%2B%2B23',overrides:!(),runtimeTools:!(),source:1,stdinPanelShown:!f,wrap:!f),l:'5',n:'0',o:'Executor%20gsnapshot',t:'0')),k:50,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),hideEditorToolbars:!t,version:4"></iframe><p>  <li><b class="tab-title">C++26</b> </p><iframe width="100%" height="350px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,id:1,lang:'c%2B%2B',source:'%23define%20ANYXX_26%0A%23include%20%3Cbit_factory/anyxx.hpp%3E%0A%23include%20%3Ccatch2/catch_test_macros.hpp%3E%0A%23include%20%3Cstring%3E%0A%0Anamespace%20%7B%0A//%20%5Bslide%5D%0Astruct%20circle%20%7B%7D%3B%0Astruct%20square%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20edgy_salute()%20const%20%7B%20return%20%22edgy%20World%22%3B%20%7D%0A%7D%3B%0A%0Atemplate%20%3Ctypename%20Self%3E%0Astruct%20drawable%20:%20anyxx::dynamic_copyable%3CSelf%3E%20%7B%0A%20%20%20%20std::string%20draw()%20const%3B%0A%7D%3B%0A%0Atemplate%20%3C%3E%0Astruct%20drawable%3Ccircle%3E%20%7B%0A%20%20static%20std::string%20draw(circle%20const%26)%20%7B%20return%20%22Silent%20greetings%22%3B%20%7D%3B%0A%7D%3B%0A%0Atemplate%20%3C%3E%0Astruct%20drawable%3Csquare%3E%20%7B%0A%20%20static%20std::string%20draw(square%20const%26%20self)%20%7B%20return%20self.edgy_salute()%3B%20%7D%3B%0A%7D%3B%0A%0Avoid%20draw(std::stringstream%26%20os,%0A%20%20%20%20%20%20%20%20%20%20std::vector%3Canyxx::any%3Cdrawable%3E%3E%20const%26%20drawables)%20%7B%0A%20%20for%20(auto%20const%26%20drawable%20:%20drawables)%20os%20%3C%3C%20drawable.draw()%20%3C%3C%20%22%5Cn%22%3B%0A%7D%0A%0ATEST_CASE(%22Showcase2%22)%20%7B%0A%20%20std::stringstream%20ss%3B%0A%20%20draw(ss,%20%7Bcircle%7B%7D,%20square%7B%7D%7D)%3B%0A%20%20CHECK(ss.str()%20%3D%3D%20%22Silent%20greetings%5Cnedgy%20World%5Cn%22)%3B%0A%7D%0A//%20%5Bslide%5D%0A%7D%3B%20%20//%20namespace%20showcase2%0A'),l:'5',n:'0',o:'C%2B%2B%20source%20%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:executor,i:(argsPanelShown:!f,compilationPanelShown:!f,compiler:gsnapshot,compilerOutShown:!f,execArgs:'',execStdin:'',fontScale:14,lang:'c%2B%2B',libs:!((name:anyxx,ver:develop),(name:catch2,ver:'300-preview2')),options:'-lCatch2Main%20-std%3Dc%2B%2B26%20-freflection',overrides:!(),runtimeTools:!(),source:1,stdinPanelShown:!f,wrap:!f),l:'5',n:'0',o:'Executor%20gsnapshot',t:'0')),k:50,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),hideEditorToolbars:!t,version:4"></iframe><p>  </li>  </ul></div></p>
+<p>Showcase 2 demonstrates, how to use the <span class="tt">Any++</span> "model map" feature to provide custom behavior for unrelated types using traits.  </li></p>
+<p> <li><b class="tab-title">Type Erased Binary Operator</b>  <div class="tabbed"><ul>  <li><b class="tab-title">C++23</b> </p><iframe width="100%" height="350px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,id:1,lang:'c%2B%2B',source:'%23include%20%3Cbit_factory/anyxx.hpp%3E%0A%23include%20%3Cbit_factory/anyxx/ext/dispatch.hpp%3E%0A%23include%20%3Cbit_factory/anyxx/ext/dispatch_table.hpp%3E%0A%23include%20%3Ccatch2/catch_test_macros.hpp%3E%0A%23include%20%3Ccompare%3E%0A%23include%20%3Csstream%3E%0A%23include%20%3Cstring%3E%0A%23include%20%3Cvector%3E%0A%0Anamespace%20%7B%0A//%20%5Bslide%5D%0Astruct%20circle%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20name()%20const%20%7B%20return%20%22circle%22%3B%20%7D%0A%7D%3B%0Astruct%20square%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20name()%20const%20%7B%20return%20%22square%22%3B%20%7D%0A%7D%3B%0A%0ATRAIT_EX(figure,%20anyxx::dynamic_copyable,%20(FN(std::string,%20name,%20(),%20const)),%20,%0A%20%20%20%20%20%20%20%20%20,%20(HAS_OPEN_DISPATCH),%20())%0A%0Aanyxx::dispatch%3Cstd::partial_ordering(anyxx::virtual_%3Canyxx::any%3Cfigure%3E%3E,%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20anyxx::virtual_%3Canyxx::any%3Cfigure%3E%3E)%3E%0A%20%20%20%20compare_edges%3B%0A%0A%5B%5Bnodiscard%5D%5D%20std::partial_ordering%20operator%3C%3D%3E(anyxx::any%3Cfigure%3E%20const%26%20l,%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20anyxx::any%3Cfigure%3E%20const%26%20r)%20%7B%0A%20%20return%20compare_edges(l,%20r)%3B%0A%7D%0A%0Aauto%20__%20%3D%20compare_edges.define%3Ccircle,%20circle%3E(%0A%20%20%20%20%5B%5D(auto%20const%26,%20auto%20const%26)%20%7B%20return%20std::partial_ordering::equivalent%3B%20%7D)%3B%0Aauto%20__%20%3D%20compare_edges.define%3Ccircle,%20square%3E(%0A%20%20%20%20%5B%5D(auto%20const%26,%20auto%20const%26)%20%7B%20return%20std::partial_ordering::less%3B%20%7D)%3B%0Aauto%20__%20%3D%20compare_edges.define%3Csquare,%20square%3E(%0A%20%20%20%20%5B%5D(auto%20const%26,%20auto%20const%26)%20%7B%20return%20std::partial_ordering::equivalent%3B%20%7D)%3B%0Aauto%20__%20%3D%20compare_edges.define%3Csquare,%20circle%3E(%0A%20%20%20%20%5B%5D(auto%20const%26,%20auto%20const%26)%20%7B%20return%20std::partial_ordering::greater%3B%20%7D)%3B%0A%0Avoid%20compare_each(std::stringstream%26%20os,%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20std::vector%3Canyxx::any%3Cfigure%3E%3E%20const%26%20figures)%20%7B%0A%20%20std::string%20sep%3B%0A%20%20for%20(auto%20const%26%20l%20:%20figures)%0A%20%20%20%20for%20(auto%20const%26%20r%20:%20figures)%20%7B%0A%20%20%20%20%20%20os%20%3C%3C%20std::exchange(sep,%20%22,%20%22)%20%3C%3C%20l.name()%20%3C%3C%20%22%20%22%3B%0A%20%20%20%20%20%20if%20(auto%20c%20%3D%20l%20%3C%3D%3E%20r%3B%20c%20%3D%3D%20std::partial_ordering::equivalent)%0A%20%20%20%20%20%20%20%20os%20%3C%3C%20%22%3D%3D%22%3B%0A%20%20%20%20%20%20else%20if%20(c%20%3D%3D%20std::partial_ordering::less)%0A%20%20%20%20%20%20%20%20os%20%3C%3C%20%22%3C%22%3B%0A%20%20%20%20%20%20else%20if%20(c%20%3D%3D%20std::partial_ordering::greater)%0A%20%20%20%20%20%20%20%20os%20%3C%3C%20%22%3E%22%3B%0A%20%20%20%20%20%20else%0A%20%20%20%20%20%20%20%20os%20%3C%3C%20%22%3F%22%3B%0A%20%20%20%20%20%20os%20%3C%3C%20%22%20%22%20%3C%3C%20r.name()%3B%0A%20%20%20%20%7D%0A%7D%0A%0ATEST_CASE(%22Showcase3%22)%20%7B%0A%20%20std::stringstream%20ss%3B%0A%20%20compare_each(ss,%20%7Bcircle%7B%7D,%20square%7B%7D%7D)%3B%0A%20%20CHECK(ss.str()%20%3D%3D%0A%20%20%20%20%20%20%20%20%22circle%20%3D%3D%20circle,%20circle%20%3C%20square,%20square%20%3E%20circle,%20square%20%3D%3D%20square%22)%3B%0A%7D%0A//%20%5Bslide%5D%0A%7D%3B%20%20//%20namespace%0A'),l:'5',n:'0',o:'C%2B%2B%20source%20%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:executor,i:(argsPanelShown:!f,compilationPanelShown:!f,compiler:gsnapshot,compilerOutShown:!f,execArgs:'',execStdin:'',fontScale:14,lang:'c%2B%2B',libs:!((name:anyxx,ver:develop),(name:catch2,ver:'300-preview2')),options:'-lCatch2Main%20-std%3Dc%2B%2B23',overrides:!(),runtimeTools:!(),source:1,stdinPanelShown:!f,wrap:!f),l:'5',n:'0',o:'Executor%20gsnapshot',t:'0')),k:50,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),hideEditorToolbars:!t,version:4"></iframe><p>  <li><b class="tab-title">C++26</b> </p><iframe width="100%" height="350px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,id:1,lang:'c%2B%2B',source:'%23define%20ANYXX_26%0A%23include%20%3Cbit_factory/anyxx.hpp%3E%0A%23include%20%3Cbit_factory/anyxx/ext/dispatch.hpp%3E%0A%23include%20%3Cbit_factory/anyxx/ext/dispatch_table.hpp%3E%0A%23include%20%3Ccatch2/catch_test_macros.hpp%3E%0A%23include%20%3Ccompare%3E%0A%23include%20%3Csstream%3E%0A%23include%20%3Cstring%3E%0A%23include%20%3Cvector%3E%0A%0Anamespace%20%7B%0A//%20%5Bslide%5D%0Astruct%20circle%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20name()%20const%20%7B%20return%20%22circle%22%3B%20%7D%0A%7D%3B%0Astruct%20square%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20name()%20const%20%7B%20return%20%22square%22%3B%20%7D%0A%7D%3B%0A%0Atemplate%20%3Ctypename%20Self%3E%0Astruct%20figure%20:%20anyxx::dynamic_copyable%3CSelf%3E%20%7B%0A%20%20std::string%20name()%20const%3B%0A%20%20using%20dispatch_table%20%5B%5B%3D%20anyxx::v_table_data%5D%5D%20%3D%20anyxx::dispatch_table%3B%0A%7D%3B%0A%0Aanyxx::dispatch%3Cstd::partial_ordering(anyxx::virtual_%3Canyxx::any%3Cfigure%3E%3E,%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20anyxx::virtual_%3Canyxx::any%3Cfigure%3E%3E)%3E%0A%20%20%20%20compare_edges%3B%0A%0A%5B%5Bnodiscard%5D%5D%20std::partial_ordering%20operator%3C%3D%3E(anyxx::any%3Cfigure%3E%20const%26%20l,%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20anyxx::any%3Cfigure%3E%20const%26%20r)%20%7B%0A%20%20return%20compare_edges(l,%20r)%3B%0A%7D%0A%0Aauto%20__%20%3D%20compare_edges.define%3Ccircle,%20circle%3E(%0A%20%20%20%20%5B%5D(auto%20const%26,%20auto%20const%26)%20%7B%20return%20std::partial_ordering::equivalent%3B%20%7D)%3B%0Aauto%20__%20%3D%20compare_edges.define%3Ccircle,%20square%3E(%0A%20%20%20%20%5B%5D(auto%20const%26,%20auto%20const%26)%20%7B%20return%20std::partial_ordering::less%3B%20%7D)%3B%0Aauto%20__%20%3D%20compare_edges.define%3Csquare,%20square%3E(%0A%20%20%20%20%5B%5D(auto%20const%26,%20auto%20const%26)%20%7B%20return%20std::partial_ordering::equivalent%3B%20%7D)%3B%0Aauto%20__%20%3D%20compare_edges.define%3Csquare,%20circle%3E(%0A%20%20%20%20%5B%5D(auto%20const%26,%20auto%20const%26)%20%7B%20return%20std::partial_ordering::greater%3B%20%7D)%3B%0A%0Avoid%20compare_each(std::stringstream%26%20os,%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20std::vector%3Canyxx::any%3Cfigure%3E%3E%20const%26%20figures)%20%7B%0A%20%20std::string%20sep%3B%0A%20%20for%20(auto%20const%26%20l%20:%20figures)%0A%20%20%20%20for%20(auto%20const%26%20r%20:%20figures)%20%7B%0A%20%20%20%20%20%20os%20%3C%3C%20std::exchange(sep,%20%22,%20%22)%20%3C%3C%20l.name()%20%3C%3C%20%22%20%22%3B%0A%20%20%20%20%20%20if%20(auto%20c%20%3D%20l%20%3C%3D%3E%20r%3B%20c%20%3D%3D%20std::partial_ordering::equivalent)%0A%20%20%20%20%20%20%20%20os%20%3C%3C%20%22%3D%3D%22%3B%0A%20%20%20%20%20%20else%20if%20(c%20%3D%3D%20std::partial_ordering::less)%0A%20%20%20%20%20%20%20%20os%20%3C%3C%20%22%3C%22%3B%0A%20%20%20%20%20%20else%20if%20(c%20%3D%3D%20std::partial_ordering::greater)%0A%20%20%20%20%20%20%20%20os%20%3C%3C%20%22%3E%22%3B%0A%20%20%20%20%20%20else%0A%20%20%20%20%20%20%20%20os%20%3C%3C%20%22%3F%22%3B%0A%20%20%20%20%20%20os%20%3C%3C%20%22%20%22%20%3C%3C%20r.name()%3B%0A%20%20%20%20%7D%0A%7D%0A%0ATEST_CASE(%22Showcase3%22)%20%7B%0A%20%20std::stringstream%20ss%3B%0A%20%20compare_each(ss,%20%7Bcircle%7B%7D,%20square%7B%7D%7D)%3B%0A%20%20CHECK(ss.str()%20%3D%3D%0A%20%20%20%20%20%20%20%20%22circle%20%3D%3D%20circle,%20circle%20%3C%20square,%20square%20%3E%20circle,%20square%20%3D%3D%20square%22)%3B%0A%7D%0A//%20%5Bslide%5D%0A%7D%3B%20%20//%20namespace%0A'),l:'5',n:'0',o:'C%2B%2B%20source%20%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:executor,i:(argsPanelShown:!f,compilationPanelShown:!f,compiler:gsnapshot,compilerOutShown:!f,execArgs:'',execStdin:'',fontScale:14,lang:'c%2B%2B',libs:!((name:anyxx,ver:develop),(name:catch2,ver:'300-preview2')),options:'-lCatch2Main%20-std%3Dc%2B%2B26%20-freflection',overrides:!(),runtimeTools:!(),source:1,stdinPanelShown:!f,wrap:!f),l:'5',n:'0',o:'Executor%20gsnapshot',t:'0')),k:50,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),hideEditorToolbars:!t,version:4"></iframe><p>  </li>  </ul></div></p>
+<p>Showcase 3 demonstrates how to use the Any++ library to implement open multi-dispatch (type-erased binary operators) in C++. In this example:</p><ul>
+<li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with a <span class="tt">name()</span> method.</li>
+<li>A <span class="tt">figure</span> trait is declared using the <span class="tt">Any++</span> macro system, specifying a <span class="tt">name()</span> function.</li>
+<li>The <span class="tt">ANY</span> macro is an extension of the <span class="tt"><a class="el" href="group__trait__macros.html#gaf5624cf0eece4d4b6d59dd56e3f19529" title="Macro to define the functional behavior for an any_.">TRAIT</a></span> macro. It defines the requested behavior (trait interface) and additionally creates a typedef for an <span class="tt">any</span> type, named <span class="tt">any&lt;first parameter of macro&gt;</span>, that uses this trait. The generated trait itself has a template parameter for the Proxy type, which is defaulted to the last parameter of the <span class="tt">ANY</span> macro.</li>
+<li>The <span class="tt">dispatch&lt;R(Args...)&gt;</span> mechanism is used to define a type-erased, runtime-resolved binary operator (<span class="tt">operator&lt;=&gt;</span>) for comparing two <span class="tt">any_figure&lt;&gt;</span> objects.</li>
+<li>The dispatch table is populated with custom comparison logic for each pair of types (<span class="tt">circle</span> vs <span class="tt">circle</span>, <span class="tt">circle</span> vs <span class="tt">square</span>, etc.) at static initialization time. To do this with as little ceremony as possible, <span class="tt"><a class="el" href="anyxx_8hpp.html" title="C++ header only library for external polymorphism.">anyxx.hpp</a></span> provides a <span class="tt">__</span> macro that simulates the<a href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2169r4.pdf">C++26 placeholder with no name</a>. That trick initializes a static variable with automatic name at each usage site with a dummy value, returned by <span class="tt">declare</span> only for this purpose.</li>
+<li>The <span class="tt">compare_each</span> function iterates over all pairs of figures, compares them using the type-erased operator, and outputs the results.  </li></li>
+</ul>
+<p> <li><b class="tab-title">No Visitor!</b>  <div class="tabbed"><ul>  <li><b class="tab-title">C++23</b> </p><iframe width="100%" height="350px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,id:1,lang:'c%2B%2B',source:'%23include%20%3Cbit_factory/anyxx.hpp%3E%0A%23include%20%3Cbit_factory/anyxx/ext/dispatch.hpp%3E%0A%23include%20%3Cbit_factory/anyxx/ext/dispatch_table.hpp%3E%0A%23include%20%3Ccatch2/catch_test_macros.hpp%3E%0A%23include%20%3Csstream%3E%0A%23include%20%3Cstring%3E%0A%23include%20%3Cvector%3E%0A%0Anamespace%20%7B%0A//%20%5Bslide%5D%0Anamespace%20ayx%20%3D%20anyxx%3B%0A%0Astruct%20circle%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20name()%20const%20%7B%20return%20%22circle%22%3B%20%7D%0A%7D%3B%0Astruct%20square%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20name()%20const%20%7B%20return%20%22square%22%3B%20%7D%0A%7D%3B%0A%0ATRAIT_EX(figure,%20anyxx::dynamic_copyable,%20(FN(std::string,%20name,%20(),%20const)),%20,%0A%20%20%20%20%20%20%20%20%20,%20(HAS_OPEN_DISPATCH),%20())%0Ausing%20any_figure%20%3D%20anyxx::any%3Cfigure%3E%3B%0A%0Aayx::dispatch%3Cstd::string(ayx::virtual_%3Cany_figure%3E)%3E%20latin,%20italian%3B%0A%0Aauto%20__%20%3D%20latin.define%3Ccircle%3E(%5B%5D(auto%20const%26)%20%7B%20return%20%22orbis%22%3B%20%7D)%3B%0Aauto%20__%20%3D%20latin.define%3Csquare%3E(%5B%5D(auto%20const%26)%20%7B%20return%20%22quadratum%22%3B%20%7D)%3B%0Aauto%20__%20%3D%20italian.define%3Ccircle%3E(%5B%5D(auto%20const%26)%20%7B%20return%20%22cerchio%22%3B%20%7D)%3B%0Aauto%20__%20%3D%20italian.define%3Csquare%3E(%5B%5D(auto%20const%26)%20%7B%20return%20%22quadrato%22%3B%20%7D)%3B%0A%0Avoid%20translate(std::stringstream%26%20os,%20std::vector%3Cany_figure%3E%20const%26%20figures)%20%7B%0A%20%20std::string%20sep%3B%0A%20%20for%20(auto%20const%26%20f%20:%20figures)%0A%20%20%20%20os%20%3C%3C%20std::exchange(sep,%20%22%3B%20%22)%20%3C%3C%20f.name()%20%3C%3C%20%22:%20latin%20%3D%20%22%20%3C%3C%20latin(f)%0A%20%20%20%20%20%20%20%3C%3C%20%22,%20italian%20%3D%20%22%20%3C%3C%20italian(f)%3B%0A%7D%0A%0ATEST_CASE(%22Showcase4%22)%20%7B%0A%20%20std::stringstream%20ss%3B%0A%20%20translate(ss,%20%7Bcircle%7B%7D,%20square%7B%7D%7D)%3B%0A%20%20CHECK(ss.str()%20%3D%3D%0A%20%20%20%20%20%20%20%20%22circle:%20latin%20%3D%20orbis,%20italian%20%3D%20cerchio%3B%20square:%20latin%20%3D%20quadratum,%20%22%0A%20%20%20%20%20%20%20%20%22italian%20%3D%20quadrato%22)%3B%0A%7D%0A//%20%5Bslide%5D%0A%7D%20%20//%20namespace%0A'),l:'5',n:'0',o:'C%2B%2B%20source%20%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:executor,i:(argsPanelShown:!f,compilationPanelShown:!f,compiler:gsnapshot,compilerOutShown:!f,execArgs:'',execStdin:'',fontScale:14,lang:'c%2B%2B',libs:!((name:anyxx,ver:develop),(name:catch2,ver:'300-preview2')),options:'-lCatch2Main%20-std%3Dc%2B%2B23',overrides:!(),runtimeTools:!(),source:1,stdinPanelShown:!f,wrap:!f),l:'5',n:'0',o:'Executor%20gsnapshot',t:'0')),k:50,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),hideEditorToolbars:!t,version:4"></iframe><p>  <li><b class="tab-title">C++26</b> </p><iframe width="100%" height="350px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,id:1,lang:'c%2B%2B',source:'%23define%20ANYXX_26%0A%23include%20%3Cbit_factory/anyxx.hpp%3E%0A%23include%20%3Cbit_factory/anyxx/ext/dispatch.hpp%3E%0A%23include%20%3Cbit_factory/anyxx/ext/dispatch_table.hpp%3E%0A%23include%20%3Ccatch2/catch_test_macros.hpp%3E%0A%23include%20%3Csstream%3E%0A%23include%20%3Cstring%3E%0A%23include%20%3Cvector%3E%0A%0Anamespace%20%7B%0A//%20%5Bslide%5D%0Anamespace%20ayx%20%3D%20anyxx%3B%0A%0Astruct%20circle%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20name()%20const%20%7B%20return%20%22circle%22%3B%20%7D%0A%7D%3B%0Astruct%20square%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20name()%20const%20%7B%20return%20%22square%22%3B%20%7D%0A%7D%3B%0A%0Atemplate%20%3Ctypename%20Self%3E%0Astruct%20figure%20:%20anyxx::dynamic_copyable%3CSelf%3E%20%7B%0A%20%20%20%20std::string%20name()%20const%3B%0A%20%20%20%20using%20dispatch_table%20%5B%5B%3D%20ayx::v_table_data%5D%5D%20%3D%20anyxx::dispatch_table%3B%0A%7D%3B%0Ausing%20any_figure%20%3D%20anyxx::any%3Cfigure%3E%3B%0A%0Aayx::dispatch%3Cstd::string(ayx::virtual_%3Cany_figure%3E)%3E%20latin,%20italian%3B%0A%0Aauto%20__%20%3D%20latin.define%3Ccircle%3E(%5B%5D(auto%20const%26)%20%7B%20return%20%22orbis%22%3B%20%7D)%3B%0Aauto%20__%20%3D%20latin.define%3Csquare%3E(%5B%5D(auto%20const%26)%20%7B%20return%20%22quadratum%22%3B%20%7D)%3B%0Aauto%20__%20%3D%20italian.define%3Ccircle%3E(%5B%5D(auto%20const%26)%20%7B%20return%20%22cerchio%22%3B%20%7D)%3B%0Aauto%20__%20%3D%20italian.define%3Csquare%3E(%5B%5D(auto%20const%26)%20%7B%20return%20%22quadrato%22%3B%20%7D)%3B%0A%0Avoid%20translate(std::stringstream%26%20os,%20std::vector%3Cany_figure%3E%20const%26%20figures)%20%7B%0A%20%20std::string%20sep%3B%0A%20%20for%20(auto%20const%26%20f%20:%20figures)%0A%20%20%20%20os%20%3C%3C%20std::exchange(sep,%20%22%3B%20%22)%20%3C%3C%20f.name()%20%3C%3C%20%22:%20latin%20%3D%20%22%20%3C%3C%20latin(f)%0A%20%20%20%20%20%20%20%3C%3C%20%22,%20italian%20%3D%20%22%20%3C%3C%20italian(f)%3B%0A%7D%0A%0ATEST_CASE(%22Showcase4%22)%20%7B%0A%20%20std::stringstream%20ss%3B%0A%20%20translate(ss,%20%7Bcircle%7B%7D,%20square%7B%7D%7D)%3B%0A%20%20CHECK(ss.str()%20%3D%3D%0A%20%20%20%20%20%20%20%20%22circle:%20latin%20%3D%20orbis,%20italian%20%3D%20cerchio%3B%20square:%20latin%20%3D%20quadratum,%20%22%0A%20%20%20%20%20%20%20%20%22italian%20%3D%20quadrato%22)%3B%0A%7D%0A//%20%5Bslide%5D%0A%7D%20%20//%20namespace%0A'),l:'5',n:'0',o:'C%2B%2B%20source%20%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:executor,i:(argsPanelShown:!f,compilationPanelShown:!f,compiler:gsnapshot,compilerOutShown:!f,execArgs:'',execStdin:'',fontScale:14,lang:'c%2B%2B',libs:!((name:anyxx,ver:develop),(name:catch2,ver:'300-preview2')),options:'-lCatch2Main%20-std%3Dc%2B%2B26%20-freflection',overrides:!(),runtimeTools:!(),source:1,stdinPanelShown:!f,wrap:!f),l:'5',n:'0',o:'Executor%20gsnapshot',t:'0')),k:50,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),hideEditorToolbars:!t,version:4"></iframe><p>  </li>  </ul></div></p>
+<p>Showcase 4 demonstrates how to use <span class="tt">Any++</span> to implement open dispatch in the style of a visitor pattern, enabling runtime selection of behavior for different types without inheritance or virtual functions.</p><ul>
+<li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, each provide a <span class="tt">name()</span> method.</li>
+<li>A <span class="tt">figure</span> trait is defined, specifying the required interface.</li>
+<li>Two open dispatchers, <span class="tt">latin</span> and <span class="tt">italian</span>, are created using <span class="tt">dispatch&lt;R(Args...)&gt;</span>, each mapping a figure to a localized string.</li>
+<li>The dispatchers are populated with type-specific translations for <span class="tt">circle</span> and <span class="tt">square</span>.</li>
+<li>The <span class="tt">translate</span> function iterates over a collection of type-erased figures, using the dispatchers to output the name and its translation in both Latin and Italian. This is the so-called "Open Visitor Pattern" implemented via open dispatch O(1) runtime complexity <b>without boilerplate</b>.  </li></li>
+</ul>
+<p> <li><b class="tab-title">Crosscast + Factory</b>  <div class="tabbed"><ul>  <li><b class="tab-title">C++23</b> </p><iframe width="100%" height="350px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,id:1,lang:'c%2B%2B',source:'%23include%20%3Cbit_factory/anyxx.hpp%3E%0A%23include%20%3Cbit_factory/anyxx/ext/factory.hpp%3E%0A%23include%20%3Ccatch2/catch_test_macros.hpp%3E%0A%23include%20%3Cstring%3E%0A%0Anamespace%20%7B%0A//%20%5Bslide%5D%0Anamespace%20ayx%20%3D%20anyxx%3B%0A%0Astruct%20circle%20%7B%0A%20%20double%20radius%20%3D%200.0%3B%0A%20%20%5B%5Bnodiscard%5D%5D%20double%20area()%20const%20%7B%20return%20radius%20%2A%20radius%20%2A%203.14%3B%20%7D%0A%7D%3B%0Astruct%20square%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20double%20area()%20const%20%7B%20return%20edge_length%20%2A%20edge_length%3B%20%7D%0A%20%20double%20edge_length%20%3D%200.0%3B%0A%7D%3B%0A%0ATRAIT(figure,%20ayx::dynamic_copyable,%20%0A%20%20(FN(double,%20area,%20(),%20const))%0A)%0ATRAIT(serializable,%20ayx::dynamic_copyable,%0A%20%20(FN(void,%20serialize,%20(std::ostream%26),%20const))%0A)%0A%0Aayx::factory%3Cayx::any%3Cserializable%3E,%20std::string,%20std::istream%26%3E%20deserialize%3B%0A%0A%5B%5Bnodiscard%5D%5D%20ayx::any%3Cfigure%3E%20deserialize_any_figure(std::istream%26%20archive)%20%7B%0A%20%20std::string%20type%3B%0A%20%20archive%20%3E%3E%20type%3B%0A%20%20return%20ayx::move_to%3Cayx::any%3Cfigure%3E%3E(deserialize(type,%20archive))%3B%0A%7D%0A%0ATRAIT_MAP(serializable,%20circle)%20%7B%0A%20%20static%20void%20serialize(circle%20const%26%20self,%20std::ostream%26%20os)%20%7B%0A%20%20%20%20os%20%3C%3C%20%22circle%20%22%20%3C%3C%20self.radius%20%3C%3C%20%22%20%22%3B%0A%20%20%7D%3B%0A%7D%3B%0Aauto%20__%20%3D%20deserialize.register_(%22circle%22,%20%5B%5D(std::istream%26%20archive)%20-%3E%20circle%20%7B%0A%20%20circle%20c%3B%0A%20%20archive%20%3E%3E%20c.radius%3B%0A%20%20return%20c%3B%0A%7D)%3B%0Aanyxx::castable_to%3Ccircle,%20figure%3E%20__%3B%0Aanyxx::castable_to%3Ccircle,%20serializable%3E%20__%3B%0A%0ATRAIT_MAP(serializable,%20square)%20%7B%0A%20%20static%20void%20serialize(square%20const%26%20self,%20std::ostream%26%20os)%20%7B%0A%20%20%20%20os%20%3C%3C%20%22square%20%22%20%3C%3C%20self.edge_length%20%3C%3C%20%22%20%22%3B%0A%20%20%7D%3B%0A%7D%3B%0Aauto%20__%20%3D%20deserialize.register_(%22square%22,%20%5B%5D(std::istream%26%20archive)%20%7B%0A%20%20square%20s%3B%0A%20%20archive%20%3E%3E%20s.edge_length%3B%0A%20%20return%20s%3B%0A%7D)%3B%0Aanyxx::castable_to%3Csquare,%20figure%3E%20__%3B%0Aanyxx::castable_to%3Csquare,%20serializable%3E%20__%3B%0A%0Avoid%20areas(std::stringstream%26%20os,%0A%20%20%20%20%20%20%20%20%20%20%20std::vector%3Cayx::any%3Cfigure%3E%3E%20const%26%20figures)%20%7B%0A%20%20std::string%20sep%3B%0A%20%20for%20(auto%20const%26%20f%20:%20figures)%20os%20%3C%3C%20std::exchange(sep,%20%22,%20%22)%20%3C%3C%20f.area()%3B%0A%7D%0A%0ATEST_CASE(%22Showcase5%22)%20%7B%0A%20%20std::stringstream%20archive%7B%22:%20circle%201%20:%20square%202%20:%20circle%203%20:%20circle%204%20end%22%7D%3B%0A%20%20std::vector%3Cayx::any%3Cfigure%3E%3E%20figures%3B%0A%20%20std::string%20more%3B%0A%20%20for%20(archive%20%3E%3E%20more%3B%20more%20!!%3D%20%22end%22%3B%20archive%20%3E%3E%20more)%0A%20%20%20%20figures.push_back(deserialize_any_figure(archive))%3B%0A%0A%20%20std::stringstream%20ss%3B%0A%20%20areas(ss,%20figures)%3B%0A%20%20CHECK(ss.str()%20%3D%3D%20%223.14,%204,%2028.26,%2050.24%22)%3B%0A%0A%20%20std::stringstream%20serialized%3B%0A%20%20for%20(auto%20const%26%20f%20:%20figures)%20%7B%0A%20%20%20%20serialized%20%3C%3C%20%22:%20%22%3B%0A%20%20%20%20ayx::borrow_as%3Cayx::any_%3Cayx::cref,%20serializable%3E%3E(f)-%3Eserialize(serialized)%3B%0A%20%20%7D%0A%20%20serialized%20%3C%3C%20%22end%22%3B%0A%0A%20%20CHECK(serialized.str()%20%3D%3D%20archive.str())%3B%0A%7D%0A//%20%5Bslide%5D%0A%7D%3B%20%20//%20namespace%20showcase5%0A'),l:'5',n:'0',o:'C%2B%2B%20source%20%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:executor,i:(argsPanelShown:!f,compilationPanelShown:!f,compiler:gsnapshot,compilerOutShown:!f,execArgs:'',execStdin:'',fontScale:14,lang:'c%2B%2B',libs:!((name:anyxx,ver:develop),(name:catch2,ver:'300-preview2')),options:'-lCatch2Main%20-std%3Dc%2B%2B23',overrides:!(),runtimeTools:!(),source:1,stdinPanelShown:!f,wrap:!f),l:'5',n:'0',o:'Executor%20gsnapshot',t:'0')),k:50,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),hideEditorToolbars:!t,version:4"></iframe><p>  <li><b class="tab-title">C++26</b> </p><iframe width="100%" height="350px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,id:1,lang:'c%2B%2B',source:'%23define%20ANYXX_26%0A%23include%20%3Cbit_factory/anyxx.hpp%3E%0A%23include%20%3Cbit_factory/anyxx/ext/factory.hpp%3E%0A%23include%20%3Ccatch2/catch_test_macros.hpp%3E%0A%23include%20%3Cstring%3E%0A%0Anamespace%20%7B%0A//%20%5Bslide%5D%0Anamespace%20ayx%20%3D%20anyxx%3B%0A%0Astruct%20circle%20%7B%0A%20%20double%20radius%20%3D%200.0%3B%0A%20%20%5B%5Bnodiscard%5D%5D%20double%20area()%20const%20%7B%20return%20radius%20%2A%20radius%20%2A%203.14%3B%20%7D%0A%7D%3B%0Astruct%20square%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20double%20area()%20const%20%7B%20return%20edge_length%20%2A%20edge_length%3B%20%7D%0A%20%20double%20edge_length%20%3D%200.0%3B%0A%7D%3B%0A%0Atemplate%20%3Ctypename%20Self%3E%0Astruct%20figure%20:%20ayx::dynamic_copyable%3CSelf%3E%20%7B%0A%20%20%20%20double%20area()%20const%3B%0A%7D%3B%0Atemplate%20%3Ctypename%20Self%3E%0Astruct%20serializable%20:%20ayx::dynamic_copyable%3CSelf%3E%20%7B%0A%20%20%20%20void%20serialize(std::ostream%26%20os)%20const%3B%0A%7D%3B%0A%0Aayx::factory%3Cayx::any%3Cserializable%3E,%20std::string,%20std::istream%26%3E%20deserialize%3B%0A%0A%5B%5Bnodiscard%5D%5D%20ayx::any%3Cfigure%3E%20deserialize_any_figure(std::istream%26%20archive)%20%7B%0A%20%20std::string%20type%3B%0A%20%20archive%20%3E%3E%20type%3B%0A%20%20return%20ayx::move_to%3Cayx::any%3Cfigure%3E%3E(deserialize(type,%20archive))%3B%0A%7D%0A%0Atemplate%3C%3E%0Astruct%20serializable%3Ccircle%3E%20%7B%0A%20%20static%20void%20serialize(circle%20const%26%20self,%20std::ostream%26%20os)%20%7B%0A%20%20%20%20os%20%3C%3C%20%22circle%20%22%20%3C%3C%20self.radius%20%3C%3C%20%22%20%22%3B%0A%20%20%7D%3B%0A%7D%3B%0Aauto%20__%20%3D%20deserialize.register_(%22circle%22,%20%5B%5D(std::istream%26%20archive)%20-%3E%20circle%20%7B%0A%20%20circle%20c%3B%0A%20%20archive%20%3E%3E%20c.radius%3B%0A%20%20return%20c%3B%0A%7D)%3B%0Aanyxx::castable_to%3Ccircle,%20figure%3E%20__%3B%0Aanyxx::castable_to%3Ccircle,%20serializable%3E%20__%3B%0A%0Atemplate%3C%3E%0Astruct%20serializable%3Csquare%3E%20%7B%0A%20%20static%20void%20serialize(square%20const%26%20self,%20std::ostream%26%20os)%20%7B%0A%20%20%20%20os%20%3C%3C%20%22square%20%22%20%3C%3C%20self.edge_length%20%3C%3C%20%22%20%22%3B%0A%20%20%7D%3B%0A%7D%3B%0Aauto%20__%20%3D%20deserialize.register_(%22square%22,%20%5B%5D(std::istream%26%20archive)%20%7B%0A%20%20square%20s%3B%0A%20%20archive%20%3E%3E%20s.edge_length%3B%0A%20%20return%20s%3B%0A%7D)%3B%0Aanyxx::castable_to%3Csquare,%20figure%3E%20__%3B%0Aanyxx::castable_to%3Csquare,%20serializable%3E%20__%3B%0A%0Avoid%20areas(std::stringstream%26%20os,%0A%20%20%20%20%20%20%20%20%20%20%20std::vector%3Cayx::any%3Cfigure%3E%3E%20const%26%20figures)%20%7B%0A%20%20std::string%20sep%3B%0A%20%20for%20(auto%20const%26%20f%20:%20figures)%20os%20%3C%3C%20std::exchange(sep,%20%22,%20%22)%20%3C%3C%20f.area()%3B%0A%7D%0A%0ATEST_CASE(%22Showcase5%22)%20%7B%0A%20%20std::stringstream%20archive%7B%22:%20circle%201%20:%20square%202%20:%20circle%203%20:%20circle%204%20end%22%7D%3B%0A%20%20std::vector%3Cayx::any%3Cfigure%3E%3E%20figures%3B%0A%20%20std::string%20more%3B%0A%20%20for%20(archive%20%3E%3E%20more%3B%20more%20!!%3D%20%22end%22%3B%20archive%20%3E%3E%20more)%0A%20%20%20%20figures.push_back(deserialize_any_figure(archive))%3B%0A%0A%20%20std::stringstream%20ss%3B%0A%20%20areas(ss,%20figures)%3B%0A%20%20CHECK(ss.str()%20%3D%3D%20%223.14,%204,%2028.26,%2050.24%22)%3B%0A%0A%20%20std::stringstream%20serialized%3B%0A%20%20for%20(auto%20const%26%20f%20:%20figures)%20%7B%0A%20%20%20%20serialized%20%3C%3C%20%22:%20%22%3B%0A%20%20%20%20ayx::borrow_as%3Cayx::any_%3Cayx::cref,%20serializable%3E%3E(f)-%3Eserialize(serialized)%3B%0A%20%20%7D%0A%20%20serialized%20%3C%3C%20%22end%22%3B%0A%0A%20%20CHECK(serialized.str()%20%3D%3D%20archive.str())%3B%0A%7D%0A//%20%5Bslide%5D%0A%7D%20%20//%20namespace%20showcase5%0A'),l:'5',n:'0',o:'C%2B%2B%20source%20%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:executor,i:(argsPanelShown:!f,compilationPanelShown:!f,compiler:gsnapshot,compilerOutShown:!f,execArgs:'',execStdin:'',fontScale:14,lang:'c%2B%2B',libs:!((name:anyxx,ver:develop),(name:catch2,ver:'300-preview2')),options:'-lCatch2Main%20-std%3Dc%2B%2B26%20-freflection',overrides:!(),runtimeTools:!(),source:1,stdinPanelShown:!f,wrap:!f),l:'5',n:'0',o:'Executor%20gsnapshot',t:'0')),k:50,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),hideEditorToolbars:!t,version:4"></iframe><p>  </li>  </ul></div></p>
+<p>Showcase 5 demonstrates how to use <span class="tt">Any++</span> to combine cross-casting and factory patterns for serialization and deserialization of type-erased objects.</p><ul>
+<li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with an <span class="tt">area()</span> method and serializable state (<span class="tt">radius</span> or <span class="tt">edge_length</span>).</li>
+<li>Two traits are declared: <span class="tt">figure</span> (with an <span class="tt">area()</span> method) and <span class="tt">serializable</span> (with a <span class="tt">serialize(std::ostream&amp;)</span> method).</li>
+<li>A factory (<span class="tt">deserialize</span>) is created to construct type-erased <span class="tt">any_serializable</span> objects from a type name and an input stream.</li>
+<li>Model maps provide custom serialization logic for each type.</li>
+<li>The <span class="tt">deserialize_any_figure</span> function reads a type name from the stream, uses the factory to construct the correct type, and cross-casts it to a figure.</li>
+<li>The test case deserializes a sequence of shapes from a stream, computes their areas, serializes them back, and checks that the serialization matches the original input.  </li></li>
+</ul>
+<p> <li><b class="tab-title">std::variant</b>  <div class="tabbed"><ul>  <li><b class="tab-title">C++23</b> </p><iframe width="100%" height="350px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,id:1,lang:'c%2B%2B',source:'%23include%20%3Cbit_factory/anyxx.hpp%3E%0A%23include%20%3Ccatch2/catch_test_macros.hpp%3E%0A%23include%20%3Cstring%3E%0A%0Anamespace%20%7B%0A//%20%5Bslide%5D%0Astruct%20circle%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20draw()%20const%20%7B%20return%20%22Hello%22%3B%20%7D%0A%7D%3B%0Astruct%20square%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20draw()%20const%20%7B%20return%20%22World%22%3B%20%7D%0A%7D%3B%0A%0ATRAIT(drawable,%20anyxx::dynamic_copyable,%20(FN(std::string,%20draw,%20(),%20const)))%0A%0Ausing%20known_shapes%20%3D%20std::variant%3Ccircle,%20square%3E%3B%0A%0Avoid%20draw(%0A%20%20%20%20std::stringstream%26%20os,%0A%20%20%20%20std::vector%3Canyxx::trait_as%3Cknown_shapes,%20drawable%3E%3E%20const%26%20drawables)%20%7B%0A%20%20for%20(auto%20const%26%20drawable%20:%20drawables)%20os%20%3C%3C%20drawable.draw()%20%3C%3C%20%22%5Cn%22%3B%0A%7D%0A%0ATEST_CASE(%22Showcase6%22)%20%7B%0A%20%20std::stringstream%20ss%3B%0A%20%20draw(ss,%20%7Bcircle%7B%7D,%20square%7B%7D%7D)%3B%0A%20%20CHECK(ss.str()%20%3D%3D%20%22Hello%5CnWorld%5Cn%22)%3B%0A%7D%0A//%20%5Bslide%5D%0A%7D%20%20//%20namespace%0A'),l:'5',n:'0',o:'C%2B%2B%20source%20%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:executor,i:(argsPanelShown:!f,compilationPanelShown:!f,compiler:gsnapshot,compilerOutShown:!f,execArgs:'',execStdin:'',fontScale:14,lang:'c%2B%2B',libs:!((name:anyxx,ver:develop),(name:catch2,ver:'300-preview2')),options:'-lCatch2Main%20-std%3Dc%2B%2B23',overrides:!(),runtimeTools:!(),source:1,stdinPanelShown:!f,wrap:!f),l:'5',n:'0',o:'Executor%20gsnapshot',t:'0')),k:50,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),hideEditorToolbars:!t,version:4"></iframe><p>  <li><b class="tab-title">C++26</b> </p><iframe width="100%" height="350px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,id:1,lang:'c%2B%2B',source:'%23define%20ANYXX_26%0A%23include%20%3Cbit_factory/anyxx.hpp%3E%0A%23include%20%3Ccatch2/catch_test_macros.hpp%3E%0A%23include%20%3Cstring%3E%0A%0Anamespace%20%7B%0A//%20%5Bslide%5D%0Astruct%20circle%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20draw()%20const%20%7B%20return%20%22Hello%22%3B%20%7D%0A%7D%3B%0Astruct%20square%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20draw()%20const%20%7B%20return%20%22World%22%3B%20%7D%0A%7D%3B%0A%0Atemplate%20%3Ctypename%20Self%3E%0Astruct%20drawable%20:%20anyxx::dynamic_copyable%3CSelf%3E%20%7B%0A%20%20%20%20std::string%20draw()%20const%3B%0A%7D%3B%20%20%0A%0Ausing%20known_shapes%20%3D%20std::variant%3Ccircle,%20square%3E%3B%0A%0Avoid%20draw(%0A%20%20%20%20std::stringstream%26%20os,%0A%20%20%20%20std::vector%3Canyxx::trait_as%3Cknown_shapes,%20drawable%3E%3E%20const%26%20drawables)%20%7B%0A%20%20for%20(auto%20const%26%20drawable%20:%20drawables)%20os%20%3C%3C%20drawable.draw()%20%3C%3C%20%22%5Cn%22%3B%0A%7D%0A%0ATEST_CASE(%22Showcase6%22)%20%7B%0A%20%20std::stringstream%20ss%3B%0A%20%20draw(ss,%20%7Bcircle%7B%7D,%20square%7B%7D%7D)%3B%0A%20%20CHECK(ss.str()%20%3D%3D%20%22Hello%5CnWorld%5Cn%22)%3B%0A%7D%0A//%20%5Bslide%5D%0A%7D%20%20//%20namespace%0A'),l:'5',n:'0',o:'C%2B%2B%20source%20%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:executor,i:(argsPanelShown:!f,compilationPanelShown:!f,compiler:gsnapshot,compilerOutShown:!f,execArgs:'',execStdin:'',fontScale:14,lang:'c%2B%2B',libs:!((name:anyxx,ver:develop),(name:catch2,ver:'300-preview2')),options:'-lCatch2Main%20-std%3Dc%2B%2B26%20-freflection',overrides:!(),runtimeTools:!(),source:1,stdinPanelShown:!f,wrap:!f),l:'5',n:'0',o:'Executor%20gsnapshot',t:'0')),k:50,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),hideEditorToolbars:!t,version:4"></iframe><p>  </li>  </ul></div></p>
+<p>Showcase 6 demonstrates how to use <span class="tt">Any++</span> with <span class="tt">std::variant</span> to enable type-erased polymorphism over a fixed set of types.</p><ul>
+<li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with a <span class="tt">draw()</span> method returning a string.</li>
+<li>A <span class="tt">drawable</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</li>
+<li>A <span class="tt">known_shapes</span> type alias is defined as <span class="tt">std::variant&lt;circle, square&gt;</span>, representing a closed set of possible shapes.</li>
+<li>The function <span class="tt">draw</span> takes a vector of objects, type-erased via std::variant (<span class="tt">anyxx::trait_as&lt;known_shapes, drawable&gt;</span>), and calls <span class="tt">draw()</span> on each, writing the results to a stringstream.</li>
+<li>The Catch2 test verifies that drawing a <span class="tt">circle</span> and a <span class="tt">square</span> produces the expected output. This example shows how <span class="tt">Any++</span> can be combined with <span class="tt">std::variant</span> to provide type-erased, trait-based polymorphism for a known set of types, allowing heterogeneous collections and uniform interface access without inheritance or virtual functions. Because the set of types is fixed, this approach can offer better performance than fully dynamic type erasure while still providing flexibility and extensibility through traits.  </li></li>
+</ul>
+<p> <li><b class="tab-title">vany</b>  <div class="tabbed"><ul>  <li><b class="tab-title">C++23</b> </p><iframe width="100%" height="350px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,id:1,lang:'c%2B%2B',source:'%23include%20%3Cbit_factory/anyxx/ext/vany.hpp%3E%0A%23include%20%3Ccatch2/catch_test_macros.hpp%3E%0A%23include%20%3Cstring%3E%0A%0Anamespace%20showcase7%20%7B%0A//%20%5Bslide%5D%0Ausing%20namespace%20anyxx%3B%0Ausing%20namespace%20std::string_literals%3B%0A%0Astruct%20circle%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20draw()%20const%20%7B%20return%20%22Hello%22%3B%20%7D%0A%7D%3B%0Astruct%20square%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20draw()%20const%20%7B%20return%20%22World%22%3B%20%7D%0A%7D%3B%0A%0ATRAIT(figure,%20dynamic_copyable,%20(FN(std::string,%20draw,%20(),%20const)))%0A%0Ausing%20known_and_unknown_shapes%20%3D%20vany%3Cfigure,%20circle,%20square%3E%3B%0Astatic_assert(std::same_as%3C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20known_and_unknown_shapes,%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20trait_as%3Cstd::variant%3Cany%3Cfigure%3E,%20circle,%20square%3E,%20figure%3E%3E)%3B%0Avoid%20draw_vany(std::stringstream%26%20os,%0A%20%20%20%20std::vector%3Cknown_and_unknown_shapes%3E%20const%26%20figures)%20%7B%0A%20%20%20%20for(auto%20const%26%20f%20:%20figures)%20os%20%3C%3C%20f.draw()%20%3C%3C%20%22%5Cn%22%3B%0A%7D%0A%0ATRAIT_MAP(figure,%20std::string)%20%7B%0A%20%20std::string%20draw(std::string%20const%26%20s)%20%7B%20return%20s%3B%20%7D%3B%0A%7D%3B%0A%0ATEST_CASE(%22Showcase7%22)%20%7B%0A%20%20std::stringstream%20ss%3B%0A%20%20draw_vany(ss,%20%7Bcircle%7B%7D,%20square%7B%7D,%20any%3Cfigure%3E%7B%22The%20big%20unknown...%22s%7D%7D)%3B%0A%20%20CHECK(ss.str()%20%3D%3D%20%22Hello%5CnWorld%5CnThe%20big%20unknown...%5Cn%22)%3B%0A%7D%0A//%20%5Bslide%5D%0A%7D%20%20//%20namespace%20showcase7%0A'),l:'5',n:'0',o:'C%2B%2B%20source%20%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:executor,i:(argsPanelShown:!f,compilationPanelShown:!f,compiler:gsnapshot,compilerOutShown:!f,execArgs:'',execStdin:'',fontScale:14,lang:'c%2B%2B',libs:!((name:anyxx,ver:develop),(name:catch2,ver:'300-preview2')),options:'-lCatch2Main%20-std%3Dc%2B%2B23',overrides:!(),runtimeTools:!(),source:1,stdinPanelShown:!f,wrap:!f),l:'5',n:'0',o:'Executor%20gsnapshot',t:'0')),k:50,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),hideEditorToolbars:!t,version:4"></iframe><p>  <li><b class="tab-title">C++26</b> </p><iframe width="100%" height="350px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,id:1,lang:'c%2B%2B',source:'%23define%20ANYXX_26%0A%23include%20%3Cbit_factory/anyxx/ext/vany.hpp%3E%0A%23include%20%3Ccatch2/catch_test_macros.hpp%3E%0A%23include%20%3Cstring%3E%0A%0Anamespace%20showcase7%20%7B%0A//%20%5Bslide%5D%0Ausing%20namespace%20anyxx%3B%0Ausing%20namespace%20std::string_literals%3B%0A%0Astruct%20circle%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20draw()%20const%20%7B%20return%20%22Hello%22%3B%20%7D%0A%7D%3B%0Astruct%20square%20%7B%0A%20%20%5B%5Bnodiscard%5D%5D%20std::string%20draw()%20const%20%7B%20return%20%22World%22%3B%20%7D%0A%7D%3B%0A%0Atemplate%20%3Ctypename%20Self%3E%0Astruct%20figure%20:%20anyxx::dynamic_copyable%3CSelf%3E%20%7B%0A%20%20%20%20std::string%20draw()%20const%3B%0A%7D%3B%0A%0Ausing%20known_and_unknown_shapes%20%3D%20vany%3Cfigure,%20circle,%20square%3E%3B%0Astatic_assert(std::same_as%3C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20known_and_unknown_shapes,%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20trait_as%3Cstd::variant%3Cany%3Cfigure%3E,%20circle,%20square%3E,%20figure%3E%3E)%3B%0Avoid%20draw_vany(std::stringstream%26%20os,%0A%20%20%20%20std::vector%3Cknown_and_unknown_shapes%3E%20const%26%20figures)%20%7B%0A%20%20%20%20for(auto%20const%26%20f%20:%20figures)%20os%20%3C%3C%20f.draw()%20%3C%3C%20%22%5Cn%22%3B%0A%7D%0A%0Atemplate%20%3C%3E%20%0Astruct%20figure%3Cstd::string%3E%20%7B%0A%20%20static%20std::string%20draw(std::string%20const%26%20s)%20%7B%20return%20s%3B%20%7D%3B%0A%7D%3B%0A%0ATEST_CASE(%22Showcase7%22)%20%7B%0A%20%20std::stringstream%20ss%3B%0A%20%20draw_vany(ss,%20%7Bcircle%7B%7D,%20square%7B%7D,%20any%3Cfigure%3E%7B%22The%20big%20unknown...%22s%7D%7D)%3B%0A%20%20CHECK(ss.str()%20%3D%3D%20%22Hello%5CnWorld%5CnThe%20big%20unknown...%5Cn%22)%3B%0A%7D%0A//%20%5Bslide%5D%0A%7D%20%20//%20namespace%20showcase7%0A'),l:'5',n:'0',o:'C%2B%2B%20source%20%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:executor,i:(argsPanelShown:!f,compilationPanelShown:!f,compiler:gsnapshot,compilerOutShown:!f,execArgs:'',execStdin:'',fontScale:14,lang:'c%2B%2B',libs:!((name:anyxx,ver:develop),(name:catch2,ver:'300-preview2')),options:'-lCatch2Main%20-std%3Dc%2B%2B26%20-freflection',overrides:!(),runtimeTools:!(),source:1,stdinPanelShown:!f,wrap:!f),l:'5',n:'0',o:'Executor%20gsnapshot',t:'0')),k:50,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),hideEditorToolbars:!t,version:4"></iframe><p>  </li>  </ul></div></p>
+<p>Showcase 7 demonstrates how to use <span class="tt">Any++</span> to combine open type erasure with <span class="tt">std::variant</span> for extensible, heterogeneous collections. Let us call them "vany" (variant-any).</p><ul>
+<li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with a <span class="tt">draw()</span> method returning a string.</li>
+<li>A <span class="tt">figure</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</li>
+<li>The type alias <span class="tt">known_and_unknown_shapes</span> is created using <span class="tt">anyxx::vany</span>, which produces a type-erased wrapper over a <span class="tt">std::variant</span> containing:<ul>
+<li>All known types (<span class="tt">circle</span>, <span class="tt">square</span>)</li>
+<li>An open-ended type-erased fallback (<span class="tt">any_figure&lt;ayx::val&lt;&gt;&gt;</span>)</li>
+</ul>
+</li>
+<li>A model map is provided for <span class="tt">std::string</span>, allowing strings to be handled as figures.</li>
+<li>So the vector passed to <span class="tt">draw</span> can seamlessly contain both known types (like <span class="tt">circle</span> and <span class="tt">square</span>) and dynamically extended types (like <span class="tt">std::string</span>), all accessed through the same trait-based interface.</li>
+</ul>
+<p>This example shows how <span class="tt">Any++</span> enables a hybrid approach: you get the performance of <span class="tt">std::variant</span> for known types, while still supporting open-ended extension with type-erased objects. This is useful for scenarios where you want to handle a fixed set of types efficiently, but also allow for runtime extension or plugin types, all through a uniform trait-based interface.</p>
+<p>"vany" is a modern, safer, and extensible <strike>variant</strike> version of OLEVariant and QVariant.  </li></p>
+<p> </ul></div></p>
+<p>More Examples ☞ <a class="el" href="talk_meeting_cpp26.html" title="Talk at Meeting C++ 2026: Static and Dynamic Polymorphism in C++23 and beyond">Talk at Meeting C++ 2026: Static and Dynamic Polymorphism in C++23 and beyond</a></p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md1"></a>
 Available on vcpkg:</h3>
 <p>Install in vcpkg root directory: </p><div class="fragment"><div class="line">vcpkg install anyxx</div>
 </div><!-- fragment --><p>In your CMakeLists.txt: </p><div class="fragment"><div class="line">find_package(anyxx CONFIG REQUIRED)</div>
 <div class="line">target_link_libraries(main PRIVATE bit_factory::anyxx)</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
 Useage in CMakeLists.txt:</h3>
 <div class="fragment"><div class="line">FetchContent_Declare(</div>
 <div class="line">    bit_factory::anyxx</div>
@@ -206,10 +218,10 @@ Useage in CMakeLists.txt:</h3>
 <div class="line">    GIT_TAG 0.8.0</div>
 <div class="line">)</div>
 <div class="line">FetchContent_MakeAvailable(anyxx)</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
 Clone the repo:</h3>
 <div class="fragment"><div class="line">git clone - c core.symlinks = true https://github.com/bitfactory-software/anyxx</div>
-</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
 Runtime Performance compared</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -237,7 +249,7 @@ clang-cl /O2 /Ob2  </th><th class="markdownTableHeadRight">Source  </th><th clas
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft"><span class="tt">std::variant</span> + <span class="tt">std::visit</span>  </td><td class="markdownTableBodyRight">x 0.8  </td><td class="markdownTableBodyRight">x 0.65  </td><td class="markdownTableBodyRight">x 0.35  </td><td class="markdownTableBodyRight"><a href="https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/30a_Animals_variant_visit.cpp">Source</a>  </td><td class="markdownTableBodyRight"><span class="tt">BENCHMARK("30a_Animals variant visit")</span>  </td></tr>
 </table>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 CI Matrix</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -249,406 +261,6 @@ CI Matrix</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyCenter">MacOS(latest)  </td><td class="markdownTableBodyCenter">-  </td><td class="markdownTableBodyCenter">23  </td><td class="markdownTableBodyCenter">16  </td></tr>
 </table>
-<p><a class="anchor" id="showcase2"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
-Showcase 2: <em>Any++</em> with Model Map</h3>
-<div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
-<div class="line"><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">namespace </span>showcase2 {</div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">struct </span>circle {};</div>
-<div class="line"><span class="keyword">struct </span>square {</div>
-<div class="line">  [[nodiscard]] std::string edgy_salute()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;edgy World&quot;</span>; }</div>
-<div class="line">};</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gaf5624cf0eece4d4b6d59dd56e3f19529">TRAIT</a>(drawable, anyxx::dynamic_copyable, (<a class="code hl_define" href="group__fn__macros.html#ga9ad7f2ddb5429c1461365f875141e5af">FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__map__macros.html#ga4cdcb74f956bbd2e93898cdaec0642a4">TRAIT_MAP</a>(drawable, circle ) {</div>
-<div class="line">  <span class="keyword">static</span> std::string draw(circle <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;Silent greetings&quot;</span>; };</div>
-<div class="line">};</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__map__macros.html#ga4cdcb74f956bbd2e93898cdaec0642a4">TRAIT_MAP</a>(drawable, square) {</div>
-<div class="line">  <span class="keyword">static</span> std::string draw(square <span class="keyword">const</span>&amp; self) { <span class="keywordflow">return</span> self.edgy_salute(); };</div>
-<div class="line">};</div>
-<div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> draw(std::stringstream&amp; os,</div>
-<div class="line">          std::vector&lt;anyxx::any&lt;drawable&gt;&gt; <span class="keyword">const</span>&amp; drawables) {</div>
-<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line">TEST_CASE(<span class="stringliteral">&quot;Showcase2&quot;</span>) {</div>
-<div class="line">  std::stringstream ss;</div>
-<div class="line">  draw(ss, {circle{}, square{}});</div>
-<div class="line">  CHECK(ss.str() == <span class="stringliteral">&quot;Silent greetings\nedgy World\n&quot;</span>);</div>
-<div class="line">}</div>
-<div class="line">};  <span class="comment">// namespace showcase2</span></div>
-<div class="line"><span class="comment">// &lt;!--</span></div>
-<div class="line"><span class="preprocessor">#if 0</span></div>
-<div class="line"><span class="comment">// --&gt;</span></div>
-<div class="ttc" id="agroup__trait__map__macros_html_ga4cdcb74f956bbd2e93898cdaec0642a4"><div class="ttname"><a href="group__trait__map__macros.html#ga4cdcb74f956bbd2e93898cdaec0642a4">TRAIT_MAP</a></div><div class="ttdeci">#define TRAIT_MAP(trait_, model_)</div><div class="ttdoc">TRAIT_MAP macro.</div><div class="ttdef"><b>Definition</b> preprocessor_meta_class.hpp:1117</div></div>
-</div><!-- fragment --><p> Showcase 2 demonstrates, how to use the <span class="tt">Any++</span> "model map" feature to provide custom behavior for unrelated types using traits.</p>
-<p><a href="https://godbolt.org/z/P7rfbzecj">Compiler Explorer</a></p>
-<p><a class="anchor" id="showcase3"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
-Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h3>
-<div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
-<div class="line"><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line"> </div>
-<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/dispatch.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/dispatch_table.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;compare&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;sstream&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">namespace </span>showcase3 {</div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">struct </span>circle {</div>
-<div class="line">  [[nodiscard]] std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;circle&quot;</span>; }</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">struct </span>square {</div>
-<div class="line">  [[nodiscard]] std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;square&quot;</span>; }</div>
-<div class="line">};</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gaeca22f47380f68415a51ad846b24c1cb">TRAIT_EX</a>(figure, anyxx::dynamic_copyable, (<a class="code hl_define" href="group__fn__macros.html#ga9ad7f2ddb5429c1461365f875141e5af">FN</a>(std::string, name, (), <span class="keyword">const</span>)), ,</div>
-<div class="line">         , (HAS_OPEN_DISPATCH), ())</div>
-<div class="line"> </div>
-<div class="line">anyxx::dispatch&lt;std::partial_ordering(anyxx::virtual_&lt;anyxx::any&lt;figure&gt;&gt;,</div>
-<div class="line">                                      anyxx::virtual_&lt;anyxx::any&lt;figure&gt;&gt;)&gt;</div>
-<div class="line">    compare_edges;</div>
-<div class="line"> </div>
-<div class="line">[[nodiscard]] std::partial_ordering operator&lt;=&gt;(anyxx::any&lt;figure&gt; const&amp; l,</div>
-<div class="line">                                                anyxx::any&lt;figure&gt; const&amp; r) {</div>
-<div class="line">  <span class="keywordflow">return</span> compare_edges(l, r);</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">auto</span> __ = compare_edges.define&lt;circle, circle&gt;(</div>
-<div class="line">    [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;, <span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> std::partial_ordering::equivalent; });</div>
-<div class="line"><span class="keyword">auto</span> __ = compare_edges.define&lt;circle, square&gt;(</div>
-<div class="line">    [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;, <span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> std::partial_ordering::less; });</div>
-<div class="line"><span class="keyword">auto</span> __ = compare_edges.define&lt;square, square&gt;(</div>
-<div class="line">    [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;, <span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> std::partial_ordering::equivalent; });</div>
-<div class="line"><span class="keyword">auto</span> __ = compare_edges.define&lt;square, circle&gt;(</div>
-<div class="line">    [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;, <span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> std::partial_ordering::greater; });</div>
-<div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> compare_each(std::stringstream&amp; os,</div>
-<div class="line">                  std::vector&lt;anyxx::any&lt;figure&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
-<div class="line">  std::string sep;</div>
-<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; l : figures)</div>
-<div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r : figures) {</div>
-<div class="line">      os &lt;&lt; std::exchange(sep, <span class="stringliteral">&quot;, &quot;</span>) &lt;&lt; l.name() &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
-<div class="line">      <span class="keywordflow">if</span> (<span class="keyword">auto</span> c = l &lt;=&gt; r; c == std::partial_ordering::equivalent)</div>
-<div class="line">        os &lt;&lt; <span class="stringliteral">&quot;==&quot;</span>;</div>
-<div class="line">      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (c == std::partial_ordering::less)</div>
-<div class="line">        os &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span>;</div>
-<div class="line">      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (c == std::partial_ordering::greater)</div>
-<div class="line">        os &lt;&lt; <span class="stringliteral">&quot;&gt;&quot;</span>;</div>
-<div class="line">      <span class="keywordflow">else</span></div>
-<div class="line">        os &lt;&lt; <span class="stringliteral">&quot;?&quot;</span>;</div>
-<div class="line">      os &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; r.name();</div>
-<div class="line">    }</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line">TEST_CASE(<span class="stringliteral">&quot;Showcase3&quot;</span>) {</div>
-<div class="line">  std::stringstream ss;</div>
-<div class="line">  compare_each(ss, {circle{}, square{}});</div>
-<div class="line">  CHECK(ss.str() ==</div>
-<div class="line">        <span class="stringliteral">&quot;circle == circle, circle &lt; square, square &gt; circle, square == square&quot;</span>);</div>
-<div class="line">}</div>
-<div class="line">};  <span class="comment">// namespace showcase3</span></div>
-<div class="line"><span class="comment">// &lt;!--</span></div>
-<div class="line"><span class="preprocessor">#if 0</span></div>
-<div class="line"><span class="comment">// --&gt;</span></div>
-<div class="ttc" id="agroup__trait__macros_html_gaeca22f47380f68415a51ad846b24c1cb"><div class="ttname"><a href="group__trait__macros.html#gaeca22f47380f68415a51ad846b24c1cb">TRAIT_EX</a></div><div class="ttdeci">#define TRAIT_EX(n, BASE, l, static_fns, typedefs, v_table_data, decoration)</div><div class="ttdoc">TRAIT derived from base with decoration. Macro to define the functional behavior for a any_,...</div><div class="ttdef"><b>Definition</b> preprocessor_meta_class.hpp:773</div></div>
-</div><!-- fragment --><p> Showcase 3 demonstrates how to use the Any++ library to implement open multi-dispatch (type-erased binary operators) in C++. In this example:</p><ul>
-<li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with a <span class="tt">name()</span> method.</li>
-<li>A <span class="tt">figure</span> trait is declared using the <span class="tt">Any++</span> macro system, specifying a <span class="tt">name()</span> function.</li>
-<li>The <span class="tt">ANY</span> macro is an extension of the <span class="tt"><a class="el" href="group__trait__macros.html#gaf5624cf0eece4d4b6d59dd56e3f19529" title="Macro to define the functional behavior for an any_.">TRAIT</a></span> macro. It defines the requested behavior (trait interface) and additionally creates a typedef for an <span class="tt">any</span> type, named <span class="tt">any&lt;first parameter of macro&gt;</span>, that uses this trait. The generated trait itself has a template parameter for the Proxy type, which is defaulted to the last parameter of the <span class="tt">ANY</span> macro.</li>
-<li>The <span class="tt">dispatch&lt;R(Args...)&gt;</span> mechanism is used to define a type-erased, runtime-resolved binary operator (<span class="tt">operator&lt;=&gt;</span>) for comparing two <span class="tt">any_figure&lt;&gt;</span> objects.</li>
-<li>The dispatch table is populated with custom comparison logic for each pair of types (<span class="tt">circle</span> vs <span class="tt">circle</span>, <span class="tt">circle</span> vs <span class="tt">square</span>, etc.) at static initialization time. To do this with as little ceremony as possible, <span class="tt"><a class="el" href="anyxx_8hpp.html" title="C++ header only library for external polymorphism.">anyxx.hpp</a></span> provides a <span class="tt">__</span> macro that simulates the<a href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2169r4.pdf">C++26 placeholder with no name</a>. That trick initializes a static variable with automatic name at each usage site with a dummy value, returned by <span class="tt">declare</span> only for this purpose.</li>
-<li>The <span class="tt">compare_each</span> function iterates over all pairs of figures, compares them using the type-erased operator, and outputs the results.</li>
-</ul>
-<p><a href="https://godbolt.org/z/caTnh9cf1">Compiler Explorer</a></p>
-<p><a class="anchor" id="showcase4"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
-Showcase 4: <em>Any++</em> Open Dispatch As Visitor</h3>
-<div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
-<div class="line"><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/dispatch.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/dispatch_table.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;sstream&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">namespace </span>showcase4 {</div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">namespace </span>ayx = anyxx;</div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">struct </span>circle {</div>
-<div class="line">  [[nodiscard]] std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;circle&quot;</span>; }</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">struct </span>square {</div>
-<div class="line">  [[nodiscard]] std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;square&quot;</span>; }</div>
-<div class="line">};</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gaeca22f47380f68415a51ad846b24c1cb">TRAIT_EX</a>(figure, anyxx::dynamic_copyable, (<a class="code hl_define" href="group__fn__macros.html#ga9ad7f2ddb5429c1461365f875141e5af">FN</a>(std::string, name, (), <span class="keyword">const</span>)), ,</div>
-<div class="line">         , (HAS_OPEN_DISPATCH), ())</div>
-<div class="line">using any_figure = anyxx::any&lt;figure&gt;;</div>
-<div class="line"> </div>
-<div class="line">ayx::dispatch&lt;std::<span class="keywordtype">string</span>(ayx::virtual_&lt;any_figure&gt;)&gt; latin, italian;</div>
-<div class="line"> </div>
-<div class="line">auto __ = latin.define&lt;circle&gt;([](auto const&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;orbis&quot;</span>; });</div>
-<div class="line"><span class="keyword">auto</span> __ = latin.define&lt;square&gt;([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;quadratum&quot;</span>; });</div>
-<div class="line"><span class="keyword">auto</span> __ = italian.define&lt;circle&gt;([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;cerchio&quot;</span>; });</div>
-<div class="line"><span class="keyword">auto</span> __ = italian.define&lt;square&gt;([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;quadrato&quot;</span>; });</div>
-<div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> translate(std::stringstream&amp; os, std::vector&lt;any_figure&gt; <span class="keyword">const</span>&amp; figures) {</div>
-<div class="line">  std::string sep;</div>
-<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures)</div>
-<div class="line">    os &lt;&lt; std::exchange(sep, <span class="stringliteral">&quot;; &quot;</span>) &lt;&lt; f.name() &lt;&lt; <span class="stringliteral">&quot;: latin = &quot;</span> &lt;&lt; latin(f)</div>
-<div class="line">       &lt;&lt; <span class="stringliteral">&quot;, italian = &quot;</span> &lt;&lt; italian(f);</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line">TEST_CASE(<span class="stringliteral">&quot;Showcase4&quot;</span>) {</div>
-<div class="line">  std::stringstream ss;</div>
-<div class="line">  translate(ss, {circle{}, square{}});</div>
-<div class="line">  CHECK(ss.str() ==</div>
-<div class="line">        <span class="stringliteral">&quot;circle: latin = orbis, italian = cerchio; square: latin = quadratum, &quot;</span></div>
-<div class="line">        <span class="stringliteral">&quot;italian = quadrato&quot;</span>);</div>
-<div class="line">}</div>
-<div class="line">};  <span class="comment">// namespace showcase4</span></div>
-<div class="line"><span class="comment">// &lt;!--</span></div>
-<div class="line"><span class="preprocessor">#if 0</span></div>
-<div class="line"><span class="comment">// --&gt;</span></div>
-</div><!-- fragment --><p> Showcase 4 demonstrates how to use <span class="tt">Any++</span> to implement open dispatch in the style of a visitor pattern, enabling runtime selection of behavior for different types without inheritance or virtual functions.</p><ul>
-<li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, each provide a <span class="tt">name()</span> method.</li>
-<li>A <span class="tt">figure</span> trait is defined, specifying the required interface.</li>
-<li>Two open dispatchers, <span class="tt">latin</span> and <span class="tt">italian</span>, are created using <span class="tt">dispatch&lt;R(Args...)&gt;</span>, each mapping a figure to a localized string.</li>
-<li>The dispatchers are populated with type-specific translations for <span class="tt">circle</span> and <span class="tt">square</span>.</li>
-<li>The <span class="tt">translate</span> function iterates over a collection of type-erased figures, using the dispatchers to output the name and its translation in both Latin and Italian. This is the so-called "Open Visitor Pattern" implemented via open dispatch O(1) runtime complexity <b>without boilerplate</b>.</li>
-</ul>
-<p><a href="https://godbolt.org/z/c1eWsrdr7">Compiler Explorer</a></p>
-<p><a class="anchor" id="showcase5"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
-Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
-<div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
-<div class="line"><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/factory.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">namespace </span>showcase5 {</div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">namespace </span>ayx = anyxx;</div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">struct </span>circle {</div>
-<div class="line">  <span class="keywordtype">double</span> radius = 0.0;</div>
-<div class="line">  [[nodiscard]] <span class="keywordtype">double</span> area()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> radius * radius * 3.14; }</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">struct </span>square {</div>
-<div class="line">  [[nodiscard]] <span class="keywordtype">double</span> area()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> edge_length * edge_length; }</div>
-<div class="line">  <span class="keywordtype">double</span> edge_length = 0.0;</div>
-<div class="line">};</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gaf5624cf0eece4d4b6d59dd56e3f19529">TRAIT</a>(figure, ayx::dynamic_copyable, </div>
-<div class="line">  (<a class="code hl_define" href="group__fn__macros.html#ga9ad7f2ddb5429c1461365f875141e5af">FN</a>(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>))</div>
-<div class="line">)</div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gaf5624cf0eece4d4b6d59dd56e3f19529">TRAIT</a>(serializable, ayx::dynamic_copyable,</div>
-<div class="line">  (<a class="code hl_define" href="group__fn__macros.html#ga9ad7f2ddb5429c1461365f875141e5af">FN</a>(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), const))</div>
-<div class="line">)</div>
-<div class="line"> </div>
-<div class="line">ayx::factory&lt;ayx::any&lt;serializable&gt;, std::<span class="keywordtype">string</span>, std::istream&amp;&gt; deserialize;</div>
-<div class="line"> </div>
-<div class="line">[[nodiscard]] ayx::any&lt;figure&gt; deserialize_any_figure(std::istream&amp; archive) {</div>
-<div class="line">  std::string type;</div>
-<div class="line">  archive &gt;&gt; type;</div>
-<div class="line">  <span class="keywordflow">return</span> ayx::move_to&lt;ayx::any&lt;figure&gt;&gt;(deserialize(type, archive));</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__map__macros.html#ga4cdcb74f956bbd2e93898cdaec0642a4">TRAIT_MAP</a>(serializable, circle) {</div>
-<div class="line">  <span class="keyword">static</span> <span class="keywordtype">void</span> serialize(circle <span class="keyword">const</span>&amp; self, std::ostream&amp; os) {</div>
-<div class="line">    os &lt;&lt; <span class="stringliteral">&quot;circle &quot;</span> &lt;&lt; self.radius &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
-<div class="line">  };</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">auto</span> __ = deserialize.register_(<span class="stringliteral">&quot;circle&quot;</span>, [](std::istream&amp; archive) -&gt; circle {</div>
-<div class="line">  circle c;</div>
-<div class="line">  archive &gt;&gt; c.radius;</div>
-<div class="line">  <span class="keywordflow">return</span> c;</div>
-<div class="line">});</div>
-<div class="line">anyxx::castable_to&lt;circle, figure&gt; __;</div>
-<div class="line">anyxx::castable_to&lt;circle, serializable&gt; __;</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__map__macros.html#ga4cdcb74f956bbd2e93898cdaec0642a4">TRAIT_MAP</a>(serializable, square) {</div>
-<div class="line">  <span class="keyword">static</span> <span class="keywordtype">void</span> serialize(square <span class="keyword">const</span>&amp; self, std::ostream&amp; os) {</div>
-<div class="line">    os &lt;&lt; <span class="stringliteral">&quot;square &quot;</span> &lt;&lt; self.edge_length &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
-<div class="line">  };</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">auto</span> __ = deserialize.register_(<span class="stringliteral">&quot;square&quot;</span>, [](std::istream&amp; archive) {</div>
-<div class="line">  square s;</div>
-<div class="line">  archive &gt;&gt; s.edge_length;</div>
-<div class="line">  <span class="keywordflow">return</span> s;</div>
-<div class="line">});</div>
-<div class="line">anyxx::castable_to&lt;square, figure&gt; __;</div>
-<div class="line">anyxx::castable_to&lt;square, serializable&gt; __;</div>
-<div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> areas(std::stringstream&amp; os,</div>
-<div class="line">           std::vector&lt;ayx::any&lt;figure&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
-<div class="line">  std::string sep;</div>
-<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures) os &lt;&lt; std::exchange(sep, <span class="stringliteral">&quot;, &quot;</span>) &lt;&lt; f.area();</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line">TEST_CASE(<span class="stringliteral">&quot;Showcase5&quot;</span>) {</div>
-<div class="line">  std::stringstream archive{<span class="stringliteral">&quot;: circle 1 : square 2 : circle 3 : circle 4 end&quot;</span>};</div>
-<div class="line">  std::vector&lt;ayx::any&lt;figure&gt;&gt; figures;</div>
-<div class="line">  std::string more;</div>
-<div class="line">  <span class="keywordflow">for</span> (archive &gt;&gt; more; more != <span class="stringliteral">&quot;end&quot;</span>; archive &gt;&gt; more)</div>
-<div class="line">    figures.push_back(deserialize_any_figure(archive));</div>
-<div class="line"> </div>
-<div class="line">  std::stringstream ss;</div>
-<div class="line">  areas(ss, figures);</div>
-<div class="line">  CHECK(ss.str() == <span class="stringliteral">&quot;3.14, 4, 28.26, 50.24&quot;</span>);</div>
-<div class="line"> </div>
-<div class="line">  std::stringstream serialized;</div>
-<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures) {</div>
-<div class="line">    serialized &lt;&lt; <span class="stringliteral">&quot;: &quot;</span>;</div>
-<div class="line">    ayx::borrow_as&lt;ayx::any_&lt;ayx::cref, serializable&gt;&gt;(f)-&gt;serialize(serialized);</div>
-<div class="line">  }</div>
-<div class="line">  serialized &lt;&lt; <span class="stringliteral">&quot;end&quot;</span>;</div>
-<div class="line"> </div>
-<div class="line">  CHECK(serialized.str() == archive.str());</div>
-<div class="line">}</div>
-<div class="line">};  <span class="comment">// namespace showcase5</span></div>
-<div class="line"><span class="comment">// &lt;!--</span></div>
-<div class="line"><span class="preprocessor">#if 0</span></div>
-<div class="line"><span class="comment">// --&gt;</span></div>
-</div><!-- fragment --><p> Showcase 5 demonstrates how to use <span class="tt">Any++</span> to combine cross-casting and factory patterns for serialization and deserialization of type-erased objects.</p><ul>
-<li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with an <span class="tt">area()</span> method and serializable state (<span class="tt">radius</span> or <span class="tt">edge_length</span>).</li>
-<li>Two traits are declared: <span class="tt">figure</span> (with an <span class="tt">area()</span> method) and <span class="tt">serializable</span> (with a <span class="tt">serialize(std::ostream&amp;)</span> method).</li>
-<li>A factory (<span class="tt">deserialize</span>) is created to construct type-erased <span class="tt">any_serializable</span> objects from a type name and an input stream.</li>
-<li>Model maps provide custom serialization logic for each type.</li>
-<li>The <span class="tt">deserialize_any_figure</span> function reads a type name from the stream, uses the factory to construct the correct type, and cross-casts it to a figure.</li>
-<li>The test case deserializes a sequence of shapes from a stream, computes their areas, serializes them back, and checks that the serialization matches the original input.</li>
-</ul>
-<p>Summary:</p>
-<p>This example shows how <span class="tt">Any++</span> enables runtime type selection, safe cross-casting between interfaces, and pluggable serialization logic for unrelated types, all using type-erased objects and open extension points.</p>
-<p><a href="https://godbolt.org/z/4r5o6en94">Compiler Explorer</a></p>
-<p><a class="anchor" id="showcase6"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
-Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
-<div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
-<div class="line"><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">namespace </span>showcase6 {</div>
-<div class="line"><span class="keyword">struct </span>circle {</div>
-<div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hello&quot;</span>; }</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">struct </span>square {</div>
-<div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
-<div class="line">};</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gaf5624cf0eece4d4b6d59dd56e3f19529">TRAIT</a>(drawable, anyxx::dynamic_copyable, (<a class="code hl_define" href="group__fn__macros.html#ga9ad7f2ddb5429c1461365f875141e5af">FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
-<div class="line"> </div>
-<div class="line">using known_shapes = std::variant&lt;circle, square&gt;;</div>
-<div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> draw(std::stringstream&amp; os,</div>
-<div class="line">          std::vector&lt;anyxx::trait_as&lt;known_shapes, drawable&gt;&gt; const&amp;</div>
-<div class="line">              drawables) {</div>
-<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line">TEST_CASE(<span class="stringliteral">&quot;Showcase6&quot;</span>) {</div>
-<div class="line">  std::stringstream ss;</div>
-<div class="line">  draw(ss, {circle{}, square{}});</div>
-<div class="line">  CHECK(ss.str() == <span class="stringliteral">&quot;Hello\nWorld\n&quot;</span>);</div>
-<div class="line">}</div>
-<div class="line">}  <span class="comment">// namespace showcase6</span></div>
-<div class="line"><span class="comment">// &lt;!--</span></div>
-<div class="line"><span class="preprocessor">#if 0</span></div>
-<div class="line"><span class="comment">// --&gt;</span></div>
-</div><!-- fragment --><p> Showcase 6 demonstrates how to use <span class="tt">Any++</span> with <span class="tt">std::variant</span> to enable type-erased polymorphism over a fixed set of types.</p><ul>
-<li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with a <span class="tt">draw()</span> method returning a string.</li>
-<li>A <span class="tt">drawable</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</li>
-<li>A <span class="tt">known_shapes</span> type alias is defined as <span class="tt">std::variant&lt;circle, square&gt;</span>, representing a closed set of possible shapes.</li>
-<li>The function <span class="tt">draw</span> takes a vector of objects, type-erased via std::variant (<span class="tt">anyxx::trait_as&lt;known_shapes, drawable&gt;</span>), and calls <span class="tt">draw()</span> on each, writing the results to a stringstream.</li>
-<li>The Catch2 test verifies that drawing a <span class="tt">circle</span> and a <span class="tt">square</span> produces the expected output. This example shows how <span class="tt">Any++</span> can be combined with <span class="tt">std::variant</span> to provide type-erased, trait-based polymorphism for a known set of types, allowing heterogeneous collections and uniform interface access without inheritance or virtual functions. Because the set of types is fixed, this approach can offer better performance than fully dynamic type erasure while still providing flexibility and extensibility through traits.</li>
-</ul>
-<p><a href="https://godbolt.org/z/hTT64bv79">Compiler Explorer</a></p>
-<p><a class="anchor" id="showcase7"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
-Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
-<div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
-<div class="line"><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx/ext/vany.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">namespace </span>showcase7 {</div>
-<div class="line"><span class="keyword">using namespace </span>anyxx;</div>
-<div class="line"><span class="keyword">using namespace </span>std::string_literals;</div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">struct </span>circle {</div>
-<div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hello&quot;</span>; }</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">struct </span>square {</div>
-<div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
-<div class="line">};</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gaf5624cf0eece4d4b6d59dd56e3f19529">TRAIT</a>(figure, dynamic_copyable, (<a class="code hl_define" href="group__fn__macros.html#ga9ad7f2ddb5429c1461365f875141e5af">FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
-<div class="line"> </div>
-<div class="line">using known_and_unknown_shapes = vany&lt;figure, circle, square&gt;;</div>
-<div class="line">static_assert(std::same_as&lt;</div>
-<div class="line">              known_and_unknown_shapes,</div>
-<div class="line">              trait_as&lt;std::variant&lt;any&lt;figure&gt;, circle, square&gt;, figure&gt;&gt;);</div>
-<div class="line"><span class="keywordtype">void</span> draw_vany(std::stringstream&amp; os,</div>
-<div class="line">    std::vector&lt;known_and_unknown_shapes&gt; const&amp; figures) {</div>
-<div class="line">    <span class="keywordflow">for</span>(<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures) os &lt;&lt; f.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__map__macros.html#ga4cdcb74f956bbd2e93898cdaec0642a4">TRAIT_MAP</a>(figure, std::string) {</div>
-<div class="line">  std::string draw(std::string <span class="keyword">const</span>&amp; s) { <span class="keywordflow">return</span> s; };</div>
-<div class="line">};</div>
-<div class="line"> </div>
-<div class="line">TEST_CASE(<span class="stringliteral">&quot;Showcase7&quot;</span>) {</div>
-<div class="line">  std::stringstream ss;</div>
-<div class="line">  draw_vany(ss, {circle{}, square{}, any&lt;figure&gt;{<span class="stringliteral">&quot;The big unknown...&quot;</span>s}});</div>
-<div class="line">  CHECK(ss.str() == <span class="stringliteral">&quot;Hello\nWorld\nThe big unknown...\n&quot;</span>);</div>
-<div class="line">}</div>
-<div class="line">}  <span class="comment">// namespace showcase7</span></div>
-<div class="line"><span class="comment">// &lt;!--</span></div>
-<div class="line"><span class="preprocessor">#if 0</span></div>
-<div class="line"><span class="comment">// --&gt;</span></div>
-</div><!-- fragment --><p> Showcase 7 demonstrates how to use <span class="tt">Any++</span> to combine open type erasure with <span class="tt">std::variant</span> for extensible, heterogeneous collections. Let us call them "vany" (variant-any).</p><ul>
-<li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with a <span class="tt">draw()</span> method returning a string.</li>
-<li>A <span class="tt">figure</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</li>
-<li>The type alias <span class="tt">known_and_unknown_shapes</span> is created using <span class="tt">anyxx::vany</span>, which produces a type-erased wrapper over a <span class="tt">std::variant</span> containing:<ul>
-<li>All known types (<span class="tt">circle</span>, <span class="tt">square</span>)</li>
-<li>An open-ended type-erased fallback (<span class="tt">any_figure&lt;ayx::val&lt;&gt;&gt;</span>)</li>
-</ul>
-</li>
-<li>A model map is provided for <span class="tt">std::string</span>, allowing strings to be handled as figures.</li>
-<li>So the vector passed to <span class="tt">draw</span> can seamlessly contain both known types (like <span class="tt">circle</span> and <span class="tt">square</span>) and dynamically extended types (like <span class="tt">std::string</span>), all accessed through the same trait-based interface.</li>
-</ul>
-<p>This example shows how <span class="tt">Any++</span> enables a hybrid approach: you get the performance of <span class="tt">std::variant</span> for known types, while still supporting open-ended extension with type-erased objects. This is useful for scenarios where you want to handle a fixed set of types efficiently, but also allow for runtime extension or plugin types, all through a uniform trait-based interface.</p>
-<p>"vany" is a modern, safer, and extensible <strike>variant</strike> version of OLEVariant and QVariant.</p>
-<p><a href="https://godbolt.org/z/dj5eabYdc">Compiler Explorer</a></p>
-<p>If you are still here, you are ready for <a href="https://www.alexweb.io/anyxx/examples.html">more Examples</a>   </p>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->
