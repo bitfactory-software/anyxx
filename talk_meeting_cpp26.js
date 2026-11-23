@@ -1,6 +1,6 @@
 var talk_meeting_cpp26 =
 [
-    [ "Introduction to Internal and External Polymorphism:", "talk_meeting_cpp26_sample_01_.html", null ],
+    [ "Introduction to Internal and External Polymorphism", "talk_meeting_cpp26_sample_01_.html", null ],
     [ "Using shared", "talk_meeting_cpp26_sample_01_ptr.html", null ],
     [ "Using cref:", "talk_meeting_cpp26_sample_01_ref.html", null ],
     [ "Using val:", "talk_meeting_cpp26_sample_01_val.html", null ],

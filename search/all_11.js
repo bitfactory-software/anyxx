@@ -4,10 +4,10 @@ var searchData=
   ['template_5fmodel_5fmap_1',['TEMPLATE_MODEL_MAP',['../group__trait__map__macros.html#gaecddc138bc5edea421953e75ff6c6f33',1,'preprocessor_meta_class.hpp']]],
   ['terms_20and_20definitions_20in_20context_20of_20any_2',['Terms and Definitions in Context of &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2terms__and__definitions.html',1,'']]],
   ['the_20repo_3a_3',['Clone the repo:',['../index.html#autotoc_md3',1,'']]],
-  ['to_20internal_20and_20external_20polymorphism_3a_4',['Introduction to Internal and External Polymorphism:',['../talk_meeting_cpp26_sample_01_.html',1,'talk_meeting_cpp26']]],
+  ['to_20internal_20and_20external_20polymorphism_4',['Introduction to Internal and External Polymorphism',['../talk_meeting_cpp26_sample_01_.html',1,'talk_meeting_cpp26']]],
   ['trait_5',['TRAIT',['../group__trait__macros.html#gaf5624cf0eece4d4b6d59dd56e3f19529',1,'preprocessor_meta_class.hpp']]],
-  ['trait_6',['Trait',['../md_docs_2terms__and__definitions.html#autotoc_md14',1,'']]],
-  ['trait_20jacket_7',['Trait jacket',['../md_docs_2terms__and__definitions.html#autotoc_md15',1,'']]],
+  ['trait_6',['Trait',['../md_docs_2terms__and__definitions.html#autotoc_md16',1,'']]],
+  ['trait_20jacket_7',['Trait jacket',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]],
   ['trait_20macros_8',['TRAIT... macros',['../group__trait__macros.html',1,'']]],
   ['trait_5fas_3a_9',['trait_as:',['../talk_meeting_cpp26_sample_06_trait_as.html',1,'talk_meeting_cpp26']]],
   ['trait_5fclass_10',['trait_class',['../structanyxx_1_1trait__class.html',1,'anyxx']]],
@@ -19,5 +19,5 @@ var searchData=
   ['tree_16',['Vany Multi Dispatch: Fancy Expression Tree',['../talk_meeting_cpp26_sample_12_fancy_expression_tree.html',1,'talk_meeting_cpp26']]],
   ['txt_3a_17',['Useage in CMakeLists.txt:',['../index.html#autotoc_md2',1,'']]],
   ['type_20erased_20proxy_20s_18',['&lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt; Type Erased &lt;span class=&quot;tt&quot;&gt;Proxy&lt;/span&gt;*s',['../md_docs_2Proxy__overview.html',1,'']]],
-  ['typed_5fany_19',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md23',1,'']]]
+  ['typed_5fany_19',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md25',1,'']]]
 ];

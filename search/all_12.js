@@ -4,7 +4,7 @@ var searchData=
   ['unchecked_5fany_5fcast_1',['unchecked_any_cast',['../group__casts.html#ga6570ed19f7b75cf08e0600fcfed92758',1,'anyxx']]],
   ['undefined_2',['undefined',['../structanyxx_1_1undefined.html',1,'anyxx']]],
   ['unique_3',['unique',['../structanyxx_1_1unique.html',1,'anyxx']]],
-  ['upcast_20vs_20downcast_4',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md25',1,'']]],
+  ['upcast_20vs_20downcast_4',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md27',1,'']]],
   ['useage_20in_20cmakelists_20txt_3a_5',['Useage in CMakeLists.txt:',['../index.html#autotoc_md2',1,'']]],
   ['using_6',['USING',['../group__trait__macros.html#gab9e48505b72e33e3565bc6ad6fa40274',1,'preprocessor_meta_class.hpp']]],
   ['using_20any_20pure_7',['Using &quot;any&quot; Pure',['../talk_meeting_cpp26_sample_03_any.html',1,'talk_meeting_cpp26']]],
