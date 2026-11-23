@@ -8,7 +8,7 @@
 #include <vector>
 
 namespace {
-
+// [slide]
 struct circle {
   [[nodiscard]] std::string name() const { return "circle"; }
 };
@@ -61,4 +61,5 @@ TEST_CASE("Showcase3") {
   CHECK(ss.str() ==
         "circle == circle, circle < square, square > circle, square == square");
 }
+// [slide]
 };  // namespace

@@ -4,7 +4,7 @@
 #include <string>
 
 namespace {
-
+// [slide]
 namespace ayx = anyxx;
 
 struct circle {
@@ -83,4 +83,5 @@ TEST_CASE("Showcase5") {
 
   CHECK(serialized.str() == archive.str());
 }
+// [slide]
 };  // namespace showcase5

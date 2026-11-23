@@ -3,6 +3,7 @@
 #include <string>
 
 namespace showcase7 {
+// [slide]
 using namespace anyxx;
 using namespace std::string_literals;
 
@@ -33,4 +34,5 @@ TEST_CASE("Showcase7") {
   draw_vany(ss, {circle{}, square{}, any<figure>{"The big unknown..."s}});
   CHECK(ss.str() == "Hello\nWorld\nThe big unknown...\n");
 }
+// [slide]
 }  // namespace showcase7

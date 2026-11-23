@@ -7,7 +7,7 @@
 #include <vector>
 
 namespace {
-
+// [slide]
 namespace ayx = anyxx;
 
 struct circle {
@@ -42,4 +42,5 @@ TEST_CASE("Showcase4") {
         "circle: latin = orbis, italian = cerchio; square: latin = quadratum, "
         "italian = quadrato");
 }
+// [slide]
 }  // namespace

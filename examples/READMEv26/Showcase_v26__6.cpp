@@ -4,6 +4,7 @@
 #include <string>
 
 namespace {
+// [slide]
 struct circle {
   [[nodiscard]] std::string draw() const { return "Hello"; }
 };
@@ -29,4 +30,5 @@ TEST_CASE("Showcase6") {
   draw(ss, {circle{}, square{}});
   CHECK(ss.str() == "Hello\nWorld\n");
 }
+// [slide]
 }  // namespace

@@ -1,3 +1,4 @@
+// [slide]
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
@@ -23,3 +24,4 @@ TEST_CASE("Showcase1") {
   CHECK(ss.str() == "Hello\nWorld\n");
 }
 }  // namespace
+// [slide]

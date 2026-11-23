@@ -3,7 +3,7 @@
 #include <string>
 
 namespace {
-
+// [slide]
 struct circle {};
 struct square {
   [[nodiscard]] std::string edgy_salute() const { return "edgy World"; }
@@ -29,4 +29,5 @@ TEST_CASE("Showcase2") {
   draw(ss, {circle{}, square{}});
   CHECK(ss.str() == "Silent greetings\nedgy World\n");
 }
+// [slide]
 };  // namespace showcase2
