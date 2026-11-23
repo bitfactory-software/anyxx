@@ -11,6 +11,7 @@
 - \subpage  talk_meeting_cpp26_sample_06_trait_as                             
 - \subpage  talk_meeting_cpp26_sample_07_downcast                             
 - \subpage  talk_meeting_cpp26_sample_08_crosscast                            
+- \subpage  talk_meeting_cpp26_sample_08_factory_and_crosscast                            
 - \subpage  talk_meeting_cpp26_sample_09_no_visitors                          
 - \subpage  talk_meeting_cpp26_sample_10_spaceship                            
 - \subpage  talk_meeting_cpp26_sample_11_vany                                 

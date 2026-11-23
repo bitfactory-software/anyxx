@@ -1,1 +1,0 @@
-../examples/inline_mode/README.cpp
