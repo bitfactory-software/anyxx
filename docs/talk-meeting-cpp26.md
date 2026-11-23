@@ -1,5 +1,12 @@
 \page talk_meeting_cpp26 Talk at Meeting C++ 2026: Static and Dynamic Polymorphism in C++23 and beyond
 
+<img width="959" height="539" alt="Talk at Meeting C++ 2026" src="https://github.com/bitfactory-software/anyxx/blob/master/docs/StaticAndDynamicPolymorphism.jpg?raw=true" />
+
+### [Slides](https://github.com/bitfactory-software/anyxx/blob/master/docs/TalkMeetingCpp26.pdf?raw=true)
+
+- [Download now!](https://github.com/bitfactory-software/anyxx/blob/master/docs/TalkMeetingCpp26.pdf?raw=true)
+
+### Examples
 - \subpage  talk_meeting_cpp26_sample_01_                                     
 - \subpage  talk_meeting_cpp26_sample_01_ptr                                  
 - \subpage  talk_meeting_cpp26_sample_01_ref                                  

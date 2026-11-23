@@ -70,6 +70,7 @@ The draw function takes a vector of type-erased any objects that conform to the 
 It shows how to create and use a heterogeneous collection of unrelated objects (`circle` and `square`).
 
 <img width="454" height="355" alt="Any++logo-small" src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" />
+
 @endtab
 
 @tab{Trait Map}

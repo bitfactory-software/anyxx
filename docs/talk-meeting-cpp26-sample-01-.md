@@ -1,4 +1,4 @@
-\page talk_meeting_cpp26_sample_01_ Introduction to Internal and External Polymorphism:
+\page talk_meeting_cpp26_sample_01_ Introduction to Internal and External Polymorphism
 
 @tabs
 @tab{C++23}
