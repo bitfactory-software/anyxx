@@ -2,6 +2,8 @@
 
 <img width="959" height="539" alt="Talk at Meeting C++ 2026" src="https://github.com/bitfactory-software/anyxx/blob/master/docs/StaticAndDynamicPolymorphism.jpg?raw=true" />
 
+### [Video](https://youtu.be/hr_AGfIAInk)
+
 ### [Slides](https://github.com/bitfactory-software/anyxx/blob/master/docs/TalkMeetingCpp26.pdf?raw=true)
 
 - [Download now!](https://github.com/bitfactory-software/anyxx/blob/master/docs/TalkMeetingCpp26.pdf?raw=true)
