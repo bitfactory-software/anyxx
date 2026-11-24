@@ -4,8 +4,8 @@ var searchData=
   ['c_2023_20and_20beyond_1',['Talk at Meeting C++ 2026: Static and Dynamic Polymorphism in C++23 and beyond',['../talk_meeting_cpp26.html',1,'']]],
   ['c_2026_2',['External Polymorphism in C++26',['../md_docs_2scetch_01c_09_0926_01reflection.html',1,'']]],
   ['case_20study_3a_20factory_20and_20crosscast_3',['Case Study: factory and crosscast',['../talk_meeting_cpp26_sample_08_factory_and_crosscast.html',1,'talk_meeting_cpp26']]],
-  ['cast_4',['Cast',['../md_docs_2terms__and__definitions.html#autotoc_md28',1,'Lifetime Cast'],['../md_docs_2terms__and__definitions.html#autotoc_md26',1,'Static Cast vs Dynamic Cast']]],
-  ['cast_20vs_20dynamic_20cast_5',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md26',1,'']]],
+  ['cast_4',['Cast',['../md_docs_2terms__and__definitions.html#autotoc_md29',1,'Lifetime Cast'],['../md_docs_2terms__and__definitions.html#autotoc_md27',1,'Static Cast vs Dynamic Cast']]],
+  ['cast_20vs_20dynamic_20cast_5',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md27',1,'']]],
   ['castability_6',['Lifetime castability',['../md_docs_2Proxy__overview.html#autotoc_md8',1,'']]],
   ['castable_5fto_7',['castable_to',['../structanyxx_1_1castable__to.html',1,'anyxx']]],
   ['casts_8',['Casts',['../group__casts.html',1,'']]],
@@ -20,6 +20,6 @@ var searchData=
   ['context_20of_20any_17',['Terms and Definitions in Context of &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2terms__and__definitions.html',1,'']]],
   ['cow_18',['cow',['../structanyxx_1_1cow.html',1,'anyxx']]],
   ['cref_3a_19',['Using cref:',['../talk_meeting_cpp26_sample_01_ref.html',1,'talk_meeting_cpp26']]],
-  ['crosscast_20',['Crosscast',['../md_docs_2terms__and__definitions.html#autotoc_md29',1,'']]],
+  ['crosscast_20',['Crosscast',['../md_docs_2terms__and__definitions.html#autotoc_md30',1,'']]],
   ['crosscast_21',['crosscast',['../talk_meeting_cpp26_sample_08_factory_and_crosscast.html',1,'Case Study: factory and crosscast'],['../talk_meeting_cpp26_sample_08_crosscast.html',1,'crosscast'],['../group__meta__class__macros.html',1,'META_CLASS macros for crosscast']]]
 ];

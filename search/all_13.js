@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['v_5ftable_0',['v_table',['../md_docs_2terms__and__definitions.html#autotoc_md20',1,'']]],
-  ['v_5ftable_20data_1',['v_table data',['../md_docs_2terms__and__definitions.html#autotoc_md22',1,'']]],
-  ['v_5ftable_20instance_2',['v_table instance',['../md_docs_2terms__and__definitions.html#autotoc_md21',1,'']]],
+  ['v_5ftable_0',['v_table',['../md_docs_2terms__and__definitions.html#autotoc_md21',1,'']]],
+  ['v_5ftable_20data_1',['v_table data',['../md_docs_2terms__and__definitions.html#autotoc_md23',1,'']]],
+  ['v_5ftable_20instance_2',['v_table instance',['../md_docs_2terms__and__definitions.html#autotoc_md22',1,'']]],
   ['val_3',['val',['../structanyxx_1_1val.html',1,'anyxx']]],
   ['val_3a_4',['Using val:',['../talk_meeting_cpp26_sample_01_val.html',1,'talk_meeting_cpp26']]],
   ['val_3c_20smallobjectsize_2c_20std_3a_3atrue_5ftype_20_3e_5',['val&lt; SmallObjectSize, std::true_type &gt;',['../structanyxx_1_1val.html',1,'anyxx']]],
@@ -15,10 +15,11 @@ var searchData=
   ['vany_5fdispach_5fdeclare_12',['VANY_DISPACH_DECLARE',['../group__vany__macros.html#ga91576a60551a35c378aa094aebd591bb',1,'dispatch_vany.hpp']]],
   ['variant_20dispatch_3a_20vany_13',['Open Variant Dispatch: vany',['../talk_meeting_cpp26_sample_11_vany.html',1,'talk_meeting_cpp26']]],
   ['vcpkg_3a_14',['Available on vcpkg:',['../index.html#autotoc_md1',1,'']]],
-  ['versus_20typed_5fany_15',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md25',1,'']]],
-  ['view_16',['any view',['../talk_meeting_cpp26_sample_05_view.html',1,'talk_meeting_cpp26']]],
-  ['virtual_5f_17',['virtual_',['../structanyxx_1_1virtual__.html',1,'anyxx']]],
-  ['visitors_20open_20dispatch_18',['Visitors! Open Dispatch',['../talk_meeting_cpp26_sample_09_no_visitors.html',1,'talk_meeting_cpp26']]],
-  ['vs_20downcast_19',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md27',1,'']]],
-  ['vs_20dynamic_20cast_20',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md26',1,'']]]
+  ['versus_20typed_5fany_15',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md26',1,'']]],
+  ['video_16',['&lt;a href=&quot;https://youtu.be/hr_AGfIAInk&quot;&gt;Video&lt;/a&gt;',['../talk_meeting_cpp26.html#autotoc_md13',1,'']]],
+  ['view_17',['any view',['../talk_meeting_cpp26_sample_05_view.html',1,'talk_meeting_cpp26']]],
+  ['virtual_5f_18',['virtual_',['../structanyxx_1_1virtual__.html',1,'anyxx']]],
+  ['visitors_20open_20dispatch_19',['Visitors! Open Dispatch',['../talk_meeting_cpp26_sample_09_no_visitors.html',1,'talk_meeting_cpp26']]],
+  ['vs_20downcast_20',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md28',1,'']]],
+  ['vs_20dynamic_20cast_21',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md27',1,'']]]
 ];

@@ -10,7 +10,7 @@ var searchData=
   ['any_20function_7',['any function',['../talk_meeting_cpp26_sample_04_functiom.html',1,'talk_meeting_cpp26']]],
   ['any_20pure_8',['Using &quot;any&quot; Pure',['../talk_meeting_cpp26_sample_03_any.html',1,'talk_meeting_cpp26']]],
   ['any_20type_20erased_20proxy_20s_9',['&lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt; Type Erased &lt;span class=&quot;tt&quot;&gt;Proxy&lt;/span&gt;*s',['../md_docs_2Proxy__overview.html',1,'']]],
-  ['any_20versus_20typed_5fany_10',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md25',1,'']]],
+  ['any_20versus_20typed_5fany_10',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md26',1,'']]],
   ['any_20view_11',['any view',['../talk_meeting_cpp26_sample_05_view.html',1,'talk_meeting_cpp26']]],
   ['at_20meeting_20c_202026_3a_20static_20and_20dynamic_20polymorphism_20in_20c_2023_20and_20beyond_12',['Talk at Meeting C++ 2026: Static and Dynamic Polymorphism in C++23 and beyond',['../talk_meeting_cpp26.html',1,'']]],
   ['available_20on_20vcpkg_3a_13',['Available on vcpkg:',['../index.html#autotoc_md1',1,'']]]

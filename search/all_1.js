@@ -12,7 +12,7 @@ var searchData=
   ['any_20function_9',['any function',['../talk_meeting_cpp26_sample_04_functiom.html',1,'talk_meeting_cpp26']]],
   ['any_20pure_10',['Using &quot;any&quot; Pure',['../talk_meeting_cpp26_sample_03_any.html',1,'talk_meeting_cpp26']]],
   ['any_20type_20erased_20proxy_20s_11',['&lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt; Type Erased &lt;span class=&quot;tt&quot;&gt;Proxy&lt;/span&gt;*s',['../md_docs_2Proxy__overview.html',1,'']]],
-  ['any_20versus_20typed_5fany_12',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md25',1,'']]],
+  ['any_20versus_20typed_5fany_12',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md26',1,'']]],
   ['any_20view_13',['any view',['../talk_meeting_cpp26_sample_05_view.html',1,'talk_meeting_cpp26']]],
   ['any_5f_14',['any_',['../classanyxx_1_1any__.html',1,'anyxx::any_&lt; Proxy, Trait, Args &gt;'],['../classanyxx_1_1any__.html#a01bfcd138d15fbb63e74ca5f008b4ec5',1,'anyxx::any_::any_(std::in_place_t, V &amp;&amp;v)'],['../classanyxx_1_1any__.html#a5e326792951e4e5aae27a344dab5db0e',1,'anyxx::any_::any_(std::in_place_type_t&lt; T &gt;, TArgs &amp;&amp;... args)']]],
   ['any_5f_3c_20anyxx_3a_3acref_2c_20trait_2c_20args_2e_2e_2e_20_3e_15',['any_&lt; anyxx::cref, Trait, Args... &gt;',['../classanyxx_1_1any__.html',1,'anyxx']]],
