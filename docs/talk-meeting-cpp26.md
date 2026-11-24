@@ -2,11 +2,6 @@
 
 <img width="959" height="539" alt="Talk at Meeting C++ 2026" src="https://github.com/bitfactory-software/anyxx/blob/master/docs/StaticAndDynamicPolymorphism.jpg?raw=true" />
 
-### [Video](https://youtu.be/hr_AGfIAInk)
-
-### [Slides](https://github.com/bitfactory-software/anyxx/blob/master/docs/TalkMeetingCpp26.pdf?raw=true)
-
-- [Download now!](https://github.com/bitfactory-software/anyxx/blob/master/docs/TalkMeetingCpp26.pdf?raw=true)
 
 ### Examples
 - \subpage  talk_meeting_cpp26_sample_01_                                     
@@ -26,4 +21,14 @@
 - \subpage  talk_meeting_cpp26_sample_11_vany                                 
 - \subpage  talk_meeting_cpp26_sample_12_fancy_expression_tree                
 
+<!-- 
 
+### Video
+
+- [Youtube](https://youtu.be/hr_AGfIAInk) 
+
+### Slides
+
+- [Download now!](https://github.com/bitfactory-software/anyxx/blob/master/docs/TalkMeetingCpp26.pdf?raw=true)
+
+--!>
